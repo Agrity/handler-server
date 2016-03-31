@@ -30,7 +30,7 @@ public class Application extends Controller {
       //grower3.handler = new Handler();
       //grower3.save();
 
-      return ok();
+      return ok("Hello World");
     }
 
 }

@@ -50,10 +50,10 @@ public class Grower extends Model {
 
 
   @Constraints.Required
-  public List<Offer> recievedOffers = new ArrayList<Offer>();
+  public List<Offer> recievedOffers = new ArrayList<>();
 
 
-  public static Finder<Long, Grower> find = new Finder<Long, Grower>(Grower.class);
+  public static Finder<Long, Grower> find = new Finder<>(Grower.class);
 
   public Grower() {}
 

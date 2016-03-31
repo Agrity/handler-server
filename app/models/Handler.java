@@ -30,11 +30,13 @@ public class Handler extends Model {
 
   @OneToMany
   @Constraints.Required
-  public List<Grower> growersList = new ArrayList<Grower>();
+  public List<Grower> growersList = new ArrayList<>();
 
-  /* ============== TODO Offers Here =============== */
+  @OneToMany
+  @Constraints.Required
+  List<Offer> offerList = new ArrayList<>();
 
-  public static Finder<Long, Handler> find = new Finder<Long, Handler>(Handler.class);
+  public static Finder<Long, Handler> find = new Finder<>(Handler.class);
 
   public Handler() {
 
