@@ -6,11 +6,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.money.MonetaryAmount;
+//import javax.money.MonetaryAmount;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 import play.data.format.Formats;
 import play.data.validation.Constraints;
@@ -23,6 +25,7 @@ public class Offer extends Model {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   public Long id;
 
+  @ManyToOne(cascade = CascadeType.ALL)
   @Constraints.Required
   public Handler handler;
 
@@ -37,8 +40,9 @@ public class Offer extends Model {
   @Constraints.Required
   public Integer quantity;
 
-  @Constraints.Required
-  public MonetaryAmount price;
+  // TODO Figure out Why this can't use reflection
+  //@Constraints.Required
+  //public MonetaryAmount price;
 
   @Formats.DateTime(pattern="dd/MM/yyyy")
   public Date paymentDate;

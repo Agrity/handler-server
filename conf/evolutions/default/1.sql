@@ -19,6 +19,7 @@ create table handler (
 
 create table offer (
   id                        bigint auto_increment not null,
+  handler_handler_id        bigint,
   variety                   varchar(2),
   quantity                  integer,
   payment_date              timestamp,
@@ -29,6 +30,8 @@ create table offer (
 
 alter table grower add constraint fk_grower_handler_1 foreign key (handler_handler_id) references handler (handler_id) on delete restrict on update restrict;
 create index ix_grower_handler_1 on grower (handler_handler_id);
+alter table offer add constraint fk_offer_handler_2 foreign key (handler_handler_id) references handler (handler_id) on delete restrict on update restrict;
+create index ix_offer_handler_2 on offer (handler_handler_id);
 
 
 

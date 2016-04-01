@@ -10,7 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-//import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import play.data.validation.Constraints;
@@ -24,9 +23,6 @@ public class Grower extends Model {
   public Long id;
 
   @ManyToOne(cascade = CascadeType.ALL)
-  // TODO Verify Correct Annotation
-  //@JoinColumn(name = Constants.DB.Columns.HANDLER_ID,
-  //    referencedColumnName = Constants.DB.Columns.HANDLER_ID)
   @Constraints.Required
   public Handler handler;
 
