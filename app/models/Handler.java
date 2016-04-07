@@ -21,16 +21,32 @@ public class Handler extends Model {
   @Constraints.Min(10)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = Constants.DB.Columns.HANDLER_ID)
-  public Long id;
+  private Long id;
+
+  public Long getId() {
+    return id;
+  }
 
   @Constraints.Required
-  public String companyName;
+  private String companyName;
+
+  public void setCompanyName(String companyName) {
+    this.companyName = companyName;
+  }
+
+  public String getCompanyName() {
+    return companyName;
+  }
 
   /* ============== TODO Authorization Here =============== */
 
   @OneToMany
   @Constraints.Required
   public List<Grower> growersList = new ArrayList<>();
+
+  public List<Grower> getGrowersList() {
+    return growersList;
+  }
 
   @OneToMany
   @Constraints.Required
@@ -42,9 +58,25 @@ public class Handler extends Model {
 
   }
 
+  public Handler(String companyName) {
+    this.companyName = companyName;
+  }
+
   @Override
   public String toString() {
-    // TODO
-    return "[ " + companyName + " : " + growersList.size() + " ]";
+    return "(" + id + ") " + companyName + " : " + growersList.size();
+  }
+  
+  public String toPrettyString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("\n(" + id + ") " + companyName + ":");
+
+    for (Grower grower : growersList) {
+      builder.append("\n-- " + grower.toString());
+    }
+
+    builder.append("\n");
+
+    return builder.toString();
   }
 }

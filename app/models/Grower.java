@@ -20,18 +20,33 @@ public class Grower extends Model {
   @Id
   @Constraints.Min(10)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  public Long id;
+  private Long id;
+
+  public Long getId() {
+    return id;
+  }
 
   @ManyToOne(cascade = CascadeType.ALL)
   @Constraints.Required
-  public Handler handler;
+  private Handler handler;
 
+  public Handler getHandler() {
+    return handler;
+  }
+
+  public void setHandler(Handler handler) {
+    this.handler = handler;
+  }
 
   @Constraints.Required
-  public String firstName;
+  private String firstName;
 
   @Constraints.Required
-  public String lastName;
+  private String lastName;
+
+  public String getFullName() {
+    return firstName + " " + lastName;
+  }
 
   /**
    * TODO: Change to play email format to use play-mailer plugin
@@ -53,9 +68,14 @@ public class Grower extends Model {
 
   public Grower() {}
 
+  public Grower(String firstName, String lastName) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+  }
+
   @Override
   public String toString() {
     // TODO
-    return "[ " + firstName + " " + lastName + " ]";
+    return "(" + id + ") " + getFullName() + " [" + handler.getCompanyName() + "]";
   }
 }

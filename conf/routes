@@ -3,7 +3,25 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index()
+GET     /                                      controllers.Application.index()
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+GET     /assets/*file                         controllers.Assets.versioned(path="/public", file: Asset)
+
+
+
+# ========== Handler ========== #
+GET     /handlers                             controllers.HandlerController.getAllHandlers()
+
+POST    /handlers                             controllers.HandlerController.createHandler()
+
+GET     /handlers/:id                         controllers.HandlerController.getHandler(id: Long)
+
+GET     /handlers/:id/growers                 controllers.HandlerController.getAllGrowers(id: Long)
+
+POST    /handlers/:id/growers                 controllers.HandlerController.addGrower(id: Long)
+
+GET     /handlers/:id/growers/:growerId       controllers.HandlerController.getGrower(id: Long, growerId: Long)
+
+# ========== Grower ========== #
+
