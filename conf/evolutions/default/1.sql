@@ -4,11 +4,11 @@
 # --- !Ups
 
 create table grower (
-  id                        bigint auto_increment not null,
+  grower_id                 bigint auto_increment not null,
   handler_handler_id        bigint,
   first_name                varchar(255),
   last_name                 varchar(255),
-  constraint pk_grower primary key (id))
+  constraint pk_grower primary key (grower_id))
 ;
 
 create table handler (
@@ -18,14 +18,14 @@ create table handler (
 ;
 
 create table offer (
-  id                        bigint auto_increment not null,
+  offer_id                  bigint auto_increment not null,
   handler_handler_id        bigint,
   variety                   varchar(2),
   quantity                  integer,
   payment_date              timestamp,
   comments                  varchar(255),
   constraint ck_offer_variety check (variety in ('PD','FR','PR','MI','MT','PL','BT','SN','NP','CR')),
-  constraint pk_offer primary key (id))
+  constraint pk_offer primary key (offer_id))
 ;
 
 alter table grower add constraint fk_grower_handler_1 foreign key (handler_handler_id) references handler (handler_id) on delete restrict on update restrict;

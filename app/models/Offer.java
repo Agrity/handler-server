@@ -8,6 +8,7 @@ import java.util.List;
 
 //import javax.money.MonetaryAmount;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,6 +24,7 @@ public class Offer extends Model {
   @Id
   @Constraints.Min(10)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = DBConstants.OfferColumns.ID)
   public Long id;
 
   @ManyToOne(cascade = CascadeType.ALL)
@@ -44,7 +46,7 @@ public class Offer extends Model {
   //@Constraints.Required
   //public MonetaryAmount price;
 
-  @Formats.DateTime(pattern="dd/MM/yyyy")
+  @Formats.DateTime(pattern = "dd/MM/yyyy")
   public Date paymentDate;
 
   public String comments = "";

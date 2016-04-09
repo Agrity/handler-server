@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import models.Grower;
 import models.Handler;
 
+import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
 
@@ -13,6 +14,9 @@ import services.HandlerService;
 
 public class HandlerController extends Controller {
 
+  // Annotation ensures that POST request is of type application/json. If not HTTP 400 response
+  // returned.
+  @BodyParser.Of(BodyParser.Json.class)
   public Result createHandler() {
 
     JsonNode data = request().body().asJson();
@@ -22,8 +26,7 @@ public class HandlerController extends Controller {
           + HandlerService.createFakeHandler().toString());
     }
 
-    // TODO Create handler and return created
-    return ok("Data Found. Handler Not Created.\n" + data.toString());
+    return HandlerService.createHandlerResult(data);
   }
 
   public Result getAllHandlers() {
@@ -54,7 +57,7 @@ public class HandlerController extends Controller {
     }
 
     // TODO Create grower and return created
-    return ok("Data Found. Grower Not Created.\n" + data.toString());
+    return ok("Data Found. Grower Not Created.\n" + data.toString() + "\n");
   }
 
   public Result getAllGrowers(long id) {

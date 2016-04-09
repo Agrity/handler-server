@@ -20,7 +20,7 @@ public class Handler extends Model {
   @Id
   @Constraints.Min(10)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = Constants.DB.Columns.HANDLER_ID)
+  @Column(name = DBConstants.HandlerColumns.ID)
   private Long id;
 
   public Long getId() {
@@ -28,6 +28,7 @@ public class Handler extends Model {
   }
 
   @Constraints.Required
+  @Column(name = DBConstants.HandlerColumns.COMPANY_NAME)
   private String companyName;
 
   public void setCompanyName(String companyName) {
