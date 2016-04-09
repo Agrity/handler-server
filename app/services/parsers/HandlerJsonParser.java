@@ -9,37 +9,21 @@ import services.HandlerService;
  *
  * Expected Json Structure: { COMPANY_NAME: ... }
  */
-public class HandlerJsonParser {
-  // Error variables
-  private boolean valid;
-  private String errorMessage;
-
+public class HandlerJsonParser extends JsonParser {
   // Parsed variables
   private final String companyName;
 
-  // TODO check if company name already exists.
   public HandlerJsonParser(JsonNode data) {
+    super();
+
     companyName = data.findValue(JsonConstants.COMPANY_NAME).asText();
     if (!checkValidCompanyName(companyName)) {
+      // Parser set to invalid with proper error message.
       return;
     }
 
-    // Check that company name parameter is present.
-
-    // Json data is valid for new Handler.
-    valid = true;
-    errorMessage = null;
-  }
-
-  public boolean isValid() {
-    return valid;
-  }
-
-  // WARNING: Should only be called after isValud() has been checked to be false
-  public String getErrorMessage() {
-    ensureInvalid();
-
-    return errorMessage;
+    // Valid json data recieved and processed.
+    setValid();
   }
 
   // WARNING: Should only be called after isValud() has been checked to be true
@@ -50,42 +34,23 @@ public class HandlerJsonParser {
   }
 
   private boolean checkValidCompanyName(String companyName) {
+    // Check companyName is present.
     if (companyName == null) {
-      valid = false;
-      errorMessage = missingParameterError(JsonConstants.COMPANY_NAME);
+      setInvalid(missingParameterError(JsonConstants.COMPANY_NAME));
       return false;
 
-    // Check if company name is already in use.
+      // Check if company name is already in use.
     } else if (!checkHandlerCompanyNameAvailable(companyName)) {
-      valid = false;
-      errorMessage = "Handler name [" + companyName + "] is already in use.\n";
+      setInvalid("Handler name [" + companyName + "] is already in use.\n");
       return false;
     }
 
     return true;
   }
 
-  private void ensureValid() {
-    if (!isValid()) {
-      throw new RuntimeException("Parser Invalid: valid parser expected.");
-    }
-  }
-
-  private void ensureInvalid() {
-    if (isValid()) {
-      throw new RuntimeException("Parser Valid: invalid parser expected.");
-    }
-  }
-
   private boolean checkHandlerCompanyNameAvailable(String companyName) {
     return HandlerService.getHandler(companyName) == null;
   }
-
-
-  private static String missingParameterError(String paramaterName) {
-    return "Missing paramater [ " + paramaterName + " ]\n";
-  }
-
 
   private static class JsonConstants {
     private static final String COMPANY_NAME = "company_name";
