@@ -7,7 +7,10 @@ import services.HandlerService;
 /**
  * Class to parse json data to create new Handler.
  *
- * Expected Json Structure: { COMPANY_NAME: ... }
+ * Expected Json Structure:
+ *  {
+ *    COMPANY_NAME: ...
+ *  }
  */
 public class HandlerJsonParser extends JsonParser {
   // Parsed variables
@@ -16,36 +19,44 @@ public class HandlerJsonParser extends JsonParser {
   public HandlerJsonParser(JsonNode data) {
     super();
 
-    companyName = data.findValue(JsonConstants.COMPANY_NAME).asText();
-    if (!checkValidCompanyName(companyName)) {
+    companyName = parseCompanyName(data);
+    if (companyName == null) {
       // Parser set to invalid with proper error message.
       return;
     }
 
-    // Valid json data recieved and processed.
+    // Valid json data received and processed.
     setValid();
   }
 
-  // WARNING: Should only be called after isValud() has been checked to be true
+  // WARNING: Should only be called after isValid() has been checked to be true
   public String getCompanyName() {
     ensureValid();
 
     return companyName;
   }
 
-  private boolean checkValidCompanyName(String companyName) {
-    // Check companyName is present.
+  /* 
+   * Attempt to extract the company name from the given json data. If there is an error, the parser
+   * will be set to invalid with appropriate error message, and null will be returned.
+   *
+   * WARNING: Parser set to invalid if error is encountered.
+   */
+  private String parseCompanyName(JsonNode data) {
+    String companyName = data.findValue(JsonConstants.COMPANY_NAME).asText();
+
+    // Check company name is present.
     if (companyName == null) {
       setInvalid(missingParameterError(JsonConstants.COMPANY_NAME));
-      return false;
+      return null;
 
       // Check if company name is already in use.
     } else if (!checkHandlerCompanyNameAvailable(companyName)) {
       setInvalid("Handler name [" + companyName + "] is already in use.\n");
-      return false;
+      return null;
     }
 
-    return true;
+    return companyName;
   }
 
   private boolean checkHandlerCompanyNameAvailable(String companyName) {

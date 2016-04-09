@@ -25,6 +25,7 @@ public abstract class JsonParser {
   }
 
   protected void setValid() {
+    ensureValidityIsNotSet();
     validitySet = true;
 
     valid = true;
@@ -32,6 +33,7 @@ public abstract class JsonParser {
   }
 
   protected void setInvalid(String errorMessge) {
+    ensureValidityIsNotSet();
     validitySet = true;
 
     valid = false;
@@ -58,7 +60,13 @@ public abstract class JsonParser {
 
   private void ensureValidityIsSet() {
     if (!validitySet) {
-      throw new RuntimeException("Parser Validity Not Set: validity expected to be set");
+      throw new RuntimeException("Parser Validity Not Set: validity expected to be set.");
+    }
+  }
+
+  private void ensureValidityIsNotSet() {
+    if (validitySet) {
+      throw new RuntimeException("Parser Validity Set: validity expected to not be set.");
     }
   }
 }
