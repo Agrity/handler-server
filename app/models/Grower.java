@@ -70,6 +70,9 @@ public class Grower extends Model {
 
   public Grower() {}
 
+  /*
+   * Shim constructor intended for fake/mocked growers
+   */
   public Grower(String firstName, String lastName) {
     this.firstName = firstName;
     this.lastName = lastName;
