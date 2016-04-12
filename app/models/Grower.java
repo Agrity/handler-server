@@ -68,19 +68,30 @@ public class Grower extends Model {
 
   public static Finder<Long, Grower> find = new Finder<>(Grower.class);
 
-  public Grower() {}
-
   /*
    * Shim constructor intended for fake/mocked growers
    */
   public Grower(String firstName, String lastName) {
+    super();
+
     this.firstName = firstName;
     this.lastName = lastName;
+  }
+
+  public Grower(Handler handler, String firstName, String lastName, List<String> emailAddresses,
+      List<String> phoneNumbers) {
+    super();
+
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.handler = handler;
+    this.emailAddresses = emailAddresses;
+    this.phoneNumbers = phoneNumbers;
   }
 
   @Override
   public String toString() {
     // TODO
-    return "(" + id + ") " + getFullName() + " [" + handler.getCompanyName() + "]";
+    return "(" + id + ") " + getFullName() + " [" + emailAddresses + "]";
   }
 }

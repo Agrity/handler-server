@@ -1,0 +1,16 @@
+#!/bin/bash
+
+if [[ -z $1 ]]; then
+  echo "Creating Grower..."
+  echo # Insert Blank Line
+
+  curl \
+    --header "Content-type: application/json" \
+    --request POST \
+    --data "{ \"email_addresses\" :  [ \"Test 1\", \"Test 2\" ] }" \
+    localhost:9000/growers
+else
+  echo "ERROR: do not use any arguements."
+fi
+
+

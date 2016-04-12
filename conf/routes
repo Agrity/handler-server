@@ -25,3 +25,4 @@ GET     /handlers/:id/growers/:growerId       controllers.HandlerController.getG
 
 # ========== Grower ========== #
 
+POST    /growers                              controllers.GrowerController.createGrower()

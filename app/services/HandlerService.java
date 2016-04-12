@@ -14,6 +14,7 @@ import play.mvc.Result;
 import services.parsers.HandlerJsonParser;
 
 
+// TODO Figure out how to construct Result without needing to extend Controller.
 public class HandlerService extends Controller {
 
   // Used by createFakeHandler() for testing.
