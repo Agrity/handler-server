@@ -26,3 +26,9 @@ GET     /handlers/:id/growers/:growerId       controllers.HandlerController.getG
 # ========== Grower ========== #
 
 POST    /growers                              controllers.GrowerController.createGrower()
+
+GET     /growers                              controllers.GrowerController.getAllGrowers()
+
+GET     /growers/:id                          controllers.GrowerController.getGrower(id: Long)
+
+# TODO Add handlers/:id/offer and growers/:id/offers

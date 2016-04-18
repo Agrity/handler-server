@@ -54,11 +54,13 @@ public class Grower extends Model {
    * TODO: Change to play email format to use play-mailer plugin
    * <a href="https://github.com/playframework/play-mailer/blob/master/README.adoc">Plugin Link</a>
    */
+  @Constraints.Required
   public List<String> emailAddresses;
 
   /**
    * TODO: Change to phone number format
    */
+  @Constraints.Required
   public List<String> phoneNumbers;
 
 
@@ -76,6 +78,9 @@ public class Grower extends Model {
 
     this.firstName = firstName;
     this.lastName = lastName;
+    this.handler = null;
+    this.emailAddresses = new ArrayList<>();
+    this.phoneNumbers = new ArrayList<>();
   }
 
   public Grower(Handler handler, String firstName, String lastName, List<String> emailAddresses,
@@ -92,6 +97,11 @@ public class Grower extends Model {
   @Override
   public String toString() {
     // TODO
-    return "(" + id + ") " + getFullName() + " [" + emailAddresses + "]";
+    return "(" + id + ") " + getFullName(); // + " [" + emailAddresses + "]";
+  }
+
+  public String toPrettyString() {
+    // TODO Implement
+    return null;
   }
 }

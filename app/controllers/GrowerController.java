@@ -2,6 +2,7 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import models.Grower;
 import play.Logger;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
@@ -15,15 +16,27 @@ public class GrowerController extends Controller {
   // returned.
   @BodyParser.Of(BodyParser.Json.class)
   public Result createGrower() {
-
-
     JsonNode data = request().body().asJson();
-    Logger.info("Data Recieved: " + data.toString());
 
     if (data == null) {
       return badRequest("Expecting Some Data.\n");
     }
 
+    Logger.info("Data Recieved: " + data.toString());
     return GrowerService.createGrowerResult(data);
+  }
+
+  public Result getAllGrowers() {
+    return ok(GrowerService.getAllGrowers().toString());
+  }
+
+  public Result getGrower(long id) {
+    Grower grower = GrowerService.getGrower(id);
+
+    if (grower == null) {
+      return notFound(ErrorMessages.growerNotFoundMessage(id));
+    }
+
+    return ok(grower.toString());
   }
 }

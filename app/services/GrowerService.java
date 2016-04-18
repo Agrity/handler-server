@@ -2,6 +2,8 @@ package services;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import java.util.List;
+
 import models.Grower;
 import models.Handler;
 
@@ -17,6 +19,10 @@ public class GrowerService extends Controller {
 
   // Used to generate fake grower.
   private static Integer curGrowerNum = 0;
+
+  public static List<Grower> getAllGrowers() {
+    return Grower.find.all();
+  }
 
   public static Grower getGrower(Long id) {
     return Grower.find.byId(id);

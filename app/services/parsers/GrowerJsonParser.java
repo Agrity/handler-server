@@ -1,14 +1,11 @@
 package services.parsers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import models.Handler;
-
-import play.Logger;
 
 import services.EmailService;
 import services.HandlerService;
@@ -71,11 +68,13 @@ public class GrowerJsonParser extends JsonParser {
     
     emailAddresses = parseEmailAddresses(data);
     if (emailAddresses == null) {
+      // Parser set to invalid with proper error message.
       return;
     }
 
     phoneNumbers = parsePhoneNumbers(data);
     if (phoneNumbers == null) {
+      // Parser set to invalid with proper error message.
       return;
     }
 
@@ -116,14 +115,14 @@ public class GrowerJsonParser extends JsonParser {
    * WARNING: Parser set to invalid if error is encountered.
    */
   private Handler parseHandler(JsonNode data) {
-    String handlerIdStr = data.findValue(JsonConstants.HANDLER_ID).asText();
-
     // Check handler id is present.
-    if (handlerIdStr == null) {
+    if (!data.has(JsonConstants.HANDLER_ID)) {
       setInvalid(missingParameterError(JsonConstants.HANDLER_ID));
       return null;
 
     } 
+
+    String handlerIdStr = data.findValue(JsonConstants.HANDLER_ID).asText();
 
     // Ensure handler id is valid integer format.
     Long handlerId = parseLong(handlerIdStr);
@@ -150,15 +149,17 @@ public class GrowerJsonParser extends JsonParser {
    * WARNING: Parser set to invalid if error is encountered.
    */
   private String parseGrowerName(JsonNode data, String paramaterName) {
-    String name = data.findValue(paramaterName).asText();
-    if (name == null) {
+    // Ensure parameterName is present.
+    if (!data.has(paramaterName)) {
       setInvalid(missingParameterError(paramaterName));
       return null;
     } 
+    String name = data.findValue(paramaterName).asText();
+    
     
     // TODO Check valid human name. (i.e. length, no numbers, etc.)
     
-    return null;
+    return name;
   }
 
   /* 
@@ -172,12 +173,12 @@ public class GrowerJsonParser extends JsonParser {
    * WARNING: Parser set to invalid if error is encountered.
    */
   private List<String> parseEmailAddresses(JsonNode data) {
-    JsonNode emailAddrs = data.get(JsonConstants.EMAIL_ADDRESSES);
-
     // Email addresses not present in json node. Returning empty list.
-    if (emailAddrs == null) {
+    if (!data.has(JsonConstants.EMAIL_ADDRESSES)) {
       return new ArrayList<>();
     }
+
+    JsonNode emailAddrs = data.get(JsonConstants.EMAIL_ADDRESSES);
 
     // Emails should be formatted as an array of strings.
     if (!emailAddrs.isArray()) {
@@ -192,7 +193,7 @@ public class GrowerJsonParser extends JsonParser {
       String emailAddr = node.asText();
 
       // Ensure email address is valid.
-      if (EmailService.verifyEmailAddress(emailAddr)) {
+      if (!EmailService.verifyEmailAddress(emailAddr)) {
         setInvalid("Invalid Email Address: [" + node + "] is not a valid email address.");
         return null;
       }
@@ -214,12 +215,12 @@ public class GrowerJsonParser extends JsonParser {
    * WARNING: Parser set to invalid if error is encountered.
    */
   private List<String> parsePhoneNumbers(JsonNode data) {
-    JsonNode phoneNums = data.get(JsonConstants.PHONE_NUMBERS);
-
     // Phone numbers not present in json node. Returning empty list.
-    if (phoneNums == null) {
+    if (!data.has(JsonConstants.PHONE_NUMBERS)) {
       return new ArrayList<>();
     }
+
+    JsonNode phoneNums = data.get(JsonConstants.PHONE_NUMBERS);
 
     // Phone numbers should be formatted as an array of strings.
     if (!phoneNums.isArray()) {

@@ -12,10 +12,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import models.interfaces.PrettyString;
 import play.data.validation.Constraints;
 
 @Entity
-public class Handler extends Model {
+public class Handler extends Model implements PrettyString {
 
   @Id
   @Constraints.Min(10)
@@ -70,10 +71,15 @@ public class Handler extends Model {
   
   public String toPrettyString() {
     StringBuilder builder = new StringBuilder();
-    builder.append("\n(" + id + ") " + companyName + ":");
+    builder.append("(" + id + ") " + companyName + ":");
 
-    for (Grower grower : growersList) {
-      builder.append("\n-- " + grower.toString());
+    if (growersList.isEmpty()) {
+      builder.append(" [] ");
+
+    } else {
+      for (Grower grower : growersList) {
+        builder.append("\n-- " + grower.toString());
+      }
     }
 
     builder.append("\n");
