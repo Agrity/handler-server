@@ -91,6 +91,11 @@ public class OfferJsonParser extends JsonParser {
     return growers;
   }
 
+  public AlmondVariety getAlmondVariety() {
+    ensureValid();
+    return almondVariety;
+  }
+
   public Integer getAlmondPounds() {
     ensureValid();
     return almondPounds;
