@@ -3,6 +3,13 @@
 
 # --- !Ups
 
+create table email_address (
+  id                        bigint auto_increment not null,
+  grower_grower_id          bigint not null,
+  email_address             varchar(255),
+  constraint pk_email_address primary key (id))
+;
+
 create table grower (
   grower_id                 bigint auto_increment not null,
   handler_handler_id        bigint,
@@ -28,16 +35,20 @@ create table offer (
   constraint pk_offer primary key (offer_id))
 ;
 
-alter table grower add constraint fk_grower_handler_1 foreign key (handler_handler_id) references handler (handler_id) on delete restrict on update restrict;
-create index ix_grower_handler_1 on grower (handler_handler_id);
-alter table offer add constraint fk_offer_handler_2 foreign key (handler_handler_id) references handler (handler_id) on delete restrict on update restrict;
-create index ix_offer_handler_2 on offer (handler_handler_id);
+alter table email_address add constraint fk_email_address_grower_1 foreign key (grower_grower_id) references grower (grower_id) on delete restrict on update restrict;
+create index ix_email_address_grower_1 on email_address (grower_grower_id);
+alter table grower add constraint fk_grower_handler_2 foreign key (handler_handler_id) references handler (handler_id) on delete restrict on update restrict;
+create index ix_grower_handler_2 on grower (handler_handler_id);
+alter table offer add constraint fk_offer_handler_3 foreign key (handler_handler_id) references handler (handler_id) on delete restrict on update restrict;
+create index ix_offer_handler_3 on offer (handler_handler_id);
 
 
 
 # --- !Downs
 
 SET REFERENTIAL_INTEGRITY FALSE;
+
+drop table if exists email_address;
 
 drop table if exists grower;
 

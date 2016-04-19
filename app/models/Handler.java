@@ -78,7 +78,7 @@ public class Handler extends Model implements PrettyString {
 
     } else {
       for (Grower grower : growersList) {
-        builder.append("\n-- " + grower.toString());
+        builder.append("\n-- " + grower.toPrettyString());
       }
     }
 

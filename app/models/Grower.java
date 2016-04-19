@@ -12,11 +12,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
+import models.interfaces.PrettyString;
 import play.data.validation.Constraints;
 
 @Entity
-public class Grower extends Model {
+public class Grower extends Model implements PrettyString {
 
   @Id
   @Constraints.Min(10)
@@ -54,11 +56,12 @@ public class Grower extends Model {
    * TODO: Change to play email format to use play-mailer plugin
    * <a href="https://github.com/playframework/play-mailer/blob/master/README.adoc">Plugin Link</a>
    */
+  @OneToMany(cascade = CascadeType.ALL)
   @Constraints.Required
-  public List<String> emailAddresses;
+  public List<EmailAddress> emailAddresses;
 
   /**
-   * TODO: Change to phone number format
+   * TODO: Change to phone number format, construct own model so that can be consistant.
    */
   @Constraints.Required
   public List<String> phoneNumbers;
@@ -83,8 +86,8 @@ public class Grower extends Model {
     this.phoneNumbers = new ArrayList<>();
   }
 
-  public Grower(Handler handler, String firstName, String lastName, List<String> emailAddresses,
-      List<String> phoneNumbers) {
+  public Grower(Handler handler, String firstName, String lastName,
+      List<EmailAddress> emailAddresses, List<String> phoneNumbers) {
     super();
 
     this.firstName = firstName;
@@ -97,11 +100,26 @@ public class Grower extends Model {
   @Override
   public String toString() {
     // TODO
-    return "(" + id + ") " + getFullName(); // + " [" + emailAddresses + "]";
+    return "(" + id + ") " + getFullName() + " [" + emailAddresses.toString() + "]";
   }
 
   public String toPrettyString() {
-    // TODO Implement
-    return null;
+    StringBuilder builder = new StringBuilder()
+        .append("(" + id + ") " + getFullName());
+
+    builder.append(" [ ");
+    for (EmailAddress addr : emailAddresses) {
+      builder.append(addr + ", ");
+    }
+
+    builder.append("] [ ");
+
+    // TODO Uncomment after transitioned Phone Numbers into their own model.
+    //for (String number : phoneNumbers) {
+    //  builder.append(number + ", ");
+    //}
+    builder.append(" ]\n");
+
+    return builder.toString();
   }
 }

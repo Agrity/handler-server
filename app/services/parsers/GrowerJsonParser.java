@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.EmailAddress;
 import models.Handler;
 
 import services.EmailService;
@@ -42,7 +43,7 @@ public class GrowerJsonParser extends JsonParser {
   private Handler handler;
   private String firstName;
   private String lastName;
-  private List<String> emailAddresses;
+  private List<EmailAddress> emailAddresses;
   private List<String> phoneNumbers;
 
   public GrowerJsonParser(JsonNode data) {
@@ -97,7 +98,7 @@ public class GrowerJsonParser extends JsonParser {
     return lastName;
   }
 
-  public List<String> getEmailAddresses() {
+  public List<EmailAddress> getEmailAddresses() {
     ensureValid();
     return emailAddresses;
   }
@@ -172,7 +173,7 @@ public class GrowerJsonParser extends JsonParser {
    *
    * WARNING: Parser set to invalid if error is encountered.
    */
-  private List<String> parseEmailAddresses(JsonNode data) {
+  private List<EmailAddress> parseEmailAddresses(JsonNode data) {
     // Email addresses not present in json node. Returning empty list.
     if (!data.has(JsonConstants.EMAIL_ADDRESSES)) {
       return new ArrayList<>();
@@ -201,7 +202,7 @@ public class GrowerJsonParser extends JsonParser {
       processedEmailAddresses.add(emailAddr);
     }
 
-    return processedEmailAddresses;
+    return EmailService.stringToEmailAddressList(processedEmailAddresses);
   }
 
   /* 
