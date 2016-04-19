@@ -43,15 +43,18 @@ public class HandlerJsonParser extends JsonParser {
    * WARNING: Parser set to invalid if error is encountered.
    */
   private String parseCompanyName(JsonNode data) {
-    String companyName = data.findValue(JsonConstants.COMPANY_NAME).asText();
 
     // Check company name is present.
-    if (companyName == null) {
-      setInvalid(missingParameterError(JsonConstants.COMPANY_NAME));
+    if (!data.has(HandlerJsonConstants.COMPANY_NAME)) {
+      setInvalid(missingParameterError(HandlerJsonConstants.COMPANY_NAME));
       return null;
 
-      // Check if company name is already in use.
-    } else if (!checkHandlerCompanyNameAvailable(companyName)) {
+    } 
+    
+    String companyName = data.findValue(HandlerJsonConstants.COMPANY_NAME).asText();
+
+    // Check if company name is already in use.
+    if (!checkHandlerCompanyNameAvailable(companyName)) {
       setInvalid("Handler name [" + companyName + "] is already in use.\n");
       return null;
     }
@@ -63,7 +66,7 @@ public class HandlerJsonParser extends JsonParser {
     return HandlerService.getHandler(companyName) == null;
   }
 
-  private static class JsonConstants {
+  private static class HandlerJsonConstants {
     private static final String COMPANY_NAME = "company_name";
   }
 }

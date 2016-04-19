@@ -9,7 +9,6 @@ import models.EmailAddress;
 import models.Handler;
 
 import services.EmailService;
-import services.HandlerService;
 import services.PhoneMessageService;
 
 /**
@@ -17,7 +16,7 @@ import services.PhoneMessageService;
  *
  * Expected Json Structure:
  *  {
- *    HANDLER_ID: ...
+ *    HANDLER_ID: ... (Constant in JsonParser super class)
  *
  *    FIRST_NAME: ...
  *    LAST_NAME: ...
@@ -55,13 +54,13 @@ public class GrowerJsonParser extends JsonParser {
       return;
     }
     
-    firstName = parseGrowerName(data, JsonConstants.FIRST_NAME);
+    firstName = parseGrowerName(data, GrowerJsonConstants.FIRST_NAME);
     if (firstName == null) {
       // Parser set to invalid with proper error message.
       return;
     }
 
-    lastName = parseGrowerName(data, JsonConstants.LAST_NAME);
+    lastName = parseGrowerName(data, GrowerJsonConstants.LAST_NAME);
     if (lastName == null) {
       // Parser set to invalid with proper error message.
       return;
@@ -109,40 +108,6 @@ public class GrowerJsonParser extends JsonParser {
   }
 
   /* 
-   * Attempt to extract the Handler from the given json data, via the HANDLER_ID field. If there
-   * is an error, the parser will be set to invalid with appropriate error message, and null will
-   * be returned.
-   *
-   * WARNING: Parser set to invalid if error is encountered.
-   */
-  private Handler parseHandler(JsonNode data) {
-    // Check handler id is present.
-    if (!data.has(JsonConstants.HANDLER_ID)) {
-      setInvalid(missingParameterError(JsonConstants.HANDLER_ID));
-      return null;
-
-    } 
-
-    String handlerIdStr = data.findValue(JsonConstants.HANDLER_ID).asText();
-
-    // Ensure handler id is valid integer format.
-    Long handlerId = parseLong(handlerIdStr);
-    if (handlerId == null) {
-      setInvalid("Handler id value [" + handlerIdStr + "] is not a valid long integer.\n");
-      return null;
-    }
-    
-    // Check handler exists with given id.
-    Handler handler = HandlerService.getHandler(handlerId);
-    if (handler == null) {
-      setInvalid("Handler does not exist with handler id [" + handlerId + "].\n");
-      return null;
-    }
-
-    return handler;
-  }
-
-  /* 
    * Attempt to extract the grower name from the given json data. Parameter name of the json data
    * to be extracted is given by parameterName. If there is an error, the parser will be set to
    * invalid with appropriate error message, and null will be returned.
@@ -175,11 +140,11 @@ public class GrowerJsonParser extends JsonParser {
    */
   private List<EmailAddress> parseEmailAddresses(JsonNode data) {
     // Email addresses not present in json node. Returning empty list.
-    if (!data.has(JsonConstants.EMAIL_ADDRESSES)) {
+    if (!data.has(GrowerJsonConstants.EMAIL_ADDRESSES)) {
       return new ArrayList<>();
     }
 
-    JsonNode emailAddrs = data.get(JsonConstants.EMAIL_ADDRESSES);
+    JsonNode emailAddrs = data.get(GrowerJsonConstants.EMAIL_ADDRESSES);
 
     // Emails should be formatted as an array of strings.
     if (!emailAddrs.isArray()) {
@@ -217,11 +182,11 @@ public class GrowerJsonParser extends JsonParser {
    */
   private List<String> parsePhoneNumbers(JsonNode data) {
     // Phone numbers not present in json node. Returning empty list.
-    if (!data.has(JsonConstants.PHONE_NUMBERS)) {
+    if (!data.has(GrowerJsonConstants.PHONE_NUMBERS)) {
       return new ArrayList<>();
     }
 
-    JsonNode phoneNums = data.get(JsonConstants.PHONE_NUMBERS);
+    JsonNode phoneNums = data.get(GrowerJsonConstants.PHONE_NUMBERS);
 
     // Phone numbers should be formatted as an array of strings.
     if (!phoneNums.isArray()) {
@@ -247,27 +212,7 @@ public class GrowerJsonParser extends JsonParser {
     return processedPhoneNumbers;
   }
 
-  /*
-   * Wrapper to parse given string to long. If string is null, or not in proper integer format,
-   * null will be returned instead.
-   */
-  private static Long parseLong(String numStr) {
-    if (numStr == null) {
-      return null;
-    }
-
-    try {
-      Long num = Long.parseLong(numStr);
-      return num;
-
-    } catch (NumberFormatException e) {
-      return null;
-    }
-  }
-
-  private static class JsonConstants {
-    private static final String HANDLER_ID = "handler_id";
-
+  private static class GrowerJsonConstants {
     private static final String FIRST_NAME = "first_name";
     private static final String LAST_NAME = "last_name";
 

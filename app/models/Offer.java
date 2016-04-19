@@ -2,8 +2,8 @@ package models;
 
 import com.avaje.ebean.Model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 //import javax.money.MonetaryAmount;
@@ -45,9 +45,11 @@ public class Offer extends Model {
   // TODO Figure out Why this can't use reflection
   //@Constraints.Required
   //public MonetaryAmount price;
+  
 
+  // TODO Change to Java 8 Date and Time
   @Formats.DateTime(pattern = "dd/MM/yyyy")
-  public Date paymentDate;
+  public LocalDate paymentDate;
 
   public String comments = "";
 
