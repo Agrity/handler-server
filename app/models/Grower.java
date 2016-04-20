@@ -54,6 +54,7 @@ public class Grower extends Model implements PrettyString {
 
   /**
    * TODO: Change to play email format to use play-mailer plugin
+   *
    * <a href="https://github.com/playframework/play-mailer/blob/master/README.adoc">Plugin Link</a>
    */
   @OneToMany(cascade = CascadeType.ALL)

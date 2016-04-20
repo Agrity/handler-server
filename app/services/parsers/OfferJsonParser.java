@@ -164,7 +164,7 @@ public class OfferJsonParser extends JsonParser {
     AlmondVariety almondVariety =
         Almond.stringToAlmondVariety(data.get(OfferJsonConstants.ALMOND_VARIETY).asText());
 
-    if (almondPounds == null) {
+    if (almondVariety == null) {
       setInvalid("Almond Variety Format Invalid: string of valid almond variety expected.\n");
       return null;
     }
@@ -212,8 +212,8 @@ public class OfferJsonParser extends JsonParser {
   private static class OfferJsonConstants {
     private static final String GROWER_IDS = "grower_ids";
 
-    private static final String ALMOND_VARIETY = "almound_variety";
-    private static final String ALMOND_POUNDS = "almound_pounds";
+    private static final String ALMOND_VARIETY = "almond_variety";
+    private static final String ALMOND_POUNDS = "almond_pounds";
 
     private static final String PAYMENT_DATE = "payment_date";
   }

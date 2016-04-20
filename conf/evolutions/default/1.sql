@@ -27,11 +27,11 @@ create table handler (
 create table offer (
   offer_id                  bigint auto_increment not null,
   handler_handler_id        bigint,
-  variety                   varchar(2),
-  quantity                  integer,
-  payment_date              timestamp,
+  almond_variety            varchar(2),
+  almond_pounds             integer,
+  payment_date              date,
   comments                  varchar(255),
-  constraint ck_offer_variety check (variety in ('PD','FR','PR','MI','MT','PL','BT','SN','NP','CR')),
+  constraint ck_offer_almond_variety check (almond_variety in ('PD','FR','PR','MI','MT','PL','BT','SN','NP','CR')),
   constraint pk_offer primary key (offer_id))
 ;
 

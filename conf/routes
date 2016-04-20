@@ -23,12 +23,22 @@ POST    /handlers/:id/growers                 controllers.HandlerController.addG
 
 GET     /handlers/:id/growers/:growerId       controllers.HandlerController.getGrower(id: Long, growerId: Long)
 
-# ========== Grower ========== #
+GET     /handlers/:id/offers                  controllers.OfferController.getAllHandlerOffers(id: Long)
 
-POST    /growers                              controllers.GrowerController.createGrower()
+# ========== Grower ========== #
 
 GET     /growers                              controllers.GrowerController.getAllGrowers()
 
+POST    /growers                              controllers.GrowerController.createGrower()
+
 GET     /growers/:id                          controllers.GrowerController.getGrower(id: Long)
 
-# TODO Add handlers/:id/offer and growers/:id/offers
+GET     /growers/:id/offers                   controllers.OfferController.getAllGrowerOffers(id: Long)
+
+# ========== Offer ========== #
+
+GET     /offers                               controllers.OfferController.getAllOffers()
+
+POST    /offers                               controllers.OfferController.createOffer()
+
+GET     /offers/:id                           controllers.OfferController.getOffer(id: Long)

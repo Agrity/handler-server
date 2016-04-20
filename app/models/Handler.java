@@ -44,7 +44,7 @@ public class Handler extends Model implements PrettyString {
 
   @OneToMany
   @Constraints.Required
-  public List<Grower> growersList = new ArrayList<>();
+  private List<Grower> growersList = new ArrayList<>();
 
   public List<Grower> getGrowersList() {
     return growersList;
@@ -52,13 +52,13 @@ public class Handler extends Model implements PrettyString {
 
   @OneToMany
   @Constraints.Required
-  List<Offer> offerList = new ArrayList<>();
+  private List<Offer> offerList = new ArrayList<>();
+
+  public List<Offer> getOfferList() {
+    return offerList;
+  }
 
   public static Finder<Long, Handler> find = new Finder<>(Handler.class);
-
-  public Handler() {
-
-  }
 
   public Handler(String companyName) {
     this.companyName = companyName;
@@ -71,14 +71,14 @@ public class Handler extends Model implements PrettyString {
   
   public String toPrettyString() {
     StringBuilder builder = new StringBuilder();
-    builder.append("(" + id + ") " + companyName + ":");
+    builder.append("(" + id + ") " + companyName + ":\n");
 
     if (growersList.isEmpty()) {
       builder.append(" [] ");
 
     } else {
       for (Grower grower : growersList) {
-        builder.append("\n-- " + grower.toPrettyString());
+        builder.append("-- " + grower.toPrettyString());
       }
     }
 

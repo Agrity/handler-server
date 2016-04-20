@@ -15,11 +15,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import models.Almond.AlmondVariety;
+import models.interfaces.PrettyString;
+
 import play.data.format.Formats;
 import play.data.validation.Constraints;
 
 @Entity
-public class Offer extends Model {
+public class Offer extends Model implements PrettyString {
 
   @Id
   @Constraints.Min(10)
@@ -35,12 +38,12 @@ public class Offer extends Model {
   public List<Grower> allGrowers = new ArrayList<Grower>();
 
   @Constraints.Required
-  public Almond.AlmondVariety variety;
+  public Almond.AlmondVariety almondVariety;
   
   /* ============== TODO Almond Size Here =============== */
 
   @Constraints.Required
-  public Integer quantity;
+  public Integer almondPounds;
 
   // TODO Figure out Why this can't use reflection
   //@Constraints.Required
@@ -64,13 +67,22 @@ public class Offer extends Model {
 
   public static Finder<Long, Offer> find = new Finder<Long, Offer>(Offer.class);
 
-  public Offer(String firstName, String lastName) {
-
+  public Offer(Handler handler, List<Grower> allGrowers, AlmondVariety almondVariety,
+      Integer almondPounds, LocalDate paymentDate) {
+    this.handler = handler;
+    this.allGrowers = allGrowers;
+    this.noResponseGrowers = allGrowers;
+    this.almondVariety = almondVariety;
+    this.almondPounds = almondPounds;
+    this.paymentDate = paymentDate;
   }
 
   @Override
   public String toString() {
-    // TODO
-    return null;
+    return "(" + id + ") " + almondVariety;
+  }
+
+  public String toPrettyString() {
+    return "(" + id + ") " + almondVariety + "[ " + almondPounds + "]\n";
   }
 }

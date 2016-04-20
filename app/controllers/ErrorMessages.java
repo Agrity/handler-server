@@ -12,6 +12,10 @@ public class ErrorMessages {
     return "Grower with id '" + id + "' could not be found\n";
   }
 
+  public static String offerNotFoundMessage(Long id) {
+    return "Offer with id '" + id + "' could not be found\n";
+  }
+
   public static String handlerDoesNotOwnGrowerMessage(Handler handler, Grower grower) {
     return "Handler " + handler.getCompanyName() + " does not own Grower " + grower.getFullName()
         + ".\n";

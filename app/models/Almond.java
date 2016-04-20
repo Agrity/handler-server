@@ -5,6 +5,8 @@ import com.avaje.ebean.annotation.EnumMapping;
 import java.util.HashMap;
 import java.util.Map;
 
+import play.Logger;
+
 public class Almond {
 
   /*
@@ -53,6 +55,5 @@ public class Almond {
 
   public static AlmondVariety stringToAlmondVariety(String almondVarietyString) {
     return almondVarietyString != null ? almondVarietyMap.get(almondVarietyString) : null;
-
   }
 }
