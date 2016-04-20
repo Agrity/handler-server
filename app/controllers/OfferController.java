@@ -1,11 +1,14 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.inject.Inject;
 
 import models.Grower;
 import models.Handler;
 import models.Offer;
 
+import play.api.libs.mailer.MailerClient;
+import play.libs.mailer.Email;
 import play.Logger;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
@@ -16,6 +19,38 @@ import services.HandlerService;
 import services.OfferService;
 
 public class OfferController extends Controller {
+
+  private final MailerClient mailer;
+
+  @Inject
+  public OfferController(MailerClient mailerClient) {
+    this.mailer = mailerClient;
+  }
+
+  public Result send() {
+
+    //final Email email = new Email()
+    //  .setSubject("AUTOMATED FUCKING EMAILS")
+    //  .setFrom("Agrity <agritycommodities@gmail.com>")
+    //  .addTo("<larsenj@stanford.edu>")
+    //  .setBodyText("Start Up Done");
+
+    //final Email email2 = new Email()
+    //  .setSubject("AUTOMATED FUCKING EMAILS")
+    //  .setFrom("Agrity <agritycommodities@gmail.com>")
+    //  .addTo("<jackmcc@stanford.edu>")
+    //  .setBodyText("Start Up Done");
+
+    //try {
+    //  String id = mailer.send(email);
+    //  String id2 = mailer.send(email2);
+    //  return ok("Email " + id + " " + id2 + " sent!");
+    //} catch (Exception e) {
+    //  Logger.error("=== Error Sending Email ===\n" + e.getMessage());
+    //  return internalServerError("Error sending email");
+    //}
+
+  }
 
   // Annotation ensures that POST request is of type application/json. If not HTTP 400 response
   // returned.
@@ -49,7 +84,7 @@ public class OfferController extends Controller {
     Handler handler = HandlerService.getHandler(handlerId);
 
     if (handler == null) {
-      return notFound(ErrorMessages.offerNotFoundMessage(handlerId));
+      return notFound(ErrorMessages.handlerNotFoundMessage(handlerId));
     }
 
     return ok(Helpers.fetchList(handler.getOfferList()).toString());

@@ -21,10 +21,11 @@ libraryDependencies ++= Seq(
 // other, legacy style, accesses its actions statically.
 routesGenerator := InjectedRoutesGenerator
 
-
 // -------------  Custom ------------------ //
 // Java project. Don't expect Scala IDE
 EclipseKeys.projectFlavor := EclipseProjectFlavor.Java
 
 // Use .class files instead of generated .scala files for views and routes
 EclipseKeys.createSrc := EclipseCreateSrc.ValueSet(EclipseCreateSrc.ManagedClasses, EclipseCreateSrc.ManagedResources)
+
+routesGenerator := InjectedRoutesGenerator
