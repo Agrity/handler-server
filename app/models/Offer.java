@@ -101,7 +101,13 @@ public class Offer extends Model implements PrettyString {
     return paymentDate;
   }
 
-  public String comments = "";
+  @Column(columnDefinition = "TEXT")
+  private String comment = "";
+
+  public String getComment() {
+    return comment;
+  }
+
 
   public List<Grower> getAcceptedGrowers() {
     return getGrowersWithResponse(GrowerResponse.ACCEPTED);
@@ -143,10 +149,10 @@ public class Offer extends Model implements PrettyString {
   /* ========== Member Functions ========== */
 
   public Offer(Handler handler, List<Grower> allGrowers, AlmondVariety almondVariety,
-      Integer almondPounds, String pricePerPound, LocalDate paymentDate) {
+      Integer almondPounds, String pricePerPound, LocalDate paymentDate, String comment) {
     this.handler = handler;
+
     // TODO Fix to Java 8 Map Syntax
-    
     for (Grower grower : allGrowers) {
       GrowerOfferResponse growerResponse = new GrowerOfferResponse(grower);
       growerOfferResponses.add(growerResponse);
@@ -156,6 +162,7 @@ public class Offer extends Model implements PrettyString {
     this.almondPounds = almondPounds;
     this.pricePerPound = pricePerPound;
     this.paymentDate = paymentDate;
+    this.comment = comment;
   }
 
   public void saveGrowerResponses() {

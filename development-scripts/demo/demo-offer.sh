@@ -5,7 +5,7 @@ if [[ -z $1 ]]; then
   curl \
     --header "Content-type: application/json" \
     --request POST \
-    --data '{ "handler_id" : 1, "grower_ids" : [1], "almond_variety" : "NP", "almond_pounds" :  100,  "price_per_pound" : "2.23", "payment_date" : "testing", "comment" : "This is an awesome test comment" }' \
+    --data '{ "handler_id" : 1, "grower_ids" : [1, 2], "almond_variety" : "NP", "almond_pounds" :  88000,  "price_per_pound" : "2.23", "payment_date" : "testing", "comment" : "This is a good offer fucking jackasses" }' \
     localhost:9000/offers
   echo # Insert Blank Line
 else

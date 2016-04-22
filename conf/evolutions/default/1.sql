@@ -40,7 +40,7 @@ create table offer (
   almond_pounds             integer,
   price_per_pound           varchar(255),
   payment_date              date,
-  comments                  varchar(255),
+  comment                   TEXT,
   constraint ck_offer_almond_variety check (almond_variety in ('PD','FR','PR','MI','MT','PL','BT','SN','NP','CR')),
   constraint pk_offer primary key (offer_id))
 ;

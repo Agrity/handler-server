@@ -36,6 +36,10 @@ import services.HandlerService;
  *
  *    (TODO Determine Date Format)
  *    PAYMENT_DATE: ... ,
+ *
+ *    ==== OPTIONAL ====
+ *
+ *    COMMENT: ... ,
  *  }
  */
 public class OfferJsonParser extends JsonParser {
@@ -46,6 +50,7 @@ public class OfferJsonParser extends JsonParser {
   private Integer almondPounds;
   private String pricePerPound;
   private LocalDate paymentDate;
+  private String comment;
 
   public OfferJsonParser(JsonNode data) {
     super();
@@ -86,6 +91,12 @@ public class OfferJsonParser extends JsonParser {
       return;
     }
 
+    comment = parseComment(data);
+    if (comment == null) {
+      // Parser set to invalid with proper error message.
+      return;
+    }
+
     // Valid json data recieved
     setValid();
   }
@@ -118,6 +129,11 @@ public class OfferJsonParser extends JsonParser {
   public LocalDate getPaymentDate() {
     ensureValid();
     return paymentDate;
+  }
+
+  public String getComment() {
+    ensureValid();
+    return comment;
   }
 
   private List<Grower> parseGrowers(JsonNode data) {
@@ -215,7 +231,7 @@ public class OfferJsonParser extends JsonParser {
     // TODO Change To Monetary Value
     String pricePerPound = data.get(OfferJsonConstants.PRICE_PER_POUND).asText();
 
-    if (almondPounds == null) {
+    if (pricePerPound == null) {
       setInvalid("Almond Price Per Pound Format Invalid: monetary value string expected.\n");
       return null;
     }
@@ -242,6 +258,22 @@ public class OfferJsonParser extends JsonParser {
     return DateService.stringToDate(dateString);
   }
 
+  private String parseComment(JsonNode data) {
+    // Check comment is present.
+    if (!data.has(OfferJsonConstants.COMMENT)) {
+      return "";
+    } 
+    
+    String commentString = data.get(OfferJsonConstants.COMMENT).asText();
+
+    if (commentString == null) {
+      setInvalid("Comment Format Invalid: string format expected.\n");
+      return null;
+    }
+
+    return commentString;
+  }
+
   private static class OfferJsonConstants {
     private static final String GROWER_IDS = "grower_ids";
 
@@ -251,5 +283,7 @@ public class OfferJsonParser extends JsonParser {
     private static final String PRICE_PER_POUND = "price_per_pound";
 
     private static final String PAYMENT_DATE = "payment_date";
+
+    private static final String COMMENT = "comment";
   }
 }

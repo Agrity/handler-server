@@ -45,9 +45,8 @@ public class OfferService extends Controller {
         parser.getAlmondVariety(),
         parser.getAlmondPounds(),
         parser.getPricePerPound(),
-        parser.getPaymentDate());
-
-    
+        parser.getPaymentDate(),
+        parser.getComment());
 
     newOffer.save();
     return newOffer;
