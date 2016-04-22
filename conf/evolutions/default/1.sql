@@ -18,6 +18,15 @@ create table grower (
   constraint pk_grower primary key (grower_id))
 ;
 
+create table grower_offer_response (
+  grower_id                 bigint auto_increment not null,
+  offer_offer_id            bigint not null,
+  grower_grower_id          bigint,
+  grower_response           integer,
+  constraint ck_grower_offer_response_grower_response check (grower_response in (0,1,2,3)),
+  constraint pk_grower_offer_response primary key (grower_id))
+;
+
 create table handler (
   handler_id                bigint auto_increment not null,
   company_name              varchar(255),
@@ -36,24 +45,18 @@ create table offer (
   constraint pk_offer primary key (offer_id))
 ;
 
-
-create table offer_grower (
-  offer_offer_id                 bigint not null,
-  grower_grower_id               bigint not null,
-  constraint pk_offer_grower primary key (offer_offer_id, grower_grower_id))
-;
 alter table email_address add constraint fk_email_address_grower_1 foreign key (grower_grower_id) references grower (grower_id) on delete restrict on update restrict;
 create index ix_email_address_grower_1 on email_address (grower_grower_id);
 alter table grower add constraint fk_grower_handler_2 foreign key (handler_handler_id) references handler (handler_id) on delete restrict on update restrict;
 create index ix_grower_handler_2 on grower (handler_handler_id);
-alter table offer add constraint fk_offer_handler_3 foreign key (handler_handler_id) references handler (handler_id) on delete restrict on update restrict;
-create index ix_offer_handler_3 on offer (handler_handler_id);
+alter table grower_offer_response add constraint fk_grower_offer_response_offer_3 foreign key (offer_offer_id) references offer (offer_id) on delete restrict on update restrict;
+create index ix_grower_offer_response_offer_3 on grower_offer_response (offer_offer_id);
+alter table grower_offer_response add constraint fk_grower_offer_response_growe_4 foreign key (grower_grower_id) references grower (grower_id) on delete restrict on update restrict;
+create index ix_grower_offer_response_growe_4 on grower_offer_response (grower_grower_id);
+alter table offer add constraint fk_offer_handler_5 foreign key (handler_handler_id) references handler (handler_id) on delete restrict on update restrict;
+create index ix_offer_handler_5 on offer (handler_handler_id);
 
 
-
-alter table offer_grower add constraint fk_offer_grower_offer_01 foreign key (offer_offer_id) references offer (offer_id) on delete restrict on update restrict;
-
-alter table offer_grower add constraint fk_offer_grower_grower_02 foreign key (grower_grower_id) references grower (grower_id) on delete restrict on update restrict;
 
 # --- !Downs
 
@@ -63,11 +66,11 @@ drop table if exists email_address;
 
 drop table if exists grower;
 
+drop table if exists grower_offer_response;
+
 drop table if exists handler;
 
 drop table if exists offer;
-
-drop table if exists offer_grower;
 
 SET REFERENTIAL_INTEGRITY TRUE;
 

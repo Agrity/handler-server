@@ -213,7 +213,7 @@ public class OfferJsonParser extends JsonParser {
     } 
     
     // TODO Change To Monetary Value
-    String pricePerPound = data.get(OfferJsonConstants.ALMOND_POUNDS).asText();
+    String pricePerPound = data.get(OfferJsonConstants.PRICE_PER_POUND).asText();
 
     if (almondPounds == null) {
       setInvalid("Almond Price Per Pound Format Invalid: monetary value string expected.\n");

@@ -11,39 +11,44 @@ GET     /assets/*file                         controllers.Assets.versioned(path=
 
 
 # ========== Handler ========== #
-GET     /handlers                             controllers.HandlerController.getAllHandlers()
+GET     /handlers                                 controllers.HandlerController.getAllHandlers()
 
-POST    /handlers                             controllers.HandlerController.createHandler()
+POST    /handlers                                 controllers.HandlerController.createHandler()
 
-GET     /handlers/:id                         controllers.HandlerController.getHandler(id: Long)
+GET     /handlers/:id                             controllers.HandlerController.getHandler(id: Long)
 
-GET     /handlers/:id/growers                 controllers.HandlerController.getAllGrowers(id: Long)
+GET     /handlers/:id/growers                     controllers.HandlerController.getAllGrowers(id: Long)
 
-POST    /handlers/:id/growers                 controllers.HandlerController.addGrower(id: Long)
+POST    /handlers/:id/growers                     controllers.HandlerController.addGrower(id: Long)
 
-GET     /handlers/:id/growers/:growerId       controllers.HandlerController.getGrower(id: Long, growerId: Long)
+GET     /handlers/:id/growers/:growerId           controllers.HandlerController.getGrower(id: Long, growerId: Long)
 
-GET     /handlers/:id/offers                  controllers.OfferController.getAllHandlerOffers(id: Long)
+GET     /handlers/:id/offers                      controllers.OfferController.getAllHandlerOffers(id: Long)
 
 # ========== Grower ========== #
 
-GET     /growers                              controllers.GrowerController.getAllGrowers()
+GET     /growers                                  controllers.GrowerController.getAllGrowers()
 
-POST    /growers                              controllers.GrowerController.createGrower()
+POST    /growers                                  controllers.GrowerController.createGrower()
 
-GET     /growers/:id                          controllers.GrowerController.getGrower(id: Long)
+GET     /growers/:id                              controllers.GrowerController.getGrower(id: Long)
 
-GET     /growers/:id/offers                   controllers.OfferController.getAllGrowerOffers(id: Long)
+GET     /growers/:id/offers                       controllers.OfferController.getAllGrowerOffers(id: Long)
 
 # ========== Offer ========== #
 
-GET     /offers                               controllers.OfferController.getAllOffers()
+GET     /offers                                   controllers.OfferController.getAllOffers()
 
-POST    /offers                               controllers.OfferController.createOffer()
+POST    /offers                                   controllers.OfferController.createOffer()
 
-GET     /offers/:id                           controllers.OfferController.getOffer(id: Long)
+GET     /offers/:id                               controllers.OfferController.getOffer(id: Long)
 
-GET     /offers/:id/index                     controllers.OfferController.indexOffer(id: Long)
+GET     /offers/:id/index                         controllers.OfferController.indexOffer(id: Long)
 
-GET     /offers/:id/send                      controllers.OfferController.sendOffer(id: Long)
+GET     /offers/:id/send                          controllers.OfferController.sendOffer(id: Long)
 
+GET     /offers/:offerId/accept/:growerId         controllers.OfferController.acceptOffer(offerId: Long, growerId: Long)
+
+GET     /offers/:offerId/reject/:growerId         controllers.OfferController.rejectOffer(offerId: Long, growerId: Long)
+
+GET     /offers/:offerId/requestcall/:growerId    controllers.OfferController.requestCall(offerId: Long, growerId: Long)

@@ -1,0 +1,50 @@
+@(offer: Offer, grower: Grower)
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.blue_grey-green.min.css" />
+  </head>
+  <body>
+
+    <div class="mdl-grid">
+      <div class="mdl-cell mdl-cell--12-col">
+        <h3> New Offer from @offer.getHandler().getCompanyName()</h3>
+      </div>
+
+      <div class="mdl-cell mdl-cell--2-col"><b>Almond Type</b></div>
+      <div class="mdl-cell mdl-cell--10-col">@offer.getAlmondVariety()</div>
+
+      <div class="mdl-cell mdl-cell--2-col"><b>Payment Date</b></div>
+      <div class="mdl-cell mdl-cell--10-col">@offer.getPaymentDate()</div>
+
+      <div class="mdl-cell mdl-cell--2-col"><b>Pounds</b></div>
+      <div class="mdl-cell mdl-cell--10-col">@offer.getAlmondPounds()</div>
+
+      <div class="mdl-cell mdl-cell--2-col"><b>Price Per Pound</b></div>
+      <div class="mdl-cell mdl-cell--10-col">TODO</div>
+
+      <!-- TODO: ADD Payment -->
+    </div>
+
+    <div class="mdl-grid">
+      <div class="mdl-cell mdl-cell--4-col">
+        <a class="mdl-button mdl-button--raised mdl-button--colored mdl-color--green" href="/growers/@grower.getId()">
+          Accept
+        </a>
+      </div>
+      <div class="mdl-cell mdl-cell--4-col">
+        <a class="mdl-button mdl-button--raised mdl-button--colored mdl-color--red" href="/growers/@grower.getId()">
+          Reject
+        </a>
+      </div>
+      <div class="mdl-cell mdl-cell--4-col">
+        <a class="mdl-button mdl-button--raised mdl-button--colored" href="/">
+          Request Call
+        </a>
+      </div>
+    </div>
+
+  </body>
+</html>

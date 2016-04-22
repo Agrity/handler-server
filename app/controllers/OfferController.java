@@ -28,14 +28,52 @@ public class OfferController extends Controller {
   }
 
   public Result indexOffer(long id) {
-    Content html = views.html.emailOfferBody.render(OfferService.getOffer(id), GrowerService.getGrower(1L));
+    Content html =
+        views.html.emailOfferBody.render(OfferService.getOffer(id), GrowerService.getGrower(1L));
     return ok(html);
   }
+
+  public Result acceptOffer(long offerId, long growerId) {
+    Offer offer = OfferService.getOffer(offerId);
+    if (offer == null) {
+      return notFound(ErrorMessages.offerNotFoundMessage(growerId));
+    }
+
+    boolean success = offer.growerAcceptOffer(growerId);
+
+    return success ? ok("Successfully Accepted Offer.")
+        : internalServerError("Internal Error: Offer could not be accepted.");
+  }
+
+  public Result rejectOffer(long offerId, long growerId) {
+    Offer offer = OfferService.getOffer(offerId);
+    if (offer == null) {
+      return notFound(ErrorMessages.offerNotFoundMessage(growerId));
+    }
+
+    boolean success = offer.growerRejectOffer(growerId);
+
+    return success ? ok("Successfully Rejected Offer.")
+        : internalServerError("Internal Error: Offer could not be accepted.");
+  }
+
+  public Result requestCall(long offerId, long growerId) {
+    Offer offer = OfferService.getOffer(offerId);
+    if (offer == null) {
+      return notFound(ErrorMessages.offerNotFoundMessage(growerId));
+    }
+
+    boolean success = offer.growerRequestCall(growerId);
+
+    return success ? ok("Successfully Requested Call.")
+        : internalServerError("Internal Error: Offer could not be accepted.");
+  }
+
 
   public Result sendOffer(long id) {
     Offer offer = OfferService.getOffer(id);
     boolean emailSucces = offerMessageService.send(offer);
-    return emailSucces ? redirect("/") : internalServerError("Some or all of the emails were unable to be sent");
+  return emailSucces ? redirect("/") : internalServerError("Some or all of the emails were unable to be sent");
   }
 
   // Annotation ensures that POST request is of type application/json. If not HTTP 400 response

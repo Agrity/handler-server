@@ -13,16 +13,17 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import models.Almond.AlmondVariety;
+import models.GrowerOfferResponse.GrowerResponse;
 import models.interfaces.PrettyString;
 
 import play.data.format.Formats;
 import play.data.validation.Constraints;
 
-import services.OfferService;
+import services.GrowerService;
 
 @Entity
 public class Offer extends Model implements PrettyString {
@@ -45,12 +46,24 @@ public class Offer extends Model implements PrettyString {
     return handler;
   }
 
+  @OneToMany(cascade = CascadeType.ALL)
   @Constraints.Required
-  @ManyToMany
-  private List<Grower> allGrowers = new ArrayList<Grower>();
+  private List<GrowerOfferResponse> growerOfferResponses = new ArrayList<>();
 
   public List<Grower> getAllGrowers() {
-    return allGrowers;
+    List<Grower> growerList = new ArrayList<>();
+    for (GrowerOfferResponse growerResponses : growerOfferResponses) {
+      growerList.add(growerResponses.getGrower());
+    }
+    return growerList;
+  }
+
+  public List<GrowerResponse> getAllGrowersResponses() {
+    List<GrowerResponse> growerList = new ArrayList<>();
+    for (GrowerOfferResponse growerResponses : growerOfferResponses) {
+      growerList.add(growerResponses.getGrowersResponse());
+    }
+    return growerList;
   }
 
   @Constraints.Required
@@ -90,28 +103,39 @@ public class Offer extends Model implements PrettyString {
 
   public String comments = "";
 
-  @Constraints.Required
-  @ManyToMany
-  private List<Grower> acceptedGrowers = new ArrayList<Grower>();
-
   public List<Grower> getAcceptedGrowers() {
-    return acceptedGrowers;
+    return getGrowersWithResponse(GrowerResponse.ACCEPTED);
   }
-
-  @Constraints.Required
-  @ManyToMany
-  private List<Grower> rejectedGrowers = new ArrayList<Grower>();
 
   public List<Grower> getRejectedGrowers() {
-    return rejectedGrowers;
+    return getGrowersWithResponse(GrowerResponse.REJECTED);
   }
 
-  @Constraints.Required
-  @ManyToMany
-  private List<Grower> noResponseGrowers = new ArrayList<Grower>();
-
   public List<Grower> getNoResponseGrowers() {
-    return noResponseGrowers;
+    return getGrowersWithResponse(GrowerResponse.NO_RESPONSE);
+  }
+
+  public List<Grower> getRequestCallGrowers() {
+    return getGrowersWithResponse(GrowerResponse.REQUEST_CALL);
+  }
+
+  private List<Grower> getGrowersWithResponse(GrowerResponse response) {
+    List<Grower> matchedGrowers = new ArrayList<>();
+    for (GrowerOfferResponse growerOfferResponse : growerOfferResponses) {
+      if (growerOfferResponse.getGrowersResponse().equals(response)) {
+        matchedGrowers.add(growerOfferResponse.getGrower());
+      }
+    }
+    return matchedGrowers;
+  }
+
+  private GrowerOfferResponse getGrowerOfferResponse(Grower grower) {
+    for (GrowerOfferResponse growerOfferResponse : growerOfferResponses) {
+      if (growerOfferResponse.getGrower().equals(grower)) {
+        return growerOfferResponse;
+      }
+    }
+    return null;
   }
 
   public static Finder<Long, Offer> find = new Finder<Long, Offer>(Offer.class);
@@ -121,24 +145,54 @@ public class Offer extends Model implements PrettyString {
   public Offer(Handler handler, List<Grower> allGrowers, AlmondVariety almondVariety,
       Integer almondPounds, String pricePerPound, LocalDate paymentDate) {
     this.handler = handler;
-    this.allGrowers = allGrowers;
-    this.noResponseGrowers = allGrowers;
+    // TODO Fix to Java 8 Map Syntax
+    
+    for (Grower grower : allGrowers) {
+      GrowerOfferResponse growerResponse = new GrowerOfferResponse(grower);
+      growerOfferResponses.add(growerResponse);
+    }
+
     this.almondVariety = almondVariety;
     this.almondPounds = almondPounds;
     this.pricePerPound = pricePerPound;
     this.paymentDate = paymentDate;
   }
 
-  //public boolean acceptOffer(Long id) {
-  //  Grower grower = Grower.getOffer(id);
+  public void saveGrowerResponses() {
+    for (GrowerOfferResponse growerResponse : growerOfferResponses) {
+      growerResponse.save();
+    }
+  }
 
-  //  if (order == null)
-  //    return null;
+  public boolean growerAcceptOffer(Long growerId) {
+    return setGrowerResponseForOffer(growerId, GrowerResponse.ACCEPTED);
+  }
 
-  //  
+  public boolean growerRejectOffer(Long growerId) {
+    return setGrowerResponseForOffer(growerId, GrowerResponse.REJECTED);
+  }
 
+  public boolean growerRequestCall(Long growerId) {
+    return setGrowerResponseForOffer(growerId, GrowerResponse.REQUEST_CALL);
+  }
 
-  //}
+  // TODO Provide better error handling
+  private boolean setGrowerResponseForOffer(Long growerId, GrowerResponse growerResponse) {
+    Grower grower = GrowerService.getGrower(id);
+    if (grower == null)
+      return false;
+
+    GrowerOfferResponse growerOfferResponse = getGrowerOfferResponse(grower);
+
+    if (growerOfferResponse == null) {
+      return false;
+
+    }
+    growerOfferResponse.setGrowersResponse(growerResponse);
+    growerOfferResponse.save();
+
+    return true;
+  }
 
   @Override
   public String toString() {
@@ -147,9 +201,10 @@ public class Offer extends Model implements PrettyString {
 
   public String toPrettyString() {
     return "(" + id + ") " + almondVariety + " [ " + almondPounds + " ] ( " + pricePerPound + " )\n"
-      + "Growers: " + allGrowers.size() + "\n"
-      + "\tAccepted: " + acceptedGrowers.toString() + "\n"
-      + "\tRejected: " + rejectedGrowers.toString() + "\n"
-      + "\tNo Response: " + noResponseGrowers.toString() + "\n";
+      + "Growers: " + getAllGrowers() + "\n"
+      + "\tAccepted: " + getAcceptedGrowers() + "\n"
+      + "\tRejected: " + getRejectedGrowers() + "\n"
+      + "\tRequest Call: " + getRequestCallGrowers() + "\n"
+      + "\tNo Response: " + getNoResponseGrowers() + "\n";
   }
 }
