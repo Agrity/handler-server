@@ -74,6 +74,9 @@ public class Grower extends Model implements PrettyString {
 
   public static Finder<Long, Grower> find = new Finder<>(Grower.class);
 
+
+  /* ========== Member Functions ========== */
+
   /*
    * Shim constructor intended for fake/mocked growers
    */
@@ -97,6 +100,13 @@ public class Grower extends Model implements PrettyString {
     this.emailAddresses = emailAddresses;
     this.phoneNumbers = phoneNumbers;
   }
+
+
+  public String getPrefferedContact() {
+    return emailAddresses.isEmpty() ? null : emailAddresses.get(0).toString();
+  }
+
+
 
   @Override
   public String toString() {
@@ -123,4 +133,6 @@ public class Grower extends Model implements PrettyString {
 
     return builder.toString();
   }
+
+  /* ========== Static Functions ========== */
 }

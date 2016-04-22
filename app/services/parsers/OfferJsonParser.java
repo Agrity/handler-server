@@ -32,6 +32,8 @@ import services.HandlerService;
  *
  *    ALMOND_POUNDS: ... ,
  *
+ *    ALMOND_PRICE_PER_POUND: ... ,
+ *
  *    (TODO Determine Date Format)
  *    PAYMENT_DATE: ... ,
  *  }
@@ -42,6 +44,7 @@ public class OfferJsonParser extends JsonParser {
   private List<Grower> growers;
   private AlmondVariety almondVariety;
   private Integer almondPounds;
+  private String pricePerPound;
   private LocalDate paymentDate;
 
   public OfferJsonParser(JsonNode data) {
@@ -67,6 +70,12 @@ public class OfferJsonParser extends JsonParser {
 
     almondPounds = parseAlmondPounds(data);
     if (almondPounds == null) {
+      // Parser set to invalid with proper error message.
+      return;
+    }
+
+    pricePerPound = parsePricePerPound(data);
+    if (pricePerPound == null) {
       // Parser set to invalid with proper error message.
       return;
     }
@@ -99,6 +108,11 @@ public class OfferJsonParser extends JsonParser {
   public Integer getAlmondPounds() {
     ensureValid();
     return almondPounds;
+  }
+
+  public String getPricePerPound() {
+    ensureValid();
+    return pricePerPound;
   }
 
   public LocalDate getPaymentDate() {
@@ -173,7 +187,7 @@ public class OfferJsonParser extends JsonParser {
   }
 
   private Integer parseAlmondPounds(JsonNode data) {
-    // Check almound pounds is preseent.
+    // Check almound pounds is present.
     if (!data.has(OfferJsonConstants.ALMOND_POUNDS)) {
       setInvalid(missingParameterError(OfferJsonConstants.ALMOND_POUNDS));
       return null;
@@ -188,6 +202,25 @@ public class OfferJsonParser extends JsonParser {
     }
 
     return almondPounds.intValue();
+  }
+
+  private String parsePricePerPound(JsonNode data) {
+    // Check price per pound is present.
+    if (!data.has(OfferJsonConstants.PRICE_PER_POUND)) {
+      setInvalid(missingParameterError(OfferJsonConstants.PRICE_PER_POUND));
+      return null;
+
+    } 
+    
+    // TODO Change To Monetary Value
+    String pricePerPound = data.get(OfferJsonConstants.ALMOND_POUNDS).asText();
+
+    if (almondPounds == null) {
+      setInvalid("Almond Price Per Pound Format Invalid: monetary value string expected.\n");
+      return null;
+    }
+
+    return "$" + pricePerPound;
   }
 
   private LocalDate parsePaymentDate(JsonNode data) {
@@ -214,6 +247,8 @@ public class OfferJsonParser extends JsonParser {
 
     private static final String ALMOND_VARIETY = "almond_variety";
     private static final String ALMOND_POUNDS = "almond_pounds";
+
+    private static final String PRICE_PER_POUND = "price_per_pound";
 
     private static final String PAYMENT_DATE = "payment_date";
   }

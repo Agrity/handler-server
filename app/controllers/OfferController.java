@@ -7,49 +7,35 @@ import models.Grower;
 import models.Handler;
 import models.Offer;
 
-import play.api.libs.mailer.MailerClient;
-import play.libs.mailer.Email;
 import play.Logger;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.twirl.api.Content;
 
 import services.GrowerService;
 import services.HandlerService;
 import services.OfferService;
+import services.messaging.offer.OfferMessageService;
 
 public class OfferController extends Controller {
 
-  private final MailerClient mailer;
+  private final OfferMessageService offerMessageService;
 
   @Inject
-  public OfferController(MailerClient mailerClient) {
-    this.mailer = mailerClient;
+  public OfferController(OfferMessageService offerMessageService) {
+    this.offerMessageService = offerMessageService;
   }
 
-  public Result send() {
+  public Result indexOffer(long id) {
+    Content html = views.html.emailOfferBody.render(OfferService.getOffer(id), GrowerService.getGrower(1L));
+    return ok(html);
+  }
 
-    //final Email email = new Email()
-    //  .setSubject("AUTOMATED FUCKING EMAILS")
-    //  .setFrom("Agrity <agritycommodities@gmail.com>")
-    //  .addTo("<larsenj@stanford.edu>")
-    //  .setBodyText("Start Up Done");
-
-    //final Email email2 = new Email()
-    //  .setSubject("AUTOMATED FUCKING EMAILS")
-    //  .setFrom("Agrity <agritycommodities@gmail.com>")
-    //  .addTo("<jackmcc@stanford.edu>")
-    //  .setBodyText("Start Up Done");
-
-    //try {
-    //  String id = mailer.send(email);
-    //  String id2 = mailer.send(email2);
-    //  return ok("Email " + id + " " + id2 + " sent!");
-    //} catch (Exception e) {
-    //  Logger.error("=== Error Sending Email ===\n" + e.getMessage());
-    //  return internalServerError("Error sending email");
-    //}
-
+  public Result sendOffer(long id) {
+    Offer offer = OfferService.getOffer(id);
+    boolean emailSucces = offerMessageService.send(offer);
+    return emailSucces ? redirect("/") : internalServerError("Some or all of the emails were unable to be sent");
   }
 
   // Annotation ensures that POST request is of type application/json. If not HTTP 400 response
