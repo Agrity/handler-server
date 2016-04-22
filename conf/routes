@@ -9,6 +9,7 @@ GET     /                                     controllers.Application.index()
 GET     /assets/*file                         controllers.Assets.versioned(path="/public", file: Asset)
 
 
+# ============================= API Responses =================================================== #
 
 # ========== Handler ========== #
 GET     /handlers                                 controllers.HandlerController.getAllHandlers()
@@ -52,3 +53,13 @@ GET     /offers/:offerId/accept/:growerId         controllers.OfferController.ac
 GET     /offers/:offerId/reject/:growerId         controllers.OfferController.rejectOffer(offerId: Long, growerId: Long)
 
 GET     /offers/:offerId/requestcall/:growerId    controllers.OfferController.requestCall(offerId: Long, growerId: Long)
+
+# =============================== HTML Responses ================================================ #
+
+
+GET     /                                     controllers.Application.index()
+
+GET     /html/handlers/:handlerId/offers       controllers.HtmlOfferController.handlerOfferList(handlerId: Long)
+
+
+
