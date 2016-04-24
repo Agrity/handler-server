@@ -2,13 +2,15 @@
 
 @display_title(offer: Offer) = {
   <h4>@offer.getAlmondVariety()</h4>
-  <h5>@offer.getAlmondPounds()lbs - @offer.getPricePerPound()</h5>
+  <h5>@offer.getAlmondPoundsString() lbs - @offer.getPricePerPound()</h5>
 }
 
 @display_responses(offer: Offer) = {
   <b>Accepted:</b> @offer.getAcceptedGrowers().size()
   <b>Rejected:</b> @offer.getRejectedGrowers().size()
-  <b>Call:</b> @offer.getRequestCallGrowers().size()
+  <b>Call:</b> @offer.getCallRequestedGrowers().size()
+  <br />
+  <b>No Response:</b> @offer.getNoResponseGrowers().size()
 }
 
 @main(title = "Offer List") {
@@ -32,7 +34,7 @@
             </div>
 
             <div class="mdl-card__actions mdl-card--border">
-              <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="/#">
+              <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="/html/offers/@offer.getId()">
                 View Offer
               </a>
             </div>

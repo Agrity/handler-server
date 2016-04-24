@@ -2,6 +2,7 @@ package models;
 
 import com.avaje.ebean.Model;
 
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +83,10 @@ public class Offer extends Model implements PrettyString {
     return almondPounds;
   }
 
+  public String getAlmondPoundsString() {
+    return NumberFormat.getIntegerInstance().format(almondPounds);
+  }
+
   // TODO Figure out Why this can't use reflection
   //@Constraints.Required
   //public MonetaryAmount price;
@@ -121,7 +126,7 @@ public class Offer extends Model implements PrettyString {
     return getGrowersWithResponse(GrowerResponse.NO_RESPONSE);
   }
 
-  public List<Grower> getRequestCallGrowers() {
+  public List<Grower> getCallRequestedGrowers() {
     return getGrowersWithResponse(GrowerResponse.REQUEST_CALL);
   }
 
@@ -211,7 +216,7 @@ public class Offer extends Model implements PrettyString {
       + "Growers: " + getAllGrowers() + "\n"
       + "\tAccepted: " + getAcceptedGrowers() + "\n"
       + "\tRejected: " + getRejectedGrowers() + "\n"
-      + "\tRequest Call: " + getRequestCallGrowers() + "\n"
+      + "\tRequest Call: " + getCallRequestedGrowers() + "\n"
       + "\tNo Response: " + getNoResponseGrowers() + "\n";
   }
 }

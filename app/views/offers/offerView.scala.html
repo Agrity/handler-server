@@ -1,0 +1,86 @@
+@(offer: Offer)
+
+<style>
+  .demo-list-icon {
+    width: 300px;
+  }
+</style>
+
+@display_grower(grower: Grower) = {
+  @grower.getFullName()
+}
+
+@display_grower_list(growers: List[Grower]) =  {
+  <ul class="demo-list-icon mdl-list">
+    @for(grower <- growers) {
+      <li class="mdl-list__item">
+        <span class="mdl-list__item-primary-content">
+          <i class="material-icons mdl-list__item-icon">person</i>
+          @display_grower(grower)
+        </span>
+      </li>
+    }
+  </ul>
+}
+
+@main(title = "View Offer") {
+
+  <div class="mdl-grid">
+
+    <div class="mdl-cell mdl-cell--6-col">
+
+      <h3><b>Offer Details</b></h3>
+
+      <div class="mdl-grid">
+        <div class="mdl-cell mdl-cell--6-col">
+          <h5><b>Almond Variety</b></h5>
+          <h5><b>Almond Pounds</b></h5>
+          <h5><b>Price Per Pound</b></h5>
+          <h5><b>Payment Date</b></h5>
+
+          <br />
+
+          <h5><b>Almond Size</b></h5>
+          <h5><b>Almond Quality</b></h5>
+
+
+        </div>
+        <div class="mdl-cell mdl-cell--6-col">
+          <h5>@offer.getAlmondVariety()</h5>
+          <h5>@offer.getAlmondPoundsString() lbs</h5>
+          <h5>@offer.getPricePerPound()</h5>
+          <h5>Feature Under Construction</h5>
+
+          <br />
+
+          <h5>Feature Under Construction</h5>
+          <h5>Feature Under Construction</h5>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="mdl-cell mdl-cell--6-col">
+
+
+      <h4><b>Accepted Growers</b></h4>
+      @display_grower_list(offer.getAcceptedGrowers())
+      <hr />
+
+      <h4><b>Rejected Growers</b></h4>
+      @display_grower_list(offer.getRejectedGrowers())
+      <hr />
+
+      <h4><b>Call Requested Growers</b></h4>
+      @display_grower_list(offer.getCallRequestedGrowers())
+      <hr />
+
+      <h4><b>No Response Growers</b></h4>
+      @display_grower_list(offer.getNoResponseGrowers())
+      <hr />
+    
+    
+    </div>
+  </div>
+
+}
