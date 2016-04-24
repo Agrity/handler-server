@@ -4,6 +4,7 @@ import com.avaje.ebean.Model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,7 +15,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import models.GrowerOfferResponse.GrowerResponse;
 import models.interfaces.PrettyString;
+
 import play.data.validation.Constraints;
 
 @Entity
@@ -69,7 +72,8 @@ public class Grower extends Model implements PrettyString {
 
 
   @Constraints.Required
-  public List<Offer> recievedOffers = new ArrayList<>();
+  @OneToMany
+  public List<GrowerOfferResponse> offerResponses = new ArrayList<>();
 
 
   public static Finder<Long, Grower> find = new Finder<>(Grower.class);
@@ -107,6 +111,35 @@ public class Grower extends Model implements PrettyString {
   }
 
 
+  public List<Offer> getAcceptedOffers() {
+    return getOffersWithResponse(GrowerResponse.ACCEPTED);
+  }
+  public List<Offer> getRejectedOffers() {
+    return getOffersWithResponse(GrowerResponse.REJECTED);
+  }
+  public List<Offer> getCallRequestedOffers() {
+    return getOffersWithResponse(GrowerResponse.REQUEST_CALL);
+  }
+  public List<Offer> getNoResponseOffers() {
+    return getOffersWithResponse(GrowerResponse.NO_RESPONSE);
+  }
+
+  private List<Offer> getOffersWithResponse(GrowerResponse response) {
+    List<Offer> matchedOffers = new ArrayList<>();
+    for (GrowerOfferResponse growerOfferResponse : offerResponses) {
+      if (growerOfferResponse.getGrowersResponse().equals(response)) {
+        matchedOffers.add(growerOfferResponse.getOffer());
+      }
+    }
+    return matchedOffers;
+  }
+
+  public List<String> getEmailAddressStrings() {
+    return emailAddresses
+      .stream()
+      .map(EmailAddress::getEmailAddress)
+      .collect(Collectors.toList());
+  }
 
   @Override
   public String toString() {

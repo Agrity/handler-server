@@ -61,6 +61,9 @@ GET     /                                         controllers.Application.index(
 
 GET     /html/handlers/:handlerId/offers          controllers.HtmlOfferController.handlerOfferList(handlerId: Long)
 
+GET     /html/growers/:growerId                    controllers.HtmlGrowerController.growerView(growerId: Long)
+
 GET     /html/offers/:offerId                     controllers.HtmlOfferController.offerView(offerId: Long)
+
 
 

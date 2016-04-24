@@ -7,7 +7,9 @@
 </style>
 
 @display_grower(grower: Grower) = {
-  @grower.getFullName()
+  <a class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" href="/html/growers/@grower.getId()">
+    @grower.getFullName()
+  </a>
 }
 
 @display_grower_list(growers: List[Grower]) =  {

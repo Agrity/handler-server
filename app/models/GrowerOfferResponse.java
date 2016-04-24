@@ -31,6 +31,9 @@ public class GrowerOfferResponse extends Model {
   @ManyToOne(cascade = CascadeType.PERSIST)
   private Grower grower;
 
+  @ManyToOne(cascade = CascadeType.PERSIST)
+  private Offer offer;
+
   private GrowerResponse growerResponse;
 
 
@@ -55,6 +58,10 @@ public class GrowerOfferResponse extends Model {
 
   public Grower getGrower() {
     return grower;
+  }
+
+  public Offer getOffer() {
+    return offer;
   }
 
   public GrowerResponse getGrowersResponse() {

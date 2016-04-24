@@ -30,7 +30,7 @@ public class EmailAddress extends Model {
   @Constraints.Required
   private String emailAddress;
 
-  public String getEmailAddresses() {
+  public String getEmailAddress() {
     return emailAddress;
   }
 
