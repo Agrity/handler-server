@@ -1,41 +1,40 @@
-@(offers: List[Offer])
+@(growers: List[Grower])
 
-@display_title(offer: Offer) = {
-  <h4>@offer.getAlmondVariety()</h4>
-  <h5>@offer.getAlmondPoundsString() lbs - @offer.getPricePerPound()</h5>
+@display_title(grower: Grower) = {
+  <h4>@grower.getFullName()</h4>
 }
 
-@display_responses(offer: Offer) = {
-  <b>Accepted:</b> @offer.getAcceptedGrowers().size()
-  <b>Rejected:</b> @offer.getRejectedGrowers().size()
-  <b>Call:</b> @offer.getCallRequestedGrowers().size()
+@display_responses(grower: Grower) = {
+  <b>Accepted:</b> @grower.getAcceptedOffers().size()
+  <b>Rejected:</b> @grower.getRejectedOffers().size()
+  <b>Call:</b> @grower.getCallRequestedOffers().size()
   <br />
-  <b>No Response:</b> @offer.getNoResponseGrowers().size()
+  <b>No Response:</b> @grower.getNoResponseOffers().size()
 }
 
-@main(title = "Offer List") {
+@main(title = "Growers List") {
 
-  @if(offers.isEmpty) {
-    <h2>You haven't created any offers yet! Click make an offer in the top right to get started.</h2>
+  @if(growers.isEmpty) {
+    <h2>You haven't added any Growers yet! Click add a grower in the top right to get started.</h2>
   } else {
 
     <div class="mdl-grid">
 
-      @for(offer <- offers) {
+      @for(grower <- growers) {
         <div class="mdl-cell mdl-cell--3-col">
           <div class="mdl-card mdl-shadow--4dp">
 
             <div class="mdl-card__supporting-text">
-              @display_title(offer)
+              @display_title(grower)
             </div>
 
             <div class="mdl-card__supporting-text">
-              @display_responses(offer)
+              @display_responses(grower)
             </div>
 
             <div class="mdl-card__actions mdl-card--border">
-              <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="/html/offers/@offer.getId()">
-                View Offer
+              <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="/html/growers/@grower.getId()">
+                View Grower
               </a>
             </div>
 

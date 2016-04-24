@@ -3,24 +3,22 @@ import controllers.ErrorMessages;
 
 import models.Grower;
 import models.Handler;
-import models.Offer;
 // TODO Remove *
 import play.mvc.*;
 
 import services.GrowerService;
 import services.HandlerService;
-import services.OfferService;
 
 public class HtmlGrowerController extends Controller {
 
-    public Result handlerOfferList(long handlerId) {
+    public Result handlerGrowerList(long handlerId) {
       Handler handler = HandlerService.getHandler(handlerId);
 
       if (handler == null) {
         return badRequest(ErrorMessages.handlerNotFoundMessage(handlerId));
       }
 
-      return ok(views.html.offers.offerList.render(handler.getOfferList()));
+      return ok(views.html.growers.growerList.render(handler.getGrowersList()));
     }
 
     public Result growerView(long growerId) {
