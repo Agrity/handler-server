@@ -81,7 +81,7 @@ public class HtmlOfferController extends Controller {
 
     String comment = getFieldValue(offerForm, "comment");
     if (comment == null) 
-      return badRequest("Comment Field Not Present");
+      comment = "";
 
     String almondPoundsStr = getFieldValue(offerForm, "almond_pounds");
     if (almondPoundsStr == null) 
