@@ -23,9 +23,9 @@ routesGenerator := InjectedRoutesGenerator
 
 // -------------  Custom ------------------ //
 // Java project. Don't expect Scala IDE
-EclipseKeys.projectFlavor := EclipseProjectFlavor.Java
+//EclipseKeys.projectFlavor := EclipseProjectFlavor.Java
 
 // Use .class files instead of generated .scala files for views and routes
-EclipseKeys.createSrc := EclipseCreateSrc.ValueSet(EclipseCreateSrc.ManagedClasses, EclipseCreateSrc.ManagedResources)
+//EclipseKeys.createSrc := EclipseCreateSrc.ValueSet(EclipseCreateSrc.ManagedClasses, EclipseCreateSrc.ManagedResources)
 
 routesGenerator := InjectedRoutesGenerator
