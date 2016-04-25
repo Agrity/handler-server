@@ -40,7 +40,7 @@ public class Offer extends Model implements PrettyString {
     return id;
   };
 
-  @ManyToOne(cascade = CascadeType.ALL)
+  @ManyToOne(cascade = CascadeType.PERSIST)
   @Constraints.Required
   private Handler handler;
 
