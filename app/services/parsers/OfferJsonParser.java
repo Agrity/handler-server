@@ -251,7 +251,7 @@ public class OfferJsonParser extends JsonParser {
 
     if (!DateService.verifyDateString(dateString)) {
       // TODO: Determine Date Format
-      setInvalid("Date String Format Invalid: string with TODO format expected.\n");
+      setInvalid("Date String Format Invalid: string with TODO format expected.\n"); 
       return null;
     }
 

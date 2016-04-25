@@ -68,21 +68,26 @@
     <div class="mdl-cell mdl-cell--6-col">
 
 
-      <h4><b>Accepted Offers</b></h4>
+      <h5><b>Accepted Offers</b></h5>
       @display_offer_list(grower.getAcceptedOffers())
       <hr />
 
-      <h4><b>Rejected Offers</b></h4>
+      <h5><b>Rejected Offers</b></h5>
       @display_offer_list(grower.getRejectedOffers())
       <hr />
 
-      <h4><b>Call Requested Growers</b></h4>
+      <h5><b>Call Requested Growers</b></h5>
       @display_offer_list(grower.getCallRequestedOffers())
       <hr />
 
-      <h4><b>No Response Growers</b></h4>
+      <h5><b>No Response Growers</b></h5>
       @display_offer_list(grower.getNoResponseOffers())
       <hr />
+
+      <a class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" href="">
+        Send Offer to Growers
+      </a>
+
     
     
     </div>

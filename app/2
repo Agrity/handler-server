@@ -1,0 +1,76 @@
+package controllers;
+import controllers.ErrorMessages;
+
+import models.Handler;
+import models.Offer;
+// TODO Remove *
+import play.mvc.*;
+
+import services.HandlerService;
+import services.OfferService;
+
+public class HtmlOfferController extends Controller {
+
+    public Result handlerOfferList(long handlerId) {
+      Handler handler = HandlerService.getHandler(handlerId);
+
+      if (handler == null) {
+        return badRequest(ErrorMessages.handlerNotFoundMessage(handlerId));
+      }
+
+      return ok(views.html.offers.offerList.render(handler.getOfferList()));
+    }
+
+    public Result offerView(long offerId) {
+      Offer offer = OfferService.getOffer(offerId);
+
+      if (offer == null) {
+        return badRequest(ErrorMessages.offerNotFoundMessage(offerId));
+      }
+
+      return ok(views.html.offers.offerView.render(offer));
+    }
+
+  public Result offerCreateForm() {
+    Handler handler = HandlerService.getHandler(1L);
+
+    if (handler == null) {
+      return badRequest(ErrorMessages.handlerNotFoundMessage(1L));
+    }
+
+    return ok(views.html.offers.offerCreate.render(handler));
+  }
+
+  public Result offerCreate() {
+    // TODO Change from hardcode
+    long handlerId = 1L;
+    Handler handler = HandlerService.getHandler(handlerId);
+
+    //if (handler == null) {
+    //  return badRequest(ErrorMessages.handlerNotFoundMessage(handlerId));
+    //}
+
+    //Form growerForm = Form.form().bindFromRequest();
+
+    //String firstName = getFieldValue(growerForm, "first_name");
+    //if (firstName == null) 
+    //  return badRequest("First Name Field Not Present");
+
+    //String lastName = getFieldValue(growerForm, "last_name");
+    //if (lastName == null) 
+    //  return badRequest("Last Name Field Not Present");
+
+    //String email = getFieldValue(growerForm, "email_address");
+    //if (email == null) 
+    //  return badRequest("Email Address Field Not Present");
+    //List<EmailAddress> emailAddresses = new ArrayList<>();
+    //emailAddresses.add(new EmailAddress(email));
+
+    //Grower grower = new Grower(handler, firstName, lastName, emailAddresses,
+    //    new ArrayList<String>());
+
+    //grower.save();
+
+    //return redirect("/html/growers/" + grower.getId());
+  }
+}

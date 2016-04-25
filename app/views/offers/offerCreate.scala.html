@@ -13,7 +13,67 @@
   padding: 24px;
   flex: none;
 }
+
+/* Style Select Field */
+select {
+  font-family: inherit;
+  background-color: transparent;
+  width: 100%;
+  padding: 4px 0;
+  font-size: 16px;
+  color: rgba(0,0,0, 0.26);
+  border: none;
+  border-bottom: 1px solid rgba(0,0,0, 0.12);
+}
+
+/* Remove focus */
+select:focus {
+  outline: none;
+}
+
+/* Hide label */
+.mdl-selectfield label {
+  display: none;
+}
+
+/* Use custom arrow */
+.mdl-selectfield select {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+}
+
+.mdl-selectfield {
+  font-family: 'Roboto','Helvetica','Arial',sans-serif;
+  position: relative;
+}
+.mdl-selectfield:after {
+  position: absolute;
+  top: 0.75em;
+  right: 0.5em;
+  /* Styling the down arrow */
+  width: 0;
+  height: 0;
+  padding: 0;
+  content: '';
+  border-left: .25em solid transparent;
+  border-right: .25em solid transparent;
+  border-top: 0.375em solid rgba(0,0,0, 0.12);
+  pointer-events: none;
+}
 </style>
+
+@display_almond_variety() = {
+  <div class="mdl-selectfield">
+    <label>Standard Select</label>
+    <select name="almond_variety" class="browser-default">
+      <option value="" disabled selected>Choose Almond Variety</option>
+      @for(variety <- models.Almond.getAlmondVarietyStrings()) {
+        <option value="@variety">@variety</option>
+      }
+    </select>
+  </div>
+}
 
 @display_text_input(displayName: String, name: String) = {
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label ">
@@ -22,7 +82,30 @@
     </div>
 }
 
-@main(title = "Add Grower") {
+@display_disabled_text_input(displayName: String) = {
+  <div class="mdl-textfield mdl-js-textfield">
+    <input class="mdl-textfield__input" type="text" id="@displayName" disabled>
+    <label class="mdl-textfield__label" for="@displayName">@displayName - Under Construction</label>
+  </div>
+}
+
+@display_grower_checkbox(grower: Grower) = {
+  <label for="@grower.getId()" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" >
+    <input type="checkbox" name="growers[]" value="@grower.getId()" id="@grower.getId()" class="mdl-checkbox__input" checked />
+        <span class="mdl-checkbox__label">@grower.getFullName()</span>
+    </label>
+}
+
+@display_grower_checkbox_list(growers: List[Grower]) = {
+    <h5>Growers:</h5>
+    <fieldset>
+    @for(grower <- growers) {
+      @display_grower_checkbox(grower)
+    }
+    </fieldset>
+}
+
+@main(title = "Create Offer") {
 
 <div class="space">
   <div class="mdl-layout mdl-js-layout">
@@ -30,24 +113,26 @@
       <div class="mdl-card mdl-shadow--6dp">
 
         <div class="mdl-card__title mdl-color--primary mdl-color-text--white">
-          <h2 class="mdl-card__title-text">New Grower</h2>
+          <h2 class="mdl-card__title-text">Create Offer</h2>
         </div>
 
         <div class="mdl-card__supporting-text">
-          <form action="/html/growers" method="POST" id="growerForm">
-            @display_text_input("First Name", "first_name")
-            @display_text_input("Last Name", "last_name")
-            @display_text_input("Email", "email_address")
+          <form action="/html/offers" method="POST" id="growerForm">
+            @display_almond_variety()
+            @display_text_input("Price Per Pound", "price_per_pound")
+            @display_text_input("Pounds", "almond_pounds")
+            @display_disabled_text_input("Payment Date")
+            @display_text_input("Comments", "comment")
+            @display_grower_checkbox_list(handler.getGrowersList())
           </form>
         </div>
 
         <div class="mdl-card__actions mdl-card--border">
-          <button type="submit" form="growerForm" value="Submit" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Add Grower</button>
+          <button type="submit" form="growerForm" value="Submit" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Create Offer</button>
         </div>
 
       </div>
     </main>
   </div>
 </div>
-
 }

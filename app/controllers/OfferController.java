@@ -73,7 +73,7 @@ public class OfferController extends Controller {
   public Result sendOffer(long id) {
     Offer offer = OfferService.getOffer(id);
     boolean emailSucces = offerMessageService.send(offer);
-    return emailSucces ? redirect("/") : internalServerError("Some or all of the emails were unable to be sent");
+    return emailSucces ? ok("Emails Sent Successfully!") : internalServerError("Some or all of the emails were unable to be sent");
   }
 
   // Annotation ensures that POST request is of type application/json. If not HTTP 400 response

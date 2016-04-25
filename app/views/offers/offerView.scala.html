@@ -65,24 +65,43 @@
     <div class="mdl-cell mdl-cell--6-col">
 
 
-      <h4><b>Accepted Growers</b></h4>
+      <h5><b>Accepted Growers</b></h5>
       @display_grower_list(offer.getAcceptedGrowers())
       <hr />
 
-      <h4><b>Rejected Growers</b></h4>
+      <h5><b>Rejected Growers</b></h5>
       @display_grower_list(offer.getRejectedGrowers())
       <hr />
 
-      <h4><b>Call Requested Growers</b></h4>
+      <h5><b>Call Requested Growers</b></h5>
       @display_grower_list(offer.getCallRequestedGrowers())
       <hr />
 
-      <h4><b>No Response Growers</b></h4>
+      <h5><b>No Response Growers</b></h5>
       @display_grower_list(offer.getNoResponseGrowers())
       <hr />
     
+      <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" onclick"sendOffer()">
+        Send Offer to Growers
+      </button>
+
     
     </div>
   </div>
+  <script>
+    function sendOffer() {
+      console.log("Sending Offer!");
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == 4 && xhttp.status == 200) {
+          alert(xhttp.responseText);
+        } else {
+          allet("ERROR: " + alert(xhttp.responseText);
+        }
+      };
+      xhttp.open("GET", "/offers/@offer.getId()/send", false);
+      xhttp.send();
+    }
+  </script>
 
 }

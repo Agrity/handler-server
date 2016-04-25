@@ -1,9 +1,14 @@
 package models;
 
 import com.avaje.ebean.annotation.EnumMapping;
+import com.google.common.collect.ImmutableList;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import play.Logger;
 
@@ -51,6 +56,10 @@ public class Almond {
       + "MONTEREY=MT, SONORA=SN, FRITZ=FR, PRICE=PR, PEERLESS=PL")
   public enum AlmondVariety {
     NONPAREIL, CARMEL, BUTTE, PADRE, MISSION, MONTEREY, SONORA, FRITZ, PRICE, PEERLESS
+  }
+
+  public static List<String> getAlmondVarietyStrings() {
+    return Stream.of(AlmondVariety.values()).map(AlmondVariety::name).collect(Collectors.toList());
   }
 
   public static AlmondVariety stringToAlmondVariety(String almondVarietyString) {
