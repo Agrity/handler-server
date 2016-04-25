@@ -81,27 +81,49 @@
       @display_grower_list(offer.getNoResponseGrowers())
       <hr />
     
-      <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" onclick"sendOffer()">
+      <div id="loading-bar" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
+      <br />
+      <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" onclick="sendOffer()">
         Send Offer to Growers
       </button>
+      
 
     
     </div>
   </div>
+
+}
+
   <script>
+    // Hide Element Initially
+    doneLoading();
+
     function sendOffer() {
       console.log("Sending Offer!");
+      setLoding();
       var xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function() {
         if (xhttp.readyState == 4 && xhttp.status == 200) {
+          doneLoading();
           alert(xhttp.responseText);
-        } else {
-          allet("ERROR: " + alert(xhttp.responseText);
+        } else if (xhttp.readyState == 4) {
+          doneLoading();
+          alert("ERROR: " + xhttp.responseText);
         }
       };
-      xhttp.open("GET", "/offers/@offer.getId()/send", false);
+      xhttp.open("GET", "/offers/@offer.getId()/send", true);
       xhttp.send();
     }
-  </script>
 
-}
+    function setLoding() {
+      getLoadingBar().style.visibility = "visible";
+    }
+
+    function doneLoading() {
+      getLoadingBar().style.visibility = "hidden";
+    }
+
+    function getLoadingBar() {
+      return document.getElementById("loading-bar");
+    }
+  </script>
