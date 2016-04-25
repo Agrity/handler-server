@@ -63,7 +63,11 @@ GET     /html/handlers/:handlerId/offers          controllers.HtmlOfferControlle
 
 GET     /html/handlers/:handlerId/growers         controllers.HtmlGrowerController.handlerGrowerList(handlerId: Long)
 
+GET     /html/growers/createForm                  controllers.HtmlGrowerController.growerCreateForm()
+
 GET     /html/growers/:growerId                   controllers.HtmlGrowerController.growerView(growerId: Long)
+
+POST    /html/growers                             controllers.HtmlGrowerController.growerCreate()
 
 GET     /html/offers/:offerId                     controllers.HtmlOfferController.offerView(offerId: Long)
 

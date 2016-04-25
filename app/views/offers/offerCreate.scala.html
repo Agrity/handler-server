@@ -1,0 +1,53 @@
+@(handler: Handler)
+
+<style>
+.space {
+  width: 360px;
+  margin-top: 24px;
+  margin: auto;
+}
+
+.mdl-layout {
+}
+.mdl-layout__content {
+  padding: 24px;
+  flex: none;
+}
+</style>
+
+@display_text_input(displayName: String, name: String) = {
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label ">
+        <label for="@name" class="mdl-textfield__label">@displayName</label>
+        <input type="text" class="mdl-textfield__input" name="@name" />
+    </div>
+}
+
+@main(title = "Add Grower") {
+
+<div class="space">
+  <div class="mdl-layout mdl-js-layout">
+    <main class="mdl-layout__content">
+      <div class="mdl-card mdl-shadow--6dp">
+
+        <div class="mdl-card__title mdl-color--primary mdl-color-text--white">
+          <h2 class="mdl-card__title-text">New Grower</h2>
+        </div>
+
+        <div class="mdl-card__supporting-text">
+          <form action="/html/growers" method="POST" id="growerForm">
+            @display_text_input("First Name", "first_name")
+            @display_text_input("Last Name", "last_name")
+            @display_text_input("Email", "email_address")
+          </form>
+        </div>
+
+        <div class="mdl-card__actions mdl-card--border">
+          <button type="submit" form="growerForm" value="Submit" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Add Grower</button>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+}
