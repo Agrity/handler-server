@@ -34,7 +34,7 @@ public class OfferEmailMessageService implements OfferMessageService {
         mailer.send(email);
       } catch (Exception e) {
         success = false;
-        Logger.error("=== Error Sending Email ===\n" + e.toString() + "\n\n");
+        Logger.error("=== Error Sending Email ===\n" + e.getCause() + "\n\n");
       }
     }
 
