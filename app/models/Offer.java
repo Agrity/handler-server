@@ -191,16 +191,16 @@ public class Offer extends Model implements PrettyString {
 
   // TODO Provide better error handling
   private boolean setGrowerResponseForOffer(Long growerId, GrowerResponse growerResponse) {
-    Grower grower = GrowerService.getGrower(id);
+    Grower grower = GrowerService.getGrower(growerId);
     if (grower == null) {
-      Logger.error("Grower with id [" + id + "] could not be found to respond to offer");
+      Logger.error("Grower with id [" + growerId + "] could not be found to respond to offer");
       return false;
     }
 
     GrowerOfferResponse growerOfferResponse = getGrowerOfferResponse(grower);
 
     if (growerOfferResponse == null) {
-      Logger.error("Grower Response with grower id [" + id + "] could not be found to respond to offer");
+      Logger.error("Grower Response with grower id [" + growerId + "] could not be found to respond to offer");
       return false;
 
     }

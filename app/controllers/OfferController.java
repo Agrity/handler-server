@@ -36,7 +36,7 @@ public class OfferController extends Controller {
   public Result acceptOffer(long offerId, long growerId) {
     Offer offer = OfferService.getOffer(offerId);
     if (offer == null) {
-      return notFound(ErrorMessages.offerNotFoundMessage(growerId));
+      return notFound(ErrorMessages.offerNotFoundMessage(offerId));
     }
 
     boolean success = offer.growerAcceptOffer(growerId);
@@ -48,7 +48,7 @@ public class OfferController extends Controller {
   public Result rejectOffer(long offerId, long growerId) {
     Offer offer = OfferService.getOffer(offerId);
     if (offer == null) {
-      return notFound(ErrorMessages.offerNotFoundMessage(growerId));
+      return notFound(ErrorMessages.offerNotFoundMessage(offerId));
     }
 
     boolean success = offer.growerRejectOffer(growerId);

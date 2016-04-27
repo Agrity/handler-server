@@ -10,6 +10,7 @@ import models.GrowerOfferResponse;
 import models.Handler;
 import models.Offer;
 
+import play.Logger;
 import play.db.ebean.Model;
 // TODO Remove *
 import play.mvc.*;
@@ -33,6 +34,11 @@ public class Application extends Controller {
 
         List<EmailAddress> emailList = EmailAddress.find.all();
         Ebean.delete(emailList);
+
+        Logger.debug("Handlers: " + Handler.find.all() + "\n\n");
+        Logger.debug("Growers: " + Grower.find.all() + "\n\n");
+        Logger.debug("GrowerOfferResponse: " + GrowerOfferResponse.find.all() + "\n\n");
+        Logger.debug("EmailAddress: " + EmailAddress.find.all() + "\n\n");
 
       }
 
