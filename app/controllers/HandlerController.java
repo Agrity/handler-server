@@ -22,8 +22,7 @@ public class HandlerController extends Controller {
     JsonNode data = request().body().asJson();
 
     if (data == null) {
-      return badRequest("Expecting Some Data.\n" + "Fake Handler Created:\n"
-          + HandlerService.createFakeHandler().toString());
+      return badRequest("Expecting Some Data.\n");
     }
 
     return HandlerService.createHandlerResult(data);
@@ -52,8 +51,7 @@ public class HandlerController extends Controller {
     JsonNode data = request().body().asJson();
 
     if (data == null) {
-      return badRequest("Expecting Some Data.\n" + "Fake Grower Created:\n"
-          + GrowerService.createFakeGrower(handler).toString());
+      return badRequest("Expecting Some Data.\n");
     }
 
     // TODO Create grower and return created

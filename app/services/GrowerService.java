@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.List;
 
 import models.Grower;
-import models.Handler;
 
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -16,9 +15,6 @@ import services.parsers.GrowerJsonParser;
 
 // TODO Figure out how to construct Result without needing to extend Controller.
 public class GrowerService extends Controller {
-
-  // Used to generate fake grower.
-  private static Integer curGrowerNum = 0;
 
   public static List<Grower> getAllGrowers() {
     return Grower.find.all();
@@ -38,16 +34,6 @@ public class GrowerService extends Controller {
     Grower grower = createGrower(parser);
 
     return created("Grower Created: " + grower + "\n");
-  }
-
-  public static Grower createFakeGrower(Handler handler) {
-    Grower fakeGrower = new Grower("Test", "Grower " + curGrowerNum);
-    fakeGrower.setHandler(handler);
-    fakeGrower.save();
-
-    curGrowerNum++;
-
-    return fakeGrower;
   }
 
   private static Grower createGrower(GrowerJsonParser parser) {

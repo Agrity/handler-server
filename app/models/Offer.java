@@ -52,7 +52,7 @@ public class Offer extends Model implements PrettyString {
   @Constraints.Required
   private Set<OfferResponse> offerResponses = new HashSet<>();
   
-  @OneToMany
+  @OneToMany(cascade = CascadeType.ALL)
   @Constraints.Required
   private Set<Grower> growers = new HashSet<>();
 
@@ -83,7 +83,7 @@ public class Offer extends Model implements PrettyString {
   private String comment = "";
 
 
-  public static Finder<Long, Offer> find = new Finder<Long, Offer>(Offer.class);
+  private static Finder<Long, Offer> find = new Finder<Long, Offer>(Offer.class);
   
 
 

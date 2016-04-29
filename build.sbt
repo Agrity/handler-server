@@ -14,7 +14,8 @@ libraryDependencies ++= Seq(
   javaJpa,
   evolutions,
   "javax.money" % "money-api" % "1.0",
-  "com.typesafe.play" %% "play-mailer" % "4.0.0"
+  "com.typesafe.play" %% "play-mailer" % "4.0.0",
+  "org.mockito" % "mockito-core" % "2.0.52-beta"
 )
 
 // Play provides two styles of routers, one expects its actions to be injected, the

@@ -3,6 +3,7 @@ package models;
 import com.avaje.ebean.Model;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +23,14 @@ import play.data.validation.Constraints;
 
 @Entity
 public class Grower extends Model implements PrettyString {
+
+  public static final Comparator<Grower> ID_COMPARATOR
+      = new Comparator<Grower>() {
+          @Override
+          public int compare(Grower g1, Grower g2) {
+            return Long.compare(g1.getId(), g2.getId());
+          }
+  };
 
   @Id
   @Constraints.Min(10)
@@ -84,9 +93,10 @@ public class Grower extends Model implements PrettyString {
   /*
    * Shim constructor intended for fake/mocked growers
    */
-  public Grower(String firstName, String lastName) {
+  public Grower(long id, String firstName, String lastName) {
     super();
 
+    this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
     this.handler = null;
