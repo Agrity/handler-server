@@ -6,14 +6,13 @@ import java.util.List;
 
 import models.EmailAddress;
 import models.Grower;
-import models.GrowerOfferResponse;
+import models.OfferResponse;
 import models.Handler;
 import models.Offer;
-
 import play.Logger;
-import play.db.ebean.Model;
 // TODO Remove *
-import play.mvc.*;
+import play.mvc.Controller;
+import play.mvc.Result;
 
 public class Application extends Controller {
 
@@ -29,7 +28,7 @@ public class Application extends Controller {
         List<Offer> offerList = Offer.find.all();
         Ebean.delete(offerList);
 
-        List<GrowerOfferResponse> growerResponseList = GrowerOfferResponse.find.all();
+        List<OfferResponse> growerResponseList = OfferResponse.find.all();
         Ebean.delete(growerResponseList);
 
         List<EmailAddress> emailList = EmailAddress.find.all();
@@ -37,7 +36,7 @@ public class Application extends Controller {
 
         Logger.debug("Handlers: " + Handler.find.all() + "\n\n");
         Logger.debug("Growers: " + Grower.find.all() + "\n\n");
-        Logger.debug("GrowerOfferResponse: " + GrowerOfferResponse.find.all() + "\n\n");
+        Logger.debug("GrowerOfferResponse: " + OfferResponse.find.all() + "\n\n");
         Logger.debug("EmailAddress: " + EmailAddress.find.all() + "\n\n");
 
       }

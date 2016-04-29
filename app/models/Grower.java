@@ -15,7 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import models.GrowerOfferResponse.GrowerResponse;
+import models.OfferResponse.ResponseStatus;
 import models.interfaces.PrettyString;
 
 import play.data.validation.Constraints;
@@ -73,7 +73,7 @@ public class Grower extends Model implements PrettyString {
 
   @Constraints.Required
   @OneToMany(cascade = CascadeType.ALL)
-  public List<GrowerOfferResponse> offerResponses = new ArrayList<>();
+  public List<OfferResponse> offerResponses = new ArrayList<>();
 
 
   public static Finder<Long, Grower> find = new Finder<>(Grower.class);
@@ -112,22 +112,22 @@ public class Grower extends Model implements PrettyString {
 
 
   public List<Offer> getAcceptedOffers() {
-    return getOffersWithResponse(GrowerResponse.ACCEPTED);
+    return getOffersWithResponse(ResponseStatus.ACCEPTED);
   }
   public List<Offer> getRejectedOffers() {
-    return getOffersWithResponse(GrowerResponse.REJECTED);
+    return getOffersWithResponse(ResponseStatus.REJECTED);
   }
   public List<Offer> getCallRequestedOffers() {
-    return getOffersWithResponse(GrowerResponse.REQUEST_CALL);
+    return getOffersWithResponse(ResponseStatus.REQUEST_CALL);
   }
   public List<Offer> getNoResponseOffers() {
-    return getOffersWithResponse(GrowerResponse.NO_RESPONSE);
+    return getOffersWithResponse(ResponseStatus.NO_RESPONSE);
   }
 
-  private List<Offer> getOffersWithResponse(GrowerResponse response) {
+  private List<Offer> getOffersWithResponse(ResponseStatus response) {
     List<Offer> matchedOffers = new ArrayList<>();
-    for (GrowerOfferResponse growerOfferResponse : offerResponses) {
-      if (growerOfferResponse.getGrowersResponse().equals(response)) {
+    for (OfferResponse growerOfferResponse : offerResponses) {
+      if (growerOfferResponse.getResponseStatus().equals(response)) {
         matchedOffers.add(growerOfferResponse.getOffer());
       }
     }
