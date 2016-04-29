@@ -12,7 +12,6 @@ create table email_address (
 
 create table grower (
   grower_id                 bigint auto_increment not null,
-  offer_id                  bigint not null,
   handler_handler_id        bigint,
   first_name                varchar(255),
   last_name                 varchar(255),
@@ -46,20 +45,38 @@ create table offer_response (
   constraint pk_offer_response primary key (id))
 ;
 
+
+create table grower_offer (
+  grower_grower_id               bigint not null,
+  offer_id                       bigint not null,
+  constraint pk_grower_offer primary key (grower_grower_id, offer_id))
+;
+
+create table offer_grower (
+  offer_id                       bigint not null,
+  grower_grower_id               bigint not null,
+  constraint pk_offer_grower primary key (offer_id, grower_grower_id))
+;
 alter table email_address add constraint fk_email_address_grower_1 foreign key (grower_grower_id) references grower (grower_id) on delete restrict on update restrict;
 create index ix_email_address_grower_1 on email_address (grower_grower_id);
-alter table grower add constraint fk_grower_offer_2 foreign key (offer_id) references offer (id) on delete restrict on update restrict;
-create index ix_grower_offer_2 on grower (offer_id);
-alter table grower add constraint fk_grower_handler_3 foreign key (handler_handler_id) references handler (handler_id) on delete restrict on update restrict;
-create index ix_grower_handler_3 on grower (handler_handler_id);
-alter table offer add constraint fk_offer_handler_4 foreign key (handler_handler_id) references handler (handler_id) on delete restrict on update restrict;
-create index ix_offer_handler_4 on offer (handler_handler_id);
-alter table offer_response add constraint fk_offer_response_grower_5 foreign key (grower_grower_id) references grower (grower_id) on delete restrict on update restrict;
-create index ix_offer_response_grower_5 on offer_response (grower_grower_id);
-alter table offer_response add constraint fk_offer_response_offer_6 foreign key (offer_id) references offer (id) on delete restrict on update restrict;
-create index ix_offer_response_offer_6 on offer_response (offer_id);
+alter table grower add constraint fk_grower_handler_2 foreign key (handler_handler_id) references handler (handler_id) on delete restrict on update restrict;
+create index ix_grower_handler_2 on grower (handler_handler_id);
+alter table offer add constraint fk_offer_handler_3 foreign key (handler_handler_id) references handler (handler_id) on delete restrict on update restrict;
+create index ix_offer_handler_3 on offer (handler_handler_id);
+alter table offer_response add constraint fk_offer_response_grower_4 foreign key (grower_grower_id) references grower (grower_id) on delete restrict on update restrict;
+create index ix_offer_response_grower_4 on offer_response (grower_grower_id);
+alter table offer_response add constraint fk_offer_response_offer_5 foreign key (offer_id) references offer (id) on delete restrict on update restrict;
+create index ix_offer_response_offer_5 on offer_response (offer_id);
 
 
+
+alter table grower_offer add constraint fk_grower_offer_grower_01 foreign key (grower_grower_id) references grower (grower_id) on delete restrict on update restrict;
+
+alter table grower_offer add constraint fk_grower_offer_offer_02 foreign key (offer_id) references offer (id) on delete restrict on update restrict;
+
+alter table offer_grower add constraint fk_offer_grower_offer_01 foreign key (offer_id) references offer (id) on delete restrict on update restrict;
+
+alter table offer_grower add constraint fk_offer_grower_grower_02 foreign key (grower_grower_id) references grower (grower_id) on delete restrict on update restrict;
 
 # --- !Downs
 
@@ -69,9 +86,13 @@ drop table if exists email_address;
 
 drop table if exists grower;
 
+drop table if exists grower_offer;
+
 drop table if exists handler;
 
 drop table if exists offer;
+
+drop table if exists offer_grower;
 
 drop table if exists offer_response;
 

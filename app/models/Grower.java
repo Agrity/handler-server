@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -84,14 +85,29 @@ public class Grower extends Model implements PrettyString {
   @OneToMany(cascade = CascadeType.ALL)
   public List<OfferResponse> offerResponses = new ArrayList<>();
 
+  @Constraints.Required
+  @ManyToMany
+  public List<Offer> offers = new ArrayList<>();
+
+
+  /* ==================================== Static Functions ==================================== */
+
 
   public static Finder<Long, Grower> find = new Finder<>(Grower.class);
+
+  public static Grower createGrower(Handler handler, String firstName, String lastName) {
+    Grower grower = new Grower(handler, firstName, lastName, new ArrayList<>(), new ArrayList<>());
+    grower.save();
+    return grower;
+  }
+  
 
 
   /* ========== Member Functions ========== */
 
   /*
    * Shim constructor intended for fake/mocked growers
+   * TODO REMOVE!
    */
   public Grower(long id, String firstName, String lastName) {
     super();
@@ -100,6 +116,17 @@ public class Grower extends Model implements PrettyString {
     this.firstName = firstName;
     this.lastName = lastName;
     this.handler = null;
+    this.emailAddresses = new ArrayList<>();
+    this.phoneNumbers = new ArrayList<>();
+  }
+
+  public Grower(Handler handler, String firstName, String lastName) {
+    super();
+
+    this.handler = handler;
+    this.firstName = firstName;
+    this.lastName = lastName;
+
     this.emailAddresses = new ArrayList<>();
     this.phoneNumbers = new ArrayList<>();
   }

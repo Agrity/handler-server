@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 
 import models.Almond.AlmondVariety;
 
+import test_helpers.EbeanTest;
+
 import static org.mockito.Mockito.*;
 
 import com.google.common.collect.ImmutableList;
@@ -26,7 +28,7 @@ import com.google.common.collect.ImmutableList;
 * Offer JUnit Test.
 *
 */
-public class OfferTest {
+public class OfferTest extends EbeanTest {
 
   private static final Handler UNUSED_HANDLER = new Handler("Test Company");
   private static final List<Grower> UNUSED_GROWERS = new ImmutableList.Builder<Grower>()
@@ -80,9 +82,9 @@ public class OfferTest {
   public void testGrowers() {
 
     List<Grower> growersList = new ImmutableList.Builder<Grower>()
-        .add(new Grower(1, "F1", "L1")) // id: 1
-        .add(new Grower(2, "F2", "L2")) // id: 2
-        .add(new Grower(3, "F3", "L3")) // id: 3
+        .add(Grower.createGrower(UNUSED_HANDLER, "F1", "L1"))
+        .add(Grower.createGrower(UNUSED_HANDLER, "F2", "L2"))
+        .add(Grower.createGrower(UNUSED_HANDLER, "F3", "L3"))
         .build();
 
     int numGrowers = growersList.size();
@@ -97,6 +99,8 @@ public class OfferTest {
             UNUSED_PRICE,
             UNUSED_DATE,
             UNUSED_COMMENT);
+
+    offer.save();
 
     // Check 3 growers present.
     assertThat(offer.getAllGrowers().size(), is(equalTo(numGrowers)));

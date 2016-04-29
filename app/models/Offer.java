@@ -17,15 +17,18 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import models.Almond.AlmondVariety;
 import models.OfferResponse.ResponseStatus;
 import models.interfaces.PrettyString;
+
 import play.Logger;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
+
 import services.GrowerService;
 
 @Entity
@@ -52,7 +55,7 @@ public class Offer extends Model implements PrettyString {
   @Constraints.Required
   private Set<OfferResponse> offerResponses = new HashSet<>();
   
-  @OneToMany(cascade = CascadeType.ALL)
+  @ManyToMany(cascade = CascadeType.PERSIST)
   @Constraints.Required
   private Set<Grower> growers = new HashSet<>();
 
@@ -82,9 +85,9 @@ public class Offer extends Model implements PrettyString {
   @Column(columnDefinition = "TEXT")
   private String comment = "";
 
+  /* ==================================== Static Functions ==================================== */
 
-  private static Finder<Long, Offer> find = new Finder<Long, Offer>(Offer.class);
-  
+  public static Finder<Long, Offer> find = new Finder<Long, Offer>(Offer.class);
 
 
   /* ===================================== Implementation ===================================== */
@@ -93,8 +96,9 @@ public class Offer extends Model implements PrettyString {
 
   public Offer(Handler handler, List<Grower> allGrowers, AlmondVariety almondVariety,
       Integer almondPounds, String pricePerPound, LocalDate paymentDate, String comment) {
-    this.handler = handler;
+    super();
 
+    this.handler = handler;
 
     offerResponses =
         allGrowers.stream()
