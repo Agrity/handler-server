@@ -85,7 +85,9 @@ public class Offer extends Model implements PrettyString {
   @Column(columnDefinition = "TEXT")
   private String comment = "";
 
+
   /* ==================================== Static Functions ==================================== */
+
 
   public static Finder<Long, Offer> find = new Finder<Long, Offer>(Offer.class);
 
@@ -105,6 +107,7 @@ public class Offer extends Model implements PrettyString {
             .map(grower -> new OfferResponse(grower))
             .collect(Collectors.toSet());
 
+    this.growers = new HashSet<>(allGrowers);
     this.almondVariety = almondVariety;
     this.almondPounds = almondPounds;
     this.pricePerPound = pricePerPound;

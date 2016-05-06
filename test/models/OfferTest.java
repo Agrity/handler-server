@@ -55,7 +55,11 @@ public class OfferTest extends EbeanTest {
             UNUSED_COMMENT);
 
     assertThat(offer, is(notNullValue()));
+    offer.save();
+
+    assertThat(offer.getId(), is(notNullValue()));
   }
+
 
   @Test
   public void testHandler() {
@@ -87,9 +91,6 @@ public class OfferTest extends EbeanTest {
         .add(Grower.createGrower(UNUSED_HANDLER, "F3", "L3"))
         .build();
 
-    int numGrowers = growersList.size();
-
-
     Offer offer
         = new Offer(
             UNUSED_HANDLER,
@@ -103,12 +104,12 @@ public class OfferTest extends EbeanTest {
     offer.save();
 
     // Check 3 growers present.
-    assertThat(offer.getAllGrowers().size(), is(equalTo(numGrowers)));
+    assertThat(offer.getAllGrowers().size(), is(equalTo(3)));
 
     // Check 3 distint ids (aka growers) are present.
     long distinctGrowerIds =
         offer.getAllGrowers().stream().map(grower -> grower.getId()).distinct().count();
-    assertThat(distinctGrowerIds, is(equalTo(numGrowers)));
+    assertThat(distinctGrowerIds, is(equalTo(3L)));
   }
  
   @Test
@@ -249,9 +250,9 @@ public class OfferTest extends EbeanTest {
   public void testAcceptOffer() {
 
     List<Grower> growersList = new ImmutableList.Builder<Grower>()
-        .add(new Grower(1, "F1", "L1")) // id: 1
-        .add(new Grower(2, "F2", "L2")) // id: 2
-        .add(new Grower(3, "F3", "L3")) // id: 3
+        .add(new Grower(UNUSED_HANDLER, "F1", "L1")) // id: 1
+        .add(new Grower(UNUSED_HANDLER, "F2", "L2")) // id: 2
+        .add(new Grower(UNUSED_HANDLER, "F3", "L3")) // id: 3
         .build();
 
     Offer offer
@@ -263,6 +264,10 @@ public class OfferTest extends EbeanTest {
             UNUSED_PRICE,
             UNUSED_DATE,
             UNUSED_COMMENT);
+
+    offer.save();
+
+    System.out.println(offer.toPrettyString());
 
     offer.growerAcceptOffer(1L);
     offer.growerAcceptOffer(3L);
@@ -281,7 +286,7 @@ public class OfferTest extends EbeanTest {
     List<Grower> noResponseList = offer.getNoResponseGrowers();
 
     // Check there is still a no response grower.
-    assertThat(noResponseList.size(), is(equalTo(1L)));
+    assertThat(noResponseList.size(), is(equalTo(1)));
 
     // Check the correct grower is still no response.
     assertThat(noResponseList.get(0).getId(), is(equalTo(2)));
@@ -317,8 +322,8 @@ public class OfferTest extends EbeanTest {
     assertThat(rejectedList.size(), is(equalTo(2)));
 
     // Check that the correct 2 growers rejected.
-    assertThat(rejectedList.get(0).getId(), is(equalTo(2L)));
-    assertThat(rejectedList.get(1).getId(), is(equalTo(3L)));
+    assertThat(rejectedList.get(0).getId(), is(equalTo(2)));
+    assertThat(rejectedList.get(1).getId(), is(equalTo(3)));
 
     List<Grower> noResponseList = offer.getNoResponseGrowers();
 
@@ -375,9 +380,10 @@ public class OfferTest extends EbeanTest {
   public void testGrowerResponse_robust() {
 
     List<Grower> growersList = new ImmutableList.Builder<Grower>()
-        .add(new Grower(1, "F1", "L1")) // id: 1
-        .add(new Grower(2, "F2", "L2")) // id: 2
-        .add(new Grower(3, "F3", "L3")) // id: 3
+        .add(new Grower(UNUSED_HANDLER, "F1", "L1")) // id: 1
+        .add(new Grower(UNUSED_HANDLER, "F2", "L2")) // id: 2
+        .add(new Grower(UNUSED_HANDLER, "F3", "L3")) // id: 3
+        .add(new Grower(UNUSED_HANDLER, "F4", "L4")) // id: 4
         .build();
 
     Offer offer

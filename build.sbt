@@ -4,7 +4,7 @@ version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file(".")).enablePlugins(PlayJava, PlayEbean)
 
-scalaVersion := "2.11.6"
+scalaVersion := "2.11.7"
 
 libraryDependencies ++= Seq(
   javaJdbc,
@@ -14,7 +14,7 @@ libraryDependencies ++= Seq(
   javaJpa,
   evolutions,
   "javax.money" % "money-api" % "1.0",
-  "com.typesafe.play" %% "play-mailer" % "4.0.0",
+  "com.typesafe.play" %% "play-mailer" % "5.0.0-M1",
   "org.mockito" % "mockito-core" % "2.0.52-beta"
 )
 
