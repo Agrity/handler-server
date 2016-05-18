@@ -44,7 +44,7 @@ public class Handler extends Model implements PrettyString {
 
   @OneToMany
   @Constraints.Required
-  private List<Grower> growersList = new ArrayList<>();
+  private List<Grower> growersList;
 
   public List<Grower> getGrowersList() {
     return growersList;
@@ -52,7 +52,7 @@ public class Handler extends Model implements PrettyString {
 
   @OneToMany
   @Constraints.Required
-  private List<Offer> offerList = new ArrayList<>();
+  private List<Offer> offerList;
 
   public List<Offer> getOfferList() {
     return offerList;
@@ -62,11 +62,13 @@ public class Handler extends Model implements PrettyString {
 
   public Handler(String companyName) {
     this.companyName = companyName;
+    growersList = new ArrayList<>();
+    offerList = new ArrayList<>();
   }
 
   @Override
   public String toString() {
-    return "(" + id + ") " + companyName + " : " + growersList.size();
+    return "(" + id + ") " + companyName + " : " + getGrowersList().size();
   }
   
   public String toPrettyString() {

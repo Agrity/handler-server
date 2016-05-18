@@ -1,18 +1,18 @@
 package models;
 
+import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import models.Almond.AlmondVariety;
 
@@ -20,6 +20,7 @@ import test_helpers.EbeanTest;
 
 import static org.mockito.Mockito.*;
 
+import com.avaje.ebean.Ebean;
 import com.google.common.collect.ImmutableList;
 
 
@@ -32,8 +33,8 @@ public class OfferTest extends EbeanTest {
 
   private static final Handler UNUSED_HANDLER = new Handler("Test Company");
   private static final List<Grower> UNUSED_GROWERS = new ImmutableList.Builder<Grower>()
-      .add(new Grower(1, "F1", "L1")) // id: 1
-      .add(new Grower(2, "F2", "L2")) // id: 2
+      .add(new Grower(1, "F1", "L1"))
+      .add(new Grower(2, "F2", "L2"))
       .build();
 
   private static final AlmondVariety UNUSED_VARIETY = AlmondVariety.NONPAREIL;
@@ -41,6 +42,12 @@ public class OfferTest extends EbeanTest {
   private static final String UNUSED_PRICE = "$2.66";
   private static final LocalDate UNUSED_DATE = LocalDate.of(2015, Month.JANUARY, 1);
   private static final String UNUSED_COMMENT = "Test Comment.";
+
+  @BeforeClass
+  public static void loadInitialData() {
+    Ebean.save(UNUSED_HANDLER);
+    Ebean.saveAll(UNUSED_GROWERS);
+  }
 
   @Test
   public void testInitialization() {
@@ -55,9 +62,10 @@ public class OfferTest extends EbeanTest {
             UNUSED_COMMENT);
 
     assertThat(offer, is(notNullValue()));
-    offer.save();
+    saveModel(offer);
 
     assertThat(offer.getId(), is(notNullValue()));
+
   }
 
 
@@ -86,10 +94,12 @@ public class OfferTest extends EbeanTest {
   public void testGrowers() {
 
     List<Grower> growersList = new ImmutableList.Builder<Grower>()
-        .add(Grower.createGrower(UNUSED_HANDLER, "F1", "L1"))
-        .add(Grower.createGrower(UNUSED_HANDLER, "F2", "L2"))
-        .add(Grower.createGrower(UNUSED_HANDLER, "F3", "L3"))
+        .add(Grower.createGrower(UNUSED_HANDLER, "FN1", "LN1"))
+        .add(Grower.createGrower(UNUSED_HANDLER, "FN2", "LN2"))
+        .add(Grower.createGrower(UNUSED_HANDLER, "FN3", "LN3"))
         .build();
+
+    saveModels(growersList);
 
     Offer offer
         = new Offer(
@@ -101,7 +111,7 @@ public class OfferTest extends EbeanTest {
             UNUSED_DATE,
             UNUSED_COMMENT);
 
-    offer.save();
+    saveModel(offer);
 
     // Check 3 growers present.
     assertThat(offer.getAllGrowers().size(), is(equalTo(3)));
@@ -202,30 +212,15 @@ public class OfferTest extends EbeanTest {
   }
 
   @Test
-  public void testIdComparator() {
-
-    Grower g1 = new Grower(1, "F1", "L1"); // id: 1
-    Grower g2 = new Grower(2, "F2", "L2"); // id: 2
-
-    int compareResult = Grower.ID_COMPARATOR.compare(g1, g2);
-    
-    // Assert that the comparator catogorized g1 with a lower ID than g2.
-    // TODO: Need to change to assertThat() but JUnit packaged with old version of hamcrest.
-    //       Change after update.
-    assertTrue(compareResult < 0);
-
-    
-
-  }
-
-  @Test
   public void testNoResponse() {
 
     List<Grower> growersList = new ImmutableList.Builder<Grower>()
-        .add(new Grower(1, "F1", "L1")) // id: 1
-        .add(new Grower(2, "F2", "L2")) // id: 2
-        .add(new Grower(3, "F3", "L3")) // id: 3
+        .add(new Grower(UNUSED_HANDLER, "FN4", "LN4"))
+        .add(new Grower(UNUSED_HANDLER, "FN5", "LN5"))
+        .add(new Grower(UNUSED_HANDLER, "FN6", "LN6"))
         .build();
+
+    saveModels(growersList);
 
     Offer offer
         = new Offer(
@@ -236,6 +231,8 @@ public class OfferTest extends EbeanTest {
             UNUSED_PRICE,
             UNUSED_DATE,
             UNUSED_COMMENT);
+
+    saveModel(offer);
 
     Long noResponseCount = offer.getNoResponseGrowers().stream()
         .map(grower -> grower.getId())
@@ -243,17 +240,19 @@ public class OfferTest extends EbeanTest {
         .count();
     
     // Check all 3 growers initialized to no response.
-    assertThat(noResponseCount, is(equalTo(3)));
+    assertThat(noResponseCount, is(equalTo(3L)));
   }
 
   @Test
   public void testAcceptOffer() {
 
     List<Grower> growersList = new ImmutableList.Builder<Grower>()
-        .add(new Grower(UNUSED_HANDLER, "F1", "L1")) // id: 1
-        .add(new Grower(UNUSED_HANDLER, "F2", "L2")) // id: 2
-        .add(new Grower(UNUSED_HANDLER, "F3", "L3")) // id: 3
+        .add(new Grower(UNUSED_HANDLER, "FN7", "LN7"))
+        .add(new Grower(UNUSED_HANDLER, "FN8", "LN8"))
+        .add(new Grower(UNUSED_HANDLER, "FN9", "LN9"))
         .build();
+
+    saveModels(growersList);
 
     Offer offer
         = new Offer(
@@ -265,23 +264,24 @@ public class OfferTest extends EbeanTest {
             UNUSED_DATE,
             UNUSED_COMMENT);
 
-    offer.save();
+    saveModel(offer);
 
-    System.out.println(offer.toPrettyString());
+    offer.growerAcceptOffer(growersList.get(0).getId());
+    offer.growerAcceptOffer(growersList.get(2).getId());
 
-    offer.growerAcceptOffer(1L);
-    offer.growerAcceptOffer(3L);
-
-    List<Grower> acceptedList = offer.getAcceptedGrowers().stream()
-        .sorted(Grower.ID_COMPARATOR)
-        .collect(Collectors.toList());
+    List<Grower> acceptedList = offer.getAcceptedGrowers();
     
     // Check 2 growers accepted.
     assertThat(acceptedList.size(), is(equalTo(2)));
 
     // Check that the correct 2 growers accepted.
-    assertThat(acceptedList.get(0).getId(), is(equalTo(1L)));
-    assertThat(acceptedList.get(1).getId(), is(equalTo(3L)));
+    assertThat(acceptedList.get(0).getFullName(), anyOf(
+        equalTo(growersList.get(0).getFullName()),
+        equalTo(growersList.get(2).getFullName())));
+
+    assertThat(acceptedList.get(1).getFullName(), anyOf(
+        equalTo(growersList.get(0).getFullName()),
+        equalTo(growersList.get(2).getFullName())));
 
     List<Grower> noResponseList = offer.getNoResponseGrowers();
 
@@ -289,17 +289,19 @@ public class OfferTest extends EbeanTest {
     assertThat(noResponseList.size(), is(equalTo(1)));
 
     // Check the correct grower is still no response.
-    assertThat(noResponseList.get(0).getId(), is(equalTo(2)));
+    assertThat(noResponseList.get(0).getFullName(), is(equalTo(growersList.get(1).getFullName())));
   }
 
   @Test
   public void testRejectOffer() {
 
     List<Grower> growersList = new ImmutableList.Builder<Grower>()
-        .add(new Grower(1, "F1", "L1")) // id: 1
-        .add(new Grower(2, "F2", "L2")) // id: 2
-        .add(new Grower(3, "F3", "L3")) // id: 3
+        .add(new Grower(UNUSED_HANDLER, "FN10", "LN10"))
+        .add(new Grower(UNUSED_HANDLER, "FN11", "LN11"))
+        .add(new Grower(UNUSED_HANDLER, "FN12", "LN12"))
         .build();
+
+    saveModels(growersList);
 
     Offer offer
         = new Offer(
@@ -311,19 +313,24 @@ public class OfferTest extends EbeanTest {
             UNUSED_DATE,
             UNUSED_COMMENT);
 
-    offer.growerRejectOffer(2L);
-    offer.growerRejectOffer(3L);
+    saveModel(offer);
 
-    List<Grower> rejectedList = offer.getRejectedGrowers().stream()
-        .sorted(Grower.ID_COMPARATOR)
-        .collect(Collectors.toList());
+    offer.growerRejectOffer(growersList.get(1).getId());
+    offer.growerRejectOffer(growersList.get(2).getId());
+
+    List<Grower> rejectedList = offer.getRejectedGrowers();
     
     // Check 2 growers rejected.
     assertThat(rejectedList.size(), is(equalTo(2)));
 
     // Check that the correct 2 growers rejected.
-    assertThat(rejectedList.get(0).getId(), is(equalTo(2)));
-    assertThat(rejectedList.get(1).getId(), is(equalTo(3)));
+    assertThat(rejectedList.get(0).getFullName(), anyOf(
+          equalTo(growersList.get(1).getFullName()),
+          equalTo(growersList.get(2).getFullName())));
+
+    assertThat(rejectedList.get(1).getFullName(), anyOf(
+          equalTo(growersList.get(1).getFullName()),
+          equalTo(growersList.get(2).getFullName())));
 
     List<Grower> noResponseList = offer.getNoResponseGrowers();
 
@@ -331,17 +338,19 @@ public class OfferTest extends EbeanTest {
     assertThat(noResponseList.size(), is(equalTo(1)));
 
     // Check the correct grower is still no response.
-    assertThat(noResponseList.get(0).getId(), is(equalTo(1L)));
+    assertThat(noResponseList.get(0).getFullName(), is(equalTo(growersList.get(0).getFullName())));
   }
 
   @Test
   public void testRequestCall() {
 
-  List<Grower> growersList = new ImmutableList.Builder<Grower>()
-        .add(new Grower(1, "F1", "L1")) // id: 1
-        .add(new Grower(2, "F2", "L2")) // id: 2
-        .add(new Grower(3, "F3", "L3")) // id: 3
+    List<Grower> growersList = new ImmutableList.Builder<Grower>()
+        .add(new Grower(UNUSED_HANDLER, "FN13", "LN13"))
+        .add(new Grower(UNUSED_HANDLER, "FN14", "LN14"))
+        .add(new Grower(UNUSED_HANDLER, "FN15", "LN15"))
         .build();
+
+    saveModels(growersList);
 
     Offer offer
         = new Offer(
@@ -353,19 +362,24 @@ public class OfferTest extends EbeanTest {
             UNUSED_DATE,
             UNUSED_COMMENT);
 
-    offer.growerRequestCall(1L);
-    offer.growerRequestCall(2L);
+    saveModel(offer);
 
-    List<Grower> requestCallList = offer.getCallRequestedGrowers().stream()
-        .sorted(Grower.ID_COMPARATOR)
-        .collect(Collectors.toList());
+    offer.growerRequestCall(growersList.get(1).getId());
+    offer.growerRequestCall(growersList.get(0).getId());
+
+    List<Grower> requestCallList = offer.getCallRequestedGrowers();
     
     // Check 2 growers requested call.
     assertThat(requestCallList.size(), is(equalTo(2)));
 
     // Check that the correct 2 growers requested call.
-    assertThat(requestCallList.get(0).getId(), is(equalTo(1L)));
-    assertThat(requestCallList.get(1).getId(), is(equalTo(2L)));
+    assertThat(requestCallList.get(0).getFullName(), anyOf(
+          equalTo(growersList.get(0).getFullName()),
+          equalTo(growersList.get(1).getFullName())));
+
+    assertThat(requestCallList.get(1).getFullName(), anyOf(
+          equalTo(growersList.get(0).getFullName()),
+          equalTo(growersList.get(1).getFullName())));
 
     List<Grower> noResponseList = offer.getNoResponseGrowers();
 
@@ -373,18 +387,20 @@ public class OfferTest extends EbeanTest {
     assertThat(noResponseList.size(), is(equalTo(1)));
 
     // Check the correct grower is still no response.
-    assertThat(noResponseList.get(0).getId(), is(equalTo(3L)));
+    assertThat(noResponseList.get(0).getFullName(), is(equalTo(growersList.get(2).getFullName())));
   }
 
   @Test
   public void testGrowerResponse_robust() {
 
     List<Grower> growersList = new ImmutableList.Builder<Grower>()
-        .add(new Grower(UNUSED_HANDLER, "F1", "L1")) // id: 1
-        .add(new Grower(UNUSED_HANDLER, "F2", "L2")) // id: 2
-        .add(new Grower(UNUSED_HANDLER, "F3", "L3")) // id: 3
-        .add(new Grower(UNUSED_HANDLER, "F4", "L4")) // id: 4
+        .add(new Grower(UNUSED_HANDLER, "FN16", "LN16"))
+        .add(new Grower(UNUSED_HANDLER, "FN17", "LN17"))
+        .add(new Grower(UNUSED_HANDLER, "FN18", "LN18"))
+        .add(new Grower(UNUSED_HANDLER, "FN19", "LN19"))
         .build();
+
+    saveModels(growersList);
 
     Offer offer
         = new Offer(
@@ -396,31 +412,33 @@ public class OfferTest extends EbeanTest {
             UNUSED_DATE,
             UNUSED_COMMENT);
 
-    offer.growerAcceptOffer(1L);
-    offer.growerRejectOffer(2L);
-    offer.growerRequestCall(3L);
+    saveModel(offer);
+
+    offer.growerAcceptOffer(growersList.get(0).getId());
+    offer.growerRejectOffer(growersList.get(1).getId());
+    offer.growerRequestCall(growersList.get(2).getId());
     // Grower 4 no response.
 
     // Check accepted grower
     List<Grower> acceptedList = offer.getAcceptedGrowers();
     assertThat(acceptedList.size(), is(equalTo(1)));
-    assertThat(acceptedList.get(0).getId(), is(equalTo(1L)));
+    assertThat(acceptedList.get(0).getFullName(), is(equalTo(growersList.get(0).getFullName())));
 
 
     // Check rejected grower
     List<Grower> rejectedList = offer.getRejectedGrowers();
     assertThat(rejectedList.size(), is(equalTo(1)));
-    assertThat(rejectedList.get(0).getId(), is(equalTo(2L)));
+    assertThat(rejectedList.get(0).getFullName(), is(equalTo(growersList.get(1).getFullName())));
 
     // Check call requested grower
     List<Grower> callRequestedList = offer.getCallRequestedGrowers();
     assertThat(callRequestedList.size(), is(equalTo(1)));
-    assertThat(callRequestedList.get(0).getId(), is(equalTo(3L)));
+    assertThat(callRequestedList.get(0).getFullName(), is(equalTo(growersList.get(2).getFullName())));
 
     // Check no response grower
     List<Grower> noResponseList = offer.getNoResponseGrowers();
     assertThat(noResponseList.size(), is(equalTo(1)));
-    assertThat(noResponseList.get(0).getId(), is(equalTo(4L)));
+    assertThat(noResponseList.get(0).getFullName(), is(equalTo(growersList.get(3).getFullName())));
   }
 
 

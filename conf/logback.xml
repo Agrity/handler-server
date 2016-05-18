@@ -14,6 +14,10 @@
   -->
   <logger name="play" level="INFO" />
   <logger name="application" level="DEBUG" />
+  <!-- Ebean Loger: 
+  <logger name="org.avaje.ebean.SQL" level="TRACE" />
+  -->
+
 
   <root level="ERROR">
     <appender-ref ref="STDOUT" />

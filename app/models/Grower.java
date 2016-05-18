@@ -43,7 +43,7 @@ public class Grower extends Model implements PrettyString {
     return id;
   }
 
-  @ManyToOne(cascade = CascadeType.PERSIST)
+  @ManyToOne
   @Constraints.Required
   private Handler handler;
 
@@ -86,7 +86,7 @@ public class Grower extends Model implements PrettyString {
   public List<OfferResponse> offerResponses = new ArrayList<>();
 
   @Constraints.Required
-  @ManyToMany
+  @ManyToMany(cascade = CascadeType.ALL, mappedBy = "growers")
   public List<Offer> offers = new ArrayList<>();
 
 

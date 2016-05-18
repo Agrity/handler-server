@@ -18,12 +18,6 @@ create table grower (
   constraint pk_grower primary key (grower_id)
 );
 
-create table grower_offer (
-  grower_grower_id              bigint not null,
-  offer_id                      bigint not null,
-  constraint pk_grower_offer primary key (grower_grower_id,offer_id)
-);
-
 create table handler (
   handler_id                    bigint auto_increment not null,
   company_name                  varchar(255),
@@ -63,12 +57,6 @@ create index ix_email_address_grower_grower_id on email_address (grower_grower_i
 alter table grower add constraint fk_grower_handler_handler_id foreign key (handler_handler_id) references handler (handler_id) on delete restrict on update restrict;
 create index ix_grower_handler_handler_id on grower (handler_handler_id);
 
-alter table grower_offer add constraint fk_grower_offer_grower foreign key (grower_grower_id) references grower (grower_id) on delete restrict on update restrict;
-create index ix_grower_offer_grower on grower_offer (grower_grower_id);
-
-alter table grower_offer add constraint fk_grower_offer_offer foreign key (offer_id) references offer (id) on delete restrict on update restrict;
-create index ix_grower_offer_offer on grower_offer (offer_id);
-
 alter table offer add constraint fk_offer_handler_handler_id foreign key (handler_handler_id) references handler (handler_id) on delete restrict on update restrict;
 create index ix_offer_handler_handler_id on offer (handler_handler_id);
 
@@ -93,12 +81,6 @@ drop index if exists ix_email_address_grower_grower_id;
 alter table grower drop constraint if exists fk_grower_handler_handler_id;
 drop index if exists ix_grower_handler_handler_id;
 
-alter table grower_offer drop constraint if exists fk_grower_offer_grower;
-drop index if exists ix_grower_offer_grower;
-
-alter table grower_offer drop constraint if exists fk_grower_offer_offer;
-drop index if exists ix_grower_offer_offer;
-
 alter table offer drop constraint if exists fk_offer_handler_handler_id;
 drop index if exists ix_offer_handler_handler_id;
 
@@ -117,8 +99,6 @@ drop index if exists ix_offer_response_offer_id;
 drop table if exists email_address;
 
 drop table if exists grower;
-
-drop table if exists grower_offer;
 
 drop table if exists handler;
 

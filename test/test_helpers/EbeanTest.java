@@ -1,34 +1,31 @@
 package test_helpers;
 
 import com.avaje.ebean.Ebean;
-import com.avaje.ebean.EbeanServer;
-import com.avaje.ebean.config.ServerConfig;
-import com.avaje.ebean.config.dbplatform.H2Platform;
-import com.avaje.ebean.dbmigration.DdlGenerator;
-import com.avaje.ebeaninternal.api.SpiEbeanServer;
+import com.avaje.ebean.Model;
 
+import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 
 import play.Application;
 import play.test.Helpers;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public abstract class EbeanTest {
 
     public static Application app;
 
+    private static String SERVER_NAME = "default";
+
+    private List<Model> toUnloadList = new ArrayList<>();
+
     @BeforeClass
     public static void startApp() throws IOException {
-
-      app = Helpers.fakeApplication(/*new GlobalSettings() {
-        //@Override
-        //public void onStart(Application app) {
-        //  System.out.println("Starting Fake Application for Testing...");
-        //}
-      }*/);
+      app = Helpers.fakeApplication(Helpers.inMemoryDatabase(SERVER_NAME));
       Helpers.start(app);
     }
 
@@ -37,22 +34,19 @@ public abstract class EbeanTest {
         Helpers.stop(app);
     }
 
-    @Before
-    public void dropCreateDb() throws IOException {
+    @After
+    public void afterEachTest() {
+      Ebean.deleteAll(toUnloadList);
+      toUnloadList.clear();
+    }
 
-      //String serverName = "default";
+    public void saveModel(Model model) {
+      Ebean.save(model);
+      toUnloadList.add(model);
+    }
 
-      //EbeanServer server = Ebean.getServer(serverName);
-
-      //ServerConfig config = new ServerConfig();
-      //
-      //DdlGenerator ddl = new DdlGenerator();
-      //ddl.setup((SpiEbeanServer) server, new H2Platform(), config);
-
-      //// Drop
-      //ddl.runScript(false, ddl.generateDropDdl());
-
-      //// Create
-      //ddl.runScript(false, ddl.generateCreateDdl());
+    public void saveModels(List<? extends Model> models) {
+      Ebean.saveAll(models);
+      toUnloadList.addAll(models);
     }
 }

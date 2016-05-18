@@ -55,7 +55,7 @@ public class Offer extends Model implements PrettyString {
   @Constraints.Required
   private Set<OfferResponse> offerResponses = new HashSet<>();
   
-  @ManyToMany(cascade = CascadeType.PERSIST)
+  @ManyToMany(cascade = CascadeType.ALL)
   @Constraints.Required
   private Set<Grower> growers = new HashSet<>();
 
