@@ -33,8 +33,8 @@ public class OfferTest extends EbeanTest {
 
   private static final Handler UNUSED_HANDLER = new Handler("Test Company");
   private static final List<Grower> UNUSED_GROWERS = new ImmutableList.Builder<Grower>()
-      .add(new Grower(1, "F1", "L1"))
-      .add(new Grower(2, "F2", "L2"))
+      .add(new Grower(UNUSED_HANDLER, "F1", "L1"))
+      .add(new Grower(UNUSED_HANDLER, "F2", "L2"))
       .build();
 
   private static final AlmondVariety UNUSED_VARIETY = AlmondVariety.NONPAREIL;
