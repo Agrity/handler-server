@@ -111,7 +111,7 @@ public class OfferController extends Controller {
       return notFound(ErrorMessages.handlerNotFoundMessage(handlerId));
     }
 
-    return ok(Helpers.fetchList(handler.getOfferList()).toString());
+    return ok(Helpers.fetchList(/*handler.getOfferList()*/null).toString());
   }
 
   public Result getAllGrowerOffers(long growerId) {

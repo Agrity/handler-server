@@ -28,7 +28,7 @@ public class HtmlOfferController extends Controller {
         return badRequest(ErrorMessages.handlerNotFoundMessage(handlerId));
       }
 
-      return ok(views.html.offers.offerList.render(handler.getOfferList()));
+      return ok(views.html.offers.offerList.render(/*handler.getOfferList()*/null));
     }
 
     public Result offerView(long offerId) {

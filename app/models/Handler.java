@@ -50,20 +50,11 @@ public class Handler extends Model implements PrettyString {
     return growersList;
   }
 
-  @OneToMany
-  @Constraints.Required
-  private List<Offer> offerList;
-
-  public List<Offer> getOfferList() {
-    return offerList;
-  }
-
   public static Finder<Long, Handler> find = new Finder<>(Handler.class);
 
   public Handler(String companyName) {
     this.companyName = companyName;
     growersList = new ArrayList<>();
-    offerList = new ArrayList<>();
   }
 
   @Override

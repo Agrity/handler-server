@@ -47,10 +47,6 @@ public class Offer extends Model implements PrettyString {
   @Constraints.Required
   private Handler handler;
 
-  public Handler getHandler() {
-    return handler;
-  }
-
   @OneToMany(cascade = CascadeType.ALL)
   @Constraints.Required
   private Set<OfferResponse> offerResponses = new HashSet<>();
@@ -122,6 +118,10 @@ public class Offer extends Model implements PrettyString {
   public Long getId() {
     return id;
   };
+
+  public Handler getHandler() {
+    return handler;
+  }
 
   public List<Grower> getAllGrowers() {
     return new ArrayList<>(growers);

@@ -30,17 +30,9 @@ public class Grower extends Model implements PrettyString {
   @Column(name = DBConstants.GrowerColumns.ID)
   private Long id;
 
-  public Long getId() {
-    return id;
-  }
-
   @ManyToOne
   @Constraints.Required
   private Handler handler;
-
-  public Handler getHandler() {
-    return handler;
-  }
 
   public void setHandler(Handler handler) {
     this.handler = handler;
@@ -51,10 +43,6 @@ public class Grower extends Model implements PrettyString {
 
   @Constraints.Required
   private String lastName;
-
-  public String getFullName() {
-    return firstName + " " + lastName;
-  }
 
   /**
    * TODO: Change to play email format to use play-mailer plugin
@@ -72,6 +60,7 @@ public class Grower extends Model implements PrettyString {
   public List<String> phoneNumbers;
 
 
+  // TODO Remove OfferResponses and Offers from Growers if possible.
   @Constraints.Required
   @OneToMany(cascade = CascadeType.ALL)
   public List<OfferResponse> offerResponses = new ArrayList<>();
@@ -96,7 +85,6 @@ public class Grower extends Model implements PrettyString {
 
   /* ========== Member Functions ========== */
 
-
   public Grower(Handler handler, String firstName, String lastName) {
     super();
 
@@ -119,11 +107,21 @@ public class Grower extends Model implements PrettyString {
     this.phoneNumbers = phoneNumbers;
   }
 
+  public Long getId() {
+    return id;
+  }
+
+  public Handler getHandler() {
+    return handler;
+  }
+
+  public String getFullName() {
+    return firstName + " " + lastName;
+  }
 
   public String getPrefferedContact() {
     return emailAddresses.isEmpty() ? null : emailAddresses.get(0).toString();
   }
-
 
   public List<Offer> getAcceptedOffers() {
     return getOffersWithResponse(ResponseStatus.ACCEPTED);
