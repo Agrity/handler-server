@@ -23,12 +23,15 @@ public class EbeanOfferService implements OfferService {
   }
 
   public List<Offer> getByHandler(long handlerId) {
+    // TODO Assert Handler Exists, or Return Null
     return FINDER.where()
+        // TODO Fix this Column Name.
         .eq("handler_handler_id", handlerId)
         .findList();
   }
 
   public List<Offer> getByGrower(long growerId) {
+    // TODO Assert Grower Exists, or Return Null
     return FINDER.where()
         .eq("growers.id", growerId)
         .findList();
