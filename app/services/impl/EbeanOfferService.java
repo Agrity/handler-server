@@ -25,13 +25,13 @@ public class EbeanOfferService implements OfferService {
 
   public List<Offer> getByHandler(long handlerId) {
     return FINDER.where()
-        .eq(DBConstants.HANDLER_ID, handlerId)
+        .eq("handler_handler_id", handlerId)
         .findList();
   }
 
   public List<Offer> getByGrower(long growerId) {
     return FINDER.where()
-        .eq(DBConstants.GROWER_ID, growerId)
+        .eq("growers.id", growerId)
         .findList();
   }
 }

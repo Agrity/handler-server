@@ -2,6 +2,7 @@ package servies.impl;
 
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -142,9 +143,6 @@ public class OfferServiceTest extends EbeanTest {
       add(GROWER_2);
     }};
 
-    saveModels(offer1Growers);
-    saveModels(offer2Growers);
-
     Offer offer1
         = new Offer(
             HANDLER_1,
@@ -169,7 +167,7 @@ public class OfferServiceTest extends EbeanTest {
     Offer unusedOffer
         = new Offer(
             HANDLER_1,
-            GROWER_LIST,
+            new ArrayList<>(),
             UNUSED_VARIETY,
             UNUSED_POUNDS,
             UNUSED_PRICE,
@@ -186,6 +184,78 @@ public class OfferServiceTest extends EbeanTest {
     assertThat(offer1Result.get(0), is(equalTo(offer1)));
 
     List<Offer> offer2Result = offerService.getByGrower(GROWER_2.getId());
+    assertThat(offer2Result.size(), is(equalTo(1)));
+    assertThat(offer2Result.get(0), is(equalTo(offer2)));
+  }
+
+  @Test
+  public void testGetByHandler() {
+
+    List<Grower> unusedGrowers = new ArrayList<>();
+
+    Offer offer1_1
+        = new Offer(
+            HANDLER_1,
+            unusedGrowers,
+            UNUSED_VARIETY,
+            UNUSED_POUNDS,
+            UNUSED_PRICE,
+            UNUSED_DATE,
+            UNUSED_COMMENT);
+
+    Offer offer1_2
+        = new Offer(
+            HANDLER_1,
+            unusedGrowers,
+            UNUSED_VARIETY,
+            UNUSED_POUNDS,
+            UNUSED_PRICE,
+            UNUSED_DATE,
+            UNUSED_COMMENT);
+
+    Offer offer2
+        = new Offer(
+            HANDLER_2,
+            unusedGrowers,
+            UNUSED_VARIETY,
+            UNUSED_POUNDS,
+            UNUSED_PRICE,
+            UNUSED_DATE,
+            UNUSED_COMMENT);
+
+    Handler unusedHandler = new Handler("Unused Handler");
+
+    // Should not be returned in any searches.
+    Offer unusedOffer
+        = new Offer(
+            unusedHandler,
+            unusedGrowers,
+            UNUSED_VARIETY,
+            UNUSED_POUNDS,
+            UNUSED_PRICE,
+            UNUSED_DATE,
+            UNUSED_COMMENT);
+
+    saveModel(offer1_1);
+    saveModel(offer1_2);
+    saveModel(offer2);
+    saveModel(unusedOffer);
+
+    List<Offer> offer1Result = offerService.getByHandler(HANDLER_1.getId());
+
+    assertThat(offer1Result.size(), is(equalTo(2)));
+    assertThat(offer1Result.get(0), anyOf(
+          is(equalTo(offer1_1)),
+          is(equalTo(offer1_2))));
+    assertThat(offer1Result.get(1), anyOf(
+          is(equalTo(offer1_1)),
+          is(equalTo(offer1_2))));
+
+    // Check that they are not the same offer returned twice.
+    assertThat(offer1Result.get(0), is(not(equalTo(offer1Result.get(1)))));
+
+    List<Offer> offer2Result = offerService.getByHandler(HANDLER_2.getId());
+
     assertThat(offer2Result.size(), is(equalTo(1)));
     assertThat(offer2Result.get(0), is(equalTo(offer2)));
   }
