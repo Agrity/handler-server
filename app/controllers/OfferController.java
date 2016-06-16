@@ -28,100 +28,110 @@ public class OfferController extends Controller {
   }
 
   public Result indexOffer(long id) {
-    Content html =
-        views.html.emailOfferBody.render(OfferService.getOffer(id), GrowerService.getGrower(1L));
-    return ok(html);
+    //Content html =
+    //    views.html.emailOfferBody.render(OfferService.getOffer(id), GrowerService.getGrower(1L));
+    //return ok(html);
+    return null;
   }
 
   public Result acceptOffer(long offerId, long growerId) {
-    Offer offer = OfferService.getOffer(offerId);
-    if (offer == null) {
-      return notFound(ErrorMessages.offerNotFoundMessage(offerId));
-    }
+    //Offer offer = OfferService.getOffer(offerId);
+    //if (offer == null) {
+    //  return notFound(ErrorMessages.offerNotFoundMessage(offerId));
+    //}
 
-    boolean success = offer.growerAcceptOffer(growerId);
+    //boolean success = offer.growerAcceptOffer(growerId);
 
-    return success ? ok("Successfully Accepted Offer.")
-        : internalServerError("Internal Error: Offer could not be accepted.");
+    //return success ? ok("Successfully Accepted Offer.")
+    //    : internalServerError("Internal Error: Offer could not be accepted.");
+    return null;
   }
 
   public Result rejectOffer(long offerId, long growerId) {
-    Offer offer = OfferService.getOffer(offerId);
-    if (offer == null) {
-      return notFound(ErrorMessages.offerNotFoundMessage(offerId));
-    }
+    //Offer offer = OfferService.getOffer(offerId);
+    //if (offer == null) {
+    //  return notFound(ErrorMessages.offerNotFoundMessage(offerId));
+    //}
 
-    boolean success = offer.growerRejectOffer(growerId);
+    //boolean success = offer.growerRejectOffer(growerId);
 
-    return success ? ok("Successfully Rejected Offer.")
-        : internalServerError("Internal Error: Offer could not be accepted.");
+    //return success ? ok("Successfully Rejected Offer.")
+    //    : internalServerError("Internal Error: Offer could not be accepted.");
+    return null;
   }
 
   public Result requestCall(long offerId, long growerId) {
-    Offer offer = OfferService.getOffer(offerId);
-    if (offer == null) {
-      return notFound(ErrorMessages.offerNotFoundMessage(growerId));
-    }
+    //Offer offer = OfferService.getOffer(offerId);
+    //if (offer == null) {
+    //  return notFound(ErrorMessages.offerNotFoundMessage(growerId));
+    //}
 
-    boolean success = offer.growerRequestCall(growerId);
+    //boolean success = offer.growerRequestCall(growerId);
 
-    return success ? ok("Successfully Requested Call.")
-        : internalServerError("Internal Error: Offer could not be accepted.");
+    //return success ? ok("Successfully Requested Call.")
+    //    : internalServerError("Internal Error: Offer could not be accepted.");
+    return null;
   }
 
 
   public Result sendOffer(long id) {
-    Offer offer = OfferService.getOffer(id);
-    boolean emailSucces = offerMessageService.send(offer);
-    return emailSucces ? ok("Emails Sent Successfully!") : internalServerError("Some or all of the emails were unable to be sent");
+    //Offer offer = OfferService.getOffer(id);
+    //boolean emailSucces = offerMessageService.send(offer);
+    //return emailSucces ? ok("Emails Sent Successfully!") : internalServerError("Some or all of the emails were unable to be sent");
+    return null;
   }
 
   // Annotation ensures that POST request is of type application/json. If not HTTP 400 response
   // returned.
   @BodyParser.Of(BodyParser.Json.class)
   public Result createOffer() {
-    JsonNode data = request().body().asJson();
+    //JsonNode data = request().body().asJson();
 
-    if (data == null) {
-      return badRequest("Expecting Some Data.\n");
-    }
+    //if (data == null) {
+    //  return badRequest("Expecting Some Data.\n");
+    //}
 
-    Logger.info("Offer Data Recieved: " + data.toString());
-    return OfferService.createOfferResult(data);
+    //Logger.info("Offer Data Recieved: " + data.toString());
+    //return OfferService.createOfferResult(data);
+    return null;
   }
 
   public Result getAllOffers() {
-    return ok(OfferService.getAllOffers().toString());
+    //return ok(OfferService.getAllOffers().toString());
+    return null;
   }
 
   public Result getOffer(long id) {
-    Offer offer = OfferService.getOffer(id);
+    //Offer offer = OfferService.getOffer(id);
 
-    if (offer == null) {
-      return notFound(ErrorMessages.offerNotFoundMessage(id));
-    }
+    //if (offer == null) {
+    //  return notFound(ErrorMessages.offerNotFoundMessage(id));
+    //}
 
-    return ok(offer.toPrettyString());
+    //return ok(offer.toPrettyString());
+    return null;
   }
 
   public Result getAllHandlerOffers(long handlerId) {
-    Handler handler = HandlerService.getHandler(handlerId);
+    //Handler handler = HandlerService.getHandler(handlerId);
 
-    if (handler == null) {
-      return notFound(ErrorMessages.handlerNotFoundMessage(handlerId));
-    }
+    //if (handler == null) {
+    //  return notFound(ErrorMessages.handlerNotFoundMessage(handlerId));
+    //}
 
-    return ok(Helpers.fetchList(/*handler.getOfferList()*/null).toString());
+    //return ok(Helpers.fetchList(/*handler.getOfferList()*/null).toString());
+    return null;
   }
 
   public Result getAllGrowerOffers(long growerId) {
-    Grower grower = GrowerService.getGrower(growerId);
+    //Grower grower = GrowerService.getGrower(growerId);
 
-    if (grower == null) {
-      return notFound(ErrorMessages.offerNotFoundMessage(growerId));
-    }
+    //if (grower == null) {
+    //  return notFound(ErrorMessages.offerNotFoundMessage(growerId));
+    //}
 
-    // TODO Implement
-    return ok("TODO");
+    //// TODO Implement
+    //return ok("TODO");
+    return null;
   }
 }

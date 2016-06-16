@@ -53,24 +53,3 @@ GET     /offers/:offerId/accept/:growerId         controllers.OfferController.ac
 GET     /offers/:offerId/reject/:growerId         controllers.OfferController.rejectOffer(offerId: Long, growerId: Long)
 
 GET     /offers/:offerId/requestcall/:growerId    controllers.OfferController.requestCall(offerId: Long, growerId: Long)
-
-# =============================== HTML Responses ================================================ #
-
-
-GET     /                                         controllers.Application.index()
-
-GET     /html/handlers/:handlerId/offers          controllers.HtmlOfferController.handlerOfferList(handlerId: Long)
-
-GET     /html/handlers/:handlerId/growers         controllers.HtmlGrowerController.handlerGrowerList(handlerId: Long)
-
-GET     /html/growers/createForm                  controllers.HtmlGrowerController.growerCreateForm()
-
-GET     /html/growers/:growerId                   controllers.HtmlGrowerController.growerView(growerId: Long)
-
-POST    /html/growers                             controllers.HtmlGrowerController.growerCreate()
-
-GET     /html/offers/createForm                   controllers.HtmlOfferController.offerCreateForm()
-
-POST    /html/offers                              controllers.HtmlOfferController.offerCreate()
-
-GET     /html/offers/:offerId                     controllers.HtmlOfferController.offerView(offerId: Long)

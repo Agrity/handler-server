@@ -45,6 +45,7 @@ public class Offer extends Model implements PrettyString {
 
   @ManyToOne
   @Constraints.Required
+  @Column(name = DBConstants.HANDLER_ID)
   private Handler handler;
 
   @OneToMany(cascade = CascadeType.ALL)
@@ -70,10 +71,6 @@ public class Offer extends Model implements PrettyString {
   @Constraints.Required
   private String pricePerPound;
 
-  public String getPricePerPound() {
-    return pricePerPound;
-  }
-  
   // TODO Change to Java 8 Date and Time
   @Formats.DateTime(pattern = "dd/MM/yyyy")
   private LocalDate paymentDate;
@@ -135,6 +132,11 @@ public class Offer extends Model implements PrettyString {
   public Integer getAlmondPounds() {
     return almondPounds;
   }
+
+  public String getPricePerPound() {
+    return pricePerPound;
+  }
+  
 
   public String getAlmondPoundsString() {
     return NumberFormat.getIntegerInstance().format(almondPounds);

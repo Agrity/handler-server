@@ -2,6 +2,10 @@
 package models;
 
 public class DBConstants {
+
+  public static final String HANDLER_ID = "handler_id";
+  public static final String GROWER_ID = "grower_id";
+
   /*
    * Explicitly named columns belonging to the Handler table.
    */

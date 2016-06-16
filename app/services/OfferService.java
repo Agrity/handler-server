@@ -1,54 +1,17 @@
 package services;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
 import java.util.List;
 
 import models.Offer;
 
-import play.mvc.Controller;
-import play.mvc.Result;
+public interface OfferService {
 
-import services.parsers.OfferJsonParser;
+  public List<Offer> getAll();
 
+  public Offer getById(long id);
 
-public class OfferService extends Controller {
+  public List<Offer> getByHandler(long handlerId);
 
-  public static List<Offer> getAllOffers() {
-    return Offer.find.all();
-  }
+  public List<Offer> getByGrower(long growerId);
 
-  public static Offer getOffer(Long id) {
-    return Offer.find.byId(id);
-  }
-
-  public static Result createOfferResult(JsonNode data) {
-    OfferJsonParser parser = new OfferJsonParser(data);
-
-    if (!parser.isValid()) {
-      return badRequest(parser.getErrorMessage());
-    }
-
-    Offer offer = createOffer(parser);
-
-    return created("Offer Created: " + offer + "\n");
-  }
-
-  private static Offer createOffer(OfferJsonParser parser) {
-    if (!parser.isValid()) {
-      throw new RuntimeException("Attempted to create Offer from invalid parser.\n");
-    }
-
-    Offer newOffer = new Offer(
-        parser.getHandler(),
-        parser.getGrowers(),
-        parser.getAlmondVariety(),
-        parser.getAlmondPounds(),
-        parser.getPricePerPound(),
-        parser.getPaymentDate(),
-        parser.getComment());
-
-    newOffer.save();
-    return newOffer;
-  }
 }
