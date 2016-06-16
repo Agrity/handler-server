@@ -1,6 +1,7 @@
 package models;
 
 import com.avaje.ebean.Model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.text.NumberFormat;
 import java.time.LocalDate;
@@ -45,7 +46,6 @@ public class Offer extends Model implements PrettyString {
 
   @ManyToOne
   @Constraints.Required
-  @Column(name = DBConstants.HANDLER_ID)
   private Handler handler;
 
   @OneToMany(cascade = CascadeType.ALL)
@@ -120,6 +120,7 @@ public class Offer extends Model implements PrettyString {
     return handler;
   }
 
+  @JsonIgnore
   public List<Grower> getAllGrowers() {
     return new ArrayList<>(growers);
   }
@@ -138,6 +139,7 @@ public class Offer extends Model implements PrettyString {
   }
   
 
+  @JsonIgnore
   public String getAlmondPoundsString() {
     return NumberFormat.getIntegerInstance().format(almondPounds);
   }
@@ -179,6 +181,7 @@ public class Offer extends Model implements PrettyString {
   }
   
 
+  @JsonIgnore
   public List<ResponseStatus> getAllOfferResponseStatuses() {
     return offerResponses.stream()
         .map(offerResponse -> offerResponse.getResponseStatus())

@@ -1,6 +1,7 @@
 package models;
 
 import com.avaje.ebean.Model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import models.interfaces.PrettyString;
+
 import play.data.validation.Constraints;
 
 @Entity
@@ -44,6 +46,7 @@ public class Handler extends Model implements PrettyString {
 
   @OneToMany
   @Constraints.Required
+  @JsonIgnore
   private List<Grower> growersList;
 
   public List<Grower> getGrowersList() {

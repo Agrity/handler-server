@@ -4,7 +4,6 @@ import com.avaje.ebean.Model.Finder;
 
 import java.util.List;
 
-import models.DBConstants;
 import models.Offer;
 
 import services.OfferService;

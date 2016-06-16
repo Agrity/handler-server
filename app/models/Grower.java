@@ -1,6 +1,7 @@
 package models;
 
 import com.avaje.ebean.Model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,17 +57,19 @@ public class Grower extends Model implements PrettyString {
   /**
    * TODO: Change to phone number format, construct own model so that can be consistant.
    */
-  @Constraints.Required
-  public List<String> phoneNumbers;
+  //@Constraints.Required
+  //public List<String> phoneNumbers;
 
 
   // TODO Remove OfferResponses and Offers from Growers if possible.
   @Constraints.Required
   @OneToMany(cascade = CascadeType.ALL)
+  @JsonIgnore // Annotation here because no explicit getter
   public List<OfferResponse> offerResponses = new ArrayList<>();
 
   @Constraints.Required
   @ManyToMany(cascade = CascadeType.ALL, mappedBy = "growers")
+  @JsonIgnore // Annotation here because no explicit getter
   public List<Offer> offers = new ArrayList<>();
 
 
@@ -93,7 +96,7 @@ public class Grower extends Model implements PrettyString {
     this.lastName = lastName;
 
     this.emailAddresses = new ArrayList<>();
-    this.phoneNumbers = new ArrayList<>();
+    //this.phoneNumbers = new ArrayList<>();
   }
 
   public Grower(Handler handler, String firstName, String lastName,
@@ -103,8 +106,10 @@ public class Grower extends Model implements PrettyString {
     this.firstName = firstName;
     this.lastName = lastName;
     this.handler = handler;
-    this.emailAddresses = emailAddresses;
-    this.phoneNumbers = phoneNumbers;
+    //this.emailAddresses = emailAddresses;
+    // TODO Fix When Phonenumbers Functional
+    // this.phoneNumbers = phoneNumbers;
+    //this.phoneNumbers = new ArrayList<>();
   }
 
   public Long getId() {
@@ -123,15 +128,22 @@ public class Grower extends Model implements PrettyString {
     return emailAddresses.isEmpty() ? null : emailAddresses.get(0).toString();
   }
 
+  @JsonIgnore
   public List<Offer> getAcceptedOffers() {
     return getOffersWithResponse(ResponseStatus.ACCEPTED);
   }
+  
+  @JsonIgnore
   public List<Offer> getRejectedOffers() {
     return getOffersWithResponse(ResponseStatus.REJECTED);
   }
+
+  @JsonIgnore
   public List<Offer> getCallRequestedOffers() {
     return getOffersWithResponse(ResponseStatus.REQUEST_CALL);
   }
+
+  @JsonIgnore
   public List<Offer> getNoResponseOffers() {
     return getOffersWithResponse(ResponseStatus.NO_RESPONSE);
   }
@@ -146,6 +158,7 @@ public class Grower extends Model implements PrettyString {
     return matchedOffers;
   }
 
+  @JsonIgnore
   public List<String> getEmailAddressStrings() {
     return emailAddresses
       .stream()

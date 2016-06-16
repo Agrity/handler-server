@@ -1,7 +1,6 @@
 #!/bin/bash
 
 if [[ -z $1 ]]; then
-  echo "Creating Offer..."
   curl \
     --header "Content-type: application/json" \
     --request POST \

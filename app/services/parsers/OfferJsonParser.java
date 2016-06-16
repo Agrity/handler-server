@@ -10,6 +10,7 @@ import models.Almond;
 import models.Almond.AlmondVariety;
 import models.Grower;
 import models.Handler;
+import models.Offer;
 
 import services.DateService;
 import services.GrowerService;
@@ -99,6 +100,23 @@ public class OfferJsonParser extends JsonParser {
 
     // Valid json data recieved
     setValid();
+  }
+
+  public Offer formOffer() {
+    if (!isValid()) {
+      throw new RuntimeException("Attempted to create Offer from invalid parser.\n");
+    }
+
+    Offer newOffer = new Offer(
+        getHandler(),
+        getGrowers(),
+        getAlmondVariety(),
+        getAlmondPounds(),
+        getPricePerPound(),
+        getPaymentDate(),
+        getComment());
+
+    return newOffer;
   }
 
   public Handler getHandler() {

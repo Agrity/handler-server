@@ -1,6 +1,8 @@
 package controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 
 import models.Grower;
@@ -17,14 +19,21 @@ import services.GrowerService;
 import services.HandlerService;
 import services.OfferService;
 import services.messaging.offer.OfferMessageService;
+import services.parsers.OfferJsonParser;
 
 public class OfferController extends Controller {
 
+  private final OfferService offerService;
   private final OfferMessageService offerMessageService;
 
+  private final ObjectMapper jsonMapper;
+
   @Inject
-  public OfferController(OfferMessageService offerMessageService) {
+  public OfferController(OfferService offerService, OfferMessageService offerMessageService) {
+    this.offerService = offerService;
     this.offerMessageService = offerMessageService;
+
+    this.jsonMapper = new ObjectMapper();
   }
 
   public Result indexOffer(long id) {
@@ -85,20 +94,34 @@ public class OfferController extends Controller {
   // returned.
   @BodyParser.Of(BodyParser.Json.class)
   public Result createOffer() {
-    //JsonNode data = request().body().asJson();
+    JsonNode data = request().body().asJson();
 
-    //if (data == null) {
-    //  return badRequest("Expecting Some Data.\n");
-    //}
+    if (data == null) {
+      return badRequest("Expecting Some Data.\n");
+    }
 
-    //Logger.info("Offer Data Recieved: " + data.toString());
-    //return OfferService.createOfferResult(data);
-    return null;
+    OfferJsonParser parser = new OfferJsonParser(data);
+
+    if (!parser.isValid()) {
+      return badRequest(parser.getErrorMessage());
+    }
+
+    Offer offer = parser.formOffer();
+    offer.save();
+
+    try {
+      return created(jsonMapper.writeValueAsString(offer));
+    } catch (JsonProcessingException e) {
+      return internalServerError(e.toString());
+    }
   }
 
   public Result getAllOffers() {
-    //return ok(OfferService.getAllOffers().toString());
-    return null;
+    try {
+      return ok(jsonMapper.writeValueAsString(offerService.getAll()));
+    } catch (JsonProcessingException e) {
+      return internalServerError(e.toString());
+    }
   }
 
   public Result getOffer(long id) {
