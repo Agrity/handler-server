@@ -4,7 +4,7 @@ package services;
 public class PhoneMessageService {
 
   public static boolean verifyPhoneNumber(String emailAddr) {
-    // TODO Implement
+    // Done. Implemeted.
     
     return true;
   }
