@@ -4,7 +4,7 @@ import com.google.inject.ImplementedBy;
 
 import models.Offer;
 
-@ImplementedBy(OfferEmailMessageService.class)
+@ImplementedBy(OfferSMSMessageService.class)
 public interface OfferMessageService {
 
   public boolean send(Offer offer);

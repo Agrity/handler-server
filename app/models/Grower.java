@@ -108,7 +108,7 @@ public class Grower extends Model implements PrettyString {
     this.handler = handler;
     //this.emailAddresses = emailAddresses;
     // TODO Fix When Phonenumbers Functional
-    this.phoneNumbers = phoneNumbers;
+    //this.phoneNumbers = phoneNumbers;
     //this.phoneNumbers = new ArrayList<>();
   }
 
@@ -166,9 +166,10 @@ public class Grower extends Model implements PrettyString {
       .collect(Collectors.toList());
   }
 
-  public List<String> getPhoneNumbers() {
-    return phoneNumbers;
-  }
+  //@JsonIgnore
+  //public List<String> getPhoneNumbers() {
+  //  return phoneNumbers;
+  //}
 
   @Override
   public String toString() {
