@@ -30,37 +30,33 @@ public class WaterfallService {
 		LocalDateTime current = LocalDateTime.now();	
 		if(current.isAfter(expirationTime)) {
 			//Time has passed, remove the front and return false if the list is empty
-			moveToNext();
-			if(growers.size() == 0) 
-				return false;
+			return moveToNext();
+		} 
+		OfferResponse response = offer.getGrowerOfferResponse(growers.get(0).getId());
+		ResponseStatus status = response.getResponseStatus();
 
-		} else {
-			OfferResponse response = offer.getGrowerOfferResponse(growers.get(0).getId());
-			ResponseStatus status = response.getResponseStatus();
-				
-			switch(status) {
-				//set response status for grower here?
-				case ACCEPTED:
-					return false;
-				case REJECTED:
-					moveToNext(); break;
-				case REQUEST_CALL:
-					//return something?
-				default:
-			}
-
-
+		switch(status) {
+			//set response status for grower here?
+			case ACCEPTED:
+			return false;
+			case REJECTED:
+			return moveToNext();
+			case REQUEST_CALL:
+				//return something?
+			default:
 		}
-
 		return true;
 		
 	}
 
-	private void moveToNext() {
+	private boolean moveToNext() {
 		//Send message to 0 that their time has expired
 		growers.remove(0);
+		if(growers.size() == 0) return false;
+		
 		expirationTime = LocalDateTime.now().plus(delay);
 		//Send message to new 0 for the offer
+		return true;
 	}
 
 
