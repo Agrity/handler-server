@@ -10,6 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.time.Duration;
 import java.time.Month;
 import java.util.List;
 
@@ -22,7 +23,7 @@ import static org.mockito.Mockito.*;
 import com.avaje.ebean.Ebean;
 import com.google.common.collect.ImmutableList;
 
-import WaterfallService.java;
+import models.WaterfallService;
 
 
 
@@ -61,7 +62,11 @@ public class WaterfallServiceTest extends Ebean {
     assertThat(offer, is(notNullValue()));
     saveModel(offer);
 
-    w
+    WaterfallService wservice = new wservice(offer, Duration.ofSeconds(5));
+
+    while(wservice.process()) {
+      
+    }
 
   }
 

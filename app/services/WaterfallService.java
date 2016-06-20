@@ -29,9 +29,10 @@ public class WaterfallService {
 	public boolean process() {
 		LocalDateTime current = LocalDateTime.now();	
 		if(current.isAfter(expirationTime)) {
-			//Time has passed, remove the front and return false if the list is empty
+			// Time has passed, remove the front and return false if the list is empty
 			return moveToNext();
 		} 
+
 		OfferResponse response = offer.getGrowerOfferResponse(growers.get(0).getId());
 		ResponseStatus status = response.getResponseStatus();
 
@@ -58,6 +59,10 @@ public class WaterfallService {
 		//Send message to new 0 for the offer
 		return true;
 	}
+
+  public List<Grower> getCurrentGrowers() {
+    return growers;
+  }
 
 
 
