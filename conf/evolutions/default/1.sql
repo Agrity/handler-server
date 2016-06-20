@@ -6,6 +6,8 @@
 create table email_address (
   id                            bigint auto_increment not null,
   grower_id                     bigint not null,
+  created_at                    timestamp,
+  updated_at                    timestamp,
   email_address                 varchar(255),
   constraint pk_email_address primary key (id)
 );

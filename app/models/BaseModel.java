@@ -28,10 +28,6 @@ public class BaseModel extends Model {
   @Column(name = "updated_at")
   public LocalDateTime updatedAt;
 
-  public Long getId() {
-    return id;
-  };
-
   @PrePersist
   public void createdAt() {
     this.createdAt = this.updatedAt = LocalDateTime.now();
@@ -40,5 +36,17 @@ public class BaseModel extends Model {
   @PreUpdate
   public void updatedAt() {
     this.updatedAt = LocalDateTime.now();
+  }
+
+  public Long getId() {
+    return id;
+  };
+
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public LocalDateTime getUpdatedAt() {
+    return updatedAt;
   }
 }
