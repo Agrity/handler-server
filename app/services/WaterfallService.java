@@ -12,13 +12,6 @@ import java.time.LocalDateTime;
 
 public class WaterfallService {
 
-	// public static enum ResponseStatus {
- //    	NO_RESPONSE,
- //    	ACCEPTED,
- //   		REJECTED,
- //   		REQUEST_CALL,
-	// }
-
 	private final Offer offer;
 	private final Duration delay;
 
@@ -33,23 +26,27 @@ public class WaterfallService {
 
 	}
 
-
 	public boolean process() {
 		LocalDateTime current = LocalDateTime.now();	
 		if(current.isAfter(expirationTime)) {
 			//Time has passed, remove the front and return false if the list is empty
-			growers.remove(0);
+			moveToNext();
 			if(growers.size() == 0) 
 				return false;
+
 		} else {
 			OfferResponse response = offer.getGrowerOfferResponse(growers.get(0).getId());
 			ResponseStatus status = response.getResponseStatus();
-			if(status == ResponseStatus.ACCEPTED) {
-
-			} else if(status == ResponseStatus.REJECTED) {
-
-			} else if(status == ResponseStatus.NO_RESPONSE) {
-
+				
+			switch(status) {
+				//set response status for grower here?
+				case ACCEPTED:
+					return false;
+				case REJECTED:
+					moveToNext(); break;
+				case REQUEST_CALL:
+					//return something?
+				default:
 			}
 
 
@@ -57,8 +54,13 @@ public class WaterfallService {
 
 		return true;
 		
+	}
 
-
+	private void moveToNext() {
+		//Send message to 0 that their time has expired
+		growers.remove(0);
+		expirationTime = LocalDateTime.now().plus(delay);
+		//Send message to new 0 for the offer
 	}
 
 
