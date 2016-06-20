@@ -2,7 +2,7 @@ package services.parsers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import services.HandlerService;
+import models.Handler;
 
 /**
  * Class to parse json data to create new Handler.
@@ -27,6 +27,10 @@ public class HandlerJsonParser extends JsonParser {
 
     // Valid json data received and processed.
     setValid();
+  }
+
+  public Handler formHandler() {
+    return new Handler(getCompanyName());
   }
 
   // WARNING: Should only be called after isValid() has been checked to be true
@@ -63,7 +67,7 @@ public class HandlerJsonParser extends JsonParser {
   }
 
   private boolean checkHandlerCompanyNameAvailable(String companyName) {
-    return HandlerService.getHandler(companyName) == null;
+    return handlerService.getByCompanyName(companyName) == null;
   }
 
   private static class HandlerJsonConstants {

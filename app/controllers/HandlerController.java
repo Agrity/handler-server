@@ -1,6 +1,9 @@
 package controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.inject.Inject;
 
 import models.Grower;
 import models.Handler;
@@ -11,77 +14,111 @@ import play.mvc.Result;
 
 import services.GrowerService;
 import services.HandlerService;
+import services.parsers.HandlerJsonParser;
 
 public class HandlerController extends Controller {
+
+  private final HandlerService handlerService;
+
+  private final ObjectMapper jsonMapper;
+
+  @Inject
+  public HandlerController(HandlerService handlerService) {
+    this.handlerService = handlerService;
+
+    this.jsonMapper = new ObjectMapper();
+  }
 
   // Annotation ensures that POST request is of type application/json. If not HTTP 400 response
   // returned.
   @BodyParser.Of(BodyParser.Json.class)
   public Result createHandler() {
-
     JsonNode data = request().body().asJson();
 
     if (data == null) {
+      // TODO Change to Valid Error JSON
       return badRequest("Expecting Some Data.\n");
     }
 
-    return HandlerService.createHandlerResult(data);
+    HandlerJsonParser parser = new HandlerJsonParser(data);
+
+    if (!parser.isValid()) {
+      // TODO Change to Valid Error JSON
+      return badRequest(parser.getErrorMessage());
+    }
+
+    Handler handler = parser.formHandler();
+    handler.save();
+
+    try {
+      return created(jsonMapper.writeValueAsString(handler));
+    } catch (JsonProcessingException e) {
+      // TODO Change to Valid Error JSON
+      return internalServerError(e.toString());
+    }
   }
 
   public Result getAllHandlers() {
-    return ok(HandlerService.getAllHandlers().toString());
+    try {
+      return ok(jsonMapper.writeValueAsString(handlerService.getAll()));
+    } catch (JsonProcessingException e) {
+      // TODO Change to Valid Error JSON
+      return internalServerError(e.toString());
+    }
   }
 
   public Result getHandler(long id) {
-    Handler handler = HandlerService.getHandler(id);
+    Handler handler = handlerService.getById(id);
 
     if (handler == null) {
+      // TODO Change to Valid Error JSON
       return notFound(ErrorMessages.handlerNotFoundMessage(id));
     }
 
-    return ok(handler.toString());
+    try {
+      return ok(jsonMapper.writeValueAsString(handler));
+    } catch (JsonProcessingException e) {
+      // TODO Change to Valid Error JSON
+      return internalServerError(e.toString());
+    }
   }
 
-  public Result addGrower(long id) {
-    Handler handler = HandlerService.getHandler(id);
+  public Result getAllGrowers(long handlerId) {
+    Handler handler = handlerService.getById(handlerId);
+
     if (handler == null) {
-      return notFound(ErrorMessages.handlerNotFoundMessage(id));
+      // TODO Change to Valid Error JSON
+      return notFound(ErrorMessages.handlerNotFoundMessage(handlerId));
     }
 
-    JsonNode data = request().body().asJson();
-
-    if (data == null) {
-      return badRequest("Expecting Some Data.\n");
-    }
-
-    // TODO Create grower and return created
-    return ok("Data Found. Grower Not Created.\n" + data.toString() + "\n");
+    // TODO Use Grower Service After Implemented.
+    return ok("TODO Grower");
   }
 
-  public Result getAllGrowers(long id) {
-    Handler handler = Handler.find.byId(id);
+  public Result getGrower(long handlerId, long growerId) {
+    Handler handler = handlerService.getById(handlerId);
+    
     if (handler == null) {
-      return notFound(ErrorMessages.handlerNotFoundMessage(id));
-    }
-
-    return ok(Helpers.fetchList(handler.getGrowersList()).toString());
-  }
-
-  public Result getGrower(long id, long growerId) {
-    Handler handler = Handler.find.byId(id);
-    if (handler == null) {
-      return notFound(ErrorMessages.handlerNotFoundMessage(id));
+      // TODO Change to Valid Error JSON
+      return notFound(ErrorMessages.handlerNotFoundMessage(handlerId));
     }
 
     Grower grower = GrowerService.getGrower(growerId);
     if (grower == null) {
+      // TODO Change to Valid Error JSON
       return notFound(ErrorMessages.growerNotFoundMessage(growerId));
     }
 
-    if (!HandlerService.checkHandlerOwnsGrower(handler, grower)) {
+    if (!handlerService.checkHandlerOwnsGrower(handler, grower)) {
+      // TODO Change to Valid Error JSON
       return badRequest(ErrorMessages.handlerDoesNotOwnGrowerMessage(handler, grower));
     }
 
-    return ok(grower.toString());
+    try {
+      return ok(jsonMapper.writeValueAsString(grower));
+    } catch (JsonProcessingException e) {
+      // TODO Change to Valid Error JSON
+      return internalServerError(e.toString());
+    }
   }
 }

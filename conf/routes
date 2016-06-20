@@ -20,8 +20,6 @@ GET     /handlers/:id                             controllers.HandlerController.
 
 GET     /handlers/:id/growers                     controllers.HandlerController.getAllGrowers(id: Long)
 
-POST    /handlers/:id/growers                     controllers.HandlerController.addGrower(id: Long)
-
 GET     /handlers/:id/growers/:growerId           controllers.HandlerController.getGrower(id: Long, growerId: Long)
 
 GET     /handlers/:id/offers                      controllers.OfferController.getAllHandlerOffers(id: Long)

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import models.Handler;
 
 import services.HandlerService;
+import services.impl.EbeanHandlerService;
 
 /**
  * Base class to parse json data. Intended to be extended for specific json data types.
@@ -16,7 +17,13 @@ public abstract class JsonParser {
 
   private boolean validitySet = false;
 
-  public JsonParser() {}
+  protected final HandlerService handlerService;
+
+  public JsonParser() {
+    // TODO -- Extremely Hacky -- Change to Dependency Injection.
+    //      See Guice AssistedInjection
+    handlerService = new EbeanHandlerService();
+  }
 
   public boolean isValid() {
     ensureValidityIsSet();
@@ -89,7 +96,7 @@ public abstract class JsonParser {
     }
     
     // Check handler exists with given id.
-    Handler handler = HandlerService.getHandler(handlerId);
+    Handler handler = handlerService.getById(handlerId);
     if (handler == null) {
       setInvalid("Handler does not exist with handler id [" + handlerId + "].\n");
       return null;

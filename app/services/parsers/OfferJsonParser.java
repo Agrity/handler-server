@@ -14,7 +14,6 @@ import models.Offer;
 
 import services.DateService;
 import services.GrowerService;
-import services.HandlerService;
 
 /**
  * Class to parse json data to create new Offer.
@@ -189,7 +188,7 @@ public class OfferJsonParser extends JsonParser {
       }
 
       // Ensure given handler owns grower
-      if (!HandlerService.checkHandlerOwnsGrower(handler, grower)) {
+      if (!handlerService.checkHandlerOwnsGrower(handler, grower)) {
         setInvalid("Handler with id [ " + handler.getId() + " ] does not own grower with id [ "
             + growerId + " ].\n");
         return null;

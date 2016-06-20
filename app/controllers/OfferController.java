@@ -7,18 +7,12 @@ import com.google.inject.Inject;
 
 import java.util.List;
 
-import models.Grower;
-import models.Handler;
 import models.Offer;
 
-import play.Logger;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
-import play.twirl.api.Content;
 
-import services.GrowerService;
-import services.HandlerService;
 import services.OfferService;
 import services.messaging.offer.OfferMessageService;
 import services.parsers.OfferJsonParser;
