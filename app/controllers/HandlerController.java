@@ -19,12 +19,14 @@ import services.parsers.HandlerJsonParser;
 public class HandlerController extends Controller {
 
   private final HandlerService handlerService;
+  private final GrowerService growerService;
 
   private final ObjectMapper jsonMapper;
 
   @Inject
-  public HandlerController(HandlerService handlerService) {
+  public HandlerController(HandlerService handlerService, GrowerService growerService) {
     this.handlerService = handlerService;
+    this.growerService = growerService;
 
     this.jsonMapper = new ObjectMapper();
   }
@@ -103,7 +105,7 @@ public class HandlerController extends Controller {
       return notFound(ErrorMessages.handlerNotFoundMessage(handlerId));
     }
 
-    Grower grower = GrowerService.getGrower(growerId);
+    Grower grower = growerService.getById(growerId);
     if (grower == null) {
       // TODO Change to Valid Error JSON
       return notFound(ErrorMessages.growerNotFoundMessage(growerId));

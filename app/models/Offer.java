@@ -188,9 +188,9 @@ public class Offer extends Model implements PrettyString {
         .collect(Collectors.toList());
   }
 
-  private OfferResponse getGrowerOfferResponse(Grower grower) {
+  private OfferResponse getGrowerOfferResponse(long growerId) {
     return offerResponses.stream()
-        .filter(offerResponse -> offerResponse.getGrower().equals(grower))
+        .filter(offerResponse -> offerResponse.getGrower().getId().equals(growerId))
         .findFirst()
         .get();
   }
@@ -209,13 +209,7 @@ public class Offer extends Model implements PrettyString {
   }
 
   private boolean setGrowerResponseForOffer(Long growerId, ResponseStatus growerResponse) {
-    Grower grower = GrowerService.getGrower(growerId);
-    if (grower == null) {
-      Logger.error("Grower with id [" + growerId + "] could not be found to respond to offer");
-      return false;
-    }
-
-    OfferResponse growerOfferResponse = getGrowerOfferResponse(grower);
+    OfferResponse growerOfferResponse = getGrowerOfferResponse(growerId);
 
     if (growerOfferResponse == null) {
       Logger.error("Grower Response with grower id [" + growerId + "] could not be found to respond to offer");

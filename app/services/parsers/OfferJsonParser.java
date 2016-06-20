@@ -14,6 +14,7 @@ import models.Offer;
 
 import services.DateService;
 import services.GrowerService;
+import services.impl.EbeanGrowerService;
 
 /**
  * Class to parse json data to create new Offer.
@@ -52,8 +53,14 @@ public class OfferJsonParser extends JsonParser {
   private LocalDate paymentDate;
   private String comment;
 
+  private final GrowerService growerService;
+
   public OfferJsonParser(JsonNode data) {
     super();
+
+    // TODO -- Extremely Hacky -- Change to Dependency Injection.
+    //      See Guice AssistedInjection
+    growerService = new EbeanGrowerService();
 
     handler = parseHandler(data);
     if (handler == null) {
@@ -181,7 +188,7 @@ public class OfferJsonParser extends JsonParser {
       }
 
       // Check grower exists with given id.
-      Grower grower = GrowerService.getGrower(growerId);
+      Grower grower = growerService.getById(growerId);
       if (grower == null) {
         setInvalid("Grower does not exist with grower id [" + growerId + "].\n");
         return null;

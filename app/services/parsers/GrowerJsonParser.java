@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import models.EmailAddress;
+import models.Grower;
 import models.Handler;
 
 import services.EmailService;
@@ -80,6 +81,21 @@ public class GrowerJsonParser extends JsonParser {
 
     // Valid json data recieved
     setValid();
+  }
+
+  public Grower formGrower() {
+    if (!isValid()) {
+      throw new RuntimeException("Attempted to create Grower from invalid parser.\n");
+    }
+
+    Grower newGrower = new Grower(
+        getHandler(),
+        getFirstName(),
+        getLastName(),
+        getEmailAddresses(),
+        getPhoneNumbers());
+
+    return newGrower;
   }
 
   public Handler getHandler() {

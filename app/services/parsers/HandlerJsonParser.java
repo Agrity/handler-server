@@ -30,6 +30,9 @@ public class HandlerJsonParser extends JsonParser {
   }
 
   public Handler formHandler() {
+    if (!isValid()) {
+      throw new RuntimeException("Attempted to create Handler from invalid parser.\n");
+    }
     return new Handler(getCompanyName());
   }
 

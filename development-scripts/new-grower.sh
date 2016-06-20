@@ -1,9 +1,6 @@
 #!/bin/bash
 
 if [[ -z $1 ]]; then
-  echo "Creating Grower..."
-  echo # Insert Blank Line
-
   curl \
     --header "Content-type: application/json" \
     --request POST \
