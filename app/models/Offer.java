@@ -1,6 +1,5 @@
 package models;
 
-import com.avaje.ebean.Model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.text.NumberFormat;
@@ -15,9 +14,6 @@ import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -30,19 +26,11 @@ import play.Logger;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
 
-import services.GrowerService;
-
 @Entity
-public class Offer extends Model implements PrettyString {
+public class Offer extends BaseModel implements PrettyString {
 
 
   /* ======================================= Attributes ======================================= */
-
-
-  @Id
-  @Constraints.Min(10)
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
 
   @ManyToOne
   @Constraints.Required
@@ -54,7 +42,7 @@ public class Offer extends Model implements PrettyString {
   
   @ManyToMany(cascade = CascadeType.ALL)
   @Constraints.Required
-  private Set<Grower> growers = new HashSet<>();
+  private List<Grower> growers = new ArrayList<>();
 
   // TODO Figure out Why this can't use reflection
   //@Constraints.Required
@@ -100,7 +88,7 @@ public class Offer extends Model implements PrettyString {
             .map(grower -> new OfferResponse(grower))
             .collect(Collectors.toSet());
 
-    this.growers = new HashSet<>(allGrowers);
+    this.growers = allGrowers;
     this.almondVariety = almondVariety;
     this.almondPounds = almondPounds;
     this.pricePerPound = pricePerPound;
@@ -112,17 +100,13 @@ public class Offer extends Model implements PrettyString {
   /* === Attribute Accessors === */
 
 
-  public Long getId() {
-    return id;
-  };
-
   public Handler getHandler() {
     return handler;
   }
 
   @JsonIgnore
   public List<Grower> getAllGrowers() {
-    return new ArrayList<>(growers);
+    return growers;
   }
 
   public AlmondVariety getAlmondVariety() {

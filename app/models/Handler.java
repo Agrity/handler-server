@@ -1,6 +1,5 @@
 package models;
 
-import com.avaje.ebean.Model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
@@ -8,9 +7,6 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import models.interfaces.PrettyString;
@@ -18,17 +14,7 @@ import models.interfaces.PrettyString;
 import play.data.validation.Constraints;
 
 @Entity
-public class Handler extends Model implements PrettyString {
-
-  @Id
-  @Constraints.Min(10)
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = DBConstants.HandlerColumns.ID)
-  private Long id;
-
-  public Long getId() {
-    return id;
-  }
+public class Handler extends BaseModel implements PrettyString {
 
   @Constraints.Required
   @Column(name = DBConstants.HandlerColumns.COMPANY_NAME)
