@@ -172,7 +172,7 @@ public class Offer extends BaseModel implements PrettyString {
         .collect(Collectors.toList());
   }
 
-  private OfferResponse getGrowerOfferResponse(long growerId) {
+  public OfferResponse getGrowerOfferResponse(long growerId) {
     return offerResponses.stream()
         .filter(offerResponse -> offerResponse.getGrower().getId().equals(growerId))
         .findFirst()
