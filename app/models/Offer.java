@@ -54,7 +54,7 @@ public class Offer extends Model implements PrettyString {
   
   @ManyToMany(cascade = CascadeType.ALL)
   @Constraints.Required
-  private Set<Grower> growers = new HashSet<>();
+  private List<Grower> growers = new ArrayList<>();
 
   // TODO Figure out Why this can't use reflection
   //@Constraints.Required
@@ -100,7 +100,7 @@ public class Offer extends Model implements PrettyString {
             .map(grower -> new OfferResponse(grower))
             .collect(Collectors.toSet());
 
-    this.growers = new HashSet<>(allGrowers);
+    this.growers = allGrowers;
     this.almondVariety = almondVariety;
     this.almondPounds = almondPounds;
     this.pricePerPound = pricePerPound;
@@ -122,7 +122,7 @@ public class Offer extends Model implements PrettyString {
 
   @JsonIgnore
   public List<Grower> getAllGrowers() {
-    return new ArrayList<>(growers);
+    return growers;
   }
 
   public AlmondVariety getAlmondVariety() {
