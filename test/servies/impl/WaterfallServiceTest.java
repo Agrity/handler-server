@@ -24,9 +24,7 @@ import models.Handler;
 import models.Offer;
 import models.OfferResponse;
 import models.OfferResponse.ResponseStatus;
-
-import services.WaterfallService;
-
+import services.offer_management.WaterfallService;
 import test_helpers.EbeanTest;
 
 import static org.mockito.Mockito.*;
