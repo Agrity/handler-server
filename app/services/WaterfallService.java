@@ -72,9 +72,10 @@ public class WaterfallService {
 
   public void reject() {
     //TODO: remove front and reschedule
+    cancellable.cancel();
     moveToNext();
   }
-  
+
   public List<Grower> getCurrentGrowers() {
     return growers;
   }

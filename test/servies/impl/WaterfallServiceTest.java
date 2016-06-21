@@ -88,58 +88,37 @@ public class WaterfallServiceTest extends EbeanTest {
 
     }
     assertThat(wservice.getCurrentGrowers().size(), is(0));
-
-
-
-
-
-
-    // int index = 0;
-    // int counter = 0;
-    // while(wservice.process()) {
-    //   List<Grower> g = wservice.getCurrentGrowers();
-    //   assertThat(g.get(0), is(equalTo(UNUSED_GROWERS.get(index))));
-    //   try {
-    //     Thread.sleep(55);
-    //   } catch(InterruptedException ex) {
-    //     Thread.currentThread().interrupt();
-    //   }
-    //   counter += 1;
-    //   if(counter % 2 == 0) index += 1;
-    // }
-
-    // assertThat(wservice.getCurrentGrowers().size(), is(0));
-
   }
 
-  // @Test
-  // public void testAllRejected() {
-  //   Offer offer
-  //     = new Offer(
-  //         UNUSED_HANDLER,
-  //         UNUSED_GROWERS,
-  //         UNUSED_VARIETY,
-  //         UNUSED_POUNDS,
-  //         UNUSED_PRICE,
-  //         UNUSED_DATE,
-  //         UNUSED_COMMENT);
+  @Test
+  public void testAllRejected() {
+    Offer offer
+      = new Offer(
+          UNUSED_HANDLER,
+          UNUSED_GROWERS,
+          UNUSED_VARIETY,
+          UNUSED_POUNDS,
+          UNUSED_PRICE,
+          UNUSED_DATE,
+          UNUSED_COMMENT);
 
-  //   assertThat(offer, is(notNullValue()));
-  //   saveModel(offer);
+    assertThat(offer, is(notNullValue()));
+    saveModel(offer);
 
-  //   WaterfallService wservice = new WaterfallService(offer, Duration.ofMillis(30));
+    WaterfallService wservice = new WaterfallService(offer, Duration.ofMillis(100));
 
-  //   int index = 0;
-  //   while(wservice.process()) {
-  //     List<Grower> g = wservice.getCurrentGrowers();
-  //     OfferResponse or = offer.getGrowerOfferResponse(g.get(0).getId());
-  //     assertThat(g.get(0), is(equalTo(UNUSED_GROWERS.get(index))));
-  //     or.setResponseStatus(ResponseStatus.REJECTED);
-  //     index++;
-  //   }
-  //   assertThat(wservice.getCurrentGrowers().size(), is(0));
+    int index = 0;
+    while(wservice.getCurrentGrowers().size() > 0) {
+      List<Grower> g = wservice.getCurrentGrowers();
+      // OfferResponse or = offer.getGrowerOfferResponse(g.get(0).getId());
+      assertThat(g.get(0), is(equalTo(UNUSED_GROWERS.get(index))));
+   //   or.setResponseStatus(ResponseStatus.REJECTED);
+      wservice.reject();
+      index++;
+    }
+    assertThat(wservice.getCurrentGrowers().size(), is(0));
   
-  // }
+  }
 
   // @Test
   // public void testFirstAccepted() {
