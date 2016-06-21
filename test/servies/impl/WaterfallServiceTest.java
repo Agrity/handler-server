@@ -110,9 +110,7 @@ public class WaterfallServiceTest extends EbeanTest {
     int index = 0;
     while(wservice.getCurrentGrowers().size() > 0) {
       List<Grower> g = wservice.getCurrentGrowers();
-      // OfferResponse or = offer.getGrowerOfferResponse(g.get(0).getId());
       assertThat(g.get(0), is(equalTo(UNUSED_GROWERS.get(index))));
-   //   or.setResponseStatus(ResponseStatus.REJECTED);
       wservice.reject();
       index++;
     }
@@ -120,151 +118,147 @@ public class WaterfallServiceTest extends EbeanTest {
   
   }
 
-  // @Test
-  // public void testFirstAccepted() {
-  //   Offer offer
-  //     = new Offer(
-  //         UNUSED_HANDLER,
-  //         UNUSED_GROWERS,
-  //         UNUSED_VARIETY,
-  //         UNUSED_POUNDS,
-  //         UNUSED_PRICE,
-  //         UNUSED_DATE,
-  //         UNUSED_COMMENT);
+  @Test
+  public void testFirstAccepted() {
+    Offer offer
+      = new Offer(
+          UNUSED_HANDLER,
+          UNUSED_GROWERS,
+          UNUSED_VARIETY,
+          UNUSED_POUNDS,
+          UNUSED_PRICE,
+          UNUSED_DATE,
+          UNUSED_COMMENT);
 
-  //   assertThat(offer, is(notNullValue()));
-  //   saveModel(offer);
+    assertThat(offer, is(notNullValue()));
+    saveModel(offer);
 
-  //   WaterfallService wservice = new WaterfallService(offer, Duration.ofMillis(300));
+    WaterfallService wservice = new WaterfallService(offer, Duration.ofMillis(1000));
 
-  //   int index = 0;
-  //   while(wservice.process()) {
-  //     List<Grower> g = wservice.getCurrentGrowers();
-  //     OfferResponse or = offer.getGrowerOfferResponse(g.get(0).getId());
-  //     assertThat(g.get(0), is(equalTo(UNUSED_GROWERS.get(index))));
-  //     or.setResponseStatus(ResponseStatus.ACCEPTED);
-  //     index++;
-  //   }
-  //   assertThat(wservice.getCurrentGrowers().size(), is(4));
+    int index = 0;
+    while(wservice.getCurrentGrowers().size() > 0) {
+      List<Grower> g = wservice.getCurrentGrowers();
+      assertThat(g.get(0), is(equalTo(UNUSED_GROWERS.get(index))));
+      wservice.accept(); break;
+    }
+    assertThat(wservice.getCurrentGrowers().size(), is(4));
 
-  // }
+  }
 
-  // @Test
-  // public void test2Reject3rdAccepts() {
-  //   Offer offer
-  //     = new Offer(
-  //         UNUSED_HANDLER,
-  //         UNUSED_GROWERS,
-  //         UNUSED_VARIETY,
-  //         UNUSED_POUNDS,
-  //         UNUSED_PRICE,
-  //         UNUSED_DATE,
-  //         UNUSED_COMMENT);
+  @Test
+  public void test2Reject3rdAccepts() {
+    Offer offer
+      = new Offer(
+          UNUSED_HANDLER,
+          UNUSED_GROWERS,
+          UNUSED_VARIETY,
+          UNUSED_POUNDS,
+          UNUSED_PRICE,
+          UNUSED_DATE,
+          UNUSED_COMMENT);
 
-  //   assertThat(offer, is(notNullValue()));
-  //   saveModel(offer);
+    assertThat(offer, is(notNullValue()));
+    saveModel(offer);
 
-  //   WaterfallService wservice = new WaterfallService(offer, Duration.ofMillis(1000));
-  //   assertThat(wservice.getCurrentGrowers().size(), is(4));
+    WaterfallService wservice = new WaterfallService(offer, Duration.ofMillis(1000));
+    assertThat(wservice.getCurrentGrowers().size(), is(4));
 
-  //   int index = 0;
-  //   while(wservice.process()) {
-  //     List<Grower> g = wservice.getCurrentGrowers();
-  //     assertThat(g.get(0), is(equalTo(UNUSED_GROWERS.get(index))));
+    int index = 0;
+    while(wservice.getCurrentGrowers().size() > 0) {
+      List<Grower> g = wservice.getCurrentGrowers();
+      assertThat(g.get(0), is(equalTo(UNUSED_GROWERS.get(index))));
       
-  //     if(index == 2) {
-  //       OfferResponse or = offer.getGrowerOfferResponse(g.get(0).getId());
-  //       or.setResponseStatus(ResponseStatus.ACCEPTED);
-  //     } else if (index < 2) {
-  //       OfferResponse or = offer.getGrowerOfferResponse(g.get(0).getId());
-  //       or.setResponseStatus(ResponseStatus.REJECTED);
-  //     }
+      if(index == 2) {
+        wservice.accept();
+        break;
+      } else if (index < 2) {
+        wservice.reject();
+      }
       
-  //     index++;
-  //   }
-  //   assertThat(wservice.getCurrentGrowers().size(), is(2));
-  // }
+      index++;
+    }
+    assertThat(wservice.getCurrentGrowers().size(), is(2));
+  }
 
-  // @Test
-  // public void test3rdAccepts() {
-  //   Offer offer
-  //     = new Offer(
-  //         UNUSED_HANDLER,
-  //         UNUSED_GROWERS,
-  //         UNUSED_VARIETY,
-  //         UNUSED_POUNDS,
-  //         UNUSED_PRICE,
-  //         UNUSED_DATE,
-  //         UNUSED_COMMENT);
+  @Test
+  public void test3rdAccepts() {
+    Offer offer
+      = new Offer(
+          UNUSED_HANDLER,
+          UNUSED_GROWERS,
+          UNUSED_VARIETY,
+          UNUSED_POUNDS,
+          UNUSED_PRICE,
+          UNUSED_DATE,
+          UNUSED_COMMENT);
 
-  //   assertThat(offer, is(notNullValue()));
-  //   saveModel(offer);
+    assertThat(offer, is(notNullValue()));
+    saveModel(offer);
 
-  //   WaterfallService wservice = new WaterfallService(offer, Duration.ofSeconds(1));
-  //   assertThat(wservice.getCurrentGrowers().size(), is(4));
+    WaterfallService wservice = new WaterfallService(offer, Duration.ofSeconds(1));
+    assertThat(wservice.getCurrentGrowers().size(), is(4));
 
-  //   int index = 0;
-  //   while(wservice.process()) {
-  //     List<Grower> g = wservice.getCurrentGrowers();
-  //     assertThat(g.get(0), is(equalTo(UNUSED_GROWERS.get(index))));
+    int index = 0;
+    while(wservice.getCurrentGrowers().size() > 0) {
+      List<Grower> g = wservice.getCurrentGrowers();
+      assertThat(g.get(0), is(equalTo(UNUSED_GROWERS.get(index))));
       
-  //     if(index == 2) {
-  //       OfferResponse or = offer.getGrowerOfferResponse(g.get(0).getId());
-  //       or.setResponseStatus(ResponseStatus.ACCEPTED);
-  //     } else {
-  //       try {
-  //         Thread.sleep(1100);
-  //       } catch(InterruptedException ex) {
-  //         Thread.currentThread().interrupt();
-  //       }
-  //     }
+      if(index == 2) {
+        wservice.accept();
+        break;
+      } else {
+        try {
+          Thread.sleep(1100);
+        } catch(InterruptedException ex) {
+          Thread.currentThread().interrupt();
+        }
+      }
       
-  //     index++;
-  //   }
-  //   assertThat(wservice.getCurrentGrowers().size(), is(2));
-  // }
+      index++;
+    }
+    assertThat(wservice.getCurrentGrowers().size(), is(2));
+  }
 
-  // /* First and third grower reject, second has no response, and final grower accepts. */
-  // @Test
-  // public void testMixed() {
-  //   Offer offer
-  //     = new Offer(
-  //         UNUSED_HANDLER,
-  //         UNUSED_GROWERS,
-  //         UNUSED_VARIETY,
-  //         UNUSED_POUNDS,
-  //         UNUSED_PRICE,
-  //         UNUSED_DATE,
-  //         UNUSED_COMMENT);
+  /* First and third grower reject, second has no response, and final grower accepts. */
+  @Test
+  public void testMixed() {
+    Offer offer
+      = new Offer(
+          UNUSED_HANDLER,
+          UNUSED_GROWERS,
+          UNUSED_VARIETY,
+          UNUSED_POUNDS,
+          UNUSED_PRICE,
+          UNUSED_DATE,
+          UNUSED_COMMENT);
 
-  //   assertThat(offer, is(notNullValue()));
-  //   saveModel(offer);
+    assertThat(offer, is(notNullValue()));
+    saveModel(offer);
 
-  //   WaterfallService wservice = new WaterfallService(offer, Duration.ofSeconds(1));
-  //   assertThat(wservice.getCurrentGrowers().size(), is(4));
+    WaterfallService wservice = new WaterfallService(offer, Duration.ofSeconds(1));
+    assertThat(wservice.getCurrentGrowers().size(), is(4));
 
-  //   int index = 0;
-  //   while(wservice.process()) {
-  //     List<Grower> g = wservice.getCurrentGrowers();
-  //     assertThat(g.get(0), is(equalTo(UNUSED_GROWERS.get(index))));
+    int index = 0;
+    while(wservice.getCurrentGrowers().size() > 0) {
+      List<Grower> g = wservice.getCurrentGrowers();
+      assertThat(g.get(0), is(equalTo(UNUSED_GROWERS.get(index))));
 
-  //     if(index == 0 || index == 2) {
-  //       OfferResponse or = offer.getGrowerOfferResponse(g.get(0).getId());
-  //       or.setResponseStatus(ResponseStatus.REJECTED);
-  //     } else if (index == 3) {
-  //       OfferResponse or = offer.getGrowerOfferResponse(g.get(0).getId());
-  //       or.setResponseStatus(ResponseStatus.ACCEPTED);
-  //     } else {
-  //       try {
-  //         Thread.sleep(1100);
-  //       } catch(InterruptedException ex) {
-  //         Thread.currentThread().interrupt();
-  //       }
-  //     }
+      if(index == 0 || index == 2) {
+        wservice.reject();
+      } else if (index == 3) {
+        wservice.accept(); 
+        break;
+      } else {
+        try {
+          Thread.sleep(1100);
+        } catch(InterruptedException ex) {
+          Thread.currentThread().interrupt();
+        }
+      }
 
-  //     index ++;
-  //   }
-  //   assertThat(wservice.getCurrentGrowers().size(), is(1));
-  // }
+      index ++;
+    }
+    assertThat(wservice.getCurrentGrowers().size(), is(1));
+  }
 
 }
