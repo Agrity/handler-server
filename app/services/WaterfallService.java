@@ -32,7 +32,6 @@ public class WaterfallService {
     this.growers = new ArrayList<Grower>(offer.getAllGrowers());
 
     cancellable = scheduleTimer();
-
   }
 
   private Cancellable scheduleTimer() {
@@ -75,7 +74,10 @@ public class WaterfallService {
     //TODO: remove front and reschedule
     moveToNext();
   }
-
+  
+  public List<Grower> getCurrentGrowers() {
+    return growers;
+  }
 
 
 
@@ -113,9 +115,6 @@ public class WaterfallService {
 	// 	return true;
 	// }
 
- //  public List<Grower> getCurrentGrowers() {
- //    return growers;
- //  }
 
 
 
