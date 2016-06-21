@@ -40,9 +40,9 @@ public class WaterfallService {
 		switch(status) {
 			//set response status for grower here?
 			case ACCEPTED:
-			return false;
+			 return false;
 			case REJECTED:
-			return moveToNext();
+			 return moveToNext();
 			case REQUEST_CALL:
 				//return something?
 			default:
