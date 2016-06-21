@@ -4,4 +4,4 @@
 
 ./new-grower.sh
 
-./new-offer.sh | browser
+./new-offer.sh

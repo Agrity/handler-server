@@ -65,6 +65,8 @@ public class Offer extends BaseModel implements PrettyString {
 
   @Column(columnDefinition = "TEXT")
   private String comment = "";
+  
+  private boolean offerCurrentlyOpen = true;
 
 
   /* ==================================== Static Functions ==================================== */
@@ -136,9 +138,17 @@ public class Offer extends BaseModel implements PrettyString {
   public String getComment() {
     return comment;
   }
+  
+  public boolean getOfferCurrentlyOpen() {
+	return offerCurrentlyOpen;
+  }
 
 
   /* === Member Functions === */
+  
+  public void closeOffer() {
+	offerCurrentlyOpen = false;
+  }
 
   
   public List<Grower> getAcceptedGrowers() {
@@ -172,7 +182,7 @@ public class Offer extends BaseModel implements PrettyString {
         .collect(Collectors.toList());
   }
 
-  private OfferResponse getGrowerOfferResponse(long growerId) {
+  public OfferResponse getGrowerOfferResponse(long growerId) {
     return offerResponses.stream()
         .filter(offerResponse -> offerResponse.getGrower().getId().equals(growerId))
         .findFirst()
@@ -181,14 +191,28 @@ public class Offer extends BaseModel implements PrettyString {
 
 
   public boolean growerAcceptOffer(Long growerId) {
+	if (!offerCurrentlyOpen) {
+	  // TODO Handle Late Acceptance Error
+	  return false;
+	}
+
     return setGrowerResponseForOffer(growerId, ResponseStatus.ACCEPTED);
   }
 
   public boolean growerRejectOffer(Long growerId) {
+    if (!offerCurrentlyOpen) {
+      // TODO Handle Late Acceptance Error
+	  return false;
+	}  
+	  
     return setGrowerResponseForOffer(growerId, ResponseStatus.REJECTED);
   }
 
   public boolean growerRequestCall(Long growerId) {
+	if (!offerCurrentlyOpen) {
+	  // TODO Handle Late Acceptance Error
+	  return false;
+	}  
     return setGrowerResponseForOffer(growerId, ResponseStatus.REQUEST_CALL);
   }
 
