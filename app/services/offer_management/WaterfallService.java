@@ -1,4 +1,6 @@
-package services;
+package services.offer_management;
+
+
 import java.util.*;
 
 import models.Offer;
@@ -14,7 +16,7 @@ import scala.concurrent.duration.FiniteDuration;
 import java.util.concurrent.TimeUnit;
 import play.libs.Akka;
 
-public class WaterfallService {
+public class WaterfallService implements OfferManagementService {
 
 	private final Offer offer;
 	private final Duration delay;
@@ -59,13 +61,13 @@ public class WaterfallService {
     if(growers.size() != 0) {
       cancellable = scheduleTimer();
     } else {
-      //offer.close();
+      offer.closeOffer();
     }
   }
 
   public void accept() {
     cancellable.cancel();
-    //offer.close();
+    offer.closeOffer();
   }
 
   public void reject() {
@@ -73,6 +75,7 @@ public class WaterfallService {
     moveToNext();
   }
 
+  // NOTE: Used only for testing
   public List<Grower> getCurrentGrowers() {
     return growers;
   }
