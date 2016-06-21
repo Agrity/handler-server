@@ -8,11 +8,9 @@ import models.OfferResponse.ResponseStatus;
 
 
 import java.time.Duration;
-//import java.time.LocalDateTime;
 
 import akka.actor.Cancellable;
 import scala.concurrent.duration.FiniteDuration;
-import akka.actor.UntypedActor;
 import java.util.concurrent.TimeUnit;
 import play.libs.Akka;
 
@@ -51,12 +49,14 @@ public class WaterfallService {
 
     if(status == ResponseStatus.ACCEPTED) {
       accept();
-    } else moveToNext();
+    } else {
+      moveToNext();
+    }
 
   }
 
   private void moveToNext() {
-    //alert farmer 0 of time expired
+    // TODO alert farmer 0 of time expired
     growers.remove(0);
     if(growers.size() != 0) {
       cancellable = scheduleTimer();
@@ -71,7 +71,7 @@ public class WaterfallService {
   }
 
   public void reject() {
-    //TODO: remove front and reschedule
+    
     cancellable.cancel();
     moveToNext();
   }
