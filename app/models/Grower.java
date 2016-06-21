@@ -95,7 +95,8 @@ public class Grower extends BaseModel implements PrettyString {
     this.firstName = firstName;
     this.lastName = lastName;
     this.handler = handler;
-    //this.emailAddresses = emailAddresses;
+    this.emailAddresses = emailAddresses;
+
     // TODO Fix When Phonenumbers Functional
     // this.phoneNumbers = phoneNumbers;
     //this.phoneNumbers = new ArrayList<>();
@@ -144,6 +145,11 @@ public class Grower extends BaseModel implements PrettyString {
   }
 
   @JsonIgnore
+  public List<EmailAddress> getEmailAddresses() {
+    return emailAddresses;
+
+  }
+
   public List<String> getEmailAddressStrings() {
     return emailAddresses
       .stream()
