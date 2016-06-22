@@ -5,6 +5,9 @@ import java.util.*;
 
 import models.Offer;
 import models.Grower;
+import models.OfferResponse;
+import models.OfferResponse.ResponseStatus;
+
 
 import java.time.Duration;
 
@@ -33,7 +36,7 @@ public class WaterfallService implements OfferManagementService {
   }
 
   private Cancellable scheduleTimer() {
-    //TODO Send grower 0 offer.
+    //TODO Send grower 0 offer. Use poundsRemaining
     
   	return Akka.system().scheduler().scheduleOnce(
         FiniteDuration.create(
