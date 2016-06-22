@@ -316,10 +316,10 @@ public class OfferJsonParser extends JsonParser {
       String className = typeMap.get(OfferJsonConstants.TYPE_KEY).asText();
 
       try {
-        Class<?> mgmtClass = Class.forName(className);
+        Class<?> mgmtClass = Class.forName("services.offer_management." + className);
         mgmtTI.typeClass = mgmtClass;
       } catch (ClassNotFoundException ce) {
-        setInvalid("Management Type invalid: specified type not found\n");
+        setInvalid("Management Type invalid: specified type " + className +" not found\n");
         return null;
       }
     } else {
