@@ -57,7 +57,7 @@ public class OfferJsonParser extends JsonParser {
   private Integer almondPounds;
   private String pricePerPound;
   private LocalDate paymentDate;
-  private Object managementType;
+  private ManagementTypeInfo managementType;
   private String comment;
 
   private final GrowerService growerService;
@@ -133,7 +133,6 @@ public class OfferJsonParser extends JsonParser {
         getAlmondPounds(),
         getPricePerPound(),
         getPaymentDate(),
-        getManagementType(),
         getComment());
 
     return newOffer;
@@ -169,7 +168,7 @@ public class OfferJsonParser extends JsonParser {
     return paymentDate;
   }
 
-  public Object getManagementType() {
+  public ManagementTypeInfo getManagementType() {
     ensureValid();
     return managementType;
   }
@@ -301,7 +300,7 @@ public class OfferJsonParser extends JsonParser {
     return DateService.stringToDate(dateString);
   }
 
-  private ManagementTypeInfo parseManagementType(JsonNode date) {
+  private ManagementTypeInfo parseManagementType(JsonNode data) {
     if (!data.has(OfferJsonConstants.MANAGEMENT_TYPE)) {
       setInvalid(missingParameterError(OfferJsonConstants.MANAGEMENT_TYPE));
       return null;
@@ -313,7 +312,7 @@ public class OfferJsonParser extends JsonParser {
     //   return null;
     // }
 
-    ManagementTypeInfo mgmtTI;
+    ManagementTypeInfo mgmtTI = new ManagementTypeInfo();
 
     if(typeMap.has("TYPE")) {
       String type = typeMap.get("TYPE").asText();
@@ -330,7 +329,7 @@ public class OfferJsonParser extends JsonParser {
     }
     if(typeMap.has("DELAY")) {
       int delayInt = typeMap.get("DELAY").asInt();
-      mgmtTI.delay = Duration.ofMintutes(delayInt); 
+      mgmtTI.delay = Duration.ofMinutes(delayInt); 
     } else {
       setInvalid("Delay field not found.\n");
       return null;
