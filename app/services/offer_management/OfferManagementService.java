@@ -18,7 +18,7 @@ public interface OfferManagementService {
     return offerToManageService.remove(offer) != null;
   }
 	
-	public void accept(Integer pounds);
+	public void accept(long pounds);
 	public void reject();
 	
 }

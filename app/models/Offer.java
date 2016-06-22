@@ -193,7 +193,7 @@ public class Offer extends BaseModel implements PrettyString {
   }
 
 
-  public boolean growerAcceptOffer(Long growerId, Integer pounds) {
+  public boolean growerAcceptOffer(Long growerId, long pounds) {
     if (!offerCurrentlyOpen) {
       // TODO Handle Late Acceptance Error
       return false;

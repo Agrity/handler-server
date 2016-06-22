@@ -41,7 +41,7 @@ public class OfferController extends Controller {
     return null;
   }
 
-  public Result acceptOffer(long offerId, long growerId) {
+  public Result acceptOffer(long offerId, long growerId, long amount) {
     Offer offer = offerService.getById(offerId);
     if (offer == null) {
       // TODO Change to Valid Error JSON
@@ -49,7 +49,7 @@ public class OfferController extends Controller {
     }
 
     // TODO Change to actual pounds accepted once implemented.
-    boolean success = offer.growerAcceptOffer(growerId, 0);
+    boolean success = offer.growerAcceptOffer(growerId, amount);
 
     // TODO Change to Ok/Error to valid JSON
     return success ? ok("Successfully Accepted Offer.")

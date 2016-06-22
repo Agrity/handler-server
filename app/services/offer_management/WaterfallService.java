@@ -17,7 +17,7 @@ public class WaterfallService implements OfferManagementService {
 	private final Offer offer;
 	private final Duration delay;
   private Cancellable cancellable;
-  private Integer poundsRemaining;
+  private long poundsRemaining;
   private List<Grower> growersInLine;
 
   public WaterfallService(Offer offer, Duration delay) {
@@ -58,7 +58,7 @@ public class WaterfallService implements OfferManagementService {
   }
 
   @Override
-  public void accept(Integer pounds) {
+  public void accept(long pounds) {
   	
   	subtractFromPoundsRemaining(pounds);
   	cancellable.cancel();
@@ -79,7 +79,7 @@ public class WaterfallService implements OfferManagementService {
     moveToNext();
   }
   
-  public void subtractFromPoundsRemaining(Integer pounds) {
+  public void subtractFromPoundsRemaining(long pounds) {
 		if(pounds > poundsRemaining) {
 			// ERROR
 			// TODO: fix this error check

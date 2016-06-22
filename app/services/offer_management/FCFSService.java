@@ -8,13 +8,15 @@ import akka.actor.Cancellable;
 import scala.concurrent.duration.FiniteDuration;
 
 import java.util.concurrent.TimeUnit;
+
+import play.Logger;
 import play.libs.Akka; 
 
 public class FCFSService implements OfferManagementService {
 	
   private final Offer offer; 
   private Cancellable cancellable;
-  private Integer poundsRemaining; 
+  private long poundsRemaining; 
 	
   public FCFSService(Offer offer, Duration timeAllowed) {
     this.offer = offer;
@@ -43,7 +45,8 @@ public class FCFSService implements OfferManagementService {
     }
   
   	@Override
-    public void accept(Integer pounds) { 
+    public void accept(long pounds) { 
+  		Logger.debug("Pounds  ");
     	subtractFromPoundsRemaining(pounds);
     	//Update growers who have not accepted or rejected. offer.getGrowersWithNoResponse useful here.     	
     	if(poundsRemaining == 0) { 	
@@ -57,7 +60,7 @@ public class FCFSService implements OfferManagementService {
   	  // Do Nothing
   	}
   	
-  	public void subtractFromPoundsRemaining(Integer pounds) {
+  	public void subtractFromPoundsRemaining(long pounds) {
   		if(pounds > poundsRemaining) {
   			// ERROR
   			// TODO: fix this error check
