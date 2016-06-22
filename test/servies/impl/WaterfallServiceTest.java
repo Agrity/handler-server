@@ -1,8 +1,6 @@
 package servies.impl;
 
-import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -13,21 +11,15 @@ import org.junit.Test;
 import java.time.LocalDate;
 import java.time.Duration;
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.lang.Thread;
 
 import models.Almond.AlmondVariety;
 import models.Grower;
 import models.Handler;
 import models.Offer;
-import models.OfferResponse;
-import models.OfferResponse.ResponseStatus;
 import services.offer_management.WaterfallService;
 import test_helpers.EbeanTest;
-
-import static org.mockito.Mockito.*;
 
 import com.avaje.ebean.Ebean;
 import com.google.common.collect.ImmutableList;
@@ -74,15 +66,12 @@ public class WaterfallServiceTest extends EbeanTest {
 
     WaterfallService wservice = new WaterfallService(offer, Duration.ofMillis(1000));
 
-    int index = 0;
     while(wservice.getGrowersInLine().size() > 0) {
-      // assertThat(wservice.getCurrentGrowers().get(0), is(equalTo(UNUSED_GROWERS.get(index))));
       try {
         Thread.sleep(10);
       } catch(InterruptedException ex) {
         Thread.currentThread().interrupt();
       }
-      // index ++;
 
     }
     assertThat(wservice.getGrowersInLine().size(), is(0));
@@ -258,5 +247,89 @@ public class WaterfallServiceTest extends EbeanTest {
     }
     assertThat(wservice.getGrowersInLine().size(), is(1));
   }
+  
+  @Test
+  public void testFirstRejects_SecondAcceptsHalf_ThirdExpires_FourthAcceptsRemaining() {
+    Offer offer
+      = new Offer(
+          UNUSED_HANDLER,
+          UNUSED_GROWERS,
+          UNUSED_VARIETY,
+          UNUSED_POUNDS,
+          UNUSED_PRICE,
+          UNUSED_DATE,
+          UNUSED_COMMENT);
+
+    assertThat(offer, is(notNullValue()));
+    saveModel(offer);
+
+    WaterfallService wservice = new WaterfallService(offer, Duration.ofMillis(1000));
+    
+    assertThat(offer.getOfferCurrentlyOpen(), is(true));
+    
+    //Grower 1 Declines
+    assertThat(wservice.getGrowersInLine().size(), is(4));
+    wservice.reject();
+    assertThat(offer.getOfferCurrentlyOpen(), is(true));
+    
+    //Grower 2 Accepts Half
+    assertThat(wservice.getGrowersInLine().size(), is(3));
+    wservice.accept(offer.getAlmondPounds() / 2);
+    assertThat(offer.getOfferCurrentlyOpen(), is(true));
+    
+    //Grower 3 Expires
+    assertThat(wservice.getGrowersInLine().size(), is(2));
+    try {
+      Thread.sleep(1100);
+    } catch(InterruptedException ex) {
+      Thread.currentThread().interrupt();
+    }
+    assertThat(offer.getOfferCurrentlyOpen(), is(true));
+    
+    //Grower 4 Accepts Remaining
+    assertThat(wservice.getGrowersInLine().size(), is(1));
+    wservice.accept(offer.getAlmondPounds() - (offer.getAlmondPounds() / 2));
+    assertThat(offer.getOfferCurrentlyOpen(), is(false));
+  
+  }
+  
+  @Test
+  public void testFirstAcceptsHalf_SecondRejects_ThirdAcceptsRemaining() {
+    Offer offer
+      = new Offer(
+          UNUSED_HANDLER,
+          UNUSED_GROWERS,
+          UNUSED_VARIETY,
+          UNUSED_POUNDS,
+          UNUSED_PRICE,
+          UNUSED_DATE,
+          UNUSED_COMMENT);
+
+    assertThat(offer, is(notNullValue()));
+    saveModel(offer);
+
+    WaterfallService wservice = new WaterfallService(offer, Duration.ofMillis(1000));
+    
+    assertThat(offer.getOfferCurrentlyOpen(), is(true));
+    
+    //Grower 1 Accepts Half
+    assertThat(wservice.getGrowersInLine().size(), is(4));
+    wservice.accept(offer.getAlmondPounds() / 2);
+    assertThat(offer.getOfferCurrentlyOpen(), is(true));
+    
+    //Grower 2 Declines
+    assertThat(wservice.getGrowersInLine().size(), is(3));
+    wservice.reject();
+    assertThat(offer.getOfferCurrentlyOpen(), is(true));
+    
+    //Grower 3 Accepts Remaining 
+    assertThat(wservice.getGrowersInLine().size(), is(2));
+    wservice.accept(offer.getAlmondPounds() - (offer.getAlmondPounds() / 2));
+    assertThat(offer.getOfferCurrentlyOpen(), is(false));
+    
+    //Grower 4 Never Contacted
+  }
+  
+  
 
 }

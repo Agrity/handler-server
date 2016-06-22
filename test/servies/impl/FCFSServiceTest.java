@@ -1,9 +1,6 @@
 package servies.impl;
 
-import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
@@ -13,22 +10,16 @@ import org.junit.Test;
 import java.time.LocalDate;
 import java.time.Duration;
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
 import java.lang.Thread;
 
 import models.Almond.AlmondVariety;
 import models.Grower;
 import models.Handler;
 import models.Offer;
-import models.OfferResponse;
-import models.OfferResponse.ResponseStatus;
 import services.offer_management.FCFSService;
-import services.offer_management.WaterfallService;
 import test_helpers.EbeanTest;
-
-import static org.mockito.Mockito.*;
 
 import com.avaje.ebean.Ebean;
 import com.google.common.collect.ImmutableList;
@@ -74,7 +65,6 @@ public class FCFSServiceTest extends EbeanTest {
     saveModel(offer);
 
     FCFSService FCFSservice = new FCFSService(offer, Duration.ofMillis(1000));
-    
     assertThat(offer.getOfferCurrentlyOpen(), is(true));
     
     try {
