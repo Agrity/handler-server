@@ -1,11 +1,6 @@
 package models;
 
-import com.avaje.ebean.Model;
-
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 import play.data.validation.Constraints;
 
@@ -15,17 +10,7 @@ import play.data.validation.Constraints;
  * TODO Find way to avoid needing this wrapper class.
  */
 @Entity
-public class EmailAddress extends Model {
-
-  @Id
-  @Constraints.Min(10)
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
-
-  public Long getId() {
-    return id;
-  }
-
+public class EmailAddress extends BaseModel {
 
   @Constraints.Required
   private String emailAddress;

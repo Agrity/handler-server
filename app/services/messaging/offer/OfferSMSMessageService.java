@@ -23,57 +23,54 @@ import play.Logger;
 
 public class OfferSMSMessageService implements OfferMessageService {
 
-    private static final String ACCOUNT_SID = "ACd061aae08076e124be28d7e5b9f1db7d";
-    private static final String AUTH_TOKEN = "cd993273e55be2bd301082722c3ad064";
-    private static final String TWILIO_NUMBER = "+12095806972";
+  private static final String ACCOUNT_SID = "ACd061aae08076e124be28d7e5b9f1db7d";
+  private static final String AUTH_TOKEN = "cd993273e55be2bd301082722c3ad064";
+  private static final String TWILIO_NUMBER = "+12095806972";
     
-    private static final TwilioRestClient client = new TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN);
-    private static final Account account = client.getAccount();
-    private static final MessageFactory messageFactory = account.getMessageFactory();
+  private static final TwilioRestClient client = new TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN);
+  private static final Account account = client.getAccount();
+  private static final MessageFactory messageFactory = account.getMessageFactory();
     
-    /* MessageFactory object is used to send messages from Twilio account */
-    public MessageFactory getMessageFactory() {
-        return messageFactory; 
-    }
+  /* MessageFactory object is used to send messages from Twilio account */
+  public MessageFactory getMessageFactory() {
+    return messageFactory; 
+  }
     
-    /* Takes an offer object and sends out SMS message containing bid to all growers using Twilio account */
-    public boolean send(Offer offer) {
-        boolean success = true;
-        for (Grower curGrower : offer.getAllGrowers()) { 
-            //for (String phoneNumber: curGrower.getPhoneNumbers()) {
-                /* number needs to be in format "+18155926350" as a string */
-                List<NameValuePair> params = new ArrayList<NameValuePair>(); 
-                Logger.info(curGrower.getFullName());
-                params.add(new BasicNameValuePair("To", "+15592702013")); /* phoneNumber */      
-                params.add(new BasicNameValuePair("From", TWILIO_NUMBER)); 
-                String body = createBodyText(curGrower, offer);
-                params.add(new BasicNameValuePair("Body", body)); 
+  /* Takes an offer object and sends out SMS message containing bid to all growers using Twilio account */
+  public boolean send(Offer offer) {
+    boolean success = true;
+    for (Grower curGrower : offer.getAllGrowers()) { 
+     // for (String phoneNumber: curGrower.getPhoneNumbers()) {
+        /* number needs to be in format "+18155926350" as a string */
+        List<NameValuePair> params = new ArrayList<NameValuePair>(); 
+        Logger.info(curGrower.getFullName());
+        params.add(new BasicNameValuePair("To", "+15592702013")); /* phoneNumber */      
+        params.add(new BasicNameValuePair("From", TWILIO_NUMBER)); 
+        String body = createBodyText(curGrower, offer);
+        params.add(new BasicNameValuePair("Body", body)); 
       
-                try {
-                    Message message = messageFactory.create(params);
-                 } catch (TwilioRestException e) {
-                    success = false;
-                    
-                    Logger.error("=== Error Sending SMS Message ===\n" + e.getErrorMessage() + "\n\n");
-                }
- 
-                //error = message.getErrorMessage();
-                //if (error != null)  Logger.error("=== Error Sending SMS Message ===\n" + error + "\n\n");
-            //}
+        try {
+          Message message = messageFactory.create(params);
+        } catch (TwilioRestException e) {
+          success = false;
+          Logger.error("=== Error Sending SMS Message ===\n" + e.getErrorMessage() + "\n\n");
         }
-        return success;
+
+    //  }
     }
+    return success;
+  }
     
-    private String createBodyText(Grower curGrower, Offer offer) {
-        String body = "Hi " + curGrower.getFullName() + ",\n"
-                    + "Here are the specs for a new bid: \n"
-                    + offer.getAlmondVariety() + "\n"
-                    /* === TODO: Almond Size === */
-                    + offer.getAlmondPoundsString() + "lbs\n"
-                    + offer.getPricePerPound() + "/lb\n" 
-                    + offer.getComment() + "\n"
-                    + "Reply 0 to decline or number of pounds that you would like to accept\n" /*instructions on how to respond */
-                    + "-" + /*add handler's contact's name in addition?*/  offer.getHandler().getCompanyName(); 
-        return body;
-    }  
+  private String createBodyText(Grower curGrower, Offer offer) {
+    String body = "Hi " + curGrower.getFullName() + ",\n"
+                + "Here are the specs for a new bid: \n"
+                + offer.getAlmondVariety() + "\n"
+                /* === TODO: Almond Size === */
+                + offer.getAlmondPoundsString() + "lbs\n"
+                + offer.getPricePerPound() + "/lb\n" 
+                + offer.getComment() + "\n"
+                + "Reply 0 to decline or number of pounds that you would like to accept\n" /*instructions on how to respond */
+                + "-" + /*add handler's contact's name in addition?*/  offer.getHandler().getCompanyName(); 
+    return body;
+  }  
 }

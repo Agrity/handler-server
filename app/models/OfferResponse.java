@@ -1,17 +1,11 @@
 package models;
 
-import com.avaje.ebean.Model;
-
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import play.data.validation.Constraints;
 
 @Entity
-public class OfferResponse extends Model {
+public class OfferResponse extends BaseModel {
 
   public static enum ResponseStatus {
     NO_RESPONSE,
@@ -19,11 +13,6 @@ public class OfferResponse extends Model {
     REJECTED,
     REQUEST_CALL,
   }
-
-  @Id
-  @Constraints.Min(10)
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
 
   /* NOTE: Bid is never explicitly set, but by being placed in a list of 
    * BidResponses in the Bid class, it is linked by Ebean. */

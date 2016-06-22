@@ -27,7 +27,7 @@ public class EbeanGrowerService implements GrowerService {
     // TODO Assert Handler Exists, or Return Null
     return FINDER.where()
         // TODO Fix this Column Name.
-        .eq("handler_handler_id", handlerId)
+        .eq("handler_id", handlerId)
         .findList();
   }
 

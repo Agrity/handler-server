@@ -34,6 +34,7 @@ public class MessageReceivingController extends Controller {
     return ok("Number Responses Recieved: " + numResponses);
   }
 
+  //@BodyParser.Of(BodyParser.Json.class)
   public Result receiveTwilioResponse() {
     numResponses++;
     return ok("Response Received");

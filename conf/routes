@@ -58,3 +58,5 @@ GET     /offers/:offerId/requestcall/:growerId    controllers.OfferController.re
 GET     /messaging/response/twilio                controllers.MessageReceivingController.receiveTwilioResponse()
 
 POST    /messaging/response/twilio                controllers.MessageReceivingController.receiveTwilioResponse()
+
+GET	/messaging/response/twilio/number         controllers.MessageReceivingController.numberTwilioResponses()

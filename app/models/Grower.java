@@ -1,6 +1,5 @@
 package models;
 
-import com.avaje.ebean.Model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
@@ -8,11 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -23,13 +18,7 @@ import models.interfaces.PrettyString;
 import play.data.validation.Constraints;
 
 @Entity
-public class Grower extends Model implements PrettyString {
-
-  @Id
-  @Constraints.Min(10)
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = DBConstants.GrowerColumns.ID)
-  private Long id;
+public class Grower extends BaseModel implements PrettyString {
 
   @ManyToOne
   @Constraints.Required
@@ -106,14 +95,11 @@ public class Grower extends Model implements PrettyString {
     this.firstName = firstName;
     this.lastName = lastName;
     this.handler = handler;
-    //this.emailAddresses = emailAddresses;
+    this.emailAddresses = emailAddresses;
+
     // TODO Fix When Phonenumbers Functional
     //this.phoneNumbers = phoneNumbers;
     //this.phoneNumbers = new ArrayList<>();
-  }
-
-  public Long getId() {
-    return id;
   }
 
   public Handler getHandler() {
@@ -159,6 +145,11 @@ public class Grower extends Model implements PrettyString {
   }
 
   @JsonIgnore
+  public List<EmailAddress> getEmailAddresses() {
+    return emailAddresses;
+
+  }
+
   public List<String> getEmailAddressStrings() {
     return emailAddresses
       .stream()
