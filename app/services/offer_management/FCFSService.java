@@ -6,6 +6,7 @@ import models.Offer;
 
 import akka.actor.Cancellable; 
 import scala.concurrent.duration.FiniteDuration;
+
 import java.util.concurrent.TimeUnit;
 import play.libs.Akka; 
 
@@ -18,7 +19,7 @@ public class FCFSService implements OfferManagementService {
   public FCFSService(Offer offer, Duration timeAllowed) {
     this.offer = offer;
     this.poundsRemaining = offer.getAlmondPounds();
-    // All growers need to be messaged the offer. 
+    // All growers need to be messaged the offer.
 
     OfferManagementService.offerToManageService.put(offer, this);
 
@@ -44,9 +45,10 @@ public class FCFSService implements OfferManagementService {
   	@Override
     public void accept(Integer pounds) { 
     	subtractFromPoundsRemaining(pounds);
+    	//Update growers who have not accepted or rejected. offer.getGrowersWithNoResponse useful here.     	
     	if(poundsRemaining == 0) { 	
-    	cancellable.cancel();
-    	offer.closeOffer(); 
+    		cancellable.cancel();
+    		offer.closeOffer(); 
     	}
     }
   	
@@ -67,11 +69,6 @@ public class FCFSService implements OfferManagementService {
   	
   	public Integer getPoundsRemaining() {
   		return poundsRemaining; 
-  	}
-  
-	  public void process() { 
-	  	offer.closeOffer();  
-	  	//TODO Alert other growers that offer has been closed. 	  
-	  }
+  	} 	  
 	}
 	
