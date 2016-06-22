@@ -17,6 +17,9 @@ import services.OfferService;
 import services.messaging.offer.OfferMessageService;
 import services.parsers.OfferJsonParser;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+
 public class MessageReceivingController extends Controller {
 
   private static Integer numResponses = 0;
@@ -34,10 +37,25 @@ public class MessageReceivingController extends Controller {
     return ok("Number Responses Recieved: " + numResponses);
   }
 
-  //@BodyParser.Of(BodyParser.Json.class)
   public Result receiveTwilioResponse() {
     numResponses++;
-    return ok("Response Received");
+    JsonNode data = request().body().asJson();
+
+    if (data == null) {
+      // TODO Change to Valid Error JSON
+      return ok("Expecting Some Data.\n"); /* bad request? */
+    }
+
+    String num = data.findValue("From").textValue();
+    if (num == null) {
+      return ok("From parameter is empty."); /* bad request? */
+    }
+    String text = data.findValue("Body").textValue();
+    if (text == null) {
+      return ok("Body parameter is empty."); /* bad request? */
+    }
+    return ok(num + "\n" + text);
   }
 
+    
 }
