@@ -17,6 +17,8 @@ import services.DateService;
 import services.GrowerService;
 import services.impl.EbeanGrowerService;
 
+import java.lang.reflect.Constructor;
+
 /**
  * Class to parse json data to create new Offer.
  *
@@ -307,34 +309,32 @@ public class OfferJsonParser extends JsonParser {
     }
 
     JsonNode typeMap = data.get(OfferJsonConstants.MANAGEMENT_TYPE);
-    // if (!typeMap.isMap()) {
-    //   setInvalid("Management Type Format Invalid: map of strings to strings expected.");
-    //   return null;
-    // }
 
     ManagementTypeInfo mgmtTI = new ManagementTypeInfo();
+    
+    if(typeMap.has(OfferJsonConstants.TYPE_KEY)) {
+      String className = typeMap.get(OfferJsonConstants.TYPE_KEY).asText();
 
-    if(typeMap.has("TYPE")) {
-      String type = typeMap.get("TYPE").asText();
-
-      // switch (type) {
-      //   case "waterfall" :
-
-      // }
-
-
+      try {
+        Class<?> mgmtClass = Class.forName(className);
+        mgmtTI.typeClass = mgmtClass;
+      } catch (ClassNotFoundException ce) {
+        setInvalid("Management Type invalid: specified type not found\n");
+        return null;
+      }
     } else {
       setInvalid("Type field not found.\n");
       return null;
     }
-    if(typeMap.has("DELAY")) {
-      int delayInt = typeMap.get("DELAY").asInt();
+
+    if(typeMap.has(OfferJsonConstants.DELAY_KEY)) {
+      int delayInt = typeMap.get(OfferJsonConstants.DELAY_KEY).asInt();
       mgmtTI.delay = Duration.ofMinutes(delayInt); 
     } else {
       setInvalid("Delay field not found.\n");
       return null;
     }
-
+  
     return mgmtTI;
   }
 
@@ -370,10 +370,13 @@ public class OfferJsonParser extends JsonParser {
 
     private static final String COMMENT = "comment";
 
+    private static final String TYPE_KEY = "type";
+    private static final String DELAY_KEY = "delay";
+
   }
 
   public static class ManagementTypeInfo {
-    private Class type;
+    private Class typeClass;
     private Duration delay;
   }
 }
