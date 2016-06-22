@@ -1,10 +1,7 @@
 package services.offer_management;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.List;
 
-import models.Grower;
 import models.Offer;
 
 import akka.actor.Cancellable; 
@@ -15,21 +12,30 @@ import play.libs.Akka;
 public class FCFSService implements OfferManagementService {
 	
   private final Offer offer; 
-  private final LocalDateTime expireTime;
   private Cancellable cancellable;
 	
   public FCFSService(Offer offer, Duration timeAllowed) {
     this.offer = offer;
-    this.expireTime = (LocalDateTime.now()).plus(timeAllowed);  	 
     // All growers need to be messaged the offer. 
 
-    cancellable = Akka.system().scheduler().scheduleOnce(FiniteDuration.create(timeAllowed.toMillis(), TimeUnit.MILLISECONDS), 
-      new Runnable() { 
-    	@Override
-    	public void run() { 
-          process();
-    	  }
-      }, Akka.system().dispatcher()); 
+    OfferManagementService.offerToManageService.put(offer, this);
+
+    cancellable
+        = Akka
+          .system()
+          .scheduler()
+          .scheduleOnce(
+              FiniteDuration
+                  .create(
+                      timeAllowed.toMillis(),
+                      TimeUnit.MILLISECONDS), 
+                      new Runnable() { 
+                        @Override
+                        public void run() { 
+                            process();
+                        }
+                      },
+                      Akka.system().dispatcher()); 
     }
   
   	@Override

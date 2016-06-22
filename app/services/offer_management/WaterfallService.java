@@ -29,18 +29,24 @@ public class WaterfallService implements OfferManagementService {
     this.delay = delay;
     this.growers = new ArrayList<Grower>(offer.getAllGrowers());
 
+    OfferManagementService.offerToManageService.put(offer, this);
+
     cancellable = scheduleTimer();
   }
 
   private Cancellable scheduleTimer() {
     //alert farmer 0 of offer
-    return Akka.system().scheduler().scheduleOnce(FiniteDuration.create(delay.toMillis(), TimeUnit.MILLISECONDS), 
-      new Runnable() {
-        @Override
-        public void run() {
-          process();
-        }
-      }, Akka.system().dispatcher());
+    return Akka.system().scheduler().scheduleOnce(
+        FiniteDuration.create(
+            delay.toMillis(),
+            TimeUnit.MILLISECONDS), 
+            new Runnable() {
+              @Override
+              public void run() {
+                process();
+              }
+            },
+            Akka.system().dispatcher());
   }
 
   private void process() {
