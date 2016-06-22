@@ -50,16 +50,18 @@ public class MessageReceivingController extends Controller {
 
   public Result receiveTwilioResponse() {
     numResponses++;
-    Document dom = request().body().asXml();
-    if (dom == null) {
-      Logger.error("Expecting Xml data");
-      return badRequest("Expecting Xml data");
-    }
-    Logger.info("received populated Xml doc");
-    return ok("Have a non-null XML doc");
+    //Document doc = request().body();
+
+    
+    //if (doc == null) {
+    //  Logger.error("Expecting Xml data");
+    //  return badRequest("Expecting Xml data");
+    //}
+    Logger.info("++++ : " + request().body().toString());
+    return ok(request().body().toString());
 
     /*XPath xPath = XPathFactory.newInstance().newXPath();
-    String text = xPath.getTextContent("//body", dom);
+    String text = xPath.getTextContent("//body", doc);
     if (text == null) {
       return badRequest("Missing parameter [text]");
     } else {
