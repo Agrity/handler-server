@@ -1,14 +1,7 @@
 package controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
-
-//import java.util.List;
 import java.util.*;
-
-import models.Offer;
 
 import play.mvc.BodyParser;
 import play.mvc.Controller;
@@ -16,20 +9,7 @@ import play.mvc.Result;
 
 import services.OfferService;
 import services.messaging.offer.OfferMessageService;
-import services.parsers.OfferJsonParser;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.DocumentType;
-import org.w3c.dom.Entity;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathFactory;
-
+import models.Offer;
 import play.Logger;
 
 public class MessageReceivingController extends Controller {
@@ -49,6 +29,13 @@ public class MessageReceivingController extends Controller {
     return ok("Number Responses Recieved: " + numResponses);
   }
 
+
+  /* === TODO: Error Checking === */
+  /* === TODO: Phone number and body strings formatting === */
+  /* === TODO: Grower look-up based on phone number === */
+  /* === TODO: Update offer based on grower's response === */
+  /* === TODO: Reply to grower? === */
+  /* === TODO: How is offer updated if grower doesn't go through Twilio to accept from handler? === */
   public Result receiveTwilioResponse() {
     numResponses++;
   
@@ -63,7 +50,7 @@ public class MessageReceivingController extends Controller {
 
     String phoneNum = Arrays.toString(bodyMap.get("From"));
     String smsMessage = Arrays.toString(bodyMap.get("Body"));
-    Logger.info("From: " + phoneNum + "\nmessage: " + smsMessage);
+    Logger.info("From: " + phoneNum + " message: " + smsMessage);
     return ok("From: " + phoneNum + "\nmessage: " + smsMessage);
   }
 
