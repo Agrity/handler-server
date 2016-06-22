@@ -51,13 +51,7 @@ public class MessageReceivingController extends Controller {
 
   public Result receiveTwilioResponse() {
     numResponses++;
-    //Document doc = request().body();
-
-    
-    //if (doc == null) {
-    //  Logger.error("Expecting Xml data");
-    //  return badRequest("Expecting Xml data");
-    //}
+  
     Map<String, String[]> map = request().headers();
     for (Map.Entry<String, String[]> entry : map.entrySet()) {
       Logger.info("Header: " + entry.getKey() + " Value: " + Arrays.toString(entry.getValue()));
@@ -66,38 +60,11 @@ public class MessageReceivingController extends Controller {
     for (Map.Entry<String, String[]> entry : bodyMap.entrySet()) {
       Logger.info("Body Key: " + entry.getKey() + "     Body Value: " + Arrays.toString(entry.getValue()));
     }
-    return ok(request().body().toString());
 
-    /*XPath xPath = XPathFactory.newInstance().newXPath();
-    String text = xPath.getTextContent("//body", doc);
-    if (text == null) {
-      return badRequest("Missing parameter [text]");
-    } else {
-      return ok(text);
-    } */
-
-
-
-   /* JsonNode data = request().body().asJson();
-
-    if (data == null) {
-      Logger.error("Expecting json data");
-      return badRequest("Expecting Some Data.\n"); 
-    }
-
-    String num = data.findValue("From").textValue();
-    if (num == null) {
-      Logger.error("Expecting from parameter");
-      return badRequest("From parameter is empty."); 
-    }
-    String text = data.findValue("Body").textValue();
-    if (text == null) {
-      Logger.error("Expecting body parameter");
-      return badRequest("Body parameter is empty."); 
-    }
-    Logger.info(num + "\n" + text);
-    return ok(num + "\n" + text);
-  */
+    String phoneNum = bodyMap.get("From");
+    String smsMessage = bodyMap.get("Body");
+    Logger.info("From: " + phoneNum + "\nmessage: " + smsMessage);
+    return ok("From: " + phoneNum + "\nmessage: " + smsMessage);
   }
 
     
