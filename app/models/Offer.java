@@ -193,13 +193,13 @@ public class Offer extends BaseModel implements PrettyString {
   }
 
 
-  public boolean growerAcceptOffer(Long growerId) {
+  public boolean growerAcceptOffer(Long growerId, Integer pounds) {
     if (!offerCurrentlyOpen) {
       // TODO Handle Late Acceptance Error
       return false;
     }
-
-    getOfferManagementService().accept();
+    
+    getOfferManagementService().accept(pounds);
 
     return setGrowerResponseForOffer(growerId, ResponseStatus.ACCEPTED);
   }

@@ -34,16 +34,20 @@ public class FCFSService implements OfferManagementService {
                       new Runnable() { 
                         @Override
                         public void run() { 
-                            process();
+                            offer.closeOffer();
+                            // Alert Growers offer has been closed.   
                         }
                       },
                       Akka.system().dispatcher()); 
     }
   
   	@Override
-    public void accept() { 
-    	cancellable.cancel(); 
+    public void accept(Integer pounds) { 
+    	subtractFromPoundsRemaining(pounds);
+    	if(poundsRemaining == 0) { 	
+    	cancellable.cancel();
     	offer.closeOffer(); 
+    	}
     }
   	
   	@Override 
@@ -51,8 +55,14 @@ public class FCFSService implements OfferManagementService {
   	  // Do Nothing
   	}
   	
-  	public void subtractFromPoundsRemaining(Integer poundsToSubtract) {
-  		poundsRemaining -= poundsToSubtract; 
+  	public void subtractFromPoundsRemaining(Integer pounds) {
+  		if(pounds > poundsRemaining) {
+  			// ERROR
+  			// TODO: fix this error check
+  		}
+  		else { 
+  			poundsRemaining -= pounds; 
+  		}
   	}
   	
   	public Integer getPoundsRemaining() {

@@ -10,8 +10,7 @@ public interface OfferManagementService {
   public static final Map<Offer, OfferManagementService>
       offerToManageService = new HashMap<>();
 	
-	public void accept();
-	
+	public void accept(Integer pounds);
 	public void reject();
 	
 }
