@@ -50,24 +50,25 @@ public class MessageReceivingController extends Controller {
 
   public Result receiveTwilioResponse() {
     numResponses++;
-  //  Document dom = request().body().asXml();
-  //  if (dom == null) {
-  //    Logger.error("Expecting Xml data");
-  //    return badRequest("Expecting Xml data");
-  //  }
-  //  Logger.info("received populated Xml doc");
-   // return ok("Have a non-null XML doc");
-    //XPath xPath = XPathFactory.newInstance().newXPath();
-    //String text = xPath.getTextContent("//body", dom);
-    //if (text == null) {
-    //  return badRequest("Missing parameter [text]");
-    //} else {
-    //  return ok(text);
-    //}
+    Document dom = request().body().asXml();
+    if (dom == null) {
+      Logger.error("Expecting Xml data");
+      return badRequest("Expecting Xml data");
+    }
+    Logger.info("received populated Xml doc");
+    return ok("Have a non-null XML doc");
+
+    /*XPath xPath = XPathFactory.newInstance().newXPath();
+    String text = xPath.getTextContent("//body", dom);
+    if (text == null) {
+      return badRequest("Missing parameter [text]");
+    } else {
+      return ok(text);
+    } */
 
 
 
-    JsonNode data = request().body().asJson();
+   /* JsonNode data = request().body().asJson();
 
     if (data == null) {
       Logger.error("Expecting json data");
@@ -86,7 +87,7 @@ public class MessageReceivingController extends Controller {
     }
     Logger.info(num + "\n" + text);
     return ok(num + "\n" + text);
-  
+  */
   }
 
     
