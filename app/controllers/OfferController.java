@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 
+import java.time.Duration;
 import java.util.List;
 
 import models.Offer;
@@ -15,6 +16,7 @@ import play.mvc.Result;
 
 import services.OfferService;
 import services.messaging.offer.OfferMessageService;
+import services.offer_management.FCFSService;
 import services.parsers.OfferJsonParser;
 
 public class OfferController extends Controller {
@@ -112,6 +114,9 @@ public class OfferController extends Controller {
 
     Offer offer = parser.formOffer();
     offer.save();
+
+    // TODO Parse Which Type Would Be Desired.
+    new FCFSService(offer, Duration.ofHours(1));
 
     try {
       return created(jsonMapper.writeValueAsString(offer));

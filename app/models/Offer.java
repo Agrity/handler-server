@@ -26,6 +26,8 @@ import play.Logger;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
 
+import services.offer_management.OfferManagementService;
+
 @Entity
 public class Offer extends BaseModel implements PrettyString {
 
@@ -37,17 +39,17 @@ public class Offer extends BaseModel implements PrettyString {
   private Handler handler;
 
   @OneToMany(cascade = CascadeType.ALL)
-  @Constraints.Required
-  private Set<OfferResponse> offerResponses = new HashSet<>();
-  
+    @Constraints.Required
+    private Set<OfferResponse> offerResponses = new HashSet<>();
+
   @ManyToMany(cascade = CascadeType.ALL)
-  @Constraints.Required
-  private List<Grower> growers = new ArrayList<>();
+    @Constraints.Required
+    private List<Grower> growers = new ArrayList<>();
 
   // TODO Figure out Why this can't use reflection
   //@Constraints.Required
   //public MonetaryAmount price;
-  
+
   @Constraints.Required
   private AlmondVariety almondVariety;
 
@@ -61,11 +63,11 @@ public class Offer extends BaseModel implements PrettyString {
 
   // TODO Change to Java 8 Date and Time
   @Formats.DateTime(pattern = "dd/MM/yyyy")
-  private LocalDate paymentDate;
+    private LocalDate paymentDate;
 
   @Column(columnDefinition = "TEXT")
-  private String comment = "";
-  
+    private String comment = "";
+
   private boolean offerCurrentlyOpen = true;
 
 
@@ -77,7 +79,7 @@ public class Offer extends BaseModel implements PrettyString {
 
   /* ===================================== Implementation ===================================== */
 
-  
+
 
   public Offer(Handler handler, List<Grower> allGrowers, AlmondVariety almondVariety,
       Integer almondPounds, String pricePerPound, LocalDate paymentDate, String comment) {
@@ -86,9 +88,9 @@ public class Offer extends BaseModel implements PrettyString {
     this.handler = handler;
 
     offerResponses =
-        allGrowers.stream()
-            .map(grower -> new OfferResponse(grower))
-            .collect(Collectors.toSet());
+      allGrowers.stream()
+      .map(grower -> new OfferResponse(grower))
+      .collect(Collectors.toSet());
 
     this.growers = allGrowers;
     this.almondVariety = almondVariety;
@@ -114,7 +116,7 @@ public class Offer extends BaseModel implements PrettyString {
   public AlmondVariety getAlmondVariety() {
     return almondVariety;
   }
-  
+
 
   public Integer getAlmondPounds() {
     return almondPounds;
@@ -123,7 +125,7 @@ public class Offer extends BaseModel implements PrettyString {
   public String getPricePerPound() {
     return pricePerPound;
   }
-  
+
 
   @JsonIgnore
   public String getAlmondPoundsString() {
@@ -138,19 +140,20 @@ public class Offer extends BaseModel implements PrettyString {
   public String getComment() {
     return comment;
   }
-  
+
   public boolean getOfferCurrentlyOpen() {
-	return offerCurrentlyOpen;
+    return offerCurrentlyOpen;
   }
 
 
   /* === Member Functions === */
-  
+
   public void closeOffer() {
-	offerCurrentlyOpen = false;
+    offerCurrentlyOpen = false;
+    removeOfferManagementService();
   }
 
-  
+
   public List<Grower> getAcceptedGrowers() {
     return getGrowersWithResponse(ResponseStatus.ACCEPTED);
   }
@@ -169,32 +172,34 @@ public class Offer extends BaseModel implements PrettyString {
 
   private List<Grower> getGrowersWithResponse(ResponseStatus response) {
     return offerResponses.stream()
-        .filter(offerResponse -> offerResponse.getResponseStatus().equals(response))
-        .map(offerResponse -> offerResponse.getGrower())
-        .collect(Collectors.toList());
+      .filter(offerResponse -> offerResponse.getResponseStatus().equals(response))
+      .map(offerResponse -> offerResponse.getGrower())
+      .collect(Collectors.toList());
   }
-  
+
 
   @JsonIgnore
   public List<ResponseStatus> getAllOfferResponseStatuses() {
     return offerResponses.stream()
-        .map(offerResponse -> offerResponse.getResponseStatus())
-        .collect(Collectors.toList());
+      .map(offerResponse -> offerResponse.getResponseStatus())
+      .collect(Collectors.toList());
   }
 
   public OfferResponse getGrowerOfferResponse(long growerId) {
     return offerResponses.stream()
-        .filter(offerResponse -> offerResponse.getGrower().getId().equals(growerId))
-        .findFirst()
-        .get();
+      .filter(offerResponse -> offerResponse.getGrower().getId().equals(growerId))
+      .findFirst()
+      .get();
   }
 
 
   public boolean growerAcceptOffer(Long growerId) {
-	if (!offerCurrentlyOpen) {
-	  // TODO Handle Late Acceptance Error
-	  return false;
-	}
+    if (!offerCurrentlyOpen) {
+      // TODO Handle Late Acceptance Error
+      return false;
+    }
+
+    getOfferManagementService().accept();
 
     return setGrowerResponseForOffer(growerId, ResponseStatus.ACCEPTED);
   }
@@ -202,17 +207,19 @@ public class Offer extends BaseModel implements PrettyString {
   public boolean growerRejectOffer(Long growerId) {
     if (!offerCurrentlyOpen) {
       // TODO Handle Late Acceptance Error
-	  return false;
-	}  
-	  
+      return false;
+    }  
+
+    getOfferManagementService().reject();
+
     return setGrowerResponseForOffer(growerId, ResponseStatus.REJECTED);
   }
 
   public boolean growerRequestCall(Long growerId) {
-	if (!offerCurrentlyOpen) {
-	  // TODO Handle Late Acceptance Error
-	  return false;
-	}  
+    if (!offerCurrentlyOpen) {
+      // TODO Handle Late Acceptance Error
+      return false;
+    }  
     return setGrowerResponseForOffer(growerId, ResponseStatus.REQUEST_CALL);
   }
 
@@ -229,6 +236,14 @@ public class Offer extends BaseModel implements PrettyString {
     growerOfferResponse.save();
 
     return true;
+  }
+
+  private OfferManagementService getOfferManagementService() {
+    return OfferManagementService.offerToManageService.get(this);
+  }
+
+  private void removeOfferManagementService() {
+    OfferManagementService.offerToManageService.remove(this);
   }
 
   @Override
