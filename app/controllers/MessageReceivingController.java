@@ -5,7 +5,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 
-import java.util.List;
+//import java.util.List;
+import java.util.*;
 
 import models.Offer;
 
@@ -57,6 +58,10 @@ public class MessageReceivingController extends Controller {
     //  Logger.error("Expecting Xml data");
     //  return badRequest("Expecting Xml data");
     //}
+    Map<String, String[]> map = request().headers();
+    for (Map.Entry<String, String[]> entry : map.entrySet()) {
+      Logger.info("Header: " + entry.getKey() + "Value: " + entry.getValue());
+    }
     Logger.info("++++ : " + request().body().toString());
     return ok(request().body().toString());
 
