@@ -318,6 +318,10 @@ public class OfferJsonParser extends JsonParser {
     if(typeMap.has("TYPE")) {
       String type = typeMap.get("TYPE").asText();
 
+      // switch (type) {
+      //   case "waterfall" :
+
+      // }
 
 
     } else {
@@ -370,7 +374,7 @@ public class OfferJsonParser extends JsonParser {
   }
 
   public static class ManagementTypeInfo {
-    private Object type;
+    private Class type;
     private Duration delay;
   }
 }
