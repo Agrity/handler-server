@@ -310,34 +310,34 @@ public class OfferJsonParser extends JsonParser {
 
     JsonNode typeMap = data.get(OfferJsonConstants.MANAGEMENT_TYPE);
 
-    ManagementTypeInfo mgmtTI = new ManagementTypeInfo();
-    
-    if(typeMap.has(OfferJsonConstants.TYPE_KEY)) {
-      String className = typeMap.get(OfferJsonConstants.TYPE_KEY).asText();
+    //ManagementTypeInfo mgmtTI = new ManagementTypeInfo();
 
-      try {
-        Class<?> mgmtClass = Class.forName("services.offer_management." + className);
-        mgmtTI.typeClass = mgmtClass;
-      } catch (ClassNotFoundException ce) {
-        setInvalid("Management Type invalid: specified type " + className +" not found\n");
-        return null;
-      }
-    } else {
-      setInvalid("Type field not found.\n");
-      return null;
-    }
-
+    int delayInt;
     if(typeMap.has(OfferJsonConstants.DELAY_KEY)) {
-      int delayInt = typeMap.get(OfferJsonConstants.DELAY_KEY).asInt();
-      mgmtTI.delay = Duration.ofMinutes(delayInt); 
+      delayInt = typeMap.get(OfferJsonConstants.DELAY_KEY).asInt();
+     // mgmtTI.delay = Duration.ofMinutes(delayInt); 
     } else {
       setInvalid("Delay field not found.\n");
       return null;
     }
   
-    return mgmtTI;
-  }
+    if(typeMap.has(OfferJsonConstants.TYPE_KEY)) {
+      String className = typeMap.get(OfferJsonConstants.TYPE_KEY).asText();
 
+      try {
+        Class<?> mgmtClass = Class.forName("services.offer_management." + className);
+        
+        return new ManagementTypeInfo(mgmtClass, Duration.ofMinutes(delayInt));
+
+      } catch (ClassNotFoundException ce) {
+        setInvalid("Management Type invalid: specified type " + className +" not found\n");
+        return null;
+      }
+    } 
+
+    setInvalid("Type field not found.\n");
+    return null;
+  }
 
 
   private String parseComment(JsonNode data) {
@@ -378,5 +378,14 @@ public class OfferJsonParser extends JsonParser {
   public static class ManagementTypeInfo {
     private Class typeClass;
     private Duration delay;
+
+      ManagementTypeInfo(Class c, Duration d) {
+        this.typeClass = c;
+        this.delay = d;
+      }
+
+      public Class getClassType() { return typeClass; }
+      public Duration getDelay() { return delay; }
+
   }
 }
