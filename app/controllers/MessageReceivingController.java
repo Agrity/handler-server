@@ -62,7 +62,10 @@ public class MessageReceivingController extends Controller {
     for (Map.Entry<String, String[]> entry : map.entrySet()) {
       Logger.info("Header: " + entry.getKey() + " Value: " + Arrays.toString(entry.getValue()));
     }
-    Logger.info("++++ : " + request().body().toString());
+    Map<String, String[]> bodyMap = request().body().asFormUrlEncoded();
+    for (Map.Entry<String, String[]> entry : bodyMap.entrySet()) {
+      Logger.info("Body Key: " + entry.getKey() + "     Body Value: " + Arrays.toString(entry.getValue()));
+    }
     return ok(request().body().toString());
 
     /*XPath xPath = XPathFactory.newInstance().newXPath();
