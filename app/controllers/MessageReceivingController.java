@@ -29,6 +29,8 @@ import org.w3c.dom.Node;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
 
+import play.Logger;
+
 public class MessageReceivingController extends Controller {
 
   private static Integer numResponses = 0;
@@ -48,11 +50,13 @@ public class MessageReceivingController extends Controller {
 
   public Result receiveTwilioResponse() {
     numResponses++;
-    Document dom = request().body().asXml();
-    if (dom == null) {
-      return badRequest("Expecting Xml data");
-    }
-    return ok("Have a non-null XML doc");
+  //  Document dom = request().body().asXml();
+  //  if (dom == null) {
+  //    Logger.error("Expecting Xml data");
+  //    return badRequest("Expecting Xml data");
+  //  }
+  //  Logger.info("received populated Xml doc");
+   // return ok("Have a non-null XML doc");
     //XPath xPath = XPathFactory.newInstance().newXPath();
     //String text = xPath.getTextContent("//body", dom);
     //if (text == null) {
@@ -63,22 +67,26 @@ public class MessageReceivingController extends Controller {
 
 
 
-  /*  JsonNode data = request().body().asJson();
+    JsonNode data = request().body().asJson();
 
     if (data == null) {
-      return ok("Expecting Some Data.\n"); 
+      Logger.error("Expecting json data");
+      return badRequest("Expecting Some Data.\n"); 
     }
 
     String num = data.findValue("From").textValue();
     if (num == null) {
-      return ok("From parameter is empty."); 
+      Logger.error("Expecting from parameter");
+      return badRequest("From parameter is empty."); 
     }
     String text = data.findValue("Body").textValue();
     if (text == null) {
-      return ok("Body parameter is empty."); \
+      Logger.error("Expecting body parameter");
+      return badRequest("Body parameter is empty."); 
     }
+    Logger.info(num + "\n" + text);
     return ok(num + "\n" + text);
-  */
+  
   }
 
     
