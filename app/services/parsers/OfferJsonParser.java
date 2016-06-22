@@ -3,6 +3,7 @@ package services.parsers;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.time.LocalDate;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +39,11 @@ import services.impl.EbeanGrowerService;
  *    (TODO Determine Date Format)
  *    PAYMENT_DATE: ... ,
  *
+ *    MANAGEMENT_TYPE: {
+ *      TYPE: ...
+ *      DELAY: ...
+ *    },
+ *
  *    ==== OPTIONAL ====
  *
  *    COMMENT: ... ,
@@ -51,6 +57,7 @@ public class OfferJsonParser extends JsonParser {
   private Integer almondPounds;
   private String pricePerPound;
   private LocalDate paymentDate;
+  private Object managementType;
   private String comment;
 
   private final GrowerService growerService;
@@ -98,6 +105,12 @@ public class OfferJsonParser extends JsonParser {
       return;
     }
 
+    managementType = parseManagementType(data);
+    if(managementType == null) {
+      //Parser set to invalid with proper error message.
+      return;
+    }
+
     comment = parseComment(data);
     if (comment == null) {
       // Parser set to invalid with proper error message.
@@ -120,6 +133,7 @@ public class OfferJsonParser extends JsonParser {
         getAlmondPounds(),
         getPricePerPound(),
         getPaymentDate(),
+        getManagementType(),
         getComment());
 
     return newOffer;
@@ -153,6 +167,11 @@ public class OfferJsonParser extends JsonParser {
   public LocalDate getPaymentDate() {
     ensureValid();
     return paymentDate;
+  }
+
+  public Object getManagementType() {
+    ensureValid();
+    return managementType;
   }
 
   public String getComment() {
@@ -282,6 +301,42 @@ public class OfferJsonParser extends JsonParser {
     return DateService.stringToDate(dateString);
   }
 
+  private ManagementTypeInfo parseManagementType(JsonNode date) {
+    if (!data.has(OfferJsonConstants.MANAGEMENT_TYPE)) {
+      setInvalid(missingParameterError(OfferJsonConstants.MANAGEMENT_TYPE));
+      return null;
+    }
+
+    JsonNode typeMap = data.get(OfferJsonConstants.MANAGEMENT_TYPE);
+    // if (!typeMap.isMap()) {
+    //   setInvalid("Management Type Format Invalid: map of strings to strings expected.");
+    //   return null;
+    // }
+
+    ManagementTypeInfo mgmtTI;
+
+    if(typeMap.has("TYPE")) {
+      String type = typeMap.get("TYPE").asText();
+
+
+
+    } else {
+      setInvalid("Type field not found.\n");
+      return null;
+    }
+    if(typeMap.has("DELAY")) {
+      int delayInt = typeMap.get("DELAY").asInt();
+      mgmtTI.delay = Duration.ofMintutes(delayInt); 
+    } else {
+      setInvalid("Delay field not found.\n");
+      return null;
+    }
+
+    return mgmtTI;
+  }
+
+
+
   private String parseComment(JsonNode data) {
     // Check comment is present.
     if (!data.has(OfferJsonConstants.COMMENT)) {
@@ -308,6 +363,14 @@ public class OfferJsonParser extends JsonParser {
 
     private static final String PAYMENT_DATE = "payment_date";
 
+    private static final String MANAGEMENT_TYPE = "management_type";
+
     private static final String COMMENT = "comment";
+
+  }
+
+  public static class ManagementTypeInfo {
+    private Object type;
+    private Duration delay;
   }
 }
