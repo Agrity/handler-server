@@ -13,9 +13,11 @@ public class FCFSService implements OfferManagementService {
 	
   private final Offer offer; 
   private Cancellable cancellable;
+  private Integer poundsRemaining; 
 	
   public FCFSService(Offer offer, Duration timeAllowed) {
     this.offer = offer;
+    this.poundsRemaining = offer.getAlmondPounds();
     // All growers need to be messaged the offer. 
 
     OfferManagementService.offerToManageService.put(offer, this);
@@ -47,6 +49,14 @@ public class FCFSService implements OfferManagementService {
   	@Override 
   	public void reject() {
   	  // Do Nothing
+  	}
+  	
+  	public void subtractFromPoundsRemaining(Integer poundsToSubtract) {
+  		poundsRemaining -= poundsToSubtract; 
+  	}
+  	
+  	public Integer getPoundsRemaining() {
+  		return poundsRemaining; 
   	}
   
 	  public void process() { 
