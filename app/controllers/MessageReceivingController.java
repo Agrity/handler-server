@@ -60,7 +60,7 @@ public class MessageReceivingController extends Controller {
     //}
     Map<String, String[]> map = request().headers();
     for (Map.Entry<String, String[]> entry : map.entrySet()) {
-      Logger.info("Header: " + entry.getKey() + "Value: " + entry.getValue());
+      Logger.info("Header: " + entry.getKey() + " Value: " + Arrays.toString(entry.getValue()));
     }
     Logger.info("++++ : " + request().body().toString());
     return ok(request().body().toString());
