@@ -150,7 +150,7 @@ public class Offer extends BaseModel implements PrettyString {
 
   public void closeOffer() {
     offerCurrentlyOpen = false;
-    removeOfferManagementService();
+    OfferManagementService.removeOfferManagementService(this);
   }
 
 
@@ -198,8 +198,16 @@ public class Offer extends BaseModel implements PrettyString {
       // TODO Handle Late Acceptance Error
       return false;
     }
-    
-    getOfferManagementService().accept(pounds);
+
+
+    OfferManagementService managementService
+        = OfferManagementService.getOfferManagementService(this);
+
+    if (managementService != null) {
+      managementService.accept(pounds);
+    } else {
+      // TODO Possibly Log Error?
+    }
 
     return setGrowerResponseForOffer(growerId, ResponseStatus.ACCEPTED);
   }
@@ -210,7 +218,14 @@ public class Offer extends BaseModel implements PrettyString {
       return false;
     }  
 
-    getOfferManagementService().reject();
+    OfferManagementService managementService
+        = OfferManagementService.getOfferManagementService(this);
+
+    if (managementService != null) {
+      managementService.reject();
+    } else {
+      // TODO Possibly Log Error?
+    }
 
     return setGrowerResponseForOffer(growerId, ResponseStatus.REJECTED);
   }
@@ -220,6 +235,7 @@ public class Offer extends BaseModel implements PrettyString {
       // TODO Handle Late Acceptance Error
       return false;
     }  
+
     return setGrowerResponseForOffer(growerId, ResponseStatus.REQUEST_CALL);
   }
 
@@ -236,14 +252,6 @@ public class Offer extends BaseModel implements PrettyString {
     growerOfferResponse.save();
 
     return true;
-  }
-
-  private OfferManagementService getOfferManagementService() {
-    return OfferManagementService.offerToManageService.get(this);
-  }
-
-  private void removeOfferManagementService() {
-    OfferManagementService.offerToManageService.remove(this);
   }
 
   @Override

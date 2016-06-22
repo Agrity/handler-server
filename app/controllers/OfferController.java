@@ -48,7 +48,8 @@ public class OfferController extends Controller {
       return notFound(ErrorMessages.offerNotFoundMessage(offerId));
     }
 
-    boolean success = offer.growerAcceptOffer(growerId);
+    // TODO Change to actual pounds accepted once implemented.
+    boolean success = offer.growerAcceptOffer(growerId, 0);
 
     // TODO Change to Ok/Error to valid JSON
     return success ? ok("Successfully Accepted Offer.")

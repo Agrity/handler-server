@@ -65,10 +65,6 @@ public class FCFSService implements OfferManagementService {
   		else { 
   			poundsRemaining -= pounds; 
   		}
-  	}
-  	
-  	public Integer getPoundsRemaining() {
-  		return poundsRemaining; 
-  	} 	  
+  	}	  
 	}
 	

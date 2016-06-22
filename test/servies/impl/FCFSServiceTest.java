@@ -88,7 +88,7 @@ public class FCFSServiceTest extends EbeanTest {
   }
   
   @Test
-  public void testAccepted() {
+  public void testAcceptedInFull() {
     Offer offer
       = new Offer(
           UNUSED_HANDLER,
@@ -105,9 +105,32 @@ public class FCFSServiceTest extends EbeanTest {
     FCFSService FCFSservice = new FCFSService(offer, Duration.ofMillis(10000));
     
     assertThat(offer.getOfferCurrentlyOpen(), is(true));
-    FCFSservice.accept();
+    FCFSservice.accept(offer.getAlmondPounds());
     assertThat(offer.getOfferCurrentlyOpen(), is(false)); 
   }
+  
+  @Test 
+  public void testAcceptedInHalves() { 
+  	 Offer offer
+     = new Offer(
+         UNUSED_HANDLER,
+         UNUSED_GROWERS,
+         UNUSED_VARIETY,
+         UNUSED_POUNDS,
+         UNUSED_PRICE,
+         UNUSED_DATE,
+         UNUSED_COMMENT);
+
+   assertThat(offer, is(notNullValue()));
+   saveModel(offer);
+
+   FCFSService FCFSservice = new FCFSService(offer, Duration.ofMillis(10000));
+   
+   assertThat(offer.getOfferCurrentlyOpen(), is(true));
+   FCFSservice.accept(offer.getAlmondPounds() / 2);
+   assertThat(offer.getOfferCurrentlyOpen(), is(true));
+   FCFSservice.accept(offer.getAlmondPounds() - (offer.getAlmondPounds()/2));
+ }
   
 }
 

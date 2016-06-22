@@ -56,6 +56,8 @@ public class WaterfallServiceTest extends EbeanTest {
     Ebean.save(UNUSED_HANDLER);
     Ebean.saveAll(UNUSED_GROWERS);
   }
+  
+  /*
 	
   @Test
   public void testExpired() {
@@ -216,8 +218,11 @@ public class WaterfallServiceTest extends EbeanTest {
     }
     assertThat(wservice.getCurrentGrowers().size(), is(2));
   }
+  */
 
   /* First and third grower reject, second has no response, and final grower accepts. */
+  
+  /*
   @Test
   public void testMixed() {
     Offer offer
@@ -258,5 +263,6 @@ public class WaterfallServiceTest extends EbeanTest {
     }
     assertThat(wservice.getCurrentGrowers().size(), is(1));
   }
+  */
 
 }
