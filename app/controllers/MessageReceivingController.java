@@ -61,8 +61,8 @@ public class MessageReceivingController extends Controller {
       Logger.info("Body Key: " + entry.getKey() + "     Body Value: " + Arrays.toString(entry.getValue()));
     }
 
-    String phoneNum = bodyMap.get("From");
-    String smsMessage = bodyMap.get("Body");
+    String phoneNum = Arrays.toString(bodyMap.get("From"));
+    String smsMessage = Arrays.toString(bodyMap.get("Body"));
     Logger.info("From: " + phoneNum + "\nmessage: " + smsMessage);
     return ok("From: " + phoneNum + "\nmessage: " + smsMessage);
   }
