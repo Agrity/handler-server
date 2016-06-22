@@ -130,7 +130,38 @@ public class FCFSServiceTest extends EbeanTest {
    FCFSservice.accept(offer.getAlmondPounds() / 2);
    assertThat(offer.getOfferCurrentlyOpen(), is(true));
    FCFSservice.accept(offer.getAlmondPounds() - (offer.getAlmondPounds()/2));
+   assertThat(offer.getOfferCurrentlyOpen(), is(false));
  }
+  
+  @Test 
+  public void testHalfAcceptedThenExpired() { 
+  	 Offer offer
+     = new Offer(
+         UNUSED_HANDLER,
+         UNUSED_GROWERS,
+         UNUSED_VARIETY,
+         UNUSED_POUNDS,
+         UNUSED_PRICE,
+         UNUSED_DATE,
+         UNUSED_COMMENT);
+
+   assertThat(offer, is(notNullValue()));
+   saveModel(offer);
+
+   FCFSService FCFSservice = new FCFSService(offer, Duration.ofMillis(1000));
+   
+   assertThat(offer.getOfferCurrentlyOpen(), is(true));
+   FCFSservice.accept(offer.getAlmondPounds() / 2);
+   assertThat(offer.getOfferCurrentlyOpen(), is(true));
+   try {
+     Thread.sleep(1500);
+   } catch(InterruptedException ex) {
+     Thread.currentThread().interrupt();
+   }
+   assertThat(offer.getOfferCurrentlyOpen(), is(false));
+ }
+  
+  
   
 }
 
