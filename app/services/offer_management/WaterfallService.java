@@ -4,6 +4,7 @@ package services.offer_management;
 import java.util.*;
 
 import models.Offer;
+import models.OfferResponse;
 import models.OfferResponse.ResponseStatus;
 import models.Grower;
 import java.time.Duration;
@@ -51,25 +52,36 @@ public class WaterfallService implements OfferManagementService {
 
   private void moveToNext() {
     // TODO alert grower 0 of time expired
-    growersInLine.remove(0);
     if(growersInLine.size() != 0) {
-      cancellable = scheduleTimer();
-    } else {
-      offer.closeOffer();
+	    growersInLine.remove(0);
+	    
+	    if(growersInLine.size() != 0) {
+	      cancellable = scheduleTimer();
+	    } else {
+	      offer.closeOffer();
+	    }
     }
   }
 
   @Override
   public Boolean accept(long pounds, long growerId) {
   	
+  	if(growersInLine.isEmpty()) {
+  		return false;
+  	}
   	if(growerId != (growersInLine.get(0)).getId()) {
   		// TODO: Add Error, wrong Grower trying to accept offer. 
   		    //For example, time already expired for previous grower trying to accept.
   		return false;
   	}
   	
-  	if(offer.getGrowerOfferResponse(growerId).getResponseStatus() != ResponseStatus.NO_RESPONSE) {
-			return false; 
+  	OfferResponse growerResponse = offer.getGrowerOfferResponse(growerId);
+  	if(growerResponse == null) {
+  		return false; 
+  	}
+  	if(growerResponse.getResponseStatus() != ResponseStatus.NO_RESPONSE || 
+  		 growerResponse.getResponseStatus() != ResponseStatus.REQUEST_CALL) {
+  		return false; 
 			//TODO: Add Error. Grower already responded. 
 		}
   	
@@ -94,12 +106,21 @@ public class WaterfallService implements OfferManagementService {
   @Override
   public Boolean reject(long growerId) {
   	
+  	if(growersInLine.isEmpty()) {
+  		return false;
+  	}
   	if(growerId != (growersInLine.get(0)).getId()) {
   		return false; 
   	}
-  	
-  	if(offer.getGrowerOfferResponse(growerId).getResponseStatus() != ResponseStatus.NO_RESPONSE) {
-			return false; 
+
+  	OfferResponse growerResponse = offer.getGrowerOfferResponse(growerId);
+  	if(growerResponse == null) {
+  		return false; 
+  	}
+  	if(growerResponse.getResponseStatus() != ResponseStatus.NO_RESPONSE ||
+  		 growerResponse.getResponseStatus() != ResponseStatus.REQUEST_CALL) {
+			
+  		return false; 
 			//TODO: Add Error. Grower already responded. 
 		}
   	

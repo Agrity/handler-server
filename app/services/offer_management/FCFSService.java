@@ -3,6 +3,7 @@ package services.offer_management;
 import java.time.Duration;
 
 import models.Offer;
+import models.OfferResponse;
 import models.OfferResponse.ResponseStatus;
 import akka.actor.Cancellable; 
 import scala.concurrent.duration.FiniteDuration;
@@ -37,7 +38,7 @@ public class FCFSService implements OfferManagementService {
                         @Override
                         public void run() { 
                             offer.closeOffer();
-                            // Alert Growers offer has been closed.   
+                            // TODO: Alert Growers offer has been closed.   
                         }
                       },
                       Akka.system().dispatcher()); 
@@ -46,35 +47,46 @@ public class FCFSService implements OfferManagementService {
   	@Override
     public Boolean accept(long pounds, long growerId) { 
     	
-  		if(offer.getGrowerOfferResponse(growerId).getResponseStatus() != ResponseStatus.NO_RESPONSE) {
-  			return false; 
-  			//TODO: Add Error. Grower already responded. 
+  		OfferResponse growerResponse = offer.getGrowerOfferResponse(growerId);
+    	if(growerResponse == null) {
+    		return false; 
+    	}
+    	if(growerResponse.getResponseStatus() != ResponseStatus.NO_RESPONSE ||
+    		 growerResponse.getResponseStatus() != ResponseStatus.REQUEST_CALL) {
+ 
+    		return false; 
+  			//TODO: Add Error. Grower already responded.
+    		
   		}
-  		
+    	
   		if(!subtractFromPoundsRemaining(pounds)) {
     		return false;
     	}
-    	else{
-    	
-    		if(poundsRemaining == 0) { 	
-    			cancellable.cancel();
-    			offer.closeOffer(); 
-    		}
-    	  
+  		
+      if(poundsRemaining == 0) { 	
+      	cancellable.cancel();
+    		offer.closeOffer(); 
+    	}
     		//TODO: Send pounds remaining or closed update to growers who have not accepted or rejected. offer.getGrowersWithNoResponse useful here.     		
     		return true;
-    	}
     }
+
   	
   	@Override 
   	public Boolean reject(long growerId) {
   	  // Do Nothing
-  		if(offer.getGrowerOfferResponse(growerId).getResponseStatus() != ResponseStatus.NO_RESPONSE) {
-  			return false; 
-  			//TODO: Add Error. Grower already responded. 
-  		} else {
+  		OfferResponse growerResponse = offer.getGrowerOfferResponse(growerId);
+    	if(growerResponse == null) {
+    		return false; 
+    	}
+    	if(growerResponse.getResponseStatus() != ResponseStatus.NO_RESPONSE ||
+    		 growerResponse.getResponseStatus() != ResponseStatus.REQUEST_CALL) {
+ 
+    		return false; 
+  			//TODO: Add Error. Grower already responded.
+  		} 
+    	
   		return true;
-  		}
   	}
   	
   	public Boolean subtractFromPoundsRemaining(long pounds) {
