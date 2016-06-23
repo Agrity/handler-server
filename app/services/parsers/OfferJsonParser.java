@@ -327,7 +327,8 @@ public class OfferJsonParser extends JsonParser {
       try {
         Class<?> mgmtClass = Class.forName("services.offer_management." + className);
         
-        return new ManagementTypeInfo(mgmtClass, Duration.ofMinutes(delayInt));
+        //TODO Change Back To Minutes...seconds for testing
+        return new ManagementTypeInfo(mgmtClass, Duration.ofSeconds(delayInt));
 
       } catch (ClassNotFoundException ce) {
         setInvalid("Management Type invalid: specified type " + className +" not found\n");

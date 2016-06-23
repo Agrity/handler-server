@@ -37,7 +37,7 @@ public class WaterfallService implements OfferManagementService {
 
   private Cancellable scheduleTimer() {
     //alert farmer 0 of offer
-    Logger.info("\t" + growers.get(0).getFullName() + " is up for the offer. Delay is " + delay.toString());
+    Logger.info("\tGrower " + Long.toString(growers.get(0).getId()) + " is up for the offer. Delay is " + delay.toString());
     //
     return Akka.system().scheduler().scheduleOnce(
         FiniteDuration.create(
@@ -59,15 +59,15 @@ public class WaterfallService implements OfferManagementService {
     if(status == ResponseStatus.ACCEPTED) {
       accept();
     } else {
+      // TODO alert farmer 0 of time expired
+      Logger.info("\tGrower " + Long.toString(growers.get(0).getId()) + " time has expired");
+      //
       moveToNext();
     }
 
   }
 
   private void moveToNext() {
-    // TODO alert farmer 0 of time expired
-    Logger.info("\t" + growers.get(0).getFullName() + " time has expired");
-    //
     growers.remove(0);
     if(growers.size() != 0) {
       cancellable = scheduleTimer();
@@ -77,11 +77,17 @@ public class WaterfallService implements OfferManagementService {
   }
 
   public void accept() {
+    // TODO confirm to farmer 0 offer was accepted
+    Logger.info("\tGrower " + Long.toString(growers.get(0).getId()) + " accepted the offer");
+    //
     cancellable.cancel();
     offer.closeOffer();
   }
 
   public void reject() {
+    // TODO confirm to farmer 0 offer was rejected
+    Logger.info("\tGrower " + Long.toString(growers.get(0).getId()) + " rejected the offer");
+    //
     cancellable.cancel();
     moveToNext();
   }
