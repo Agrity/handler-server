@@ -72,7 +72,7 @@ public class GrowerController extends Controller {
     Grower grower = growerService.getById(id);
 
     if (grower == null) {
-      return notFound(ErrorMessages.growerNotFoundMessage(id));
+      return notFound(JsonMsgUtils.growerNotFoundMessage(id));
     }
 
     try {

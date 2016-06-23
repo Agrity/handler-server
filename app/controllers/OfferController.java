@@ -50,7 +50,7 @@ public class OfferController extends Controller {
     Offer offer = offerService.getById(offerId);
     if (offer == null) {
       // TODO Change to Valid Error JSON
-      return notFound(ErrorMessages.offerNotFoundMessage(offerId));
+      return notFound(JsonMsgUtils.offerNotFoundMessage(offerId));
     }
 
     boolean success = offer.growerAcceptOffer(growerId);
@@ -64,7 +64,7 @@ public class OfferController extends Controller {
     Offer offer = offerService.getById(offerId);
     if (offer == null) {
       // TODO Change to Valid Error JSON
-      return notFound(ErrorMessages.offerNotFoundMessage(offerId));
+      return notFound(JsonMsgUtils.offerNotFoundMessage(offerId));
     }
 
     boolean success = offer.growerRejectOffer(growerId);
@@ -78,7 +78,7 @@ public class OfferController extends Controller {
     Offer offer = offerService.getById(offerId);
     if (offer == null) {
       // TODO Change to Valid Error JSON
-      return notFound(ErrorMessages.offerNotFoundMessage(growerId));
+      return notFound(JsonMsgUtils.offerNotFoundMessage(growerId));
     }
 
     boolean success = offer.growerRequestCall(growerId);
@@ -153,7 +153,7 @@ public class OfferController extends Controller {
 
     if (offer == null) {
       // TODO Change to Valid Error JSON
-      return notFound(ErrorMessages.offerNotFoundMessage(id));
+      return notFound(JsonMsgUtils.offerNotFoundMessage(id));
     }
 
     try {
@@ -170,7 +170,7 @@ public class OfferController extends Controller {
     // handlerOffers will be null if Hanlder with handlerId cannot be found.
     if (handlerOffers == null) {
       // TODO Change to Valid Error JSON
-      return notFound(ErrorMessages.handlerNotFoundMessage(handlerId));
+      return notFound(JsonMsgUtils.handlerNotFoundMessage(handlerId));
     }
     
     try {
@@ -187,7 +187,7 @@ public class OfferController extends Controller {
     // growerOffers will be null if Grower with growerId cannot be found.
     if (growerOffers == null) {
       // TODO Change to Valid Error JSON
-      return notFound(ErrorMessages.growerNotFoundMessage(growerId));
+      return notFound(JsonMsgUtils.growerNotFoundMessage(growerId));
     }
 
     try {

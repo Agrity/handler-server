@@ -74,7 +74,7 @@ public class HandlerController extends Controller {
 
     if (handler == null) {
       // TODO Change to Valid Error JSON
-      return notFound(ErrorMessages.handlerNotFoundMessage(id));
+      return notFound(JsonMsgUtils.handlerNotFoundMessage(id));
     }
 
     try {
@@ -90,7 +90,7 @@ public class HandlerController extends Controller {
 
     if (handler == null) {
       // TODO Change to Valid Error JSON
-      return notFound(ErrorMessages.handlerNotFoundMessage(handlerId));
+      return notFound(JsonMsgUtils.handlerNotFoundMessage(handlerId));
     }
 
     // TODO Use Grower Service After Implemented.
@@ -102,18 +102,18 @@ public class HandlerController extends Controller {
     
     if (handler == null) {
       // TODO Change to Valid Error JSON
-      return notFound(ErrorMessages.handlerNotFoundMessage(handlerId));
+      return notFound(JsonMsgUtils.handlerNotFoundMessage(handlerId));
     }
 
     Grower grower = growerService.getById(growerId);
     if (grower == null) {
       // TODO Change to Valid Error JSON
-      return notFound(ErrorMessages.growerNotFoundMessage(growerId));
+      return notFound(JsonMsgUtils.growerNotFoundMessage(growerId));
     }
 
     if (!handlerService.checkHandlerOwnsGrower(handler, grower)) {
       // TODO Change to Valid Error JSON
-      return badRequest(ErrorMessages.handlerDoesNotOwnGrowerMessage(handler, grower));
+      return badRequest(JsonMsgUtils.handlerDoesNotOwnGrowerMessage(handler, grower));
     }
 
     try {
