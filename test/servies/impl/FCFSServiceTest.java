@@ -24,9 +24,6 @@ import test_helpers.EbeanTest;
 import com.avaje.ebean.Ebean;
 import com.google.common.collect.ImmutableList;
 
-
-
-
 public class FCFSServiceTest extends EbeanTest {	
 
 	private static final Handler UNUSED_HANDLER = new Handler("Test Company");
@@ -150,8 +147,5 @@ public class FCFSServiceTest extends EbeanTest {
    }
    assertThat(offer.getOfferCurrentlyOpen(), is(false));
  }
-  
-  
-  
 }
 
