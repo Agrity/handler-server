@@ -39,18 +39,25 @@ public class MessageReceivingController extends Controller {
   public Result receiveTwilioResponse() {
     numResponses++;
     Map<String, String[]> bodyMap = request().body().asFormUrlEncoded();
-
-    String phoneNum = Arrays.toString(bodyMap.get("From"));
-    String smsMessage = Arrays.toString(bodyMap.get("Body"));
-    String phoneNum2 = bodyMap.get("Body")[0];
-    String smsMessage2 = bodyMap.get("From")[0];
-    if (smsMessage == null) {
-      //send error message back to sender
-      return badRequest("No body in SMS message.");
+    String phoneNum = "";
+    String smsMessage = "";
+    try {
+      phoneNum = bodyMap.get("From")[0]; 
+    } catch (NullPointerException e) {
+      Logger.error("Error receiving SMS message.");
+      return badRequest("Error receiving SMS message.");
     }
+    try {
+      smsMessage = bodyMap.get("Body")[0]; 
+    } catch (NullPointerException e) {
+      /* send SMS back that there was an error */
+      Logger.error("Empty SMS message received from: " + phoneNum);
+      return badRequest("Empty SMS message received from: " + phoneNum);
+    }
+    
+    /* non-null smsMessage from phoneNum in format +11234567890 */
 
     Logger.info("From: " + phoneNum + " message: " + smsMessage);
-    Logger.info("From2: " + phoneNum2 + " message2 " + smsMessage2);
     return ok("From: " + phoneNum + "message: " + smsMessage);
   }
 
