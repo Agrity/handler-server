@@ -46,7 +46,7 @@ public class HandlerController extends Controller {
 
     if (!parser.isValid()) {
       // TODO Change to Valid Error JSON
-      return badRequest(parser.getErrorMessage());
+      return badRequest(JsonMsgUtils.caughtException(parser.getErrorMessage()));
     }
 
     Handler handler = parser.formHandler();
@@ -55,8 +55,7 @@ public class HandlerController extends Controller {
     try {
       return created(jsonMapper.writeValueAsString(handler));
     } catch (JsonProcessingException e) {
-      // TODO Change to Valid Error JSON
-      return internalServerError(e.toString());
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
     }
   }
 
@@ -64,8 +63,7 @@ public class HandlerController extends Controller {
     try {
       return ok(jsonMapper.writeValueAsString(handlerService.getAll()));
     } catch (JsonProcessingException e) {
-      // TODO Change to Valid Error JSON
-      return internalServerError(e.toString());
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
     }
   }
 
@@ -73,15 +71,13 @@ public class HandlerController extends Controller {
     Handler handler = handlerService.getById(id);
 
     if (handler == null) {
-      // TODO Change to Valid Error JSON
       return notFound(JsonMsgUtils.handlerNotFoundMessage(id));
     }
 
     try {
       return ok(jsonMapper.writeValueAsString(handler));
     } catch (JsonProcessingException e) {
-      // TODO Change to Valid Error JSON
-      return internalServerError(e.toString());
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
     }
   }
 
@@ -89,11 +85,9 @@ public class HandlerController extends Controller {
     Handler handler = handlerService.getById(handlerId);
 
     if (handler == null) {
-      // TODO Change to Valid Error JSON
       return notFound(JsonMsgUtils.handlerNotFoundMessage(handlerId));
     }
 
-    // TODO Use Grower Service After Implemented.
     return ok("TODO Grower");
   }
 
@@ -101,26 +95,22 @@ public class HandlerController extends Controller {
     Handler handler = handlerService.getById(handlerId);
     
     if (handler == null) {
-      // TODO Change to Valid Error JSON
       return notFound(JsonMsgUtils.handlerNotFoundMessage(handlerId));
     }
 
     Grower grower = growerService.getById(growerId);
     if (grower == null) {
-      // TODO Change to Valid Error JSON
       return notFound(JsonMsgUtils.growerNotFoundMessage(growerId));
     }
 
     if (!handlerService.checkHandlerOwnsGrower(handler, grower)) {
-      // TODO Change to Valid Error JSON
       return badRequest(JsonMsgUtils.handlerDoesNotOwnGrowerMessage(handler, grower));
     }
 
     try {
       return ok(jsonMapper.writeValueAsString(grower));
     } catch (JsonProcessingException e) {
-      // TODO Change to Valid Error JSON
-      return internalServerError(e.toString());
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
     }
   }
 }
