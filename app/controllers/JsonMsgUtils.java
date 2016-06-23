@@ -28,15 +28,19 @@ public class JsonMsgUtils {
   }
 
   public static ObjectNode offerNotAccepted() {
-    return errorToJson("Internal Error: Offer could not be accepted.");
+    return errorToJson("Internal Error: Offer could not be accepted.\n");
   }
 
   public static ObjectNode emailsNotSent() {
-    return errorToJson("Some or all of the emails were unable to be sent.");
+    return errorToJson("Some or all of the emails were unable to be sent.\n");
   }
 
   public static ObjectNode caughtException(String err) {
     return errorToJson(err);
+  }
+
+  public static ObjectNode expectingData() {
+    return errorToJson("Expecting Some Data.\n");
   }
 
   private static ObjectNode errorToJson(String msg) {
