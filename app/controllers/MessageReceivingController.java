@@ -38,20 +38,20 @@ public class MessageReceivingController extends Controller {
   /* === TODO: How is offer updated if grower doesn't go through Twilio to accept from handler? === */
   public Result receiveTwilioResponse() {
     numResponses++;
-  
-    Map<String, String[]> map = request().headers();
-    for (Map.Entry<String, String[]> entry : map.entrySet()) {
-      Logger.info("Header: " + entry.getKey() + " Value: " + Arrays.toString(entry.getValue()));
-    }
     Map<String, String[]> bodyMap = request().body().asFormUrlEncoded();
-    for (Map.Entry<String, String[]> entry : bodyMap.entrySet()) {
-      Logger.info("Body Key: " + entry.getKey() + "     Body Value: " + Arrays.toString(entry.getValue()));
-    }
 
     String phoneNum = Arrays.toString(bodyMap.get("From"));
     String smsMessage = Arrays.toString(bodyMap.get("Body"));
+    String phoneNum2 = bodyMap.get("Body")[0];
+    String smsMessage2 = bodyMap.get("From")[0];
+    if (smsMessage == null) {
+      //send error message back to sender
+      return badRequest("No body in SMS message.");
+    }
+
     Logger.info("From: " + phoneNum + " message: " + smsMessage);
-    return ok("From: " + phoneNum + "\nmessage: " + smsMessage);
+    Logger.info("From2: " + phoneNum2 + " message2 " + smsMessage2);
+    return ok("From: " + phoneNum + "message: " + smsMessage);
   }
 
     
