@@ -67,7 +67,7 @@ public class OfferController extends Controller {
     boolean success = offer.growerRejectOffer(growerId);
 
     return success ? ok(JsonMsgUtils.successfullReject())
-        : internalServerError(JsonMstUtils.offerNotRejected());
+        : internalServerError(JsonMsgUtils.offerNotRejected());
   }
 
   public Result requestCall(long offerId, long growerId) {
