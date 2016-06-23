@@ -39,8 +39,8 @@ public class MessageReceivingController extends Controller {
   public Result receiveTwilioResponse() {
     numResponses++;
     Map<String, String[]> bodyMap = request().body().asFormUrlEncoded();
-    String phoneNum = "";
-    String smsMessage = "";
+    String phoneNum;
+    String smsMessage;
     try {
       phoneNum = bodyMap.get("From")[0]; 
     } catch (NullPointerException e) {
