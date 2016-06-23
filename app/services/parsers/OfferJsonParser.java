@@ -324,9 +324,9 @@ public class OfferJsonParser extends JsonParser {
       String className = typeMap.get(OfferJsonConstants.TYPE_KEY).asText();
       Duration delayTime = Duration.ofMinutes(delayInt);
       switch(className) {
-        case ManagementTypes.WATERFALL:
+        case OfferJsonConstants.ManagementTypes.WATERFALL:
           return new ManagementTypeInfo(WaterfallService.class, delayTime);
-        case ManagementTypes.FCFS: 
+        case OfferJsonConstants.ManagementTypes.FCFS: 
           return new ManagementTypeInfo(FCFSService.class, delayTime);
         default:
           setInvalid("Management Type invalid: specified type " + className +" not found\n");
@@ -372,11 +372,10 @@ public class OfferJsonParser extends JsonParser {
     private static final String TYPE_KEY = "type";
     private static final String DELAY_KEY = "delay";
 
-  }
-
-  public static class ManagementTypes {
-    private static final String WATERFALL = "WaterfallService";
-    private static final String FCFS = "FCFSService";
+    public static class ManagementTypes {
+      private static final String WATERFALL = "WaterfallService";
+      private static final String FCFS = "FCFSService";
+    }
   }
 
   public static class ManagementTypeInfo {
