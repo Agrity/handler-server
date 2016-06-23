@@ -244,7 +244,7 @@ public class WaterfallServiceTest extends EbeanTest {
       
       if (index == 2) {
       	try {
-          Thread.sleep(1100);
+          Thread.sleep(1500);
         } catch(InterruptedException ex) {
           Thread.currentThread().interrupt();
         }
