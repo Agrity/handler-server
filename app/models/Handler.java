@@ -34,6 +34,8 @@ public class Handler extends BaseModel implements PrettyString {
 
 
   // Email Address, also used as username for login.
+  //
+  // WARNING: Is expected to always be lowercase.
   private String emailAddress;
 
   // Cleartext password. Not Saved to database.
@@ -66,8 +68,6 @@ public class Handler extends BaseModel implements PrettyString {
   /* ==================================== Member Accessors ==================================== */
 
 
-  //public static Finder<Long, Handler> find = new Finder<>(Handler.class);
-
   public void setCompanyName(String companyName) {
     this.companyName = companyName;
   }
@@ -78,6 +78,10 @@ public class Handler extends BaseModel implements PrettyString {
 
   public List<Grower> getGrowersList() {
     return growersList;
+  }
+
+  public void setEmailAddress(String emailAddress) {
+    this.emailAddress = emailAddress.toLowerCase();
   }
 
   public String getEmailAddress() {

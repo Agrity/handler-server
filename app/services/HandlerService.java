@@ -18,5 +18,9 @@ public interface HandlerService {
 
   public Handler getByCompanyName(String companyName);
 
+  public Handler getByEmailAddressAndPassword(String emailAddress, String password);
+
+  public Handler getByAuthToken(String authToken);
+
   public boolean checkHandlerOwnsGrower(Handler handler, Grower grower);
 }

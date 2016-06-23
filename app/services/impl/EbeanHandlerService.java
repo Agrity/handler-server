@@ -9,9 +9,11 @@ import models.Handler;
 
 import services.HandlerService;
 
+import utils.SecurityUtility;
+
 public class EbeanHandlerService implements HandlerService {
 
-  private static Finder<Long, Handler> FINDER = new Finder<>(Handler.class);
+  private static final Finder<Long, Handler> FINDER = new Finder<>(Handler.class);
 
   @Override
   public List<Handler> getAll() {
@@ -28,6 +30,23 @@ public class EbeanHandlerService implements HandlerService {
     return FINDER
         .where()
         .eq("company_name", companyName)
+        .findUnique();
+  }
+
+  @Override
+  public Handler getByEmailAddressAndPassword(String emailAddress, String password) {
+    return FINDER
+        .where()
+        .eq("email_address", emailAddress.toLowerCase())
+        .eq("sha_password", SecurityUtility.getSha512(password))
+        .findUnique();
+  }
+
+  @Override
+  public Handler getByAuthToken(String authToken) {
+    return FINDER
+        .where()
+        .eq("auth_token", authToken)
         .findUnique();
   }
 

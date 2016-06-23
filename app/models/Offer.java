@@ -39,12 +39,12 @@ public class Offer extends BaseModel implements PrettyString {
   private Handler handler;
 
   @OneToMany(cascade = CascadeType.ALL)
-    @Constraints.Required
-    private Set<OfferResponse> offerResponses = new HashSet<>();
+  @Constraints.Required
+  private Set<OfferResponse> offerResponses = new HashSet<>();
 
   @ManyToMany(cascade = CascadeType.ALL)
-    @Constraints.Required
-    private List<Grower> growers = new ArrayList<>();
+  @Constraints.Required
+  private List<Grower> growers = new ArrayList<>();
 
   // TODO Figure out Why this can't use reflection
   //@Constraints.Required
@@ -63,10 +63,10 @@ public class Offer extends BaseModel implements PrettyString {
 
   // TODO Change to Java 8 Date and Time
   @Formats.DateTime(pattern = "dd/MM/yyyy")
-    private LocalDate paymentDate;
+  private LocalDate paymentDate;
 
   @Column(columnDefinition = "TEXT")
-    private String comment = "";
+  private String comment = "";
 
   private boolean offerCurrentlyOpen = true;
 
