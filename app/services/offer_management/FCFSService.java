@@ -9,8 +9,6 @@ import scala.concurrent.duration.FiniteDuration;
 import java.util.concurrent.TimeUnit;
 import play.libs.Akka; 
 
-import play.Logger;
-
 public class FCFSService implements OfferManagementService {
 	
   private final Offer offer; 
@@ -19,8 +17,6 @@ public class FCFSService implements OfferManagementService {
   public FCFSService(Offer offer, Duration timeAllowed) {
     this.offer = offer;
     // All growers need to be messaged the offer. 
-    Logger.info(offer.getAllGrowers().toString());
-
     OfferManagementService.offerToManageService.put(offer, this);
 
     cancellable

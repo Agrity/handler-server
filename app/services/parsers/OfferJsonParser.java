@@ -310,12 +310,9 @@ public class OfferJsonParser extends JsonParser {
 
     JsonNode typeMap = data.get(OfferJsonConstants.MANAGEMENT_TYPE);
 
-    //ManagementTypeInfo mgmtTI = new ManagementTypeInfo();
-
     int delayInt;
     if(typeMap.has(OfferJsonConstants.DELAY_KEY)) {
       delayInt = typeMap.get(OfferJsonConstants.DELAY_KEY).asInt();
-     // mgmtTI.delay = Duration.ofMinutes(delayInt); 
     } else {
       setInvalid("Delay field not found.\n");
       return null;
@@ -326,9 +323,8 @@ public class OfferJsonParser extends JsonParser {
 
       try {
         Class<?> mgmtClass = Class.forName("services.offer_management." + className);
-        
-        //TODO Change Back To Minutes...seconds for testing
-        return new ManagementTypeInfo(mgmtClass, Duration.ofSeconds(delayInt));
+    
+        return new ManagementTypeInfo(mgmtClass, Duration.ofMinutes(delayInt));
 
       } catch (ClassNotFoundException ce) {
         setInvalid("Management Type invalid: specified type " + className +" not found\n");
