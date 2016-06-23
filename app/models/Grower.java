@@ -98,7 +98,7 @@ public class Grower extends BaseModel implements PrettyString {
     this.emailAddresses = emailAddresses;
 
     // TODO Fix When Phonenumbers Functional
-    //this.phoneNumbers = phoneNumbers;
+    this.phoneNumbers = phoneNumbers;
     //this.phoneNumbers = new ArrayList<>();
   }
 
@@ -110,9 +110,9 @@ public class Grower extends BaseModel implements PrettyString {
     return firstName + " " + lastName;
   }
 
-  public String getPrefferedContact() {
-    return emailAddresses.isEmpty() ? null : emailAddresses.get(0).toString();
-  }
+  //public String getPrefferedContact() {
+  //  return emailAddresses.isEmpty() ? null : emailAddresses.get(0).toString();
+  //}
 
   @JsonIgnore
   public List<Offer> getAcceptedOffers() {
@@ -158,9 +158,9 @@ public class Grower extends BaseModel implements PrettyString {
   }
 
   //@JsonIgnore
-  //public List<String> getPhoneNumbers() {
-  //  return phoneNumbers;
-  //}
+  public List<String> getPhoneNumbers() {
+    return phoneNumbers;
+  }
 
   @Override
   public String toString() {

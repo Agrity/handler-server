@@ -40,7 +40,7 @@ public class OfferSMSMessageService implements OfferMessageService {
   public boolean send(Offer offer) {
     boolean success = true;
     for (Grower curGrower : offer.getAllGrowers()) { 
-     // for (String phoneNumber: curGrower.getPhoneNumbers()) {
+      for (String phoneNumber: curGrower.getPhoneNumbers()) {
         /* number needs to be in format "+18155926350" as a string */
         List<NameValuePair> params = new ArrayList<NameValuePair>(); 
         Logger.info(curGrower.getFullName());
@@ -56,7 +56,7 @@ public class OfferSMSMessageService implements OfferMessageService {
           Logger.error("=== Error Sending SMS Message ===\n" + e.getErrorMessage() + "\n\n");
         }
 
-    //  }
+      }
     }
     return success;
   }

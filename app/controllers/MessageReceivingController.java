@@ -11,6 +11,9 @@ import services.OfferService;
 import services.messaging.offer.OfferMessageService;
 import models.Offer;
 import play.Logger;
+import models.OfferResponse;
+import models.OfferResponse.ResponseStatus;
+import models.Grower;
 
 public class MessageReceivingController extends Controller {
 
@@ -54,12 +57,31 @@ public class MessageReceivingController extends Controller {
       Logger.error("Empty SMS message received from: " + phoneNum);
       return badRequest("Empty SMS message received from: " + phoneNum);
     }
-    
+
+
     /* non-null smsMessage from phoneNum in format +11234567890 */
+
+    Grower grower = growerLookupByPhoneNum(phoneNum);
+
+    ResponseStatus status = ingestSMS(smsMessage); 
+
+    /* correctly formatted smsMessage from phoneNum in format +11234567890 with Response Status status */
 
     Logger.info("From: " + phoneNum + " message: " + smsMessage);
     return ok("From: " + phoneNum + "message: " + smsMessage);
+  }  
+
+  Grower growerLookupByPhoneNum(String phoneNum) {
+    /* iterate and look through all phoneNums until we find correct Grower 
+     * if grower does not exist, respond with a message that says we received
+     * a message from an unauthorized number 
+     */
+    return null;
   }
 
-    
+  ResponseStatus ingestSMS(String smsMessage) {
+    /* ingest string to see whether grower is accepting/declining */
+    return ResponseStatus.REJECTED;
+  } 
+
 }
