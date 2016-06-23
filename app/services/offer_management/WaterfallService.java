@@ -15,6 +15,7 @@ import akka.actor.Cancellable;
 import scala.concurrent.duration.FiniteDuration;
 import java.util.concurrent.TimeUnit;
 import play.libs.Akka;
+import play.Logger;
 
 public class WaterfallService implements OfferManagementService {
 
@@ -36,6 +37,8 @@ public class WaterfallService implements OfferManagementService {
 
   private Cancellable scheduleTimer() {
     //alert farmer 0 of offer
+    Logger.info("\t" + growers.get(0).getFullName() + " is up for the offer. Delay is " + delay.toString());
+    //
     return Akka.system().scheduler().scheduleOnce(
         FiniteDuration.create(
             delay.toMillis(),
@@ -63,6 +66,8 @@ public class WaterfallService implements OfferManagementService {
 
   private void moveToNext() {
     // TODO alert farmer 0 of time expired
+    Logger.info("\t" + growers.get(0).getFullName() + " time has expired");
+    //
     growers.remove(0);
     if(growers.size() != 0) {
       cancellable = scheduleTimer();

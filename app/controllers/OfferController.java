@@ -121,17 +121,15 @@ public class OfferController extends Controller {
     offer.save();
 
     ManagementTypeInfo managementType = parser.getManagementType();
-    Class<?> classType = managementType.getClass();
+    Class<?> classType = managementType.getClassType();
 
     if (classType == WaterfallService.class) {
       new WaterfallService(offer, managementType.getDelay());
     } else if (classType == FCFSService.class) {
       new FCFSService(offer, managementType.getDelay());
     } else {
-      return internalServerError(classType.getName() + " not found\n");
+      return internalServerError(classType.getName() + " management type not found\n");
     }
-
-   // new FCFSService(offer, Duration.ofHours(1));
 
     try {
       return created(jsonMapper.writeValueAsString(offer));
