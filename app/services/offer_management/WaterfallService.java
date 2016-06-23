@@ -4,6 +4,7 @@ package services.offer_management;
 import java.util.*;
 
 import models.Offer;
+import models.OfferResponse.ResponseStatus;
 import models.Grower;
 import java.time.Duration;
 
@@ -11,6 +12,7 @@ import akka.actor.Cancellable;
 import scala.concurrent.duration.FiniteDuration;
 import java.util.concurrent.TimeUnit;
 import play.libs.Akka;
+
 
 public class WaterfallService implements OfferManagementService {
 
@@ -58,9 +60,23 @@ public class WaterfallService implements OfferManagementService {
   }
 
   @Override
-  public void accept(long pounds) {
+  public Boolean accept(long pounds, long growerId) {
   	
-  	subtractFromPoundsRemaining(pounds);
+  	if(growerId != (growersInLine.get(0)).getId()) {
+  		// TODO: Add Error, wrong Grower trying to accept offer. 
+  		    //For example, time already expired for previous grower trying to accept.
+  		return false;
+  	}
+  	
+  	if(offer.getGrowerOfferResponse(growerId).getResponseStatus() != ResponseStatus.NO_RESPONSE) {
+			return false; 
+			//TODO: Add Error. Grower already responded. 
+		}
+  	
+  	if(!subtractFromPoundsRemaining(pounds)) {
+  		return false;
+  	}
+  	
   	cancellable.cancel();
   	
   	if(poundsRemaining == 0) {
@@ -71,23 +87,38 @@ public class WaterfallService implements OfferManagementService {
   	  moveToNext();
   	}
   	
+  	return true; 
+  	
   }
 
   @Override
-  public void reject() {
+  public Boolean reject(long growerId) {
+  	
+  	if(growerId != (growersInLine.get(0)).getId()) {
+  		return false; 
+  	}
+  	
+  	if(offer.getGrowerOfferResponse(growerId).getResponseStatus() != ResponseStatus.NO_RESPONSE) {
+			return false; 
+			//TODO: Add Error. Grower already responded. 
+		}
+  	
     cancellable.cancel();
     moveToNext();
+    return true;
   }
   
-  public void subtractFromPoundsRemaining(long pounds) {
+  public Boolean subtractFromPoundsRemaining(long pounds) {
 		if(pounds > poundsRemaining) {
-			// ERROR
+			return false;
+			// TODO: Error message!
 			// TODO: fix this error check
 		}
 		else { 
 			poundsRemaining -= pounds; 
+			return true; 
 		}
-	}
+	}	  
 
   // NOTE: Used only for testing
   public List<Grower> getGrowersInLine() {

@@ -41,7 +41,7 @@ public class FCFSServiceTest extends EbeanTest {
 	private static final Integer UNUSED_POUNDS = 44_000;
 	private static final String UNUSED_PRICE = "$2.66";
 	private static final LocalDate UNUSED_DATE = LocalDate.of(2015, Month.JANUARY, 1);
-	private static final String UNUSED_COMMENT = "Test Comment.";
+	private static final String UNUSED_COMMENT = "Test Comment."; 
 
   @BeforeClass
   public static void loadInitialData() {
@@ -95,7 +95,7 @@ public class FCFSServiceTest extends EbeanTest {
     FCFSService FCFSservice = new FCFSService(offer, Duration.ofMillis(10000));
     
     assertThat(offer.getOfferCurrentlyOpen(), is(true));
-    FCFSservice.accept(offer.getAlmondPounds());
+    FCFSservice.accept(offer.getAlmondPounds(), UNUSED_GROWERS.get(0).getId());
     assertThat(offer.getOfferCurrentlyOpen(), is(false)); 
   }
   
@@ -117,9 +117,9 @@ public class FCFSServiceTest extends EbeanTest {
    FCFSService FCFSservice = new FCFSService(offer, Duration.ofMillis(10000));
    
    assertThat(offer.getOfferCurrentlyOpen(), is(true));
-   FCFSservice.accept(offer.getAlmondPounds() / 2);
+   FCFSservice.accept(offer.getAlmondPounds() / 2, UNUSED_GROWERS.get(0).getId());
    assertThat(offer.getOfferCurrentlyOpen(), is(true));
-   FCFSservice.accept(offer.getAlmondPounds() - (offer.getAlmondPounds()/2));
+   FCFSservice.accept(offer.getAlmondPounds() - (offer.getAlmondPounds()/2), UNUSED_GROWERS.get(1).getId());
    assertThat(offer.getOfferCurrentlyOpen(), is(false));
  }
   
@@ -141,7 +141,7 @@ public class FCFSServiceTest extends EbeanTest {
    FCFSService FCFSservice = new FCFSService(offer, Duration.ofMillis(1000));
    
    assertThat(offer.getOfferCurrentlyOpen(), is(true));
-   FCFSservice.accept(offer.getAlmondPounds() / 2);
+   FCFSservice.accept(offer.getAlmondPounds() / 2, UNUSED_GROWERS.get(0).getId());
    assertThat(offer.getOfferCurrentlyOpen(), is(true));
    try {
      Thread.sleep(1500);

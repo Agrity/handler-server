@@ -204,7 +204,10 @@ public class Offer extends BaseModel implements PrettyString {
         = OfferManagementService.getOfferManagementService(this);
 
     if (managementService != null) {
-      managementService.accept(pounds);
+      if (!managementService.accept(pounds, growerId)) {
+      	// TODO Report Service Not Accepting Error.
+      	return false;
+      }
     } else {
       // TODO Possibly Log Error?
     }
@@ -222,7 +225,7 @@ public class Offer extends BaseModel implements PrettyString {
         = OfferManagementService.getOfferManagementService(this);
 
     if (managementService != null) {
-      managementService.reject();
+      managementService.reject(growerId);
     } else {
       // TODO Possibly Log Error?
     }
