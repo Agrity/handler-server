@@ -31,6 +31,14 @@ public class JsonMsgUtils {
     return errorToJson("Internal Error: Offer could not be accepted.\n");
   }
 
+  public static ObjectNode offerNotRejected() {
+    return errorToJson("Internal Error: Offer could not be rejected.\n");
+  }
+
+  public static ObjectNode callNotRequested() {
+    return errorToJson("Internal Error: Call could not be requested.\n");
+  }
+
   public static ObjectNode emailsNotSent() {
     return errorToJson("Some or all of the emails were unable to be sent.\n");
   }

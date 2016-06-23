@@ -67,21 +67,19 @@ public class OfferController extends Controller {
     boolean success = offer.growerRejectOffer(growerId);
 
     return success ? ok(JsonMsgUtils.successfullReject())
-        : internalServerError("Internal Error: Offer could not be accepted.");
+        : internalServerError(JsonMstUtils.offerNotRejected());
   }
 
   public Result requestCall(long offerId, long growerId) {
     Offer offer = offerService.getById(offerId);
     if (offer == null) {
-      // TODO Change to Valid Error JSON
       return notFound(JsonMsgUtils.offerNotFoundMessage(growerId));
     }
 
     boolean success = offer.growerRequestCall(growerId);
 
-    // TODO Change to Ok/Error to valid JSON
     return success ? ok(JsonMsgUtils.successfullCallRequest())
-        : internalServerError("Internal Error: Offer could not be accepted.");
+        : internalServerError(JsonMsgUtils.callNotRequested());
   }
 
 

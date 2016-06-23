@@ -39,13 +39,12 @@ public class HandlerController extends Controller {
 
     if (data == null) {
       // TODO Change to Valid Error JSON
-      return badRequest("Expecting Some Data.\n");
+      return badRequest(JsonMsgUtils.expectingData());
     }
 
     HandlerJsonParser parser = new HandlerJsonParser(data);
 
     if (!parser.isValid()) {
-      // TODO Change to Valid Error JSON
       return badRequest(JsonMsgUtils.caughtException(parser.getErrorMessage()));
     }
 
@@ -88,8 +87,11 @@ public class HandlerController extends Controller {
       return notFound(JsonMsgUtils.handlerNotFoundMessage(handlerId));
     }
 
-    // TODO Use Grower Service After Implemented.
-    return ok("TODO Grower");
+    try {
+      return ok(jsonMapper.writeValueAsString(growerService.getByHandler(handlerId)));
+    } catch (JsonProcessingException e) {
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
+    }
   }
 
   public Result getGrower(long handlerId, long growerId) {
