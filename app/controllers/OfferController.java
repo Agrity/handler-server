@@ -85,9 +85,9 @@ public class OfferController extends Controller {
 
   public Result sendOffer(long id) {
     Offer offer = offerService.getById(id);
-    boolean emailSucces = offerMessageService.send(offer);
+    boolean emailSuccess = offerMessageService.send(offer);
 
-    return emailSucces
+    return emailSuccess
         ? ok(JsonMsgUtils.successfullEmail())
         : internalServerError(JsonMsgUtils.emailsNotSent());
   }
