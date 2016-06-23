@@ -16,6 +16,8 @@ import models.Offer;
 import services.DateService;
 import services.GrowerService;
 import services.impl.EbeanGrowerService;
+import services.offer_management.WaterfallService;
+import services.offer_management.FCFSService;
 
 import java.lang.reflect.Constructor;
 
@@ -314,25 +316,25 @@ public class OfferJsonParser extends JsonParser {
     if(typeMap.has(OfferJsonConstants.DELAY_KEY)) {
       delayInt = typeMap.get(OfferJsonConstants.DELAY_KEY).asInt();
     } else {
-      setInvalid("Delay field not found.\n");
+      setInvalid(missingParameterError(OfferJsonConstants.DELAY_KEY));
       return null;
     }
   
     if(typeMap.has(OfferJsonConstants.TYPE_KEY)) {
       String className = typeMap.get(OfferJsonConstants.TYPE_KEY).asText();
-
-      try {
-        Class<?> mgmtClass = Class.forName("services.offer_management." + className);
-    
-        return new ManagementTypeInfo(mgmtClass, Duration.ofMinutes(delayInt));
-
-      } catch (ClassNotFoundException ce) {
-        setInvalid("Management Type invalid: specified type " + className +" not found\n");
-        return null;
+      Duration delayTime = Duration.ofMinutes(delayInt);
+      switch(className) {
+        case ManagementTypes.WATERFALL:
+          return new ManagementTypeInfo(WaterfallService.class, delayTime);
+        case ManagementTypes.FCFS: 
+          return new ManagementTypeInfo(FCFSService.class, delayTime);
+        default:
+          setInvalid("Management Type invalid: specified type " + className +" not found\n");
+          return null;          
       }
     } 
 
-    setInvalid("Type field not found.\n");
+    setInvalid(missingParameterError(OfferJsonConstants.TYPE_KEY));
     return null;
   }
 
@@ -370,6 +372,11 @@ public class OfferJsonParser extends JsonParser {
     private static final String TYPE_KEY = "type";
     private static final String DELAY_KEY = "delay";
 
+  }
+
+  public static class ManagementTypes {
+    private static final String WATERFALL = "WaterfallService";
+    private static final String FCFS = "FCFSService";
   }
 
   public static class ManagementTypeInfo {

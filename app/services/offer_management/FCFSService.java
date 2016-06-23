@@ -35,24 +35,22 @@ public class FCFSService implements OfferManagementService {
                         }
                       },
                       Akka.system().dispatcher()); 
-    }
+  }
   
-  	@Override
-    public void accept() { 
-      Logger.info("Offer accepted");
-    	cancellable.cancel(); 
-    	offer.closeOffer(); 
-    }
-  	
-  	@Override 
-  	public void reject() {
-  	  // Do Nothing
-  	}
+  @Override
+  public void accept() { 
+    cancellable.cancel(); 
+   	offer.closeOffer(); 
+  }
   
-	  public void process() {
-      Logger.info("Offer expired"); 
-	  	offer.closeOffer();  
-	  	//TODO Alert other growers that offer has been closed. 	  
-	  }
-	}
+  @Override 
+  public void reject() {
+    // Do Nothing
+  }
+  
+  public void process() {
+    offer.closeOffer();  
+   	//TODO Alert other growers that offer has been closed. 	  
+  }
+}
 	
