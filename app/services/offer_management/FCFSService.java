@@ -13,7 +13,9 @@ import play.libs.Akka;
 
 public class FCFSService implements OfferManagementService {
 
+
   private final Offer offer;
+  
   private Cancellable cancellable;
   private long poundsRemaining;
 

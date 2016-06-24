@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.NoSuchElementException;
 
 //import javax.money.MonetaryAmount;
 import javax.persistence.CascadeType;
@@ -150,6 +151,7 @@ public class Offer extends BaseModel implements PrettyString {
   public void closeOffer() {
     offerCurrentlyOpen = false;
     OfferManagementService.removeOfferManagementService(this);
+    save();
   }
 
 
@@ -185,10 +187,14 @@ public class Offer extends BaseModel implements PrettyString {
   }
 
   public OfferResponse getGrowerOfferResponse(long growerId) {
-    return offerResponses.stream()
-      .filter(offerResponse -> offerResponse.getGrower().getId().equals(growerId))
-      .findFirst()
-      .get();
+    try {
+      return offerResponses.stream()
+        .filter(offerResponse -> offerResponse.getGrower().getId().equals(growerId))
+        .findFirst()
+        .get();
+    } catch(NoSuchElementException e) {
+      return null;
+    }
   }
 
 

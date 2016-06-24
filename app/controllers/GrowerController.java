@@ -35,15 +35,13 @@ public class GrowerController extends Controller {
     JsonNode data = request().body().asJson();
 
     if (data == null) {
-      // TODO Change to Valid Error JSON
-      return badRequest("Expecting Some Data.\n");
+      return badRequest(JsonMsgUtils.expectingData());
     }
 
     GrowerJsonParser parser = new GrowerJsonParser(data);
 
     if (!parser.isValid()) {
-      // TODO Change to Valid Error JSON
-      return badRequest(parser.getErrorMessage());
+      return badRequest(JsonMsgUtils.caughtException(parser.getErrorMessage()));
     }
 
     Grower grower = parser.formGrower();
@@ -53,8 +51,7 @@ public class GrowerController extends Controller {
     try {
       return created(jsonMapper.writeValueAsString(grower));
     } catch (JsonProcessingException e) {
-      // TODO Change to Valid Error JSON
-      return internalServerError(e.toString());
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
     }
 
   }
@@ -63,8 +60,7 @@ public class GrowerController extends Controller {
     try {
       return created(jsonMapper.writeValueAsString(growerService.getAll()));
     } catch (JsonProcessingException e) {
-      // TODO Change to Valid Error JSON
-      return internalServerError(e.toString());
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
     }
   }
 
@@ -72,14 +68,13 @@ public class GrowerController extends Controller {
     Grower grower = growerService.getById(id);
 
     if (grower == null) {
-      return notFound(ErrorMessages.growerNotFoundMessage(id));
+      return notFound(JsonMsgUtils.growerNotFoundMessage(id));
     }
 
     try {
       return created(jsonMapper.writeValueAsString(grower));
     } catch (JsonProcessingException e) {
-      // TODO Change to Valid Error JSON
-      return internalServerError(e.toString());
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
     }
   }
 }
