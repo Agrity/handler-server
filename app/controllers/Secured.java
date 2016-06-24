@@ -1,7 +1,10 @@
 package controllers;
 
+import com.google.inject.Inject;
+
 import models.Handler;
 
+import play.Logger;
 import play.mvc.Http.Context;
 import play.mvc.Result;
 import play.mvc.Security;
@@ -12,6 +15,7 @@ public class Secured extends Security.Authenticator {
 
   private HandlerService handlerService;
 
+  @Inject
   public Secured(HandlerService handlerService) {
     this.handlerService = handlerService;
   }
@@ -22,11 +26,14 @@ public class Secured extends Security.Authenticator {
       = ctx.request().getHeader(SecurityController.AUTH_TOKEN_HEADER);
 
     if (authTokenHeaderValue != null) {
+      Logger.debug("Auth Token: " + authTokenHeaderValue);
       Handler handler = handlerService.getByAuthToken(authTokenHeaderValue);
       if (handler != null) {
         ctx.args.put(SecurityController.HANDLER_KEY, handler);
         return handler.getEmailAddress();
       }
+    } else {
+      Logger.debug("No Auth Token Found.");
     }
 
     return null;
@@ -35,7 +42,8 @@ public class Secured extends Security.Authenticator {
   @Override
   public Result onUnauthorized(Context ctx) {
     // TODO Redirect to Login.
-    return unauthorized();
+    Logger.info("Unauthorized Access");
+    return unauthorized("Please Log In");
   }
 
 }

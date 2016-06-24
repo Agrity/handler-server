@@ -11,7 +11,10 @@ GET     /assets/*file                         controllers.Assets.versioned(path=
 
 # ============================= API Responses =================================================== #
 
+
 # ========== Handler ========== #
+
+
 GET     /handlers                                 controllers.HandlerController.getAllHandlers()
 
 POST    /handlers                                 controllers.HandlerController.createHandler()
@@ -24,7 +27,9 @@ GET     /handlers/:id/growers/:growerId           controllers.HandlerController.
 
 GET     /handlers/:id/offers                      controllers.OfferController.getAllHandlerOffers(id: Long)
 
+
 # ========== Grower ========== #
+
 
 GET     /growers                                  controllers.GrowerController.getAllGrowers()
 
@@ -34,7 +39,9 @@ GET     /growers/:id                              controllers.GrowerController.g
 
 GET     /growers/:id/offers                       controllers.OfferController.getAllGrowerOffers(id: Long)
 
+
 # ========== Offer ========== #
+
 
 GET     /offers                                   controllers.OfferController.getAllOffers()
 
@@ -51,3 +58,11 @@ GET     /offers/:offerId/accept/:growerId         controllers.OfferController.ac
 GET     /offers/:offerId/reject/:growerId         controllers.OfferController.rejectOffer(offerId: Long, growerId: Long)
 
 GET     /offers/:offerId/requestcall/:growerId    controllers.OfferController.requestCall(offerId: Long, growerId: Long)
+
+
+# ========== Authentication ========== #
+
+
+POST    /login                                    controllers.SecurityController.login()
+
+POST    /logout                                   controllers.SecurityController.login()

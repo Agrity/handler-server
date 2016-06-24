@@ -22,5 +22,9 @@ public interface HandlerService {
 
   public Handler getByAuthToken(String authToken);
 
+  public boolean checkCompanyNameAvailable(String companyName);
+
+  public boolean checkEmailAddressAvailable(String emailAddress);
+
   public boolean checkHandlerOwnsGrower(Handler handler, Grower grower);
 }

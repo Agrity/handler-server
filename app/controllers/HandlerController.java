@@ -11,6 +11,7 @@ import models.Handler;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.Security;
 
 import services.GrowerService;
 import services.HandlerService;
@@ -69,6 +70,7 @@ public class HandlerController extends Controller {
     }
   }
 
+  @Security.Authenticated(Secured.class)
   public Result getHandler(long id) {
     Handler handler = handlerService.getById(id);
 
@@ -85,6 +87,7 @@ public class HandlerController extends Controller {
     }
   }
 
+  @Security.Authenticated(Secured.class)
   public Result getAllGrowers(long handlerId) {
     Handler handler = handlerService.getById(handlerId);
 
@@ -97,6 +100,7 @@ public class HandlerController extends Controller {
     return ok("TODO Grower");
   }
 
+  @Security.Authenticated(Secured.class)
   public Result getGrower(long handlerId, long growerId) {
     Handler handler = handlerService.getById(handlerId);
     

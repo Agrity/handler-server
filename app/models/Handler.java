@@ -13,6 +13,7 @@ import javax.persistence.Transient;
 
 import models.interfaces.PrettyString;
 
+import play.Logger;
 import play.data.validation.Constraints;
 
 import utils.SecurityUtility;
@@ -21,7 +22,7 @@ import utils.SecurityUtility;
 public class Handler extends BaseModel implements PrettyString {
 
   @Constraints.Required
-  @Column(name = DBConstants.HandlerColumns.COMPANY_NAME)
+  @Column(name = DBConstants.HandlerColumns.COMPANY_NAME, nullable = false)
   private String companyName;
 
   @OneToMany
@@ -36,6 +37,7 @@ public class Handler extends BaseModel implements PrettyString {
   // Email Address, also used as username for login.
   //
   // WARNING: Is expected to always be lowercase.
+  @Column(nullable = false)
   private String emailAddress;
 
   // Cleartext password. Not Saved to database.
@@ -59,8 +61,10 @@ public class Handler extends BaseModel implements PrettyString {
   /* ====================================== Constructors ====================================== */
 
 
-  public Handler(String companyName) {
-    this.companyName = companyName;
+  public Handler(String companyName, String emailAddress, String password) {
+    setCompanyName(companyName);
+    setEmailAddress(emailAddress);
+    setPassword(password);
     growersList = new ArrayList<>();
   }
 
@@ -95,6 +99,7 @@ public class Handler extends BaseModel implements PrettyString {
 
   public String createToken() {
     authToken = UUID.randomUUID().toString();
+    Logger.debug("Auth Token Created (" + id + "): " + authToken);
     save();
     return authToken;
   }

@@ -51,6 +51,22 @@ public class EbeanHandlerService implements HandlerService {
   }
 
   @Override
+  public boolean checkCompanyNameAvailable(String companyName) {
+    return null == FINDER
+        .where()
+        .eq("company_name", companyName.toLowerCase())
+        .findUnique();
+  }
+
+  @Override
+  public boolean checkEmailAddressAvailable(String emailAddress) {
+    return null == FINDER
+        .where()
+        .eq("email_address", emailAddress.toLowerCase())
+        .findUnique();
+  }
+
+  @Override
   public boolean checkHandlerOwnsGrower(Handler handler, Grower grower) {
     return handler.equals(grower.getHandler());
   }
