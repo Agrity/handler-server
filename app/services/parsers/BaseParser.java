@@ -123,6 +123,20 @@ public abstract class BaseParser {
     }
   }
 
+  protected static Integer parseInteger(String numStr) {
+    if (numStr == null) {
+      return null;
+    }
+
+    try {
+      Integer num = Integer.parseInt(numStr);
+      return num;
+
+    } catch (NumberFormatException e) {
+      return null;
+    }
+  }
+
   protected static String missingParameterError(String paramaterName) {
     return "Missing parameter [ " + paramaterName + " ]\n";
   }
