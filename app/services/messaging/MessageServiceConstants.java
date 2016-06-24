@@ -50,7 +50,7 @@ public abstract class MessageServiceConstants {
     private static final String TEST_AUTH_TOKEN = "4d6520f79e75c93c4d80ec72a68fd6f1";
     private static final String TWILIO_NUMBER = "+15592057098";
     
-    private static final TwilioRestClient client = new TwilioRestClient(ACCOUNT_SID, TEST_AUTH_TOKEN);
+    private static final TwilioRestClient client = new TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN);
     private static final Account account = client.getAccount();
     private static final MessageFactory messageFactory = account.getMessageFactory();
 
