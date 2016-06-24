@@ -99,7 +99,7 @@ public class MessageReceivingController extends Controller {
       return badRequest("OfferId: " + offerID + " does not exist. From: " + phoneNum);
     }
 
-    Logger.info("The valid offerID is: " + offerID + " the amount accepted is: " + almondPounds)
+    Logger.info("The valid offerID is: " + offerID + " the amount accepted is: " + almondPounds);
     updateOffer(grower, offer, almondPounds, phoneNum);
     return ok("Grower response ingested properly");
   } 
