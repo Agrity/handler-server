@@ -1,33 +1,32 @@
 package services.offer_management;
 
-
 import java.util.*;
 
 import models.Offer;
-import models.Grower;
 import models.OfferResponse;
 import models.OfferResponse.ResponseStatus;
-
-
+import models.Grower;
 import java.time.Duration;
 
 import akka.actor.Cancellable;
 import scala.concurrent.duration.FiniteDuration;
 import java.util.concurrent.TimeUnit;
+
 import play.libs.Akka;
 
 public class WaterfallService implements OfferManagementService {
 
-	private final Offer offer;
-	private final Duration delay;
+  private final Offer offer;
+  private final Duration delay;
   private Cancellable cancellable;
-
-  private List<Grower> growers;
+  private long poundsRemaining;
+  private List<Grower> growersInLine;
 
   public WaterfallService(Offer offer, Duration delay) {
     this.offer = offer;
     this.delay = delay;
-    this.growers = new ArrayList<Grower>(offer.getAllGrowers());
+    this.growersInLine = new ArrayList<Grower>(offer.getAllGrowers());
+    this.poundsRemaining = offer.getAlmondPounds();
 
     OfferManagementService.offerToManageService.put(offer, this);
 
@@ -35,57 +34,92 @@ public class WaterfallService implements OfferManagementService {
   }
 
   private Cancellable scheduleTimer() {
-    //alert farmer 0 of offer
-    return Akka.system().scheduler().scheduleOnce(
-        FiniteDuration.create(
-            delay.toMillis(),
-            TimeUnit.MILLISECONDS), 
-            new Runnable() {
-              @Override
-              public void run() {
-                process();
-              }
-            },
-            Akka.system().dispatcher());
-  }
+    // TODO Send grower 0 offer. Use poundsRemaining
 
-  private void process() {
-    OfferResponse response = offer.getGrowerOfferResponse(growers.get(0).getId());
-    ResponseStatus status = response.getResponseStatus();
-
-    if(status == ResponseStatus.ACCEPTED) {
-      accept();
-    } else {
-      // TODO alert farmer 0 of time expired
-      moveToNext();
-    }
-
+    return Akka.system().scheduler().scheduleOnce(FiniteDuration.create(delay.toMillis(), TimeUnit.MILLISECONDS),
+        new Runnable() {
+          @Override
+          public void run() {
+            moveToNext();
+            
+          }
+        }, Akka.system().dispatcher());
   }
 
   private void moveToNext() {
-    growers.remove(0);
-    if(growers.size() != 0) {
-      cancellable = scheduleTimer();
-    } else {
-      offer.closeOffer();
+    // TODO alert grower 0 of time expired
+    if (growersInLine.size() != 0) {
+      cancellable.cancel();
+      growersInLine.remove(0);
+      
+      if (growersInLine.size() != 0) {
+        cancellable = scheduleTimer();
+      } else {
+        offer.closeOffer();
+      }    
+    }
+    else {
+      //TODO: Report error.
     }
   }
 
-  public void accept() {
-    // TODO confirm to farmer 0 offer was accepted
-    cancellable.cancel();
-    offer.closeOffer();
+  @Override
+  public Boolean accept(long pounds, long growerId) {
+    
+    if (growersInLine.isEmpty()) {
+      return false;
+    }
+    if (growerId != (growersInLine.get(0)).getId()) {
+      // TODO: Add Error, wrong Grower trying to accept offer.
+      // For example, time already expired for previous grower trying to accept.
+      return false;
+      
+    }
+
+    if (!subtractFromPoundsRemaining(pounds)) {
+      return false;
+    }
+
+    if (poundsRemaining == 0) {
+      cancellable.cancel();
+      offer.closeOffer();
+    }
+
+    else {
+      moveToNext();
+    }
+
+    return true;
+
   }
 
-  public void reject() {
-    // TODO confirm to farmer 0 offer was rejected
-    cancellable.cancel();
-    moveToNext();
+  @Override
+  public Boolean reject(long growerId) {
+    if (growersInLine.isEmpty()) {
+      return false;
+    }
+    if (growerId != (growersInLine.get(0)).getId()) {
+      return false;
+    }
+    
+    moveToNext(); 
+    return true;
+    
+  }
+
+  public Boolean subtractFromPoundsRemaining(long pounds) {
+    if (pounds > poundsRemaining) {
+      return false;
+      // TODO: Error message!
+      // TODO: fix this error check
+    } else {
+      poundsRemaining -= pounds;
+      return true;
+    }
   }
 
   // NOTE: Used only for testing
-  public List<Grower> getCurrentGrowers() {
-    return growers;
+  public List<Grower> getGrowersInLine() {
+    return growersInLine;
   }
-
 }

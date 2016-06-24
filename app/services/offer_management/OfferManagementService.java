@@ -18,8 +18,7 @@ public interface OfferManagementService {
     return offerToManageService.remove(offer) != null;
   }
 	
-	public void accept();
-	
-	public void reject();
+	public Boolean accept(long pounds, long growerId);
+	public Boolean reject(long growerId);
 	
 }

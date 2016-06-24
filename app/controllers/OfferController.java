@@ -46,13 +46,14 @@ public class OfferController extends Controller {
     return null;
   }
 
-  public Result acceptOffer(long offerId, long growerId) {
+  public Result acceptOffer(long offerId, long growerId, long amount) {
     Offer offer = offerService.getById(offerId);
     if (offer == null) {
       return notFound(JsonMsgUtils.offerNotFoundMessage(offerId));
     }
 
-    boolean success = offer.growerAcceptOffer(growerId);
+    // TODO Change to actual pounds accepted once implemented.
+    boolean success = offer.growerAcceptOffer(growerId, amount);
 
     return success ? ok(JsonMsgUtils.successfullAccept())
         : internalServerError(JsonMsgUtils.offerNotAccepted());
