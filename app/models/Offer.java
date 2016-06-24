@@ -22,7 +22,7 @@ import javax.persistence.OneToMany;
 import models.Almond.AlmondVariety;
 import models.OfferResponse.ResponseStatus;
 import models.interfaces.PrettyString;
-
+import play.Logger;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
 
@@ -207,6 +207,7 @@ public class Offer extends BaseModel implements PrettyString {
     OfferResponse growerResponse = getGrowerOfferResponse(growerId);
 
     if (growerResponse == null) {
+      Logger.error("growerResponse returned null for growerId: " + growerId + " and offerID: " + getId());
       return false;
     }
     
@@ -214,7 +215,6 @@ public class Offer extends BaseModel implements PrettyString {
     if (growerResponse.getResponseStatus() != ResponseStatus.NO_RESPONSE
         && growerResponse.getResponseStatus() != ResponseStatus.REQUEST_CALL) {
       return false;
-      // TODO: Add Error. Grower already responded.
     }  
       
     
@@ -225,8 +225,9 @@ public class Offer extends BaseModel implements PrettyString {
       if (!managementService.accept(pounds, growerId)) {
       	return false;
       }
-    } else {
-      // TODO Possibly Log Error?
+    } 
+    else {
+      Logger.error("managementService returned null for offerID: " + getId());
     }
 
     return setGrowerResponseForOffer(growerId, ResponseStatus.ACCEPTED);
@@ -241,6 +242,7 @@ public class Offer extends BaseModel implements PrettyString {
     OfferResponse growerResponse = getGrowerOfferResponse(growerId);
 
     if (growerResponse == null) {
+      Logger.error("growerResponse returned null for growerId: " + growerId + " and offerID: " + getId());
       return false;
     }
     
@@ -248,7 +250,6 @@ public class Offer extends BaseModel implements PrettyString {
     if (growerResponse.getResponseStatus() != ResponseStatus.NO_RESPONSE
         && growerResponse.getResponseStatus() != ResponseStatus.REQUEST_CALL) {
       return false;
-      // TODO: Add Error. Grower already responded.
     }
     
 
@@ -261,7 +262,7 @@ public class Offer extends BaseModel implements PrettyString {
       }
     } 
     else {
-      // TODO Possibly Log Error?
+      Logger.error("managementService returned null for offerID: " + getId());
     }
 
     return setGrowerResponseForOffer(growerId, ResponseStatus.REJECTED);
@@ -279,6 +280,7 @@ public class Offer extends BaseModel implements PrettyString {
   private boolean setGrowerResponseForOffer(Long growerId, ResponseStatus growerResponse) {
     OfferResponse growerOfferResponse = getGrowerOfferResponse(growerId);
     if (growerOfferResponse == null) {
+      Logger.error("growerResponse returned null for growerId: " + growerId + " and offerID: " + getId());
       return false;
 
     }
