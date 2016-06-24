@@ -210,7 +210,6 @@ public class Offer extends BaseModel implements PrettyString {
 
     if (managementService != null) {
       if (!managementService.accept(pounds, growerId)) {
-      	// TODO Report Service Not Accepting Error.
       	return false;
       }
     } else {
@@ -221,7 +220,6 @@ public class Offer extends BaseModel implements PrettyString {
   }
 
   public boolean growerRejectOffer(Long growerId) {
-    // TODO: When this returns false the error message says could not accept. Needs to be changed.
     if (!offerCurrentlyOpen) {
       // TODO Handle Late Acceptance Error
       return false;
@@ -232,7 +230,6 @@ public class Offer extends BaseModel implements PrettyString {
 
     if (managementService != null) {
       if (!managementService.reject(growerId)) { 
-      // TODO Report Service Not Rejecting Error. 
       return false;
       }
     } 
@@ -254,7 +251,6 @@ public class Offer extends BaseModel implements PrettyString {
 
   private boolean setGrowerResponseForOffer(Long growerId, ResponseStatus growerResponse) {
     OfferResponse growerOfferResponse = getGrowerOfferResponse(growerId);
-     //TODO: Something is wrong here. 
     if (growerOfferResponse == null) {
       return false;
 

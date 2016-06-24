@@ -191,7 +191,7 @@ public class WaterfallServiceTest extends EbeanTest {
       assertThat(g.get(0), is(equalTo(UNUSED_GROWERS.get(index))));
       
       if(index == 2) {
-        wservice.accept(offer.getAlmondPounds(), 	UNUSED_GROWERS.get(2).getId());
+        wservice.accept(offer.getAlmondPounds(), UNUSED_GROWERS.get(2).getId());
         break;
       } else {
         try {
@@ -237,9 +237,9 @@ public class WaterfallServiceTest extends EbeanTest {
       }
       
       if(index == 1) {
-      	wservice.reject(UNUSED_GROWERS.get(1).getId()); 
-      	assertThat(wservice.getGrowersInLine().size(), is(2));
-      	assertThat(offer.getOfferCurrentlyOpen(), is(true));
+        wservice.reject(UNUSED_GROWERS.get(1).getId()); 
+        assertThat(wservice.getGrowersInLine().size(), is(2));
+        assertThat(offer.getOfferCurrentlyOpen(), is(true));
       }
       
       if (index == 2) {
@@ -248,15 +248,15 @@ public class WaterfallServiceTest extends EbeanTest {
         } catch(InterruptedException ex) {
           Thread.currentThread().interrupt();
         }
-      	assertThat(wservice.getGrowersInLine().size(), is(1));
-      	assertThat(offer.getOfferCurrentlyOpen(), is(true));
+        assertThat(wservice.getGrowersInLine().size(), is(1));
+        assertThat(offer.getOfferCurrentlyOpen(), is(true));
       }
       	
       if (index == 3) {
-      	wservice.accept(offer.getAlmondPounds(), UNUSED_GROWERS.get(3).getId()); 
-      	assertThat(wservice.getGrowersInLine().size(), is(1));
-      	assertThat(offer.getOfferCurrentlyOpen(), is(false));
-      	break;
+        wservice.accept(offer.getAlmondPounds(), UNUSED_GROWERS.get(3).getId()); 
+        assertThat(wservice.getGrowersInLine().size(), is(1));
+        assertThat(offer.getOfferCurrentlyOpen(), is(false));
+        break;
       }
       
       index ++;
