@@ -198,6 +198,7 @@ public class Offer extends BaseModel implements PrettyString {
     }
   }
 
+
   public boolean growerAcceptOffer(Long growerId) {
     if (!offerCurrentlyOpen) {
       // TODO Handle Late Acceptance Error
@@ -212,6 +213,7 @@ public class Offer extends BaseModel implements PrettyString {
     } else {
       // TODO Possibly Log Error?
     }
+
 
     return setGrowerResponseForOffer(growerId, ResponseStatus.ACCEPTED);
   }
@@ -249,6 +251,7 @@ public class Offer extends BaseModel implements PrettyString {
     if (growerOfferResponse == null) {
       Logger.error("Grower Response with grower id [" + growerId + "] could not be found to respond to offer");
       return false;
+
     }
 
     growerOfferResponse.setResponseStatus(growerResponse);
