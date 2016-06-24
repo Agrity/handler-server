@@ -67,7 +67,7 @@ public class OfferTest extends EbeanTest {
 
   }
 
-
+  
   @Test
   public void testHandler() {
 
@@ -265,8 +265,8 @@ public class OfferTest extends EbeanTest {
 
     saveModel(offer);
 
-    offer.growerAcceptOffer(growersList.get(0).getId());
-    offer.growerAcceptOffer(growersList.get(2).getId());
+    offer.growerAcceptOffer(growersList.get(0).getId(), 0 /* Not Testing Load Percent*/);
+    offer.growerAcceptOffer(growersList.get(2).getId(), 0);
 
     List<Grower> acceptedList = offer.getAcceptedGrowers();
     
@@ -413,7 +413,7 @@ public class OfferTest extends EbeanTest {
 
     saveModel(offer);
 
-    offer.growerAcceptOffer(growersList.get(0).getId());
+    offer.growerAcceptOffer(growersList.get(0).getId(), 0 /* Not Testing Load Percent*/);
     offer.growerRejectOffer(growersList.get(1).getId());
     offer.growerRequestCall(growersList.get(2).getId());
     // Grower 4 no response.

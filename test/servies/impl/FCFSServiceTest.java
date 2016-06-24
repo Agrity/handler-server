@@ -1,9 +1,6 @@
 package servies.impl;
 
-import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
@@ -13,28 +10,19 @@ import org.junit.Test;
 import java.time.LocalDate;
 import java.time.Duration;
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
 import java.lang.Thread;
 
 import models.Almond.AlmondVariety;
 import models.Grower;
 import models.Handler;
 import models.Offer;
-import models.OfferResponse;
-import models.OfferResponse.ResponseStatus;
 import services.offer_management.FCFSService;
-import services.offer_management.WaterfallService;
 import test_helpers.EbeanTest;
-
-import static org.mockito.Mockito.*;
 
 import com.avaje.ebean.Ebean;
 import com.google.common.collect.ImmutableList;
-
-
-
 
 public class FCFSServiceTest extends EbeanTest {	
 
@@ -74,7 +62,6 @@ public class FCFSServiceTest extends EbeanTest {
     saveModel(offer);
 
     FCFSService FCFSservice = new FCFSService(offer, Duration.ofMillis(1000));
-    
     assertThat(offer.getOfferCurrentlyOpen(), is(true));
     
     try {
@@ -88,7 +75,7 @@ public class FCFSServiceTest extends EbeanTest {
   }
   
   @Test
-  public void testAccepted() {
+  public void testAcceptedInFull() {
     Offer offer
       = new Offer(
           UNUSED_HANDLER,
@@ -105,9 +92,60 @@ public class FCFSServiceTest extends EbeanTest {
     FCFSService FCFSservice = new FCFSService(offer, Duration.ofMillis(10000));
     
     assertThat(offer.getOfferCurrentlyOpen(), is(true));
-    FCFSservice.accept();
+    FCFSservice.accept(offer.getAlmondPounds(), UNUSED_GROWERS.get(0).getId());
     assertThat(offer.getOfferCurrentlyOpen(), is(false)); 
   }
   
+  @Test 
+  public void testAcceptedInHalves() { 
+  	 Offer offer
+     = new Offer(
+         UNUSED_HANDLER,
+         UNUSED_GROWERS,
+         UNUSED_VARIETY,
+         UNUSED_POUNDS,
+         UNUSED_PRICE,
+         UNUSED_DATE,
+         UNUSED_COMMENT);
+
+   assertThat(offer, is(notNullValue()));
+   saveModel(offer);
+
+   FCFSService FCFSservice = new FCFSService(offer, Duration.ofMillis(10000));
+   
+   assertThat(offer.getOfferCurrentlyOpen(), is(true));
+   FCFSservice.accept(offer.getAlmondPounds() / 2, UNUSED_GROWERS.get(0).getId());
+   assertThat(offer.getOfferCurrentlyOpen(), is(true));
+   FCFSservice.accept(offer.getAlmondPounds() - (offer.getAlmondPounds()/2), UNUSED_GROWERS.get(1).getId());
+   assertThat(offer.getOfferCurrentlyOpen(), is(false));
+ }
+  
+  @Test 
+  public void testHalfAcceptedThenExpired() { 
+  	 Offer offer
+     = new Offer(
+         UNUSED_HANDLER,
+         UNUSED_GROWERS,
+         UNUSED_VARIETY,
+         UNUSED_POUNDS,
+         UNUSED_PRICE,
+         UNUSED_DATE,
+         UNUSED_COMMENT);
+
+   assertThat(offer, is(notNullValue()));
+   saveModel(offer);
+
+   FCFSService FCFSservice = new FCFSService(offer, Duration.ofMillis(1000));
+   
+   assertThat(offer.getOfferCurrentlyOpen(), is(true));
+   FCFSservice.accept(offer.getAlmondPounds() / 2, UNUSED_GROWERS.get(0).getId());
+   assertThat(offer.getOfferCurrentlyOpen(), is(true));
+   try {
+     Thread.sleep(1500);
+   } catch(InterruptedException ex) {
+     Thread.currentThread().interrupt();
+   }
+   assertThat(offer.getOfferCurrentlyOpen(), is(false));
+ }
 }
 
