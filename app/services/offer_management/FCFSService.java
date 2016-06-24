@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 import play.libs.Akka; 
 
 public class FCFSService implements OfferManagementService {
-	
+
   private final Offer offer; 
   private Cancellable cancellable;
 
@@ -27,30 +27,29 @@ public class FCFSService implements OfferManagementService {
           FiniteDuration
           .create(
             timeAllowed.toMillis(),
-            TimeUnit.MILLISECONDS), 
-            new Runnable() { 
+            TimeUnit.MILLISECONDS),
+            new Runnable() {
               @Override
-              public void run() { 
+              public void run() {
                 process();
               }
             },
-            Akka.system().dispatcher()); 
+            Akka.system().dispatcher());
   }
-  
+
   @Override
-  public void accept() { 
-    cancellable.cancel(); 
-    offer.closeOffer(); 
+  public void accept() {
+    cancellable.cancel();
+    offer.closeOffer();
   }
-  
+
   @Override 
   public void reject() {
     // Do Nothing
   }
-  
+
   public void process() {
-    offer.closeOffer();  
-   	//TODO Alert other growers that offer has been closed. 	  
+    offer.closeOffer();
+    //TODO Alert other growers that offer has been closed.    
   }
 }
-

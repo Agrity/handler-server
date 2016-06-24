@@ -40,14 +40,13 @@ public class HandlerController extends Controller {
 
     if (data == null) {
       // TODO Change to Valid Error JSON
-      return badRequest("Expecting Some Data.\n");
+      return badRequest(JsonMsgUtils.expectingData());
     }
 
     HandlerJsonParser parser = new HandlerJsonParser(data);
 
     if (!parser.isValid()) {
-      // TODO Change to Valid Error JSON
-      return badRequest(parser.getErrorMessage());
+      return badRequest(JsonMsgUtils.caughtException(parser.getErrorMessage()));
     }
 
     Handler handler = parser.formHandler();
@@ -56,8 +55,7 @@ public class HandlerController extends Controller {
     try {
       return created(jsonMapper.writeValueAsString(handler));
     } catch (JsonProcessingException e) {
-      // TODO Change to Valid Error JSON
-      return internalServerError(e.toString());
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
     }
   }
 
@@ -65,8 +63,7 @@ public class HandlerController extends Controller {
     try {
       return ok(jsonMapper.writeValueAsString(handlerService.getAll()));
     } catch (JsonProcessingException e) {
-      // TODO Change to Valid Error JSON
-      return internalServerError(e.toString());
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
     }
   }
 
@@ -75,15 +72,13 @@ public class HandlerController extends Controller {
     Handler handler = handlerService.getById(id);
 
     if (handler == null) {
-      // TODO Change to Valid Error JSON
-      return notFound(ErrorMessages.handlerNotFoundMessage(id));
+      return notFound(JsonMsgUtils.handlerNotFoundMessage(id));
     }
 
     try {
       return ok(jsonMapper.writeValueAsString(handler));
     } catch (JsonProcessingException e) {
-      // TODO Change to Valid Error JSON
-      return internalServerError(e.toString());
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
     }
   }
 
@@ -92,12 +87,14 @@ public class HandlerController extends Controller {
     Handler handler = handlerService.getById(handlerId);
 
     if (handler == null) {
-      // TODO Change to Valid Error JSON
-      return notFound(ErrorMessages.handlerNotFoundMessage(handlerId));
+      return notFound(JsonMsgUtils.handlerNotFoundMessage(handlerId));
     }
 
-    // TODO Use Grower Service After Implemented.
-    return ok("TODO Grower");
+    try {
+      return ok(jsonMapper.writeValueAsString(growerService.getByHandler(handlerId)));
+    } catch (JsonProcessingException e) {
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
+    }
   }
 
   @Security.Authenticated(Secured.class)
@@ -105,26 +102,22 @@ public class HandlerController extends Controller {
     Handler handler = handlerService.getById(handlerId);
     
     if (handler == null) {
-      // TODO Change to Valid Error JSON
-      return notFound(ErrorMessages.handlerNotFoundMessage(handlerId));
+      return notFound(JsonMsgUtils.handlerNotFoundMessage(handlerId));
     }
 
     Grower grower = growerService.getById(growerId);
     if (grower == null) {
-      // TODO Change to Valid Error JSON
-      return notFound(ErrorMessages.growerNotFoundMessage(growerId));
+      return notFound(JsonMsgUtils.growerNotFoundMessage(growerId));
     }
 
     if (!handlerService.checkHandlerOwnsGrower(handler, grower)) {
-      // TODO Change to Valid Error JSON
-      return badRequest(ErrorMessages.handlerDoesNotOwnGrowerMessage(handler, grower));
+      return badRequest(JsonMsgUtils.handlerDoesNotOwnGrowerMessage(handler, grower));
     }
 
     try {
       return ok(jsonMapper.writeValueAsString(grower));
     } catch (JsonProcessingException e) {
-      // TODO Change to Valid Error JSON
-      return internalServerError(e.toString());
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
     }
   }
 }
