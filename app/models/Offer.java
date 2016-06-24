@@ -205,11 +205,12 @@ public class Offer extends BaseModel implements PrettyString {
     }
       
     OfferResponse growerResponse = getGrowerOfferResponse(growerId);
-    growerResponse.refresh();
+
     if (growerResponse == null) {
       return false;
     }
     
+    growerResponse.refresh();
     if (growerResponse.getResponseStatus() != ResponseStatus.NO_RESPONSE
         && growerResponse.getResponseStatus() != ResponseStatus.REQUEST_CALL) {
       return false;
@@ -238,11 +239,12 @@ public class Offer extends BaseModel implements PrettyString {
     }  
     
     OfferResponse growerResponse = getGrowerOfferResponse(growerId);
-    growerResponse.refresh();
+
     if (growerResponse == null) {
       return false;
     }
     
+    growerResponse.refresh();
     if (growerResponse.getResponseStatus() != ResponseStatus.NO_RESPONSE
         && growerResponse.getResponseStatus() != ResponseStatus.REQUEST_CALL) {
       return false;
