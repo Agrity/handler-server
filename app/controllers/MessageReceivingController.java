@@ -19,6 +19,15 @@ import models.Grower;
 import com.avaje.ebean.Model.Finder;
 import services.impl.EbeanGrowerService;
 
+import services.messaging.MessageServiceConstants.TwilioFields;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import com.twilio.sdk.*;
+import com.twilio.sdk.resource.factory.*;
+import com.twilio.sdk.resource.instance.*;
+import com.twilio.sdk.resource.list.*;
+import com.twilio.sdk.TwilioRestResponse;
+
 public class MessageReceivingController extends Controller {
 
   private static Integer numResponses = 0;
@@ -58,7 +67,7 @@ public class MessageReceivingController extends Controller {
     try {
       smsMessage = bodyMap.get("Body")[0]; 
     } catch (NullPointerException e) {
-      /* send SMS back that there was an error */
+      boolean sent = sendResponse("Please respond with a non-empty SMS message.", phoneNum);
       Logger.error("Empty SMS message received from: " + phoneNum);
       return badRequest("Empty SMS message received from: " + phoneNum);
     }
@@ -70,7 +79,7 @@ public class MessageReceivingController extends Controller {
     EbeanGrowerService ebean = new EbeanGrowerService(); 
     Grower grower = ebean.growerLookupByPhoneNum(phoneNum);
     if (grower == null) {
-      /* send SMS message to grower letting them know they are not authorized */
+      boolean sent = sendResponse("This phone number is not authorized in Agrity's grower list.", phoneNum);
       Logger.error("Message received from " + phoneNum + " does not correspond to a grower in our system.");
       return badRequest("Message received from " + phoneNum + " does not correspond to a grower in our system.");
     }
@@ -86,20 +95,34 @@ public class MessageReceivingController extends Controller {
       return badRequest("SMS message was not formatted correctly.");
     }
 
-    /* if we reach here, the SMS message has valid offerID and almondAmount response */
+    /* if we reach here, the SMS message has a well-formatted offerID and almondAmount response */
 
     Offer offer = grower.offerLookupByID(offerID);
     if (offer == null) {
-      /* send SMS message to grower letting them know their offerID was not correct */
-      Logger.error("SMS message was not formatted correctly.");
-      return badRequest("SMS message was not formatted correctly.");
+      boolean sent = sendResponse("OfferId: " + offerID + " does not exist.", phoneNum);
+      Logger.error("OfferId: " + offerID + " does not exist. From: " + phoneNum);
+      return badRequest("OfferId: " + offerID + " does not exist. From: " + phoneNum);
     }
 
     /* now we have to update the offer response (and check if it is still a live offer) */
 
     Logger.info("From: " + phoneNum + " message: " + smsMessage);
     return ok("From: " + phoneNum + "message: " + smsMessage);
-  }  
+  } 
+
+  private boolean sendResponse(String response, String phoneNumber) {
+    List<NameValuePair> params = new ArrayList<NameValuePair>(); 
+    params.add(new BasicNameValuePair("To", phoneNumber));
+    params.add(new BasicNameValuePair("From", TwilioFields.getTwilioNumber()));
+    params.add(new BasicNameValuePair("Body", response));
+    try {
+      Message message = TwilioFields.getMessageFactory().create(params);
+    } catch (TwilioRestException e) {
+       Logger.error("=== Error Sending SMS Response Message ===\n" + e.getErrorMessage() + "\n\n");
+       return false;
+     }
+     return true;
+  } 
 
   boolean parseSMSMessage(String smsMessage, Long offerID, Integer almondPounds) {
     /* parse the smsMessage to pull out the offerID and almondAmount
