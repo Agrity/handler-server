@@ -29,8 +29,8 @@ public class OfferSMSMessageService implements OfferMessageService {
       for (String phoneNumber: curGrower.getPhoneNumbers()) {
         /* number needs to be in format "+18155926350" as a string */
         List<NameValuePair> params = new ArrayList<NameValuePair>(); 
-        params.add(new BasicNameValuePair("To", "+15592702013")); /* Ryan's number for testing */  
-        //params.add(new BasicNameValuePair("To", phoneNumber));    
+        //params.add(new BasicNameValuePair("To", "+15592702013")); /* Ryan's number for testing */  
+        params.add(new BasicNameValuePair("To", phoneNumber));    
         params.add(new BasicNameValuePair("From", TwilioFields.getTwilioNumber())); 
         String body = createBodyText(curGrower, offer);
         params.add(new BasicNameValuePair("Body", body)); 
