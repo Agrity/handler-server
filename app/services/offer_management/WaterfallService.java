@@ -76,17 +76,6 @@ public class WaterfallService implements OfferManagementService {
       
     }
 
-    OfferResponse growerResponse = offer.getGrowerOfferResponse(growerId);
-    growerResponse.refresh();
-    if (growerResponse == null) {
-      return false;
-    }
-    if (growerResponse.getResponseStatus() != ResponseStatus.NO_RESPONSE
-        && growerResponse.getResponseStatus() != ResponseStatus.REQUEST_CALL) {
-      return false;
-      // TODO: Add Error. Grower already responded.
-    }
-
     if (!subtractFromPoundsRemaining(pounds)) {
       return false;
     }
@@ -111,18 +100,6 @@ public class WaterfallService implements OfferManagementService {
     }
     if (growerId != (growersInLine.get(0)).getId()) {
       return false;
-    }
-
-    OfferResponse growerResponse = offer.getGrowerOfferResponse(growerId);
-    growerResponse.refresh();
-    if (growerResponse == null) {
-      return false;
-    }
-    
-    if (growerResponse.getResponseStatus() != ResponseStatus.NO_RESPONSE
-        && growerResponse.getResponseStatus() != ResponseStatus.REQUEST_CALL) {
-      return false;
-      // TODO: Add Error. Grower already responded.
     }
     
     moveToNext(); 

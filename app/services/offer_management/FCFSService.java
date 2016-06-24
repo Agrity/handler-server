@@ -38,20 +38,7 @@ public class FCFSService implements OfferManagementService {
 
   @Override
   public Boolean accept(long pounds, long growerId) {
-    offer.refresh();
     
-    OfferResponse growerResponse = offer.getGrowerOfferResponse(growerId);
-    growerResponse.refresh();
-    if (growerResponse == null) {
-      return false;
-    }
-    
-    if (growerResponse.getResponseStatus() != ResponseStatus.NO_RESPONSE
-        && growerResponse.getResponseStatus() != ResponseStatus.REQUEST_CALL) {
-      return false;
-      // TODO: Add Error. Grower already responded.
-    }
-
     if (!subtractFromPoundsRemaining(pounds)) {
       return false;
     }
@@ -68,19 +55,6 @@ public class FCFSService implements OfferManagementService {
 
   @Override
   public Boolean reject(long growerId) {
-    offer.refresh();
-    OfferResponse growerResponse = offer.getGrowerOfferResponse(growerId);
-    growerResponse.refresh();
-    if (growerResponse == null) {
-      return false;
-    }
-    
-    if (growerResponse.getResponseStatus() != ResponseStatus.NO_RESPONSE
-        && growerResponse.getResponseStatus() != ResponseStatus.REQUEST_CALL) {
-      return false;
-      // TODO: Add Error. Grower already responded.
-    }
-    
     return true;
   }
 
