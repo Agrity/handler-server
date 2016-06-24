@@ -46,7 +46,6 @@ public class MessageReceivingController extends Controller {
     return ok("Number Responses Recieved: " + numResponses);
   }
 
-  /* === TODO: Update offer based on grower's response === */
   /* === TODO: How is offer updated if grower doesn't go through Twilio to accept from handler? === */
 
   public Result receiveTwilioResponse() {
@@ -68,7 +67,6 @@ public class MessageReceivingController extends Controller {
       Logger.error("Empty SMS message received from: " + phoneNum);
       return badRequest("Empty SMS message received from: " + phoneNum);
     }
-
 
     /* if we reach here we have non-null smsMessage from phoneNum in format +11234567890 */
      
@@ -101,12 +99,8 @@ public class MessageReceivingController extends Controller {
       return badRequest("OfferId: " + offerID + " does not exist. From: " + phoneNum);
     }
 
-    Logger.info("The valid offerID is: " + offerID + " the amount accepted is: " + almondPounds);
-
-    /* ==== TODO: Actually do something with correctly populated information ==== */
-
+    Logger.info("The valid offerID is: " + offerID + " the amount accepted is: " + almondPounds)
     updateOffer(grower, offer, almondPounds, phoneNum);
-
     return ok("Grower response ingested properly");
   } 
 
