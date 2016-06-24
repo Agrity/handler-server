@@ -45,9 +45,9 @@ public abstract class MessageServiceConstants {
   }
 
   public static class TwilioFields {
-    private static final String ACCOUNT_SID = "ACd061aae08076e124be28d7e5b9f1db7d";
-    private static final String AUTH_TOKEN = "cd993273e55be2bd301082722c3ad064";
-    private static final String TWILIO_NUMBER = "+12095806972";
+    private static final String ACCOUNT_SID = "AC486e1d38a0597859c70f32589ea3ab1a";
+    private static final String AUTH_TOKEN = "8e930e13c7f8f31606ac3089baf8adec";
+    private static final String TWILIO_NUMBER = "+15592057098";
     
     private static final TwilioRestClient client = new TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN);
     private static final Account account = client.getAccount();
