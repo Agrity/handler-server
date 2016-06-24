@@ -51,7 +51,7 @@ public class OfferController extends Controller {
     if (offer == null) {
       return notFound(JsonMsgUtils.offerNotFoundMessage(offerId));
     }
- 
+
     boolean success = offer.growerAcceptOffer(growerId);
 
     return success ? ok(JsonMsgUtils.successfullAccept())
