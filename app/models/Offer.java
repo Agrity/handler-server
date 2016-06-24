@@ -157,58 +157,34 @@ public class Offer extends BaseModel implements PrettyString {
 
 
   public List<Grower> getAcceptedGrowers() {
-    try {
-      return getGrowersWithResponse(ResponseStatus.ACCEPTED);
-    } catch(NoSuchElementException e) {
-      return null;
-    }
+    return getGrowersWithResponse(ResponseStatus.ACCEPTED);
   }
 
   public List<Grower> getRejectedGrowers() {
-    try {  
-      return getGrowersWithResponse(ResponseStatus.REJECTED);
-    } catch(NoSuchElementException e) {
-      return null;
-    }
+    return getGrowersWithResponse(ResponseStatus.REJECTED);
   }
 
   public List<Grower> getNoResponseGrowers() {
-    try {
-      return getGrowersWithResponse(ResponseStatus.NO_RESPONSE);
-    } catch(NoSuchElementException e) {
-      return null;
-    }
+    return getGrowersWithResponse(ResponseStatus.NO_RESPONSE);
   }
 
   public List<Grower> getCallRequestedGrowers() {
-    try {
-      return getGrowersWithResponse(ResponseStatus.REQUEST_CALL);
-    } catch(NoSuchElementException e) {
-      return null;
-    }
+    return getGrowersWithResponse(ResponseStatus.REQUEST_CALL);
   }
 
   private List<Grower> getGrowersWithResponse(ResponseStatus response) {
-    try {
-      return offerResponses.stream()
-        .filter(offerResponse -> offerResponse.getResponseStatus().equals(response))
-        .map(offerResponse -> offerResponse.getGrower())
-        .collect(Collectors.toList());
-    } catch(NoSuchElementException e) {
-      return null;
-    }
+    return offerResponses.stream()
+      .filter(offerResponse -> offerResponse.getResponseStatus().equals(response))
+      .map(offerResponse -> offerResponse.getGrower())
+      .collect(Collectors.toList());
   }
 
 
   @JsonIgnore
   public List<ResponseStatus> getAllOfferResponseStatuses() {
-    try {
-      return offerResponses.stream()
-        .map(offerResponse -> offerResponse.getResponseStatus())
-        .collect(Collectors.toList());
-    } catch(NoSuchElementException e) {
-      return null;
-    }
+    return offerResponses.stream()
+      .map(offerResponse -> offerResponse.getResponseStatus())
+      .collect(Collectors.toList());
   }
 
   public OfferResponse getGrowerOfferResponse(long growerId) {

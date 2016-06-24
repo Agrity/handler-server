@@ -9,10 +9,8 @@ import scala.concurrent.duration.FiniteDuration;
 import java.util.concurrent.TimeUnit;
 import play.libs.Akka; 
 
-import play.Logger;
-
 public class FCFSService implements OfferManagementService {
-	
+  
   private final Offer offer; 
   private Cancellable cancellable;
 
@@ -51,8 +49,7 @@ public class FCFSService implements OfferManagementService {
   }
   
   public void process() {
-    offer.closeOffer();  
-   	//TODO Alert other growers that offer has been closed. 	  
+    offer.closeOffer();
+    //TODO Alert other growers that offer has been closed.    
   }
 }
-
