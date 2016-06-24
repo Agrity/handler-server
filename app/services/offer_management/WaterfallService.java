@@ -56,13 +56,13 @@ public class WaterfallService implements OfferManagementService {
     if(status == ResponseStatus.ACCEPTED) {
       accept();
     } else {
+      // TODO alert farmer 0 of time expired
       moveToNext();
     }
 
   }
 
   private void moveToNext() {
-    // TODO alert farmer 0 of time expired
     growers.remove(0);
     if(growers.size() != 0) {
       cancellable = scheduleTimer();
@@ -72,11 +72,13 @@ public class WaterfallService implements OfferManagementService {
   }
 
   public void accept() {
+    // TODO confirm to farmer 0 offer was accepted
     cancellable.cancel();
     offer.closeOffer();
   }
 
   public void reject() {
+    // TODO confirm to farmer 0 offer was rejected
     cancellable.cancel();
     moveToNext();
   }

@@ -7,9 +7,11 @@ import com.google.inject.Inject;
 
 import java.time.Duration;
 import java.util.List;
+import java.lang.reflect.Constructor;
 
 import models.Offer;
 
+import play.Logger;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -18,6 +20,9 @@ import services.OfferService;
 import services.messaging.offer.OfferMessageService;
 import services.offer_management.FCFSService;
 import services.parsers.OfferJsonParser;
+import services.parsers.OfferJsonParser.ManagementTypeInfo;
+import services.offer_management.WaterfallService;
+import services.offer_management.FCFSService;
 
 public class OfferController extends Controller {
 
@@ -115,8 +120,16 @@ public class OfferController extends Controller {
     Offer offer = parser.formOffer();
     offer.save();
 
-    // TODO Parse Which Type Would Be Desired.
-    new FCFSService(offer, Duration.ofHours(1));
+    ManagementTypeInfo managementType = parser.getManagementType();
+    Class<?> classType = managementType.getClassType();
+
+    if (classType == WaterfallService.class) {
+      new WaterfallService(offer, managementType.getDelay());
+    } else if (classType == FCFSService.class) {
+      new FCFSService(offer, managementType.getDelay());
+    } else {
+      return internalServerError(classType.getName() + " management type not found\n");
+    }
 
     try {
       return created(jsonMapper.writeValueAsString(offer));

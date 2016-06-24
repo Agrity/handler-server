@@ -3,6 +3,7 @@ package services.parsers;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.time.LocalDate;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,10 @@ import models.Offer;
 import services.DateService;
 import services.GrowerService;
 import services.impl.EbeanGrowerService;
+import services.offer_management.WaterfallService;
+import services.offer_management.FCFSService;
+
+import java.lang.reflect.Constructor;
 
 /**
  * Class to parse json data to create new Offer.
@@ -38,6 +43,11 @@ import services.impl.EbeanGrowerService;
  *    (TODO Determine Date Format)
  *    PAYMENT_DATE: ... ,
  *
+ *    MANAGEMENT_TYPE: {
+ *      TYPE: ...
+ *      DELAY: ...
+ *    },
+ *
  *    ==== OPTIONAL ====
  *
  *    COMMENT: ... ,
@@ -51,6 +61,7 @@ public class OfferJsonParser extends JsonParser {
   private Integer almondPounds;
   private String pricePerPound;
   private LocalDate paymentDate;
+  private ManagementTypeInfo managementType;
   private String comment;
 
   private final GrowerService growerService;
@@ -95,6 +106,12 @@ public class OfferJsonParser extends JsonParser {
     paymentDate = parsePaymentDate(data);
     if (paymentDate == null) {
       // Parser set to invalid with proper error message.
+      return;
+    }
+
+    managementType = parseManagementType(data);
+    if(managementType == null) {
+      //Parser set to invalid with proper error message.
       return;
     }
 
@@ -153,6 +170,11 @@ public class OfferJsonParser extends JsonParser {
   public LocalDate getPaymentDate() {
     ensureValid();
     return paymentDate;
+  }
+
+  public ManagementTypeInfo getManagementType() {
+    ensureValid();
+    return managementType;
   }
 
   public String getComment() {
@@ -282,6 +304,41 @@ public class OfferJsonParser extends JsonParser {
     return DateService.stringToDate(dateString);
   }
 
+  private ManagementTypeInfo parseManagementType(JsonNode data) {
+    if (!data.has(OfferJsonConstants.MANAGEMENT_TYPE)) {
+      setInvalid(missingParameterError(OfferJsonConstants.MANAGEMENT_TYPE));
+      return null;
+    }
+
+    JsonNode typeMap = data.get(OfferJsonConstants.MANAGEMENT_TYPE);
+
+    int delayInt;
+    if(typeMap.has(OfferJsonConstants.DELAY_KEY)) {
+      delayInt = typeMap.get(OfferJsonConstants.DELAY_KEY).asInt();
+    } else {
+      setInvalid(missingParameterError(OfferJsonConstants.DELAY_KEY));
+      return null;
+    }
+  
+    if(typeMap.has(OfferJsonConstants.TYPE_KEY)) {
+      String className = typeMap.get(OfferJsonConstants.TYPE_KEY).asText();
+      Duration delayTime = Duration.ofMinutes(delayInt);
+      switch(className) {
+        case OfferJsonConstants.ManagementTypes.WATERFALL:
+          return new ManagementTypeInfo(WaterfallService.class, delayTime);
+        case OfferJsonConstants.ManagementTypes.FCFS: 
+          return new ManagementTypeInfo(FCFSService.class, delayTime);
+        default:
+          setInvalid("Management Type invalid: specified type " + className +" not found\n");
+          return null;          
+      }
+    } 
+
+    setInvalid(missingParameterError(OfferJsonConstants.TYPE_KEY));
+    return null;
+  }
+
+
   private String parseComment(JsonNode data) {
     // Check comment is present.
     if (!data.has(OfferJsonConstants.COMMENT)) {
@@ -308,6 +365,30 @@ public class OfferJsonParser extends JsonParser {
 
     private static final String PAYMENT_DATE = "payment_date";
 
+    private static final String MANAGEMENT_TYPE = "management_type";
+
     private static final String COMMENT = "comment";
+
+    private static final String TYPE_KEY = "type";
+    private static final String DELAY_KEY = "delay";
+
+    public static class ManagementTypes {
+      private static final String WATERFALL = "WaterfallService";
+      private static final String FCFS = "FCFSService";
+    }
+  }
+
+  public static class ManagementTypeInfo {
+    private Class typeClass;
+    private Duration delay;
+
+      ManagementTypeInfo(Class c, Duration d) {
+        this.typeClass = c;
+        this.delay = d;
+      }
+
+      public Class getClassType() { return typeClass; }
+      public Duration getDelay() { return delay; }
+
   }
 }
