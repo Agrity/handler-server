@@ -37,8 +37,15 @@ public class OfferSendGridMessageService implements OfferMessageService {
     boolean success = true;
 
     for (Grower grower : offer.getAllGrowers()) {
-      List<String> growerEmailAddresses = grower.getEmailAddressStrings();
+      if(!sendToOne(offer, grower)) success = false;
+    }
 
+    return success;
+  }
+
+  public boolean sendToOne(Offer offer, Grower grower) {
+    boolean success = true;
+    List<String> growerEmailAddresses = grower.getEmailAddressStrings();
       for (String emailAddr : growerEmailAddresses) {
         Email toEmail = new Email(emailAddr);
 
@@ -56,9 +63,7 @@ public class OfferSendGridMessageService implements OfferMessageService {
 
         if (!sendEmail(mail, toEmail)) success = false;
       }
-    }
-
-    return success;
+      return success;    
   }
 
   private boolean sendEmail(Mail mail, Email email) {
