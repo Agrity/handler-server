@@ -22,7 +22,6 @@ import models.Almond.AlmondVariety;
 import models.OfferResponse.ResponseStatus;
 import models.interfaces.PrettyString;
 
-import play.Logger;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
 
@@ -216,6 +215,7 @@ public class Offer extends BaseModel implements PrettyString {
   }
 
   public boolean growerRejectOffer(Long growerId) {
+    // TODO: When this returns false the error message says could not accept. Needs to be changed.
     if (!offerCurrentlyOpen) {
       // TODO Handle Late Acceptance Error
       return false;
@@ -225,8 +225,12 @@ public class Offer extends BaseModel implements PrettyString {
         = OfferManagementService.getOfferManagementService(this);
 
     if (managementService != null) {
-      managementService.reject(growerId);
-    } else {
+      if (!managementService.reject(growerId)) { 
+      // TODO Report Service Not Rejecting Error. 
+      return false;
+      }
+    } 
+    else {
       // TODO Possibly Log Error?
     }
 
@@ -244,16 +248,15 @@ public class Offer extends BaseModel implements PrettyString {
 
   private boolean setGrowerResponseForOffer(Long growerId, ResponseStatus growerResponse) {
     OfferResponse growerOfferResponse = getGrowerOfferResponse(growerId);
-
+     //TODO: Something is wrong here. 
     if (growerOfferResponse == null) {
-      Logger.error("Grower Response with grower id [" + growerId + "] could not be found to respond to offer");
       return false;
 
     }
-
+    
     growerOfferResponse.setResponseStatus(growerResponse);
     growerOfferResponse.save();
-
+    
     return true;
   }
 

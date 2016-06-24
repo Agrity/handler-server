@@ -11,6 +11,7 @@ import java.time.Duration;
 import akka.actor.Cancellable;
 import scala.concurrent.duration.FiniteDuration;
 import java.util.concurrent.TimeUnit;
+
 import play.libs.Akka;
 
 public class WaterfallService implements OfferManagementService {
@@ -40,6 +41,7 @@ public class WaterfallService implements OfferManagementService {
           @Override
           public void run() {
             moveToNext();
+            
           }
         }, Akka.system().dispatcher());
   }
@@ -49,29 +51,33 @@ public class WaterfallService implements OfferManagementService {
     if (growersInLine.size() != 0) {
       cancellable.cancel();
       growersInLine.remove(0);
+      
       if (growersInLine.size() != 0) {
         cancellable = scheduleTimer();
       } else {
         offer.closeOffer();
-      }
-    
+      }    
+    }
+    else {
+      //TODO: Report error.
     }
   }
 
   @Override
   public Boolean accept(long pounds, long growerId) {
-
+    
     if (growersInLine.isEmpty()) {
       return false;
     }
-    
     if (growerId != (growersInLine.get(0)).getId()) {
       // TODO: Add Error, wrong Grower trying to accept offer.
       // For example, time already expired for previous grower trying to accept.
       return false;
+      
     }
 
     OfferResponse growerResponse = offer.getGrowerOfferResponse(growerId);
+    growerResponse.refresh();
     if (growerResponse == null) {
       return false;
     }
@@ -100,7 +106,6 @@ public class WaterfallService implements OfferManagementService {
 
   @Override
   public Boolean reject(long growerId) {
-
     if (growersInLine.isEmpty()) {
       return false;
     }
@@ -109,15 +114,17 @@ public class WaterfallService implements OfferManagementService {
     }
 
     OfferResponse growerResponse = offer.getGrowerOfferResponse(growerId);
+    growerResponse.refresh();
     if (growerResponse == null) {
       return false;
     }
+    
     if (growerResponse.getResponseStatus() != ResponseStatus.NO_RESPONSE
         && growerResponse.getResponseStatus() != ResponseStatus.REQUEST_CALL) {
-
       return false;
       // TODO: Add Error. Grower already responded.
     }
+    
     moveToNext(); 
     return true;
     

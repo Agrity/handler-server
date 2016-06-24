@@ -7,7 +7,6 @@ import models.OfferResponse;
 import models.OfferResponse.ResponseStatus;
 import akka.actor.Cancellable;
 import scala.concurrent.duration.FiniteDuration;
-
 import java.util.concurrent.TimeUnit;
 
 import play.libs.Akka;
@@ -37,17 +36,18 @@ public class FCFSService implements OfferManagementService {
 
   @Override
   public Boolean accept(long pounds, long growerId) {
-
+    offer.refresh();
+    
     OfferResponse growerResponse = offer.getGrowerOfferResponse(growerId);
+    growerResponse.refresh();
     if (growerResponse == null) {
       return false;
     }
+    
     if (growerResponse.getResponseStatus() != ResponseStatus.NO_RESPONSE
         && growerResponse.getResponseStatus() != ResponseStatus.REQUEST_CALL) {
-
       return false;
       // TODO: Add Error. Grower already responded.
-
     }
 
     if (!subtractFromPoundsRemaining(pounds)) {
@@ -57,6 +57,7 @@ public class FCFSService implements OfferManagementService {
     if (poundsRemaining == 0) {
       cancellable.cancel();
       offer.closeOffer();
+      return true;
     }
     // TODO: Send pounds remaining or closed update to growers who have not
     // accepted or rejected. offer.getGrowersWithNoResponse useful here.
@@ -65,18 +66,19 @@ public class FCFSService implements OfferManagementService {
 
   @Override
   public Boolean reject(long growerId) {
-    // Do Nothing
+    offer.refresh();
     OfferResponse growerResponse = offer.getGrowerOfferResponse(growerId);
+    growerResponse.refresh();
     if (growerResponse == null) {
       return false;
     }
+    
     if (growerResponse.getResponseStatus() != ResponseStatus.NO_RESPONSE
         && growerResponse.getResponseStatus() != ResponseStatus.REQUEST_CALL) {
-
       return false;
       // TODO: Add Error. Grower already responded.
     }
-
+    
     return true;
   }
 
@@ -85,7 +87,8 @@ public class FCFSService implements OfferManagementService {
       return false;
       // TODO: Error message!
       // TODO: fix this error check
-    } else {
+    } 
+    else {
       poundsRemaining -= pounds;
       return true;
     }
