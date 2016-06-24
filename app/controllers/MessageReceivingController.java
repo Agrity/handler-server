@@ -79,11 +79,11 @@ public class MessageReceivingController extends Controller {
      */
     EbeanGrowerService ebean = new EbeanGrowerService(); 
     Grower grower = ebean.growerLookupByPhoneNum(phoneNum);
-    if (grower == null) {
-      boolean sent = sendResponse("This phone number is not authorized in Agrity's grower list.", phoneNum);
-      Logger.error("Message received from " + phoneNum + " does not correspond to a grower in our system.");
-      return badRequest("Message received from " + phoneNum + " does not correspond to a grower in our system.");
-    }
+    //if (grower == null) {
+    //  boolean sent = sendResponse("This phone number is not authorized in Agrity's grower list.", phoneNum);
+    //  Logger.error("Message received from " + phoneNum + " does not correspond to a grower in our system.");
+    //  return badRequest("Message received from " + phoneNum + " does not correspond to a grower in our system.");
+    //}
 
     /* if we reach here, we received a SMS message from a valid grower */
 
@@ -93,10 +93,11 @@ public class MessageReceivingController extends Controller {
       Logger.error(parser.getErrorMessage());
       return badRequest(parser.getErrorMessage());
     }
-
+ 
     Long offerID = parser.getOfferID();
     Integer almondPounds = parser.getAlmoundPounds();
-
+    
+    Logger.info("The valid offerID is: " + offerID + " the amount accepted is: " + almondPounds);
     /* if we reach here, the SMS message has a well-formatted offerID and almondAmount response */
 
     Offer offer = grower.offerLookupByID(offerID);
