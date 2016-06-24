@@ -51,3 +51,11 @@ GET     /offers/:offerId/accept/:growerId         controllers.OfferController.ac
 GET     /offers/:offerId/reject/:growerId         controllers.OfferController.rejectOffer(offerId: Long, growerId: Long)
 
 GET     /offers/:offerId/requestcall/:growerId    controllers.OfferController.requestCall(offerId: Long, growerId: Long)
+
+# ========== Message Recieving ========== #
+
+GET     /messaging/response/twilio                controllers.MessageReceivingController.receiveTwilioResponse()
+
+POST    /messaging/response/twilio                controllers.MessageReceivingController.receiveTwilioResponse()
+
+GET	    /messaging/response/twilio/number         controllers.MessageReceivingController.numberTwilioResponses()

@@ -47,7 +47,7 @@ public class Grower extends BaseModel implements PrettyString {
    * TODO: Change to phone number format, construct own model so that can be consistant.
    */
   //@Constraints.Required
-  //public List<String> phoneNumbers;
+  public List<String> phoneNumbers;
 
 
   // TODO Remove OfferResponses and Offers from Growers if possible.
@@ -98,7 +98,7 @@ public class Grower extends BaseModel implements PrettyString {
     this.emailAddresses = emailAddresses;
 
     // TODO Fix When Phonenumbers Functional
-    // this.phoneNumbers = phoneNumbers;
+     this.phoneNumbers = phoneNumbers;
     //this.phoneNumbers = new ArrayList<>();
   }
 
@@ -155,6 +155,10 @@ public class Grower extends BaseModel implements PrettyString {
       .stream()
       .map(EmailAddress::getEmailAddress)
       .collect(Collectors.toList());
+  }
+
+  public List<String> getPhoneNumbers() {
+    return phoneNumbers;
   }
 
   @Override
