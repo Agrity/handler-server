@@ -152,6 +152,7 @@ public class Offer extends BaseModel implements PrettyString {
   public void closeOffer() {
     offerCurrentlyOpen = false;
     OfferManagementService.removeOfferManagementService(this);
+    save();
   }
 
 
