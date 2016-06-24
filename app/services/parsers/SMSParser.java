@@ -1,5 +1,13 @@
 package services.parsers;
 
+/**
+ * Class to do basic parsing SMS Message from a String to a Long and Integer.
+ * Expected String format:
+ * 123 456789
+ * Offer ID Number followed by whitespace followed by Number pounds accepted.
+ * NOTE: Does NOT accpet anything outside of this format (e.g. comma in pounds number)
+ */
+
 public class SMSParser extends BaseParser {
 
   private Long offerID;

@@ -46,13 +46,9 @@ public class MessageReceivingController extends Controller {
     return ok("Number Responses Recieved: " + numResponses);
   }
 
-
-  /* === TODO: Error Checking === */
-  /* === TODO: Phone number and body strings formatting === */
-  /* === TODO: Grower look-up based on phone number === */
   /* === TODO: Update offer based on grower's response === */
-  /* === TODO: Reply to grower? === */
   /* === TODO: How is offer updated if grower doesn't go through Twilio to accept from handler? === */
+
   public Result receiveTwilioResponse() {
     numResponses++;
     Map<String, String[]> bodyMap = request().body().asFormUrlEncoded();
@@ -74,16 +70,15 @@ public class MessageReceivingController extends Controller {
     }
 
 
-    /* if we reach here we have non-null smsMessage from phoneNum in format +11234567890 
-     * NOTE: respond with SMS if there is an error in their response 
-     */
+    /* if we reach here we have non-null smsMessage from phoneNum in format +11234567890 */
+     
     EbeanGrowerService ebean = new EbeanGrowerService(); 
     Grower grower = ebean.growerLookupByPhoneNum(phoneNum);
-    //if (grower == null) {
-    //  boolean sent = sendResponse("This phone number is not authorized in Agrity's grower list.", phoneNum);
-    //  Logger.error("Message received from " + phoneNum + " does not correspond to a grower in our system.");
-    //  return badRequest("Message received from " + phoneNum + " does not correspond to a grower in our system.");
-    //}
+    if (grower == null) {
+      boolean sent = sendResponse("This phone number is not authorized in Agrity's grower list.", phoneNum);
+      Logger.error("Message received from " + phoneNum + " does not correspond to a grower in our system.");
+      return badRequest("Message received from " + phoneNum + " does not correspond to a grower in our system.");
+    }
 
     /* if we reach here, we received a SMS message from a valid grower */
 
@@ -98,6 +93,7 @@ public class MessageReceivingController extends Controller {
     Integer almondPounds = parser.getAlmoundPounds();
     
     Logger.info("The valid offerID is: " + offerID + " the amount accepted is: " + almondPounds);
+
     /* if we reach here, the SMS message has a well-formatted offerID and almondAmount response */
 
     Offer offer = grower.offerLookupByID(offerID);
@@ -107,9 +103,8 @@ public class MessageReceivingController extends Controller {
       return badRequest("OfferId: " + offerID + " does not exist. From: " + phoneNum);
     }
 
-    /* now we have to update the offer response (and check if it is still a live offer) */
+    /* ==== TODO: Actually do something with correctly populated information ==== */
 
-    Logger.info("From: " + phoneNum + " message: " + smsMessage);
     return ok("From: " + phoneNum + "message: " + smsMessage);
   } 
 
@@ -126,12 +121,4 @@ public class MessageReceivingController extends Controller {
      }
      return true;
   } 
-
-  boolean parseSMSMessage(String smsMessage, Long offerID, Integer almondPounds) {
-    /* parse the smsMessage to pull out the offerID and almondAmount
-     * return false if not formatted correctly
-     */
-    return false;
-  }
-
 }
