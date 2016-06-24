@@ -179,6 +179,7 @@ public class Offer extends BaseModel implements PrettyString {
       .collect(Collectors.toList());
   }
 
+
   @JsonIgnore
   public List<ResponseStatus> getAllOfferResponseStatuses() {
     return offerResponses.stream()
