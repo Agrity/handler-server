@@ -57,6 +57,10 @@ public class Handler extends BaseModel implements PrettyString {
   // when logged in, and will be erased when logged out.
   private String authToken;
 
+  public String getAuthToken() {
+    return authToken;
+  }
+
 
   /* ====================================== Constructors ====================================== */
 

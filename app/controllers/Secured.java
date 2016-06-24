@@ -26,15 +26,14 @@ public class Secured extends Security.Authenticator {
       = ctx.request().getHeader(SecurityController.AUTH_TOKEN_HEADER);
 
     if (authTokenHeaderValue != null) {
-      Logger.debug("Auth Token: " + authTokenHeaderValue);
       Handler handler = handlerService.getByAuthToken(authTokenHeaderValue);
       if (handler != null) {
         ctx.args.put(SecurityController.HANDLER_KEY, handler);
         return handler.getEmailAddress();
+      } else {
+        Logger.error("No Handler With Auth Token: " + authTokenHeaderValue);
       }
-    } else {
-      Logger.debug("No Auth Token Found.");
-    }
+    } 
 
     return null;
   }

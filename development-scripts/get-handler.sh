@@ -4,7 +4,7 @@ ID=$1
 
 if ! [[ -z $ID ]]; then
   curl \
-    --header 'X-AUTH-TOKEN : "fb5f5b0a-b7df-4679-abac-7629b5ed1041"' \
+    --header 'X-AUTH-TOKEN : deca2584-0bea-44ad-a420-af90fefba1b0' \
     --request GET \
     localhost:9000/handlers/$ID
 

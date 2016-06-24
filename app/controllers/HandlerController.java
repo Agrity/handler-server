@@ -39,7 +39,6 @@ public class HandlerController extends Controller {
     JsonNode data = request().body().asJson();
 
     if (data == null) {
-      // TODO Change to Valid Error JSON
       return badRequest(JsonMsgUtils.expectingData());
     }
 

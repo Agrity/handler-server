@@ -59,7 +59,6 @@ public class SecurityController extends Controller {
       return unauthorized();
     }
 
-
     String authToken = handler.createToken();
 
     response()
