@@ -38,4 +38,16 @@ public class EbeanGrowerService implements GrowerService {
         .eq("offers.id", offerId)
         .findList();
   }
+
+  public Grower growerLookupByPhoneNum(String phoneNum) {
+    List<Grower> growers = getAll();
+    for (Grower grower: growers) {
+      for (String curPhoneNum: grower.getPhoneNumbers()) {
+        if (curPhoneNum == phoneNum) {
+          return grower;
+        }
+      }
+    }
+    return null;
+  }
 }

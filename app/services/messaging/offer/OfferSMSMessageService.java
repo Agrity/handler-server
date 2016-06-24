@@ -18,6 +18,10 @@ import models.Grower;
 import models.Offer;
 import play.Logger;
 
+import com.avaje.ebean.Model.Finder;
+import services.impl.EbeanGrowerService;
+
+
 
 public class OfferSMSMessageService implements OfferMessageService {
 
@@ -70,5 +74,6 @@ public class OfferSMSMessageService implements OfferMessageService {
                 + "Reply 0 to decline or number of pounds that you would like to accept\n" /*instructions on how to respond */
                 + "-" + /*add handler's contact's name in addition?*/  offer.getHandler().getCompanyName(); 
     return body;
-  }  
+  } 
+
 }

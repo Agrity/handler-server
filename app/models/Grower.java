@@ -161,6 +161,15 @@ public class Grower extends BaseModel implements PrettyString {
     return phoneNumbers;
   }
 
+  public Offer offerLookupByID(Long offerID) {
+    for (Offer offer: offers) {
+      if (offer.getId() == offerID) {
+        return offer;
+      }
+    }
+    return null;
+  }
+
   @Override
   public String toString() {
     // TODO

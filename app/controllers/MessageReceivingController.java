@@ -9,11 +9,15 @@ import play.mvc.Result;
 
 import services.OfferService;
 import services.messaging.offer.OfferMessageService;
+import services.messaging.offer.OfferSMSMessageService;
 import models.Offer;
 import play.Logger;
 import models.OfferResponse;
 import models.OfferResponse.ResponseStatus;
 import models.Grower;
+
+import com.avaje.ebean.Model.Finder;
+import services.impl.EbeanGrowerService;
 
 public class MessageReceivingController extends Controller {
 
@@ -44,6 +48,7 @@ public class MessageReceivingController extends Controller {
     Map<String, String[]> bodyMap = request().body().asFormUrlEncoded();
     String phoneNum;
     String smsMessage;
+
     try {
       phoneNum = bodyMap.get("From")[0]; 
     } catch (NullPointerException e) {
@@ -59,29 +64,48 @@ public class MessageReceivingController extends Controller {
     }
 
 
-    /* non-null smsMessage from phoneNum in format +11234567890 */
+    /* if we reach here we have non-null smsMessage from phoneNum in format +11234567890 
+     * NOTE: respond with SMS if there is an error in their response 
+     */
+    EbeanGrowerService ebean = new EbeanGrowerService(); 
+    Grower grower = ebean.growerLookupByPhoneNum(phoneNum);
+    if (grower == null) {
+      /* send SMS message to grower letting them know they are not authorized */
+      Logger.error("Message received from " + phoneNum + " does not correspond to a grower in our system.");
+      return badRequest("Message received from " + phoneNum + " does not correspond to a grower in our system.");
+    }
 
-    Grower grower = growerLookupByPhoneNum(phoneNum);
+    /* if we reach here, we received a SMS message from a valid grower */
 
-    ResponseStatus status = ingestSMS(smsMessage); 
+    Long offerID = -1L;
+    Integer almondPounds = -1;
+    boolean formatted = parseSMSMessage(smsMessage, offerID, almondPounds);
+    if (!formatted) {
+      /* send SMS message to grower letting them know their text was not formatted correctly */
+      Logger.error("SMS message was not formatted correctly.");
+      return badRequest("SMS message was not formatted correctly.");
+    }
 
-    /* correctly formatted smsMessage from phoneNum in format +11234567890 with Response Status status */
+    /* if we reach here, the SMS message has valid offerID and almondAmount response */
+
+    Offer offer = grower.offerLookupByID(offerID);
+    if (offer == null) {
+      /* send SMS message to grower letting them know their offerID was not correct */
+      Logger.error("SMS message was not formatted correctly.");
+      return badRequest("SMS message was not formatted correctly.");
+    }
+
+    /* now we have to update the offer response (and check if it is still a live offer) */
 
     Logger.info("From: " + phoneNum + " message: " + smsMessage);
     return ok("From: " + phoneNum + "message: " + smsMessage);
   }  
 
-  Grower growerLookupByPhoneNum(String phoneNum) {
-    /* iterate and look through all phoneNums until we find correct Grower 
-     * if grower does not exist, respond with a message that says we received
-     * a message from an unauthorized number 
+  boolean parseSMSMessage(String smsMessage, Long offerID, Integer almondPounds) {
+    /* parse the smsMessage to pull out the offerID and almondAmount
+     * return false if not formatted correctly
      */
-    return null;
+    return false;
   }
-
-  ResponseStatus ingestSMS(String smsMessage) {
-    /* ingest string to see whether grower is accepting/declining */
-    return ResponseStatus.REJECTED;
-  } 
 
 }
