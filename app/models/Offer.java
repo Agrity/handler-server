@@ -23,7 +23,6 @@ import models.Almond.AlmondVariety;
 import models.OfferResponse.ResponseStatus;
 import models.interfaces.PrettyString;
 
-import play.Logger;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
 
@@ -199,21 +198,36 @@ public class Offer extends BaseModel implements PrettyString {
   }
 
 
-  public boolean growerAcceptOffer(Long growerId) {
+  public boolean growerAcceptOffer(Long growerId, long pounds) {
     if (!offerCurrentlyOpen) {
       // TODO Handle Late Acceptance Error
       return false;
     }
+      
+    OfferResponse growerResponse = getGrowerOfferResponse(growerId);
 
+    if (growerResponse == null) {
+      return false;
+    }
+    
+    growerResponse.refresh();
+    if (growerResponse.getResponseStatus() != ResponseStatus.NO_RESPONSE
+        && growerResponse.getResponseStatus() != ResponseStatus.REQUEST_CALL) {
+      return false;
+      // TODO: Add Error. Grower already responded.
+    }  
+      
+    
     OfferManagementService managementService
         = OfferManagementService.getOfferManagementService(this);
 
     if (managementService != null) {
-      managementService.accept();
+      if (!managementService.accept(pounds, growerId)) {
+      	return false;
+      }
     } else {
       // TODO Possibly Log Error?
     }
-
 
     return setGrowerResponseForOffer(growerId, ResponseStatus.ACCEPTED);
   }
@@ -223,13 +237,30 @@ public class Offer extends BaseModel implements PrettyString {
       // TODO Handle Late Acceptance Error
       return false;
     }  
+    
+    OfferResponse growerResponse = getGrowerOfferResponse(growerId);
+
+    if (growerResponse == null) {
+      return false;
+    }
+    
+    growerResponse.refresh();
+    if (growerResponse.getResponseStatus() != ResponseStatus.NO_RESPONSE
+        && growerResponse.getResponseStatus() != ResponseStatus.REQUEST_CALL) {
+      return false;
+      // TODO: Add Error. Grower already responded.
+    }
+    
 
     OfferManagementService managementService
         = OfferManagementService.getOfferManagementService(this);
 
     if (managementService != null) {
-      managementService.reject();
-    } else {
+      if (!managementService.reject(growerId)) { 
+      return false;
+      }
+    } 
+    else {
       // TODO Possibly Log Error?
     }
 
@@ -247,16 +278,14 @@ public class Offer extends BaseModel implements PrettyString {
 
   private boolean setGrowerResponseForOffer(Long growerId, ResponseStatus growerResponse) {
     OfferResponse growerOfferResponse = getGrowerOfferResponse(growerId);
-
     if (growerOfferResponse == null) {
-      Logger.error("Grower Response with grower id [" + growerId + "] could not be found to respond to offer");
       return false;
 
     }
-
+    
     growerOfferResponse.setResponseStatus(growerResponse);
     growerOfferResponse.save();
-
+    
     return true;
   }
 

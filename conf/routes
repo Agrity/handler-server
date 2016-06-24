@@ -53,7 +53,7 @@ GET     /offers/:id/index                         controllers.OfferController.in
 
 GET     /offers/:id/send                          controllers.OfferController.sendOffer(id: Long)
 
-GET     /offers/:offerId/accept/:growerId         controllers.OfferController.acceptOffer(offerId: Long, growerId: Long)
+GET     /offers/:offerId/accept/:growerId/:amount controllers.OfferController.acceptOffer(offerId: Long, growerId: Long, amount: Long)
 
 GET     /offers/:offerId/reject/:growerId         controllers.OfferController.rejectOffer(offerId: Long, growerId: Long)
 
