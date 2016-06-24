@@ -53,7 +53,7 @@ import java.lang.reflect.Constructor;
  *    COMMENT: ... ,
  *  }
  */
-public class OfferJsonParser extends JsonParser {
+public class OfferJsonParser extends BaseParser {
 
   private Handler handler;
   private List<Grower> growers;

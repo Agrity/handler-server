@@ -38,7 +38,7 @@ import services.PhoneMessageService;
  *    ]
  *  }
  */
-public class GrowerJsonParser extends JsonParser {
+public class GrowerJsonParser extends BaseParser {
 
   private Handler handler;
   private String firstName;

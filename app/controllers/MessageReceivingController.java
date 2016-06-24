@@ -27,6 +27,7 @@ import com.twilio.sdk.resource.factory.*;
 import com.twilio.sdk.resource.instance.*;
 import com.twilio.sdk.resource.list.*;
 import com.twilio.sdk.TwilioRestResponse;
+import services.parsers.SMSParser;
 
 public class MessageReceivingController extends Controller {
 
@@ -86,14 +87,15 @@ public class MessageReceivingController extends Controller {
 
     /* if we reach here, we received a SMS message from a valid grower */
 
-    Long offerID = -1L;
-    Integer almondPounds = -1;
-    boolean formatted = parseSMSMessage(smsMessage, offerID, almondPounds);
-    if (!formatted) {
-      /* send SMS message to grower letting them know their text was not formatted correctly */
-      Logger.error("SMS message was not formatted correctly.");
-      return badRequest("SMS message was not formatted correctly.");
+    SMSParser parser = new SMSParser(smsMessage);
+    if (!parser.isValid()) {
+      sendResponse(parser.getErrorMessage(), phoneNum);
+      Logger.error(parser.getErrorMessage());
+      return badRequest(parser.getErrorMessage());
     }
+
+    Long offerID = parser.getOfferID();
+    Integer almondPounds = parser.getAlmoundPounds();
 
     /* if we reach here, the SMS message has a well-formatted offerID and almondAmount response */
 

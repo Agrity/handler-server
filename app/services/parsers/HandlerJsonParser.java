@@ -12,7 +12,7 @@ import models.Handler;
  *    COMPANY_NAME: ...
  *  }
  */
-public class HandlerJsonParser extends JsonParser {
+public class HandlerJsonParser extends BaseParser {
   // Parsed variables
   private final String companyName;
 
