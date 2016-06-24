@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.NoSuchElementException;
 
 //import javax.money.MonetaryAmount;
 import javax.persistence.CascadeType;
@@ -155,41 +156,69 @@ public class Offer extends BaseModel implements PrettyString {
 
 
   public List<Grower> getAcceptedGrowers() {
-    return getGrowersWithResponse(ResponseStatus.ACCEPTED);
+    try {
+      return getGrowersWithResponse(ResponseStatus.ACCEPTED);
+    } catch(NoSuchElementException e) {
+      return null;
+    }
   }
 
   public List<Grower> getRejectedGrowers() {
-    return getGrowersWithResponse(ResponseStatus.REJECTED);
+    try {  
+      return getGrowersWithResponse(ResponseStatus.REJECTED);
+    } catch(NoSuchElementException e) {
+      return null;
+    }
   }
 
   public List<Grower> getNoResponseGrowers() {
-    return getGrowersWithResponse(ResponseStatus.NO_RESPONSE);
+    try {
+      return getGrowersWithResponse(ResponseStatus.NO_RESPONSE);
+    } catch(NoSuchElementException e) {
+      return null;
+    }
   }
 
   public List<Grower> getCallRequestedGrowers() {
-    return getGrowersWithResponse(ResponseStatus.REQUEST_CALL);
+    try {
+      return getGrowersWithResponse(ResponseStatus.REQUEST_CALL);
+    } catch(NoSuchElementException e) {
+      return null;
+    }
   }
 
   private List<Grower> getGrowersWithResponse(ResponseStatus response) {
-    return offerResponses.stream()
-      .filter(offerResponse -> offerResponse.getResponseStatus().equals(response))
-      .map(offerResponse -> offerResponse.getGrower())
-      .collect(Collectors.toList());
+    try {
+      return offerResponses.stream()
+        .filter(offerResponse -> offerResponse.getResponseStatus().equals(response))
+        .map(offerResponse -> offerResponse.getGrower())
+        .collect(Collectors.toList());
+    } catch(NoSuchElementException e) {
+      return null;
+    }
   }
 
 
   @JsonIgnore
   public List<ResponseStatus> getAllOfferResponseStatuses() {
-    return offerResponses.stream()
-      .map(offerResponse -> offerResponse.getResponseStatus())
-      .collect(Collectors.toList());
+    try {
+      return offerResponses.stream()
+        .map(offerResponse -> offerResponse.getResponseStatus())
+        .collect(Collectors.toList());
+    } catch(NoSuchElementException e) {
+      return null;
+    }
   }
 
   public OfferResponse getGrowerOfferResponse(long growerId) {
-    return offerResponses.stream()
-      .filter(offerResponse -> offerResponse.getGrower().getId().equals(growerId))
-      .findFirst()
-      .get();
+    try {
+      return offerResponses.stream()
+        .filter(offerResponse -> offerResponse.getGrower().getId().equals(growerId))
+        .findFirst()
+        .get();
+    } catch(NoSuchElementException e) {
+      return null;
+    }
   }
 
 

@@ -135,7 +135,7 @@ public class OfferController extends Controller {
       return ok(jsonMapper.writeValueAsString(offerService.getAll()));
     } catch (JsonProcessingException e) {
       return internalServerError(JsonMsgUtils.caughtException(e.toString()));
-    }
+    } 
   }
 
   public Result getOffer(long id) {
