@@ -1,7 +1,8 @@
-package controllers;
+package controllers.security;
 
 import com.google.inject.Inject;
 
+import controllers.SecurityController;
 import models.Handler;
 
 import play.Logger;
@@ -11,12 +12,12 @@ import play.mvc.Security;
 
 import services.HandlerService;
 
-public class Secured extends Security.Authenticator {
+public class HandlerSecured extends Security.Authenticator {
 
   private HandlerService handlerService;
 
   @Inject
-  public Secured(HandlerService handlerService) {
+  public HandlerSecured(HandlerService handlerService) {
     this.handlerService = handlerService;
   }
 

@@ -13,6 +13,8 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
 
+import controllers.security.HandlerSecured;
+
 import services.GrowerService;
 import services.HandlerService;
 import services.parsers.HandlerJsonParser;
@@ -66,7 +68,7 @@ public class HandlerController extends Controller {
     }
   }
 
-  @Security.Authenticated(Secured.class)
+  @Security.Authenticated(HandlerSecured.class)
   public Result getHandler(long id) {
     Handler handler = handlerService.getById(id);
 
@@ -81,7 +83,7 @@ public class HandlerController extends Controller {
     }
   }
 
-  @Security.Authenticated(Secured.class)
+  @Security.Authenticated(HandlerSecured.class)
   public Result getAllGrowers(long handlerId) {
     Handler handler = handlerService.getById(handlerId);
 
@@ -96,7 +98,7 @@ public class HandlerController extends Controller {
     }
   }
 
-  @Security.Authenticated(Secured.class)
+  @Security.Authenticated(HandlerSecured.class)
   public Result getGrower(long handlerId, long growerId) {
     Handler handler = handlerService.getById(handlerId);
     
