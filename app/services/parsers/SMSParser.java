@@ -24,6 +24,7 @@ public class SMSParser extends BaseParser {
     if (almoundPounds == null) {
     	return;
     }
+    setValid();
   }
 
   public Long getOfferID() {
