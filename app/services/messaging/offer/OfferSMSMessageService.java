@@ -39,7 +39,7 @@ public class OfferSMSMessageService implements OfferMessageService {
           Message message = TwilioFields.getMessageFactory().create(params);
         } catch (TwilioRestException e) {
           success = false;
-          Logger.error("=== Error Sending SMS Message ===\n" + e.getErrorMessage() + "\n\n");
+          Logger.error("=== Error Sending SMS Message === to " + phoneNumber + " " + e.getErrorMessage() + "\n\n");
         }
 
       }

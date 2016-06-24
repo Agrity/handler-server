@@ -92,8 +92,6 @@ public class MessageReceivingController extends Controller {
     Long offerID = parser.getOfferID();
     Integer almondPounds = parser.getAlmoundPounds();
     
-    Logger.info("The valid offerID is: " + offerID + " the amount accepted is: " + almondPounds);
-
     /* if we reach here, the SMS message has a well-formatted offerID and almondAmount response */
 
     Offer offer = grower.offerLookupByID(offerID);
@@ -103,10 +101,41 @@ public class MessageReceivingController extends Controller {
       return badRequest("OfferId: " + offerID + " does not exist. From: " + phoneNum);
     }
 
+    Logger.info("The valid offerID is: " + offerID + " the amount accepted is: " + almondPounds);
+
     /* ==== TODO: Actually do something with correctly populated information ==== */
 
-    return ok("From: " + phoneNum + "message: " + smsMessage);
+    updateOffer(grower, offer, almondPounds, phoneNum);
+
+    return ok("Grower response ingested properly");
   } 
+
+  /* === TODO: Grower request call? === */
+  /* === TODO: More robust/detailed responses === */
+  private void updateOffer(Grower grower, Offer offer, Integer almondPounds, String phoneNum) {
+    if (almondPounds > 0) {
+      boolean accepted = offer.growerAcceptOffer(grower.getId(), almondPounds);
+      if (accepted) {
+        boolean sent = sendResponse("Congratulations! You accepted the bid!", phoneNum);
+        Logger.info("Offer: " + offer.getId() + " was accepted by: " + grower.getFullName()
+                  + " for " + almondPounds + "lbs.");
+      } else {
+        boolean sent = sendResponse("Unfortunately we were not able to process your accepted bid."
+                                  + " The bid has either expired or been accepted by another grower.", phoneNum);
+        Logger.info("Offer: " + offer.getId() + " could not be accepted by: " + grower.getFullName()
+                  + " for " + almondPounds + "lbs.");
+      }
+    } else {
+      boolean rejected = offer.growerRejectOffer(grower.getId());
+      if (rejected) {
+        boolean sent = sendResponse("The bid has successfully been rejected.", phoneNum);
+        Logger.info("Offer: " + offer.getId() + " was rejected by: " + grower.getFullName());
+      } else {
+        boolean sent = sendResponse("Error rejecting bid.", phoneNum);
+        Logger.info("Offer: " + offer.getId() + " could not be rejected by: " + grower.getFullName());
+      }
+    }
+  }
 
   private boolean sendResponse(String response, String phoneNumber) {
     List<NameValuePair> params = new ArrayList<NameValuePair>(); 
@@ -116,7 +145,7 @@ public class MessageReceivingController extends Controller {
     try {
       Message message = TwilioFields.getMessageFactory().create(params);
     } catch (TwilioRestException e) {
-       Logger.error("=== Error Sending SMS Response Message ===\n" + e.getErrorMessage() + "\n\n");
+       Logger.error("=== Error Sending SMS Response Message === to " + phoneNumber + " " + e.getErrorMessage() + "\n\n");
        return false;
      }
      return true;
