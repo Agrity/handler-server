@@ -15,54 +15,54 @@ GET     /assets/*file                         controllers.Assets.versioned(path=
 # ========== Handler ========== #
 
 
-GET     /handlers                                 controllers.HandlerController.getAllHandlers()
+GET     /admin/handlers                                 controllers.AdminHandlerController.getAllHandlers()
 
-POST    /handlers                                 controllers.HandlerController.createHandler()
+POST    /admin/handlers                                 controllers.AdminHandlerController.createHandler()
 
-GET     /handlers/:id                             controllers.HandlerController.getHandler(id: Long)
+GET     /admin/handlers/:id                             controllers.AdminHandlerController.getHandler(id: Long)
 
-GET     /handlers/:id/growers                     controllers.HandlerController.getAllGrowers(id: Long)
+GET     /admin/handlers/:id/growers                     controllers.AdminHandlerController.getAllGrowers(id: Long)
 
-GET     /handlers/:id/growers/:growerId           controllers.HandlerController.getGrower(id: Long, growerId: Long)
+GET     /admin/handlers/:id/growers/:growerId           controllers.AdminHandlerController.getGrower(id: Long, growerId: Long)
 
-GET     /handlers/:id/offers                      controllers.OfferController.getAllHandlerOffers(id: Long)
+GET     /admin/handlers/:id/offers                      controllers.AdminOfferController.getAllHandlerOffers(id: Long)
 
 
 # ========== Grower ========== #
 
 
-GET     /growers                                  controllers.GrowerController.getAllGrowers()
+GET     /admin/growers                                  controllers.AdminGrowerController.getAllGrowers()
 
-POST    /growers                                  controllers.GrowerController.createGrower()
+POST    /admin/growers                                  controllers.AdminGrowerController.createGrower()
 
-GET     /growers/:id                              controllers.GrowerController.getGrower(id: Long)
+GET     /admin/growers/:id                              controllers.AdminGrowerController.getGrower(id: Long)
 
-GET     /growers/:id/offers                       controllers.OfferController.getAllGrowerOffers(id: Long)
+GET     /admin/growers/:id/offers                       controllers.AdminOfferController.getAllGrowerOffers(id: Long)
 
 
 # ========== Offer ========== #
 
 
-GET     /offers                                   controllers.OfferController.getAllOffers()
+GET     /admin/offers                                   controllers.AdminOfferController.getAllOffers()
 
-POST    /offers                                   controllers.OfferController.createOffer()
+POST    /admin/offers                                   controllers.AdminOfferController.createOffer()
 
-GET     /offers/:id                               controllers.OfferController.getOffer(id: Long)
+GET     /admin/offers/:id                               controllers.AdminOfferController.getOffer(id: Long)
 
-GET     /offers/:id/index                         controllers.OfferController.indexOffer(id: Long)
+GET     /admin/offers/:id/index                         controllers.AdminOfferController.indexOffer(id: Long)
 
-GET     /offers/:id/send                          controllers.OfferController.sendOffer(id: Long)
+GET     /admin/offers/:id/send                          controllers.AdminOfferController.sendOffer(id: Long)
 
-GET     /offers/:offerId/accept/:growerId/:amount controllers.OfferController.acceptOffer(offerId: Long, growerId: Long, amount: Long)
+GET     /admin/offers/:offerId/accept/:growerId/:amount controllers.AdminOfferController.acceptOffer(offerId: Long, growerId: Long, amount: Long)
 
-GET     /offers/:offerId/reject/:growerId         controllers.OfferController.rejectOffer(offerId: Long, growerId: Long)
+GET     /admin/offers/:offerId/reject/:growerId         controllers.AdminOfferController.rejectOffer(offerId: Long, growerId: Long)
 
-GET     /offers/:offerId/requestcall/:growerId    controllers.OfferController.requestCall(offerId: Long, growerId: Long)
+GET     /admin/offers/:offerId/requestcall/:growerId    controllers.AdminOfferController.requestCall(offerId: Long, growerId: Long)
 
 
 # ========== Authentication ========== #
 
 
-POST    /login                                    controllers.SecurityController.login()
+POST    /handler/login                                    controllers.security.HandlerSecurityController.login()
 
-POST    /logout                                   controllers.SecurityController.login()
+POST    /handler/logout                                   controllers.security.HandlerSecurityController.logout()

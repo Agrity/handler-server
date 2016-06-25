@@ -2,7 +2,6 @@ package controllers.security;
 
 import com.google.inject.Inject;
 
-import controllers.SecurityController;
 import models.Handler;
 
 import play.Logger;
@@ -24,12 +23,12 @@ public class HandlerSecured extends Security.Authenticator {
   @Override
   public String getUsername(Context ctx) {
     String authTokenHeaderValue
-      = ctx.request().getHeader(SecurityController.AUTH_TOKEN_HEADER);
+      = ctx.request().getHeader(HandlerSecurityController.AUTH_TOKEN_HEADER);
 
     if (authTokenHeaderValue != null) {
       Handler handler = handlerService.getByAuthToken(authTokenHeaderValue);
       if (handler != null) {
-        ctx.args.put(SecurityController.HANDLER_KEY, handler);
+        ctx.args.put(HandlerSecurityController.HANDLER_KEY, handler);
         return handler.getEmailAddress();
       } else {
         Logger.error("No Handler With Auth Token: " + authTokenHeaderValue);

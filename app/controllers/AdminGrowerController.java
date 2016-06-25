@@ -14,15 +14,16 @@ import play.mvc.Result;
 
 import services.GrowerService;
 import services.parsers.GrowerJsonParser;
+import utils.JsonMsgUtils;
 
-public class GrowerController extends Controller {
+public class AdminGrowerController extends Controller {
 
   private final GrowerService growerService;
 
   private final ObjectMapper jsonMapper;
 
   @Inject
-  public GrowerController(GrowerService growerService) {
+  public AdminGrowerController(GrowerService growerService) {
     this.growerService = growerService;
 
     this.jsonMapper = new ObjectMapper();

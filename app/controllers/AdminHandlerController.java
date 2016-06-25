@@ -18,8 +18,9 @@ import controllers.security.HandlerSecured;
 import services.GrowerService;
 import services.HandlerService;
 import services.parsers.HandlerJsonParser;
+import utils.JsonMsgUtils;
 
-public class HandlerController extends Controller {
+public class AdminHandlerController extends Controller {
 
   private final HandlerService handlerService;
   private final GrowerService growerService;
@@ -27,7 +28,7 @@ public class HandlerController extends Controller {
   private final ObjectMapper jsonMapper;
 
   @Inject
-  public HandlerController(HandlerService handlerService, GrowerService growerService) {
+  public AdminHandlerController(HandlerService handlerService, GrowerService growerService) {
     this.handlerService = handlerService;
     this.growerService = growerService;
 

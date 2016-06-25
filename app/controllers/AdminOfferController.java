@@ -21,10 +21,11 @@ import services.messaging.offer.OfferMessageService;
 import services.offer_management.FCFSService;
 import services.parsers.OfferJsonParser;
 import services.parsers.OfferJsonParser.ManagementTypeInfo;
+import utils.JsonMsgUtils;
 import services.offer_management.WaterfallService;
 import services.offer_management.FCFSService;
 
-public class OfferController extends Controller {
+public class AdminOfferController extends Controller {
 
   private final OfferService offerService;
   private final OfferMessageService offerMessageService;
@@ -32,7 +33,7 @@ public class OfferController extends Controller {
   private final ObjectMapper jsonMapper;
 
   @Inject
-  public OfferController(OfferService offerService, OfferMessageService offerMessageService) {
+  public AdminOfferController(OfferService offerService, OfferMessageService offerMessageService) {
     this.offerService = offerService;
     this.offerMessageService = offerMessageService;
 

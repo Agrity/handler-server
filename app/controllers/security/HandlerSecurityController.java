@@ -1,19 +1,21 @@
-package controllers;
+package controllers.security;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import javax.inject.Inject;
+
 import models.Handler;
-
 import play.libs.Json;
-import play.mvc.*;
-
+import play.mvc.BodyParser;
+import play.mvc.Controller;
+import play.mvc.Http;
+import play.mvc.Result;
+import play.mvc.Security;
 import services.HandlerService;
 import services.parsers.LoginJsonParser;
 
-import javax.inject.Inject;
-
-public class SecurityController extends Controller {
+public class HandlerSecurityController extends Controller {
 
   public static final String AUTH_TOKEN_HEADER = "X-AUTH-TOKEN";
   public static final String AUTH_TOKEN = "authToken";
@@ -23,7 +25,7 @@ public class SecurityController extends Controller {
   private final HandlerService handlerService;
 
   @Inject
-  public SecurityController(HandlerService handlerService) {
+  public HandlerSecurityController(HandlerService handlerService) {
     this.handlerService = handlerService;
   }
 
@@ -72,7 +74,7 @@ public class SecurityController extends Controller {
     return ok(authTokenJson);
   }
 
-  @Security.Authenticated(Secured.class)
+  @Security.Authenticated(HandlerSecured.class)
   public Result logout() {
     response().discardCookie(AUTH_TOKEN);
 
