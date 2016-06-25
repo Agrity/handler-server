@@ -38,11 +38,11 @@ public abstract class MessageServiceConstants {
     }
 
     public static String getSubjectLineExpired(Long id) {
-      return "Offer " + Long.toString(id) + "Expired";
+      return "Offer " + Long.toString(id) + " Expired";
     }
 
     public static String getSubjectLineUpdated(Long id) {
-      return "Offer " + Long.toString(id) + "Expired";
+      return "Offer " + Long.toString(id) + " Updated";
     }
   }
 }
