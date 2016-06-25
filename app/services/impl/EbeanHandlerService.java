@@ -6,6 +6,7 @@ import java.util.List;
 
 import models.Grower;
 import models.Handler;
+import models.Offer;
 
 import services.HandlerService;
 
@@ -69,5 +70,10 @@ public class EbeanHandlerService implements HandlerService {
   @Override
   public boolean checkHandlerOwnsGrower(Handler handler, Grower grower) {
     return handler.equals(grower.getHandler());
+  }
+
+  @Override
+  public boolean checkHandlerOwnsOffer(Handler handler, Offer offer) {
+    return handler.equals(offer.getHandler());
   }
 }

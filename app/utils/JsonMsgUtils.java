@@ -2,11 +2,11 @@ package utils;
 
 import models.Grower;
 import models.Handler;
+import models.Offer;
 
 import play.libs.Json;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.JsonNode;
 
 public class JsonMsgUtils {
   /* ==================== Json converters for Error Messages =======================*/
@@ -24,6 +24,11 @@ public class JsonMsgUtils {
 
   public static ObjectNode handlerDoesNotOwnGrowerMessage(Handler handler, Grower grower) {
     return errorToJson("Handler " + handler.getCompanyName() + " does not own Grower " + grower.getFullName()
+        + ".\n");
+  }
+
+  public static ObjectNode handlerDoesNotOwnOfferMessage(Handler handler, Offer offer) {
+    return errorToJson("Handler " + handler.getCompanyName() + " does not own Offer " + offer.getId()
         + ".\n");
   }
 

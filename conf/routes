@@ -12,7 +12,7 @@ GET     /assets/*file                         controllers.Assets.versioned(path=
 # ============================= API Responses =================================================== #
 
 
-# ========== Handler ========== #
+# ========== Admin Handler ========== #
 
 
 GET     /admin/handlers                                 controllers.AdminHandlerController.getAllHandlers()
@@ -28,7 +28,7 @@ GET     /admin/handlers/:id/growers/:growerId           controllers.AdminHandler
 GET     /admin/handlers/:id/offers                      controllers.AdminOfferController.getAllHandlerOffers(id: Long)
 
 
-# ========== Grower ========== #
+# ========== Admin Grower ========== #
 
 
 GET     /admin/growers                                  controllers.AdminGrowerController.getAllGrowers()
@@ -40,7 +40,7 @@ GET     /admin/growers/:id                              controllers.AdminGrowerC
 GET     /admin/growers/:id/offers                       controllers.AdminOfferController.getAllGrowerOffers(id: Long)
 
 
-# ========== Offer ========== #
+# ========== Admin Offer ========== #
 
 
 GET     /admin/offers                                   controllers.AdminOfferController.getAllOffers()
@@ -66,3 +66,22 @@ GET     /admin/offers/:offerId/requestcall/:growerId    controllers.AdminOfferCo
 POST    /handler/login                                    controllers.security.HandlerSecurityController.login()
 
 POST    /handler/logout                                   controllers.security.HandlerSecurityController.logout()
+
+
+# ========== Handler User ========== #
+
+
+GET     /handler                                 controllers.HandlerController.getHandler()
+
+GET     /handler/growers                         controllers.HandlerController.getAllGrowers()
+
+POST    /handler/growers                         controllers.HandlerController.createGrower()
+
+GET     /handler/growers/:growerId               controllers.HandlerController.getGrower(growerId: Long)
+
+GET     /handler/offers                          controllers.HandlerController.getAllOffers()
+
+POST    /handler/offers                          controllers.HandlerController.createOffer()
+
+GET     /handler/offers/:offerId                 controllers.HandlerController.getOffer(offerId : Long)
+

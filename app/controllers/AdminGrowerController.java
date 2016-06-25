@@ -7,7 +7,6 @@ import com.google.inject.Inject;
 
 import models.Grower;
 
-import play.Logger;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;

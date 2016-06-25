@@ -6,6 +6,7 @@ import java.util.List;
 
 import models.Grower;
 import models.Handler;
+import models.Offer;
 
 import services.impl.EbeanHandlerService;
 
@@ -27,4 +28,6 @@ public interface HandlerService {
   public boolean checkEmailAddressAvailable(String emailAddress);
 
   public boolean checkHandlerOwnsGrower(Handler handler, Grower grower);
+
+  public boolean checkHandlerOwnsOffer(Handler handler, Offer offer);
 }
