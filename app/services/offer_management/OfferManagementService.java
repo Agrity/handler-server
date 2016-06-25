@@ -21,6 +21,7 @@ public interface OfferManagementService {
 	
 	public Boolean accept(long pounds, long growerId);
 	public Boolean reject(long growerId);
-  public Long getPoundsRemaining();
+//  private String formatUpdateMessage();
+
 	
 }

@@ -22,6 +22,8 @@ public class WaterfallService implements OfferManagementService {
   private long poundsRemaining;
   private List<Grower> growersInLine;
 
+  OfferSendGridMessageService emailService = new OfferSendGridMessageService();
+
   public WaterfallService(Offer offer, Duration delay) {
     this.offer = offer;
     this.delay = delay;
@@ -116,10 +118,6 @@ public class WaterfallService implements OfferManagementService {
       poundsRemaining -= pounds;
       return true;
     }
-  }
-
-  public Long getPoundsRemaining() {
-    return poundsRemaining;
   }
 
   // NOTE: Used only for testing

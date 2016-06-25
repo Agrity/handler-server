@@ -16,9 +16,9 @@ public interface OfferMessageService {
 
   public boolean sendClosed(Offer offer, Grower grower);
 
-  public boolean sendUpdated(Offer offer);
+  public boolean sendUpdated(Offer offer, String msg);
 
-  public boolean sendUpdated(Offer offer, Grower grower);
+  public boolean sendUpdated(Offer offer, Grower grower, String msg);
 
 
 }

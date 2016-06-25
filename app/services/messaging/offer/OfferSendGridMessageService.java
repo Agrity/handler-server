@@ -20,6 +20,7 @@ import models.Offer;
 import play.Logger;
 
 import services.messaging.MessageServiceConstants;
+import services.offer_management.OfferManagementService;
 
 public class OfferSendGridMessageService implements OfferMessageService {
 
@@ -99,28 +100,23 @@ public class OfferSendGridMessageService implements OfferMessageService {
     return success; 
   }
 
-  public boolean sendUpdated(Offer offer) {
+  public boolean sendUpdated(Offer offer, String msg) {
     boolean success = true;
 
     for (Grower grower : offer.getAllGrowers()) {
-      if(!sendUpdated(offer, grower)) success = false;
+      if(!sendUpdated(offer, grower, msg)) success = false;
     }
 
     return success; 
   }
 
-  public boolean sendUpdated(Offer offer, Grower grower) {
+  public boolean sendUpdated(Offer offer, Grower grower, String msg) {
     boolean success = true;
     List<String> growerEmailAddresses = grower.getEmailAddressStrings();
     for (String emailAddr : growerEmailAddresses) {
       Email toEmail = new Email(emailAddr);
 
-      Content content
-      = new Content(
-        "text/plain",
-        "Your offer number " + Long.toString(offer.getId()) + " has been updated. \n"
-        + "\t Offer number " + Long.toString(offer.getId()) + "now contains the following specs: \n"
-        + "\t\t ");
+      Content content = new Content("text/plain", msg);
 
       Mail mail
       = new Mail(
