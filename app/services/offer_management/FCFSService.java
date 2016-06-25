@@ -5,6 +5,7 @@ import java.time.Duration;
 import models.Offer;
 import models.OfferResponse;
 import models.OfferResponse.ResponseStatus;
+import models.Grower;
 import akka.actor.Cancellable;
 import scala.concurrent.duration.FiniteDuration;
 import java.util.concurrent.TimeUnit;
@@ -76,7 +77,7 @@ public class FCFSService implements OfferManagementService {
   }
 
   private void sendClosedToRemaining() {
-    for (Grower g : offer.getGrowersWithNoResponse()) {
+    for (Grower g : offer.getNoResponseGrowers()) {
       emailService.sendClosed(offer, g);
     }
     for (Grower g : offer.getCallRequestedGrowers()) {
@@ -85,7 +86,7 @@ public class FCFSService implements OfferManagementService {
   }
 
   private void sendUpdatedToRemaining() {
-    for (Grower g : offer.getGrowersWithNoResponse()) {
+    for (Grower g : offer.getNoResponseGrowers()) {
       emailService.sendUpdated(offer, g, formatUpdateMessage());
     }
     for (Grower g : offer.getCallRequestedGrowers()) {
