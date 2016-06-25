@@ -27,16 +27,16 @@ public class JsonMsgUtils {
         + ".\n");
   }
 
-  public static ObjectNode offerNotAccepted() {
-    return errorToJson("Internal Error: Offer could not be accepted.\n");
+  public static ObjectNode offerNotAccepted(String invalidResponseMessage) {
+    return errorToJson("" + invalidResponseMessage + " \n");
   }
 
-  public static ObjectNode offerNotRejected() {
-    return errorToJson("Internal Error: Offer could not be rejected.\n");
+  public static ObjectNode offerNotRejected(String invalidResponseMessage) {
+    return errorToJson("" + invalidResponseMessage + " \n");
   }
 
-  public static ObjectNode callNotRequested() {
-    return errorToJson("Internal Error: Call could not be requested.\n");
+  public static ObjectNode callNotRequested(String invalidResponseMessage) {
+    return errorToJson("" + invalidResponseMessage + " \n");
   }
 
   public static ObjectNode emailsNotSent() {
