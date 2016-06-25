@@ -198,11 +198,16 @@ public class GrowerJsonParser extends BaseParser {
    */
   private List<String> parsePhoneNumbers(JsonNode data) {
     // Phone numbers not present in json node. Returning empty list.
+
+    Logger.info("========== 1st log ===============\n\n");
     if (!data.has(GrowerJsonConstants.PHONE_NUMBERS)) {
       return new ArrayList<>();
     }
 
     JsonNode phoneNums = data.get(GrowerJsonConstants.PHONE_NUMBERS);
+
+    Logger.info("========== 2nd log ===============\n\n");
+
 
     // Phone numbers should be formatted as an array of strings.
     if (!phoneNums.isArray()) {
@@ -210,6 +215,7 @@ public class GrowerJsonParser extends BaseParser {
       return null;
     }
 
+    Logger.info("========== 3rd log ===============\n\n");
 
     List<String> processedPhoneNumbers = new ArrayList<>();
 
@@ -221,6 +227,9 @@ public class GrowerJsonParser extends BaseParser {
         setInvalid("Invalid Email Address: [" + node + "] is not a valid email address.");
         return null;
       }
+
+      Logger.info("========== 4th log ===============\n\n");
+
 
       processedPhoneNumbers.add(phoneNum);
     }
