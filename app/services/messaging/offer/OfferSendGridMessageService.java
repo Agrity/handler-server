@@ -87,7 +87,7 @@ public class OfferSendGridMessageService implements OfferMessageService {
       = new Content(
         "text/plain",
         "Your offer <" + offer.getAlmondVariety() + " for " 
-        + offer.getPricePerPound() + "per pound> has expired.");
+        + offer.getPricePerPound() + "/lb.> has expired.");
 
       Mail mail
       = new Mail(
