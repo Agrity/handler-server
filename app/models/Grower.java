@@ -46,7 +46,7 @@ public class Grower extends BaseModel implements PrettyString {
   /**
    * TODO: Change to phone number format, construct own model so that can be consistant.
    */
-  //@Constraints.Required
+  @Constraints.Required
   public List<String> phoneNumbers;
 
 
