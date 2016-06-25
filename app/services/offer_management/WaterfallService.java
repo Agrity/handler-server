@@ -118,6 +118,10 @@ public class WaterfallService implements OfferManagementService {
     }
   }
 
+  public Long getPoundsRemaining() {
+    return poundsRemaining;
+  }
+
   // NOTE: Used only for testing
   public List<Grower> getGrowersInLine() {
     return growersInLine;

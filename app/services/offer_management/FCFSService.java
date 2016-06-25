@@ -69,4 +69,8 @@ public class FCFSService implements OfferManagementService {
       return true;
     }
   }
+
+  public Long getPoundsRemaining() {
+    return poundsRemaining;
+  }
 }

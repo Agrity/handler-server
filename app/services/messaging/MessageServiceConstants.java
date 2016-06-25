@@ -33,8 +33,16 @@ public abstract class MessageServiceConstants {
       return name + " <" + emailAddress + ">";
     }
 
-    public static String getSubjectLine() {
+    public static String getSubjectLineNewOffer() {
       return "[Action Required] New Almond Transaction Offer";
+    }
+
+    public static String getSubjectLineExpired(Long id) {
+      return "Offer " + Long.toString(id) + "Expired";
+    }
+
+    public static String getSubjectLineUpdated(Long id) {
+      return "Offer " + Long.toString(id) + "Expired";
     }
   }
 }
