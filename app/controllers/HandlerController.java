@@ -241,7 +241,21 @@ public class HandlerController extends Controller {
   }
   
   public Result sendOffer(long id) {
+    Handler handler = HandlerSecurityController.getHandler();
+
+    if (handler == null) {
+      return handlerNotFound();
+    }
+    
     Offer offer = offerService.getById(id);
+    if (offer == null) {
+      return notFound(JsonMsgUtils.offerNotFoundMessage(id));
+    }
+
+    if (!handlerService.checkHandlerOwnsOffer(handler, offer)) {
+      return badRequest(JsonMsgUtils.handlerDoesNotOwnOfferMessage(handler, offer));
+    }
+    
     boolean emailSuccess = offerMessageService.send(offer);
 
     return emailSuccess
