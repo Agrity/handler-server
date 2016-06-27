@@ -27,7 +27,6 @@ import utils.JsonMsgUtils;
 
 import services.offer_management.WaterfallService;
 
-@Security.Authenticated(AdminSecured.class)
 public class AdminOfferController extends Controller {
 
   private final OfferService offerService;
@@ -43,13 +42,7 @@ public class AdminOfferController extends Controller {
     this.jsonMapper = new ObjectMapper();
   }
 
-  public Result indexOffer(long id) {
-    //Content html =
-    //    views.html.emailOfferBody.render(OfferService.getOffer(id), GrowerService.getGrower(1L));
-    //return ok(html);
-    return null;
-  }
-
+  // TODO Not Secured. Implement non-admin means of responding to offer.
   public Result acceptOffer(long offerId, long growerId, long amount) {
     Offer offer = offerService.getById(offerId);
     if (offer == null) {
@@ -63,6 +56,7 @@ public class AdminOfferController extends Controller {
         : internalServerError(JsonMsgUtils.offerNotAccepted(success.getInvalidResponseMessage()));
   }
 
+  // TODO Not Secured. Implement non-admin means of responding to offer.
   public Result rejectOffer(long offerId, long growerId) {
     Offer offer = offerService.getById(offerId);
     if (offer == null) {
@@ -75,6 +69,7 @@ public class AdminOfferController extends Controller {
         : internalServerError(JsonMsgUtils.offerNotRejected(success.getInvalidResponseMessage()));
   }
 
+  // TODO Not Secured. Implement non-admin means of responding to offer.
   public Result requestCall(long offerId, long growerId) {
     Offer offer = offerService.getById(offerId);
     if (offer == null) {
@@ -88,6 +83,7 @@ public class AdminOfferController extends Controller {
   }
 
 
+  @Security.Authenticated(AdminSecured.class)
   public Result sendOffer(long id) {
     Offer offer = offerService.getById(id);
     boolean emailSuccess = offerMessageService.send(offer);
@@ -99,6 +95,7 @@ public class AdminOfferController extends Controller {
 
   // Annotation ensures that POST request is of type application/json. If not HTTP 400 response
   // returned.
+  @Security.Authenticated(AdminSecured.class)
   @BodyParser.Of(BodyParser.Json.class)
   public Result createOffer() {
     JsonNode data = request().body().asJson();
@@ -135,6 +132,7 @@ public class AdminOfferController extends Controller {
     }
   }
 
+  @Security.Authenticated(AdminSecured.class)
   public Result getAllOffers() {
     try {
       return ok(jsonMapper.writeValueAsString(offerService.getAll()));
@@ -143,6 +141,7 @@ public class AdminOfferController extends Controller {
     } 
   }
 
+  @Security.Authenticated(AdminSecured.class)
   public Result getOffer(long id) {
     Offer offer = offerService.getById(id);
 
@@ -157,6 +156,7 @@ public class AdminOfferController extends Controller {
     }
   }
 
+  @Security.Authenticated(AdminSecured.class)
   public Result getAllHandlerOffers(long handlerId) {
     List<Offer> handlerOffers = offerService.getByHandler(handlerId);
 
@@ -172,6 +172,7 @@ public class AdminOfferController extends Controller {
     }
   }
 
+  @Security.Authenticated(AdminSecured.class)
   public Result getAllGrowerOffers(long growerId) {
     List<Offer> growerOffers = offerService.getByGrower(growerId);
 
@@ -185,6 +186,5 @@ public class AdminOfferController extends Controller {
     } catch (JsonProcessingException e) {
       return internalServerError(JsonMsgUtils.caughtException(e.toString()));
     }
-
   }
 }
