@@ -11,6 +11,7 @@ import scala.concurrent.duration.FiniteDuration;
 import java.util.concurrent.TimeUnit;
 
 import services.messaging.offer.OfferSendGridMessageService;
+import services.messaging.offer.OfferSMSMessageService;
 
 import play.libs.Akka;
 
@@ -22,12 +23,14 @@ public class FCFSService implements OfferManagementService {
   private Cancellable cancellable;
   private long poundsRemaining;
   OfferSendGridMessageService emailService = new OfferSendGridMessageService();
+  OfferSMSMessageService smsService = new OfferSMSMessageService();
 
   public FCFSService(Offer offer, Duration timeAllowed) {
     this.offer = offer;
     this.poundsRemaining = offer.getAlmondPounds();
 
     emailService.send(offer);
+    smsService.send(offer);
 
     OfferManagementService.offerToManageService.put(offer, this);
 
@@ -37,6 +40,7 @@ public class FCFSService implements OfferManagementService {
           public void run() {
             offer.closeOffer();
             emailService.sendClosed(offer);
+            smsService.sendClosed(offer);
           }
         }, Akka.system().dispatcher());
   }
@@ -77,18 +81,22 @@ public class FCFSService implements OfferManagementService {
   private void sendClosedToRemaining() {
     for (Grower g : offer.getNoResponseGrowers()) {
       emailService.sendClosed(offer, g);
+      smsService.sendClosed(offer, g);
     }
     for (Grower g : offer.getCallRequestedGrowers()) {
       emailService.sendClosed(offer, g);
+      smsService.sendClosed(offer, g);
     }
   }
 
   private void sendUpdatedToRemaining() {
     for (Grower g : offer.getNoResponseGrowers()) {
       emailService.sendUpdated(offer, g, formatUpdateMessage());
+      smsService.sendUpdated(offer, g, formatUpdateMessage());
     }
     for (Grower g : offer.getCallRequestedGrowers()) {
       emailService.sendUpdated(offer, g, formatUpdateMessage());
+      smsService.sendUpdated(offer, g, formatUpdateMessage());
     }
   }
 
