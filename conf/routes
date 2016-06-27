@@ -83,3 +83,5 @@ POST    /handler/offers                          controllers.HandlerController.c
 
 GET     /handler/offers/:offerId                 controllers.HandlerController.getOffer(offerId : Long)
 
+GET     /handler/offers/:id/send                 controllers.HandlerController.sendOffer(id: Long)
+
