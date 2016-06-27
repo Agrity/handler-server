@@ -1,10 +1,15 @@
 package models;
 
 import static org.hamcrest.CoreMatchers.anyOf;
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import com.avaje.ebean.Ebean;
+import com.google.common.collect.ImmutableList;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -14,13 +19,7 @@ import java.time.Month;
 import java.util.List;
 
 import models.Almond.AlmondVariety;
-
 import test_helpers.EbeanTest;
-
-import static org.mockito.Mockito.*;
-
-import com.avaje.ebean.Ebean;
-import com.google.common.collect.ImmutableList;
 
 
 /**
@@ -30,7 +29,9 @@ import com.google.common.collect.ImmutableList;
 */
 public class OfferTest extends EbeanTest {
 
-  private static final Handler UNUSED_HANDLER = new Handler("Test Company");
+  private static final String UNUSED_EMAIL_ADDRESS = "unused@domain.com";
+  private static final String UNUSED_PASSWORD = "dummy_password"; 
+  private static final Handler UNUSED_HANDLER = new Handler("Test Company", UNUSED_EMAIL_ADDRESS, UNUSED_PASSWORD);
   private static final List<Grower> UNUSED_GROWERS = new ImmutableList.Builder<Grower>()
       .add(new Grower(UNUSED_HANDLER, "F1", "L1"))
       .add(new Grower(UNUSED_HANDLER, "F2", "L2"))
