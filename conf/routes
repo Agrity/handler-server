@@ -83,3 +83,12 @@ POST    /handler/offers                          controllers.HandlerController.c
 
 GET     /handler/offers/:offerId                 controllers.HandlerController.getOffer(offerId : Long)
 
+
+# ========== **TEMP** Response to Offer ========== #
+
+
+GET     /offers/:offerId/accept/:growerId/:amount controllers.AdminOfferController.acceptOffer(offerId: Long, growerId: Long, amount: Long)
+
+GET     /offers/:offerId/reject/:growerId         controllers.AdminOfferController.rejectOffer(offerId: Long, growerId: Long)
+
+GET     /offers/:offerId/requestcall/:growerId    controllers.AdminOfferController.requestCall(offerId: Long, growerId: Long)
