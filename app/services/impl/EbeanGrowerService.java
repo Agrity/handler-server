@@ -45,8 +45,8 @@ public class EbeanGrowerService implements GrowerService {
     List<Grower> growers = FINDER.all();//getAll(); /* fix how we call getAll here! */
     for (Grower grower: growers) {
       for (String curPhoneNum: grower.getPhoneNumbers()) {
-        Logger.info("This is the curPhoneNum being looked up: " + curPhoneNum + "\n\n");
-        if (curPhoneNum == phoneNum) {
+        Logger.info("These are the curPhoneNums being looked up: " + curPhoneNum + "   " + phoneNum + "\n\n");
+        if (curPhoneNum.equals(phoneNum)) {
           return grower;
         }
       }
