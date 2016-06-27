@@ -26,7 +26,10 @@ create table handler (
   id                            bigint auto_increment not null,
   created_at                    timestamp,
   updated_at                    timestamp,
-  company_name                  varchar(255),
+  company_name                  varchar(255) not null,
+  email_address                 varchar(255) not null,
+  sha_password                  varbinary(64) not null,
+  auth_token                    varchar(255),
   constraint pk_handler primary key (id)
 );
 

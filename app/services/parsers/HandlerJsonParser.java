@@ -9,18 +9,36 @@ import models.Handler;
  *
  * Expected Json Structure:
  *  {
- *    COMPANY_NAME: ...
+ *    COMPANY_NAME: ...,
+ *
+ *    EMAIL_ADDRESS: ...,
+ *
+ *    PASSWORD: ...
  *  }
  */
 public class HandlerJsonParser extends BaseParser {
   // Parsed variables
-  private final String companyName;
+  private String companyName;
+  private String emailAddress;
+  private String password;
 
   public HandlerJsonParser(JsonNode data) {
     super();
 
     companyName = parseCompanyName(data);
     if (companyName == null) {
+      // Parser set to invalid with proper error message.
+      return;
+    }
+
+    emailAddress = parseEmailAddress(data);
+    if (emailAddress == null) {
+      // Parser set to invalid with proper error message.
+      return;
+    }
+
+    password = parsePassword(data);
+    if (password == null) {
       // Parser set to invalid with proper error message.
       return;
     }
@@ -33,7 +51,10 @@ public class HandlerJsonParser extends BaseParser {
     if (!isValid()) {
       throw new RuntimeException("Attempted to create Handler from invalid parser.\n");
     }
-    return new Handler(getCompanyName());
+    return new Handler(
+        getCompanyName(),
+        getEmailAddress(),
+        getPassword());
   }
 
   // WARNING: Should only be called after isValid() has been checked to be true
@@ -41,6 +62,20 @@ public class HandlerJsonParser extends BaseParser {
     ensureValid();
 
     return companyName;
+  }
+
+  // WARNING: Should only be called after isValid() has been checked to be true
+  public String getEmailAddress() {
+    ensureValid();
+
+    return emailAddress;
+  }
+
+  // WARNING: Should only be called after isValid() has been checked to be true
+  public String getPassword() {
+    ensureValid();
+
+    return password;
   }
 
   /* 
@@ -61,7 +96,7 @@ public class HandlerJsonParser extends BaseParser {
     String companyName = data.findValue(HandlerJsonConstants.COMPANY_NAME).asText();
 
     // Check if company name is already in use.
-    if (!checkHandlerCompanyNameAvailable(companyName)) {
+    if (!handlerService.checkCompanyNameAvailable(companyName)) {
       setInvalid("Handler name [" + companyName + "] is already in use.\n");
       return null;
     }
@@ -69,11 +104,43 @@ public class HandlerJsonParser extends BaseParser {
     return companyName;
   }
 
-  private boolean checkHandlerCompanyNameAvailable(String companyName) {
-    return handlerService.getByCompanyName(companyName) == null;
+  /* WARNING: Parser set to invalid if error is encountered.  */
+  private String parseEmailAddress(JsonNode data) {
+
+    // Check email address is present.
+    if (!data.has(HandlerJsonConstants.EMAIL_ADDRESS)) {
+      setInvalid(missingParameterError(HandlerJsonConstants.EMAIL_ADDRESS));
+      return null;
+
+    } 
+    
+    String emailAddress = data.findValue(HandlerJsonConstants.EMAIL_ADDRESS).asText();
+
+    // Check if email is already in use.
+    if (!handlerService.checkEmailAddressAvailable(emailAddress)) {
+      setInvalid("Email address [" + emailAddress + "] is already in use.\n");
+      return null;
+    }
+
+    return emailAddress;
+  }
+
+  /* WARNING: Parser set to invalid if error is encountered.  */
+  private String parsePassword(JsonNode data) {
+
+    // Check password is present.
+    if (!data.has(HandlerJsonConstants.PASSWORD)) {
+      setInvalid(missingParameterError(HandlerJsonConstants.PASSWORD));
+      return null;
+
+    } 
+    
+    return data.findValue(HandlerJsonConstants.PASSWORD).asText();
   }
 
   private static class HandlerJsonConstants {
     private static final String COMPANY_NAME = "company_name";
+    private static final String EMAIL_ADDRESS = "email_address";
+    private static final String PASSWORD = "password";
   }
 }

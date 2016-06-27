@@ -6,6 +6,7 @@ import java.util.List;
 
 import models.Grower;
 import models.Handler;
+import models.Offer;
 
 import services.impl.EbeanHandlerService;
 
@@ -18,5 +19,15 @@ public interface HandlerService {
 
   public Handler getByCompanyName(String companyName);
 
+  public Handler getByEmailAddressAndPassword(String emailAddress, String password);
+
+  public Handler getByAuthToken(String authToken);
+
+  public boolean checkCompanyNameAvailable(String companyName);
+
+  public boolean checkEmailAddressAvailable(String emailAddress);
+
   public boolean checkHandlerOwnsGrower(Handler handler, Grower grower);
+
+  public boolean checkHandlerOwnsOffer(Handler handler, Offer offer);
 }

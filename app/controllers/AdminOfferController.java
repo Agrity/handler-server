@@ -5,26 +5,29 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 
-import java.time.Duration;
 import java.util.List;
-import java.lang.reflect.Constructor;
+
+import controllers.security.AdminSecured;
 
 import models.Offer;
 
-import play.Logger;
+import models.OfferResponseResult;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.Security;
 
 import services.OfferService;
 import services.messaging.offer.OfferMessageService;
 import services.offer_management.FCFSService;
 import services.parsers.OfferJsonParser;
 import services.parsers.OfferJsonParser.ManagementTypeInfo;
-import services.offer_management.WaterfallService;
-import services.offer_management.FCFSService;
 
-public class OfferController extends Controller {
+import utils.JsonMsgUtils;
+
+import services.offer_management.WaterfallService;
+
+public class AdminOfferController extends Controller {
 
   private final OfferService offerService;
   private final OfferMessageService offerMessageService;
@@ -32,20 +35,14 @@ public class OfferController extends Controller {
   private final ObjectMapper jsonMapper;
 
   @Inject
-  public OfferController(OfferService offerService, OfferMessageService offerMessageService) {
+  public AdminOfferController(OfferService offerService, OfferMessageService offerMessageService) {
     this.offerService = offerService;
     this.offerMessageService = offerMessageService;
 
     this.jsonMapper = new ObjectMapper();
   }
 
-  public Result indexOffer(long id) {
-    //Content html =
-    //    views.html.emailOfferBody.render(OfferService.getOffer(id), GrowerService.getGrower(1L));
-    //return ok(html);
-    return null;
-  }
-
+  // TODO Not Secured. Implement non-admin means of responding to offer.
   public Result acceptOffer(long offerId, long growerId, long amount) {
     Offer offer = offerService.getById(offerId);
     if (offer == null) {
@@ -53,37 +50,40 @@ public class OfferController extends Controller {
     }
 
     // TODO Change to actual pounds accepted once implemented.
-    boolean success = offer.growerAcceptOffer(growerId, amount);
-
-    return success ? ok(JsonMsgUtils.successfullAccept())
-        : internalServerError(JsonMsgUtils.offerNotAccepted());
+    OfferResponseResult success = offer.growerAcceptOffer(growerId, amount);
+    
+    return success.isValid() ? ok(JsonMsgUtils.successfullAccept())
+        : internalServerError(JsonMsgUtils.offerNotAccepted(success.getInvalidResponseMessage()));
   }
 
+  // TODO Not Secured. Implement non-admin means of responding to offer.
   public Result rejectOffer(long offerId, long growerId) {
     Offer offer = offerService.getById(offerId);
     if (offer == null) {
       return notFound(JsonMsgUtils.offerNotFoundMessage(offerId));
     }
 
-    boolean success = offer.growerRejectOffer(growerId);
+    OfferResponseResult success = offer.growerRejectOffer(growerId);
 
-    return success ? ok(JsonMsgUtils.successfullReject())
-        : internalServerError(JsonMsgUtils.offerNotRejected());
+    return success.isValid() ? ok(JsonMsgUtils.successfullReject())
+        : internalServerError(JsonMsgUtils.offerNotRejected(success.getInvalidResponseMessage()));
   }
 
+  // TODO Not Secured. Implement non-admin means of responding to offer.
   public Result requestCall(long offerId, long growerId) {
     Offer offer = offerService.getById(offerId);
     if (offer == null) {
       return notFound(JsonMsgUtils.offerNotFoundMessage(growerId));
     }
 
-    boolean success = offer.growerRequestCall(growerId);
+    OfferResponseResult success = offer.growerRequestCall(growerId);
 
-    return success ? ok(JsonMsgUtils.successfullCallRequest())
-        : internalServerError(JsonMsgUtils.callNotRequested());
+    return success.isValid() ? ok(JsonMsgUtils.successfullCallRequest())
+        : internalServerError(JsonMsgUtils.callNotRequested(success.getInvalidResponseMessage()));
   }
 
 
+  @Security.Authenticated(AdminSecured.class)
   public Result sendOffer(long id) {
     Offer offer = offerService.getById(id);
     boolean emailSuccess = offerMessageService.send(offer);
@@ -95,6 +95,7 @@ public class OfferController extends Controller {
 
   // Annotation ensures that POST request is of type application/json. If not HTTP 400 response
   // returned.
+  @Security.Authenticated(AdminSecured.class)
   @BodyParser.Of(BodyParser.Json.class)
   public Result createOffer() {
     JsonNode data = request().body().asJson();
@@ -131,6 +132,7 @@ public class OfferController extends Controller {
     }
   }
 
+  @Security.Authenticated(AdminSecured.class)
   public Result getAllOffers() {
     try {
       return ok(jsonMapper.writeValueAsString(offerService.getAll()));
@@ -139,6 +141,7 @@ public class OfferController extends Controller {
     } 
   }
 
+  @Security.Authenticated(AdminSecured.class)
   public Result getOffer(long id) {
     Offer offer = offerService.getById(id);
 
@@ -153,6 +156,7 @@ public class OfferController extends Controller {
     }
   }
 
+  @Security.Authenticated(AdminSecured.class)
   public Result getAllHandlerOffers(long handlerId) {
     List<Offer> handlerOffers = offerService.getByHandler(handlerId);
 
@@ -168,6 +172,7 @@ public class OfferController extends Controller {
     }
   }
 
+  @Security.Authenticated(AdminSecured.class)
   public Result getAllGrowerOffers(long growerId) {
     List<Offer> growerOffers = offerService.getByGrower(growerId);
 
@@ -181,6 +186,5 @@ public class OfferController extends Controller {
     } catch (JsonProcessingException e) {
       return internalServerError(JsonMsgUtils.caughtException(e.toString()));
     }
-
   }
 }

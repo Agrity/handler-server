@@ -22,7 +22,7 @@ import javax.persistence.OneToMany;
 import models.Almond.AlmondVariety;
 import models.OfferResponse.ResponseStatus;
 import models.interfaces.PrettyString;
-
+import play.Logger;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
 
@@ -39,12 +39,12 @@ public class Offer extends BaseModel implements PrettyString {
   private Handler handler;
 
   @OneToMany(cascade = CascadeType.ALL)
-    @Constraints.Required
-    private Set<OfferResponse> offerResponses = new HashSet<>();
+  @Constraints.Required
+  private Set<OfferResponse> offerResponses = new HashSet<>();
 
   @ManyToMany(cascade = CascadeType.ALL)
-    @Constraints.Required
-    private List<Grower> growers = new ArrayList<>();
+  @Constraints.Required
+  private List<Grower> growers = new ArrayList<>();
 
   // TODO Figure out Why this can't use reflection
   //@Constraints.Required
@@ -63,10 +63,10 @@ public class Offer extends BaseModel implements PrettyString {
 
   // TODO Change to Java 8 Date and Time
   @Formats.DateTime(pattern = "dd/MM/yyyy")
-    private LocalDate paymentDate;
+  private LocalDate paymentDate;
 
   @Column(columnDefinition = "TEXT")
-    private String comment = "";
+  private String comment = "";
 
   private boolean offerCurrentlyOpen = true;
 
@@ -198,23 +198,22 @@ public class Offer extends BaseModel implements PrettyString {
   }
 
 
-  public boolean growerAcceptOffer(Long growerId, long pounds) {
+  public OfferResponseResult growerAcceptOffer(Long growerId, long pounds) {
     if (!offerCurrentlyOpen) {
-      // TODO Handle Late Acceptance Error
-      return false;
+      return OfferResponseResult.getInvalidResult("Cannot accept offer because the offer has already closed.");
     }
       
     OfferResponse growerResponse = getGrowerOfferResponse(growerId);
 
     if (growerResponse == null) {
-      return false;
+      Logger.error("growerResponse returned null for growerId: " + growerId + " and offerID: " + getId());
+      return OfferResponseResult.getInvalidResult("Cannot accept offer."); // TODO: What to tell grower when this inexplicable error happens.
     }
     
     growerResponse.refresh();
     if (growerResponse.getResponseStatus() != ResponseStatus.NO_RESPONSE
         && growerResponse.getResponseStatus() != ResponseStatus.REQUEST_CALL) {
-      return false;
-      // TODO: Add Error. Grower already responded.
+      return OfferResponseResult.getInvalidResult("Cannot accept offer because grower has already responded to offer.");
     }  
       
     
@@ -222,33 +221,35 @@ public class Offer extends BaseModel implements PrettyString {
         = OfferManagementService.getOfferManagementService(this);
 
     if (managementService != null) {
-      if (!managementService.accept(pounds, growerId)) {
-      	return false;
+      OfferResponseResult offerResponseResult = managementService.accept(pounds, growerId);
+      if (!offerResponseResult.isValid()) {
+        return offerResponseResult;
       }
-    } else {
-      // TODO Possibly Log Error?
+    } 
+    else {
+      // TODO: Determine whether to log error. 
+      // Logger.error("managementService returned null for offerID: " + getId());
     }
 
     return setGrowerResponseForOffer(growerId, ResponseStatus.ACCEPTED);
   }
 
-  public boolean growerRejectOffer(Long growerId) {
+  public OfferResponseResult growerRejectOffer(Long growerId) {
     if (!offerCurrentlyOpen) {
-      // TODO Handle Late Acceptance Error
-      return false;
-    }  
+      return OfferResponseResult.getInvalidResult("There is no need to reject the offer because the offer has closed.");
+    } 
     
     OfferResponse growerResponse = getGrowerOfferResponse(growerId);
 
     if (growerResponse == null) {
-      return false;
+      Logger.error("growerResponse returned null for growerId: " + growerId + " and offerID: " + getId());
+      return OfferResponseResult.getInvalidResult("Cannot reject the offer."); // TODO: What to tell grower when this inexplicable error happens.
     }
     
     growerResponse.refresh();
     if (growerResponse.getResponseStatus() != ResponseStatus.NO_RESPONSE
         && growerResponse.getResponseStatus() != ResponseStatus.REQUEST_CALL) {
-      return false;
-      // TODO: Add Error. Grower already responded.
+      return OfferResponseResult.getInvalidResult("Cannot accept offer because grower has already responded to offer.");
     }
     
 
@@ -256,37 +257,39 @@ public class Offer extends BaseModel implements PrettyString {
         = OfferManagementService.getOfferManagementService(this);
 
     if (managementService != null) {
-      if (!managementService.reject(growerId)) { 
-      return false;
+      OfferResponseResult offerResponseResult = managementService.reject(growerId);
+      if (!offerResponseResult.isValid()) {
+        return offerResponseResult;
       }
     } 
     else {
-      // TODO Possibly Log Error?
+      // TODO: Determine whether to log error. 
+      // Logger.error("managementService returned null for offerID: " + getId());
     }
 
     return setGrowerResponseForOffer(growerId, ResponseStatus.REJECTED);
   }
 
-  public boolean growerRequestCall(Long growerId) {
+  public OfferResponseResult growerRequestCall(Long growerId) {
     if (!offerCurrentlyOpen) {
-      // TODO Handle Late Acceptance Error
-      return false;
+      return OfferResponseResult.getInvalidResult("Can not request call because the offer has already closed.");
     }  
 
     return setGrowerResponseForOffer(growerId, ResponseStatus.REQUEST_CALL);
   }
 
-  private boolean setGrowerResponseForOffer(Long growerId, ResponseStatus growerResponse) {
+  private OfferResponseResult setGrowerResponseForOffer(Long growerId, ResponseStatus growerResponse) {
     OfferResponse growerOfferResponse = getGrowerOfferResponse(growerId);
     if (growerOfferResponse == null) {
-      return false;
+      Logger.error("growerResponse returned null for growerId: " + growerId + " and offerID: " + getId());
+      return OfferResponseResult.getInvalidResult("Cannot accept offer."); // TODO: What to tell grower when this inexplicable error happens.
 
     }
     
     growerOfferResponse.setResponseStatus(growerResponse);
     growerOfferResponse.save();
     
-    return true;
+    return OfferResponseResult.getValidResult(); 
   }
 
   @Override

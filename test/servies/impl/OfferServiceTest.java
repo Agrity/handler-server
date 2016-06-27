@@ -1,11 +1,12 @@
 package servies.impl;
 
 import static org.hamcrest.CoreMatchers.anyOf;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+
+import com.avaje.ebean.Ebean;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -20,16 +21,9 @@ import models.Almond.AlmondVariety;
 import models.Grower;
 import models.Handler;
 import models.Offer;
-
 import services.OfferService;
 import services.impl.EbeanOfferService;
-
 import test_helpers.EbeanTest;
-
-import static org.mockito.Mockito.*;
-
-import com.avaje.ebean.Ebean;
-import com.google.common.collect.ImmutableList;
 
 
 /**
@@ -38,9 +32,10 @@ import com.google.common.collect.ImmutableList;
 *
 */
 public class OfferServiceTest extends EbeanTest {
-
-  private static final Handler HANDLER_1 = new Handler("Test Company 1");
-  private static final Handler HANDLER_2 = new Handler("Test Company 2");
+  private static final String UNUSED_EMAIL_ADDRESS = "unused@domain.com";
+  private static final String UNUSED_PASSWORD = "dummy_password"; 
+  private static final Handler HANDLER_1 = new Handler("Test Company 1", UNUSED_EMAIL_ADDRESS, UNUSED_PASSWORD);
+  private static final Handler HANDLER_2 = new Handler("Test Company 2", UNUSED_EMAIL_ADDRESS, UNUSED_PASSWORD);
 
   private static final Grower GROWER_1 = new Grower(HANDLER_2, "F1", "L1");
   private static final Grower GROWER_2 = new Grower(HANDLER_1, "F2", "L2");
@@ -223,7 +218,7 @@ public class OfferServiceTest extends EbeanTest {
             UNUSED_DATE,
             UNUSED_COMMENT);
 
-    Handler unusedHandler = new Handler("Unused Handler");
+    Handler unusedHandler = new Handler("Unused Handler", UNUSED_EMAIL_ADDRESS, UNUSED_PASSWORD);
 
     // Should not be returned in any searches.
     Offer unusedOffer

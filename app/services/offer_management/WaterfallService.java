@@ -3,8 +3,7 @@ package services.offer_management;
 import java.util.*;
 
 import models.Offer;
-import models.OfferResponse;
-import models.OfferResponse.ResponseStatus;
+import models.OfferResponseResult;
 import models.Grower;
 import java.time.Duration;
 
@@ -12,6 +11,9 @@ import akka.actor.Cancellable;
 import scala.concurrent.duration.FiniteDuration;
 import java.util.concurrent.TimeUnit;
 
+import services.messaging.offer.OfferSendGridMessageService;
+
+import play.Logger;
 import play.libs.Akka;
 
 public class WaterfallService implements OfferManagementService {
@@ -21,6 +23,8 @@ public class WaterfallService implements OfferManagementService {
   private Cancellable cancellable;
   private long poundsRemaining;
   private List<Grower> growersInLine;
+
+  OfferSendGridMessageService emailService = new OfferSendGridMessageService();
 
   public WaterfallService(Offer offer, Duration delay) {
     this.offer = offer;
@@ -34,7 +38,7 @@ public class WaterfallService implements OfferManagementService {
   }
 
   private Cancellable scheduleTimer() {
-    // TODO Send grower 0 offer. Use poundsRemaining
+    emailService.send(offer, growersInLine.get(0));
 
     return Akka.system().scheduler().scheduleOnce(FiniteDuration.create(delay.toMillis(), TimeUnit.MILLISECONDS),
         new Runnable() {
@@ -47,37 +51,36 @@ public class WaterfallService implements OfferManagementService {
   }
 
   private void moveToNext() {
-    // TODO alert grower 0 of time expired
+    emailService.sendClosed(offer, growersInLine.get(0));
     if (growersInLine.size() != 0) {
       cancellable.cancel();
       growersInLine.remove(0);
       
       if (growersInLine.size() != 0) {
+        emailService.send(offer, growersInLine.get(0));
         cancellable = scheduleTimer();
       } else {
         offer.closeOffer();
       }    
     }
     else {
-      //TODO: Report error.
+      Logger.error("growersInLine is trying to remove a grower despite being empty in WaterfallService of offerId: " + offer.getId());
     }
   }
 
   @Override
-  public Boolean accept(long pounds, long growerId) {
+  public OfferResponseResult accept(long pounds, long growerId) {
     
     if (growersInLine.isEmpty()) {
-      return false;
+      return OfferResponseResult.getInvalidResult("Can not accept offer because the offer has closed.");
     }
     if (growerId != (growersInLine.get(0)).getId()) {
-      // TODO: Add Error, wrong Grower trying to accept offer.
-      // For example, time already expired for previous grower trying to accept.
-      return false;
+      return OfferResponseResult.getInvalidResult("Can not accept because the offer time has expired.");
       
     }
 
     if (!subtractFromPoundsRemaining(pounds)) {
-      return false;
+      return OfferResponseResult.getInvalidResult("Only " + poundsRemaining + " pounds remain. Can not accept offer for " + pounds + " pounds.");
     }
 
     if (poundsRemaining == 0) {
@@ -89,29 +92,27 @@ public class WaterfallService implements OfferManagementService {
       moveToNext();
     }
 
-    return true;
+    return OfferResponseResult.getValidResult();
 
   }
 
   @Override
-  public Boolean reject(long growerId) {
+  public OfferResponseResult reject(long growerId) {
     if (growersInLine.isEmpty()) {
-      return false;
+      return OfferResponseResult.getInvalidResult("There is no need to reject the offer because it has already closed.");
     }
     if (growerId != (growersInLine.get(0)).getId()) {
-      return false;
+      return OfferResponseResult.getInvalidResult("Can not accept offer because the time offer has expired.");
     }
     
     moveToNext(); 
-    return true;
+    return OfferResponseResult.getValidResult();
     
   }
 
   public Boolean subtractFromPoundsRemaining(long pounds) {
     if (pounds > poundsRemaining) {
       return false;
-      // TODO: Error message!
-      // TODO: fix this error check
     } else {
       poundsRemaining -= pounds;
       return true;
