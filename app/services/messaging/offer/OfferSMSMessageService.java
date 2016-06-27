@@ -1,6 +1,3 @@
-/* === TODO: Buy Twilio Account and hard-code account info === */
-/* === TODO: Compile and test === */
-
 package services.messaging.offer;
 
 import java.util.*;
