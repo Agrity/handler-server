@@ -3,8 +3,6 @@ package services.offer_management;
 import java.util.*;
 
 import models.Offer;
-import models.OfferResponse;
-import models.OfferResponse.ResponseStatus;
 import models.Grower;
 import java.time.Duration;
 
@@ -14,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 import services.messaging.offer.OfferSendGridMessageService;
 
+import play.Logger;
 import play.libs.Akka;
 
 public class WaterfallService implements OfferManagementService {
@@ -64,7 +63,7 @@ public class WaterfallService implements OfferManagementService {
       }    
     }
     else {
-      //TODO: Report error.
+      Logger.error("growersInLine is trying to remove a grower despite being empty in WaterfallService of offerId: " + offer.getId());
     }
   }
 

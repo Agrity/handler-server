@@ -3,8 +3,6 @@ package services.offer_management;
 import java.time.Duration;
 
 import models.Offer;
-import models.OfferResponse;
-import models.OfferResponse.ResponseStatus;
 import models.Grower;
 import akka.actor.Cancellable;
 import scala.concurrent.duration.FiniteDuration;
