@@ -11,6 +11,8 @@ import akka.actor.Cancellable;
 import scala.concurrent.duration.FiniteDuration;
 import java.util.concurrent.TimeUnit;
 
+import services.messaging.offer.OfferSendGridMessageService;
+
 import play.Logger;
 import play.libs.Akka;
 
@@ -21,6 +23,8 @@ public class WaterfallService implements OfferManagementService {
   private Cancellable cancellable;
   private long poundsRemaining;
   private List<Grower> growersInLine;
+
+  OfferSendGridMessageService emailService = new OfferSendGridMessageService();
 
   public WaterfallService(Offer offer, Duration delay) {
     this.offer = offer;
@@ -34,7 +38,7 @@ public class WaterfallService implements OfferManagementService {
   }
 
   private Cancellable scheduleTimer() {
-    // TODO Send grower 0 offer. Use poundsRemaining
+    emailService.send(offer, growersInLine.get(0));
 
     return Akka.system().scheduler().scheduleOnce(FiniteDuration.create(delay.toMillis(), TimeUnit.MILLISECONDS),
         new Runnable() {
@@ -47,12 +51,13 @@ public class WaterfallService implements OfferManagementService {
   }
 
   private void moveToNext() {
-    // TODO alert grower 0 of time expired
+    emailService.sendClosed(offer, growersInLine.get(0));
     if (growersInLine.size() != 0) {
       cancellable.cancel();
       growersInLine.remove(0);
       
       if (growersInLine.size() != 0) {
+        emailService.send(offer, growersInLine.get(0));
         cancellable = scheduleTimer();
       } else {
         offer.closeOffer();

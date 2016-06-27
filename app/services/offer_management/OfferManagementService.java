@@ -18,8 +18,10 @@ public interface OfferManagementService {
   public static boolean removeOfferManagementService(Offer offer) {
     return offerToManageService.remove(offer) != null;
   }
-	
+
 	public OfferResponseResult accept(long pounds, long growerId);
 	public OfferResponseResult reject(long growerId);
-	
+
+  // private String formatUpdateMessage();
+
 }

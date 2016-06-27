@@ -4,9 +4,13 @@ import java.time.Duration;
 
 import models.Offer;
 import models.OfferResponseResult;
+import models.Grower;
+
 import akka.actor.Cancellable;
 import scala.concurrent.duration.FiniteDuration;
 import java.util.concurrent.TimeUnit;
+
+import services.messaging.offer.OfferSendGridMessageService;
 
 import play.libs.Akka;
 
@@ -17,11 +21,13 @@ public class FCFSService implements OfferManagementService {
   
   private Cancellable cancellable;
   private long poundsRemaining;
+  OfferSendGridMessageService emailService = new OfferSendGridMessageService();
 
   public FCFSService(Offer offer, Duration timeAllowed) {
     this.offer = offer;
     this.poundsRemaining = offer.getAlmondPounds();
-    // TODO: All growers need to be messaged the offer.
+
+    emailService.send(offer);
 
     OfferManagementService.offerToManageService.put(offer, this);
 
@@ -30,7 +36,7 @@ public class FCFSService implements OfferManagementService {
           @Override
           public void run() {
             offer.closeOffer();
-            // TODO: Alert Growers offer has been closed.
+            emailService.sendClosed(offer);
           }
         }, Akka.system().dispatcher());
   }
@@ -45,9 +51,11 @@ public class FCFSService implements OfferManagementService {
     if (poundsRemaining == 0) {
       cancellable.cancel();
       offer.closeOffer();
+      sendClosedToRemaining();
+      return OfferResponseResult.getValidResult();
     }
-    // TODO: Send pounds remaining or closed update to growers who have not
-    // accepted or rejected. offer.getGrowersWithNoResponse useful here.
+    
+    sendUpdatedToRemaining();
     return OfferResponseResult.getValidResult();
   }
 
@@ -64,5 +72,31 @@ public class FCFSService implements OfferManagementService {
       poundsRemaining -= pounds;
       return true;
     }
+  }
+
+  private void sendClosedToRemaining() {
+    for (Grower g : offer.getNoResponseGrowers()) {
+      emailService.sendClosed(offer, g);
+    }
+    for (Grower g : offer.getCallRequestedGrowers()) {
+      emailService.sendClosed(offer, g);
+    }
+  }
+
+  private void sendUpdatedToRemaining() {
+    for (Grower g : offer.getNoResponseGrowers()) {
+      emailService.sendUpdated(offer, g, formatUpdateMessage());
+    }
+    for (Grower g : offer.getCallRequestedGrowers()) {
+      emailService.sendUpdated(offer, g, formatUpdateMessage());
+    }
+  }
+
+  private String formatUpdateMessage(){
+    return "Your offer number " + Long.toString(offer.getId()) + " has been updated. \n"
+        + "\tOffer number " + Long.toString(offer.getId()) + "now contains the following specs: \n"
+        + "\t\tAlmond type: " + offer.getAlmondVariety() +"\n\t\tPrice per pound: " 
+        + offer.getPricePerPound() + "\n\t\tPOUNDS REMAINING: " 
+        + Long.toString(poundsRemaining);
   }
 }

@@ -20,6 +20,7 @@ import models.Offer;
 import play.Logger;
 
 import services.messaging.MessageServiceConstants;
+import services.offer_management.OfferManagementService;
 
 public class OfferSendGridMessageService implements OfferMessageService {
 
@@ -37,29 +38,99 @@ public class OfferSendGridMessageService implements OfferMessageService {
     boolean success = true;
 
     for (Grower grower : offer.getAllGrowers()) {
-      List<String> growerEmailAddresses = grower.getEmailAddressStrings();
-
-      for (String emailAddr : growerEmailAddresses) {
-        Email toEmail = new Email(emailAddr);
-
-        Content content
-            = new Content(
-                "text/html",
-                MessageServiceConstants.EmailFields.getEmailHTMLContent(offer, grower));
-
-        Mail mail
-            = new Mail(
-                FROM_EMAIL,
-                MessageServiceConstants.EmailFields.getSubjectLine(),
-                toEmail,
-                content);
-
-        if (!sendEmail(mail, toEmail)) success = false;
-      }
+      if(!send(offer, grower)) success = false;
     }
 
     return success;
   }
+
+  public boolean send(Offer offer, Grower grower) {
+    boolean success = true;
+    List<String> growerEmailAddresses = grower.getEmailAddressStrings();
+    for (String emailAddr : growerEmailAddresses) {
+      Email toEmail = new Email(emailAddr);
+
+      Content content
+      = new Content(
+        "text/html",
+        MessageServiceConstants.EmailFields.getEmailHTMLContent(offer, grower));
+
+      Mail mail
+      = new Mail(
+        FROM_EMAIL,
+        MessageServiceConstants.EmailFields.getSubjectLineNewOffer(),
+        toEmail,
+        content);
+
+      if (!sendEmail(mail, toEmail)) success = false;
+    }
+    return success;    
+  }
+
+  public boolean sendClosed(Offer offer) {
+    boolean success = true;
+
+    for (Grower grower : offer.getAllGrowers()) {
+      if(!sendClosed(offer, grower)) success = false;
+    }
+
+    return success; 
+  }
+
+  public boolean sendClosed(Offer offer, Grower grower) {
+    boolean success = true;
+    List<String> growerEmailAddresses = grower.getEmailAddressStrings();
+    for (String emailAddr : growerEmailAddresses) {
+      Email toEmail = new Email(emailAddr);
+
+      Content content
+      = new Content(
+        "text/plain",
+        "Your offer <" + offer.getAlmondVariety() + " for " 
+        + offer.getPricePerPound() + "/lb.> has expired.");
+
+      Mail mail
+      = new Mail(
+        FROM_EMAIL,
+        MessageServiceConstants.EmailFields.getSubjectLineExpired(offer.getId()),
+        toEmail,
+        content);
+
+      if (!sendEmail(mail, toEmail)) success = false;
+    }
+    return success; 
+  }
+
+  public boolean sendUpdated(Offer offer, String msg) {
+    boolean success = true;
+
+    for (Grower grower : offer.getAllGrowers()) {
+      if(!sendUpdated(offer, grower, msg)) success = false;
+    }
+
+    return success; 
+  }
+
+  public boolean sendUpdated(Offer offer, Grower grower, String msg) {
+    boolean success = true;
+    List<String> growerEmailAddresses = grower.getEmailAddressStrings();
+    for (String emailAddr : growerEmailAddresses) {
+      Email toEmail = new Email(emailAddr);
+
+      Content content = new Content("text/plain", msg);
+
+      Mail mail
+      = new Mail(
+        FROM_EMAIL,
+        MessageServiceConstants.EmailFields.getSubjectLineUpdated(offer.getId()),
+        toEmail,
+        content);
+
+      if (!sendEmail(mail, toEmail)) success = false;
+    }
+    return success; 
+  }
+
 
   private boolean sendEmail(Mail mail, Email email) {
     Request request = new Request();
