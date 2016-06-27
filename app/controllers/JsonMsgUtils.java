@@ -28,15 +28,15 @@ public class JsonMsgUtils {
   }
 
   public static ObjectNode offerNotAccepted(String invalidResponseMessage) {
-    return errorToJson("" + invalidResponseMessage + " \n");
+    return errorToJson("Offer Could not be Accepted: " + invalidResponseMessage + " \n");
   }
 
   public static ObjectNode offerNotRejected(String invalidResponseMessage) {
-    return errorToJson("" + invalidResponseMessage + " \n");
+    return errorToJson("Offer Could not be Rejected: " + invalidResponseMessage + " \n");
   }
 
   public static ObjectNode callNotRequested(String invalidResponseMessage) {
-    return errorToJson("" + invalidResponseMessage + " \n");
+    return errorToJson("Call Could not be Requested: " + invalidResponseMessage + " \n");
   }
 
   public static ObjectNode emailsNotSent() {
