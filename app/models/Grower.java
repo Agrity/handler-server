@@ -99,8 +99,8 @@ public class Grower extends BaseModel implements PrettyString {
     this.emailAddresses = emailAddresses;
 
     // TODO Fix When Phonenumbers Functional
-     this.phoneNumbers = phoneNumbers;
-   // this.phoneNumbers = new ArrayList<>();
+    //this.phoneNumbers = phoneNumbers;
+    this.phoneNumbers = new ArrayList<>();
     phoneNumbers.add("+18155926350");
   }
 
