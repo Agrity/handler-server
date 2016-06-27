@@ -23,6 +23,7 @@ import controllers.security.HandlerSecurityController;
 import services.GrowerService;
 import services.HandlerService;
 import services.OfferService;
+import services.messaging.offer.OfferMessageService;
 import services.offer_management.FCFSService;
 import services.offer_management.WaterfallService;
 import services.parsers.GrowerJsonParser;
@@ -37,6 +38,7 @@ public class HandlerController extends Controller {
   private final HandlerService handlerService;
   private final GrowerService growerService;
   private final OfferService offerService;
+  private final OfferMessageService offerMessageService;
 
   private final ObjectMapper jsonMapper;
 
@@ -44,10 +46,12 @@ public class HandlerController extends Controller {
   public HandlerController(
       HandlerService handlerService,
       GrowerService growerService,
-      OfferService offerService) {
+      OfferService offerService,
+      OfferMessageService offerMessageService) {
     this.handlerService = handlerService;
     this.growerService = growerService;
     this.offerService = offerService;
+    this.offerMessageService = offerMessageService;
 
     this.jsonMapper = new ObjectMapper();
   }
@@ -234,6 +238,15 @@ public class HandlerController extends Controller {
     } catch (JsonProcessingException e) {
       return internalServerError(JsonMsgUtils.caughtException(e.toString()));
     }
+  }
+  
+  public Result sendOffer(long id) {
+    Offer offer = offerService.getById(id);
+    boolean emailSuccess = offerMessageService.send(offer);
+
+    return emailSuccess
+        ? ok(JsonMsgUtils.successfullEmail())
+        : internalServerError(JsonMsgUtils.emailsNotSent());
   }
 
   private Result handlerNotFound() {
