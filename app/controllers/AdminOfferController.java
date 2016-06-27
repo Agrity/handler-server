@@ -5,26 +5,28 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 
-import java.time.Duration;
 import java.util.List;
-import java.lang.reflect.Constructor;
+
+import controllers.security.AdminSecured;
 
 import models.Offer;
 
-import play.Logger;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.Security;
 
 import services.OfferService;
 import services.messaging.offer.OfferMessageService;
 import services.offer_management.FCFSService;
 import services.parsers.OfferJsonParser;
 import services.parsers.OfferJsonParser.ManagementTypeInfo;
-import utils.JsonMsgUtils;
-import services.offer_management.WaterfallService;
-import services.offer_management.FCFSService;
 
+import utils.JsonMsgUtils;
+
+import services.offer_management.WaterfallService;
+
+@Security.Authenticated(AdminSecured.class)
 public class AdminOfferController extends Controller {
 
   private final OfferService offerService;

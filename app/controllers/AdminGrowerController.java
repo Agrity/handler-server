@@ -5,16 +5,20 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 
+import controllers.security.AdminSecured;
 import models.Grower;
 
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.Security;
 
 import services.GrowerService;
 import services.parsers.GrowerJsonParser;
+
 import utils.JsonMsgUtils;
 
+@Security.Authenticated(AdminSecured.class)
 public class AdminGrowerController extends Controller {
 
   private final GrowerService growerService;

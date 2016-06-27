@@ -18,7 +18,7 @@ import services.parsers.LoginJsonParser;
 public class HandlerSecurityController extends Controller {
 
   public static final String AUTH_TOKEN_HEADER = "X-AUTH-TOKEN";
-  public static final String AUTH_TOKEN = "authToken";
+  public static final String AUTH_TOKEN = "auth_token";
 
   public static final String HANDLER_KEY = "handler";
 
