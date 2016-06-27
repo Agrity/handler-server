@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import models.Offer;
+import models.OfferResponseResult;
 
 public interface OfferManagementService {
 
@@ -18,10 +19,7 @@ public interface OfferManagementService {
     return offerToManageService.remove(offer) != null;
   }
 
-	
-	public Boolean accept(long pounds, long growerId);
-	public Boolean reject(long growerId);
-//  private String formatUpdateMessage();
+	public OfferResponseResult accept(long pounds, long growerId);
+	public OfferResponseResult reject(long growerId);
 
-	
 }

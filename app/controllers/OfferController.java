@@ -10,7 +10,7 @@ import java.util.List;
 import java.lang.reflect.Constructor;
 
 import models.Offer;
-
+import models.OfferResponseResult;
 import play.Logger;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
@@ -53,10 +53,10 @@ public class OfferController extends Controller {
     }
 
     // TODO Change to actual pounds accepted once implemented.
-    boolean success = offer.growerAcceptOffer(growerId, amount);
-
-    return success ? ok(JsonMsgUtils.successfullAccept())
-        : internalServerError(JsonMsgUtils.offerNotAccepted());
+    OfferResponseResult success = offer.growerAcceptOffer(growerId, amount);
+    
+    return success.isValid() ? ok(JsonMsgUtils.successfullAccept())
+        : internalServerError(JsonMsgUtils.offerNotAccepted(success.getInvalidResponseMessage()));
   }
 
   public Result rejectOffer(long offerId, long growerId) {
@@ -65,10 +65,10 @@ public class OfferController extends Controller {
       return notFound(JsonMsgUtils.offerNotFoundMessage(offerId));
     }
 
-    boolean success = offer.growerRejectOffer(growerId);
+    OfferResponseResult success = offer.growerRejectOffer(growerId);
 
-    return success ? ok(JsonMsgUtils.successfullReject())
-        : internalServerError(JsonMsgUtils.offerNotRejected());
+    return success.isValid() ? ok(JsonMsgUtils.successfullReject())
+        : internalServerError(JsonMsgUtils.offerNotRejected(success.getInvalidResponseMessage()));
   }
 
   public Result requestCall(long offerId, long growerId) {
@@ -77,10 +77,10 @@ public class OfferController extends Controller {
       return notFound(JsonMsgUtils.offerNotFoundMessage(growerId));
     }
 
-    boolean success = offer.growerRequestCall(growerId);
+    OfferResponseResult success = offer.growerRequestCall(growerId);
 
-    return success ? ok(JsonMsgUtils.successfullCallRequest())
-        : internalServerError(JsonMsgUtils.callNotRequested());
+    return success.isValid() ? ok(JsonMsgUtils.successfullCallRequest())
+        : internalServerError(JsonMsgUtils.callNotRequested(success.getInvalidResponseMessage()));
   }
 
 
