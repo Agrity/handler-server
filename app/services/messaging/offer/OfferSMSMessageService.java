@@ -25,28 +25,61 @@ public class OfferSMSMessageService implements OfferMessageService {
   /* Takes an offer object and sends out SMS message containing bid to all growers using Twilio account */
   public boolean send(Offer offer) {
     boolean success = true;
-    for (Grower curGrower : offer.getAllGrowers()) { 
-      for (String phoneNumber: curGrower.getPhoneNumbers()) {
-        /* number needs to be in format "+18155926350" as a string */
-        List<NameValuePair> params = new ArrayList<NameValuePair>(); 
-        //params.add(new BasicNameValuePair("To", "+15592702013")); /* Ryan's number for testing */  
-        params.add(new BasicNameValuePair("To", phoneNumber));    
-        params.add(new BasicNameValuePair("From", TwilioFields.getTwilioNumber())); 
-        String body = createBodyText(curGrower, offer);
-        params.add(new BasicNameValuePair("Body", body)); 
-      
-        try {
-          Message message = TwilioFields.getMessageFactory().create(params);
-        } catch (TwilioRestException e) {
-          success = false;
-          Logger.error("=== Error Sending SMS Message === to " + phoneNumber + " " + e.getErrorMessage() + "\n\n");
-        }
 
+    for (Grower grower : offer.getAllGrowers()) { 
+      if(!send(offer, grower)) success = false;
+    }
+
+    return success;
+  }
+    
+  public boolean send(Offer offer, Grower grower) {
+    return sendUpdated(offer, grower, createBodyText(grower, offer));
+  }
+
+  public boolean sendClosed(Offer offer) {
+    boolean success = true;
+
+    for (Grower grower : offer.getAllGrowers()) {
+      if(!sendClosed(offer, grower)) success = false;
+    }
+
+    return success; 
+  }
+
+  public boolean sendClosed(Offer offer, Grower grower) {
+    String msg = "Your offer <" + offer.getAlmondVariety() + " for " 
+        + offer.getPricePerPound() + "/lb.> has expired.";
+    return sendUpdated(offer, grower, msg);
+  }
+
+  public boolean sendUpdated(Offer offer, String msg) {
+    boolean success = true;
+
+    for (Grower grower : offer.getAllGrowers()) {
+      if(!sendUpdated(offer, grower, msg)) success = false;
+    }
+
+    return success; 
+  }
+
+  public boolean sendUpdated(Offer offer, Grower grower, String msg) {
+    boolean success = true;
+    for (String phoneNumber: grower.getPhoneNumbers()) {
+      List<NameValuePair> params = new ArrayList<NameValuePair>(); 
+      params.add(new BasicNameValuePair("To", phoneNumber));    
+      params.add(new BasicNameValuePair("From", TwilioFields.getTwilioNumber())); 
+      params.add(new BasicNameValuePair("Body", msg));
+      try {
+        Message message = TwilioFields.getMessageFactory().create(params);
+      } catch (TwilioRestException e) {
+        success = false;
+        Logger.error("=== Error Sending SMS Message === to " + phoneNumber + " " + e.getErrorMessage() + "\n\n");
       }
     }
     return success;
   }
-    
+
   private String createBodyText(Grower curGrower, Offer offer) {
     String body = "Hi " + curGrower.getFullName() + ",\n"
                 + "Here are the specs for a new bid: \n"

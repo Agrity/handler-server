@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  *    PASSWORD : ....
  *  }
  */
-public class LoginJsonParser extends JsonParser {
+public class LoginJsonParser extends BaseParser {
   // Parsed variables
   private String emailAddress;
   private String password;

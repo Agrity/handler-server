@@ -7,14 +7,13 @@ import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
 
-import services.OfferService;
-import services.messaging.offer.OfferMessageService;
 import services.messaging.offer.OfferSMSMessageService;
 import models.Offer;
 import play.Logger;
 import models.OfferResponse;
 import models.OfferResponse.ResponseStatus;
 import models.Grower;
+import models.OfferResponseResult;
 
 import com.avaje.ebean.Model.Finder;
 import services.impl.EbeanGrowerService;
@@ -33,13 +32,11 @@ public class MessageReceivingController extends Controller {
 
   private static Integer numResponses = 0;
 
-  private final OfferService offerService;
-  private final OfferMessageService offerMessageService;
+  private final OfferSMSMessageService messageService;
 
   @Inject
-  public MessageReceivingController(OfferService offerService, OfferMessageService offerMessageService) {
-    this.offerService = offerService;
-    this.offerMessageService = offerMessageService;
+  public MessageReceivingController(OfferSMSMessageService messageService) {
+    this.messageService = messageService;
   }
 
   public Result numberTwilioResponses() {
@@ -100,48 +97,51 @@ public class MessageReceivingController extends Controller {
     }
 
     Logger.info("The valid offerID is: " + offerID + " the amount accepted is: " + almondPounds);
-    updateOffer(grower, offer, almondPounds, phoneNum);
+    updateOffer(grower, offer, almondPounds);
     return ok("Grower response ingested properly");
   } 
 
   /* === TODO: Grower request call? === */
   /* === TODO: More robust/detailed responses === */
-  private void updateOffer(Grower grower, Offer offer, Integer almondPounds, String phoneNum) {
+  private void updateOffer(Grower grower, Offer offer, Integer almondPounds) {
     if (almondPounds > 0) {
-      boolean accepted = offer.growerAcceptOffer(grower.getId(), almondPounds);
-      if (accepted) {
-        boolean sent = sendResponse("Congratulations! You accepted the bid!", phoneNum);
+      OfferResponseResult result = offer.growerAcceptOffer(grower.getId(), almondPounds);
+      if (result.isValid()) {
+        boolean sent = messageService.sendUpdated(offer, grower, "Congratulations! You accepted the bid!");
         Logger.info("Offer: " + offer.getId() + " was accepted by: " + grower.getFullName()
                   + " for " + almondPounds + "lbs.");
       } else {
-        boolean sent = sendResponse("Unfortunately we were not able to process your accepted bid."
-                                  + " The bid has either expired or been accepted by another grower.", phoneNum);
+        boolean sent = messageService.sendUpdated(offer, grower, result.getInvalidResponseMessage());
         Logger.info("Offer: " + offer.getId() + " could not be accepted by: " + grower.getFullName()
-                  + " for " + almondPounds + "lbs.");
+                  + " for " + almondPounds + "lbs. " + result.getInvalidResponseMessage());
       }
     } else {
-      boolean rejected = offer.growerRejectOffer(grower.getId());
-      if (rejected) {
-        boolean sent = sendResponse("The bid has successfully been rejected.", phoneNum);
+      OfferResponseResult result = offer.growerRejectOffer(grower.getId());
+      if (result.isValid()) {
+        boolean sent = messageService.sendUpdated(offer, grower, 
+                                  "Bid #" + offer.getId() + " has successfully been rejected.");
         Logger.info("Offer: " + offer.getId() + " was rejected by: " + grower.getFullName());
       } else {
-        boolean sent = sendResponse("Error rejecting bid.", phoneNum);
-        Logger.info("Offer: " + offer.getId() + " could not be rejected by: " + grower.getFullName());
+        boolean sent = messageService.sendUpdated(offer, grower, result.getInvalidResponseMessage());
+        Logger.info("Offer: " + offer.getId() + " could not be rejected by: " 
+                  + grower.getFullName() + result.getInvalidResponseMessage());
       }
     }
   }
 
-  private boolean sendResponse(String response, String phoneNumber) {
+  /* === TODO: Get rid of this helper function because we do same process in OfferSMSMessageService
+   * However, we need this for now as we need to send error messages without having valid grower/offer === */
+  public boolean sendResponse(String msg, String phoneNum) {
     List<NameValuePair> params = new ArrayList<NameValuePair>(); 
-    params.add(new BasicNameValuePair("To", phoneNumber));
-    params.add(new BasicNameValuePair("From", TwilioFields.getTwilioNumber()));
-    params.add(new BasicNameValuePair("Body", response));
+    params.add(new BasicNameValuePair("To", phoneNum));    
+    params.add(new BasicNameValuePair("From", TwilioFields.getTwilioNumber())); 
+    params.add(new BasicNameValuePair("Body", msg));
     try {
       Message message = TwilioFields.getMessageFactory().create(params);
     } catch (TwilioRestException e) {
-       Logger.error("=== Error Sending SMS Response Message === to " + phoneNumber + " " + e.getErrorMessage() + "\n\n");
-       return false;
-     }
-     return true;
-  } 
+      Logger.error("=== Error Sending SMS Message === to " + phoneNum + " " + e.getErrorMessage() + "\n\n");
+      return false;
+    }
+    return true;
+  }
 }

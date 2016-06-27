@@ -43,17 +43,6 @@ GET     /admin/growers/:id/offers                       controllers.AdminOfferCo
 # ========== Admin Offer ========== #
 
 
-<<<<<<< HEAD
-GET     /offers/:offerId/requestcall/:growerId    controllers.OfferController.requestCall(offerId: Long, growerId: Long)
-
-# ========== Message Recieving ========== #
-
-GET     /messaging/response/twilio                controllers.MessageReceivingController.receiveTwilioResponse()
-
-POST    /messaging/response/twilio                controllers.MessageReceivingController.receiveTwilioResponse()
-
-GET	    /messaging/response/twilio/number         controllers.MessageReceivingController.numberTwilioResponses()
-=======
 GET     /admin/offers                                   controllers.AdminOfferController.getAllOffers()
 
 POST    /admin/offers                                   controllers.AdminOfferController.createOffer()
@@ -105,4 +94,11 @@ GET     /offers/:offerId/accept/:growerId/:amount controllers.AdminOfferControll
 GET     /offers/:offerId/reject/:growerId         controllers.AdminOfferController.rejectOffer(offerId: Long, growerId: Long)
 
 GET     /offers/:offerId/requestcall/:growerId    controllers.AdminOfferController.requestCall(offerId: Long, growerId: Long)
->>>>>>> master
+
+# ========== Message Recieving ========== #
+
+GET     /messaging/response/twilio                controllers.MessageReceivingController.receiveTwilioResponse()
+
+POST    /messaging/response/twilio                controllers.MessageReceivingController.receiveTwilioResponse()
+
+GET	    /messaging/response/twilio/number         controllers.MessageReceivingController.numberTwilioResponses()
