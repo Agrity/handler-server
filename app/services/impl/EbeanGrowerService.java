@@ -8,6 +8,8 @@ import models.Grower;
 
 import services.GrowerService;
 
+import play.Logger;
+
 public class EbeanGrowerService implements GrowerService {
 
   private static Finder<Long, Grower> FINDER = new Finder<>(Grower.class);
@@ -40,7 +42,7 @@ public class EbeanGrowerService implements GrowerService {
   }
 
   public Grower growerLookupByPhoneNum(String phoneNum) {
-    List<Grower> growers = getAll();
+    List<Grower> growers = FINDER.all();//getAll(); /* fix how we call getAll here! */
     for (Grower grower: growers) {
       for (String curPhoneNum: grower.getPhoneNumbers()) {
         Logger.info("This is the curPhoneNum being looked up: " + curPhoneNum + "\n\n");
