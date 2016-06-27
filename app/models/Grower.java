@@ -85,8 +85,8 @@ public class Grower extends BaseModel implements PrettyString {
     this.lastName = lastName;
 
     this.emailAddresses = new ArrayList<>();
-    this.phoneNumbers = new ArrayList<>();
-    phoneNumbers.add("+18155926350");
+   // this.phoneNumbers = new ArrayList<>();
+    //phoneNumbers.add("+18155926350");
   }
 
   public Grower(Handler handler, String firstName, String lastName,
@@ -99,8 +99,8 @@ public class Grower extends BaseModel implements PrettyString {
     this.emailAddresses = emailAddresses;
 
     // TODO Fix When Phonenumbers Functional
-    // this.phoneNumbers = phoneNumbers;
-    this.phoneNumbers = new ArrayList<>();
+     this.phoneNumbers = phoneNumbers;
+   // this.phoneNumbers = new ArrayList<>();
     phoneNumbers.add("+18155926350");
   }
 

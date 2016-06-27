@@ -10,7 +10,7 @@ if ! [[ -z $COMPANY_NAME ]]; then
       --header "X-ADMIN-TOKEN: development-use-only" \
       --request POST \
       --data "{ \"company_name\" : \"$COMPANY_NAME\", \"email_address\" : \"$EMAIL_ADDRESS\", \"password\" : \"dummy_password\" }" \
-      radiant-cove-44181.herokuapp.com/handlers
+      radiant-cove-44181.herokuapp.com/admin/handlers
 
   else
     echo "ERROR: Please provide a email address to create."
