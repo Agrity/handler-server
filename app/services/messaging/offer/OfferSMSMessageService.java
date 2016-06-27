@@ -86,7 +86,7 @@ public class OfferSMSMessageService implements OfferMessageService {
                 + offer.getAlmondPoundsString() + "lbs\n"
                 + offer.getPricePerPound() + "/lb\n" 
                 + offer.getComment() + "\n"
-                + "Offer Id: " + offer.getId() + "/n"
+                + "Offer Id: " + offer.getId() + "\n"
                 + "To respond to this bid, respond with the offer Id followed by the number of pounds "
                 + "that you would like to accept (0 for rejection).\n" 
                 + "-" + /*add handler's contact's name in addition?*/  offer.getHandler().getCompanyName(); 
