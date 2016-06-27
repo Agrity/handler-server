@@ -16,6 +16,7 @@ import models.Offer;
 import play.Logger;
 import services.messaging.MessageServiceConstants.TwilioFields;
 
+/* === TODO: Add logging on message sending === */
 
 public class OfferSMSMessageService implements OfferMessageService {
   
