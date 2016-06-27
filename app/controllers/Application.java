@@ -5,27 +5,31 @@ import play.mvc.Result;
 
 public class Application extends Controller {
 
-    public Result reset() {
-      //if (!init()) {
-      //  List<Grower> growerList = Grower.find.all();
-      //  Ebean.delete(growerList);
+  public Result home() {
+    return ok("Home.");
+  }
 
-      //  List<Offer> offerList = Offer.find.all();
-      //  Ebean.delete(offerList);
+  public Result reset() {
+    //if (!init()) {
+    //  List<Grower> growerList = Grower.find.all();
+    //  Ebean.delete(growerList);
 
-      //  List<OfferResponse> growerResponseList = OfferResponse.find.all();
-      //  Ebean.delete(growerResponseList);
+    //  List<Offer> offerList = Offer.find.all();
+    //  Ebean.delete(offerList);
 
-      //  List<EmailAddress> emailList = EmailAddress.find.all();
-      //  Ebean.delete(emailList);
+    //  List<OfferResponse> growerResponseList = OfferResponse.find.all();
+    //  Ebean.delete(growerResponseList);
 
-      //  Logger.debug("Handlers: " + Handler.find.all() + "\n\n");
-      //  Logger.debug("Growers: " + Grower.find.all() + "\n\n");
-      //  Logger.debug("GrowerOfferResponse: " + OfferResponse.find.all() + "\n\n");
-      //  Logger.debug("EmailAddress: " + EmailAddress.find.all() + "\n\n");
+    //  List<EmailAddress> emailList = EmailAddress.find.all();
+    //  Ebean.delete(emailList);
 
-      //}
+    //  Logger.debug("Handlers: " + Handler.find.all() + "\n\n");
+    //  Logger.debug("Growers: " + Grower.find.all() + "\n\n");
+    //  Logger.debug("GrowerOfferResponse: " + OfferResponse.find.all() + "\n\n");
+    //  Logger.debug("EmailAddress: " + EmailAddress.find.all() + "\n\n");
 
-      return redirect("/");
-    }
+    //}
+
+    return redirect("/");
+  }
 }
