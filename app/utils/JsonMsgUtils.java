@@ -9,6 +9,7 @@ import play.libs.Json;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class JsonMsgUtils {
+
   /* ==================== Json converters for Error Messages =======================*/
   public static ObjectNode handlerNotFoundMessage(Long id) {
     return errorToJson("Handler with id '" + id + "' could not be found\n");
@@ -32,16 +33,16 @@ public class JsonMsgUtils {
         + ".\n");
   }
 
-  public static ObjectNode offerNotAccepted() {
-    return errorToJson("Internal Error: Offer could not be accepted.\n");
+  public static ObjectNode offerNotAccepted(String invalidResponseMessage) {
+    return errorToJson("Offer Could not be Accepted: " + invalidResponseMessage + " \n");
   }
 
-  public static ObjectNode offerNotRejected() {
-    return errorToJson("Internal Error: Offer could not be rejected.\n");
+  public static ObjectNode offerNotRejected(String invalidResponseMessage) {
+    return errorToJson("Offer Could not be Rejected: " + invalidResponseMessage + " \n");
   }
 
-  public static ObjectNode callNotRequested() {
-    return errorToJson("Internal Error: Call could not be requested.\n");
+  public static ObjectNode callNotRequested(String invalidResponseMessage) {
+    return errorToJson("Call Could not be Requested: " + invalidResponseMessage + " \n");
   }
 
   public static ObjectNode emailsNotSent() {
