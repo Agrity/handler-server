@@ -46,7 +46,7 @@ public class OfferSMSMessageService implements OfferMessageService {
   }
 
   public boolean sendClosed(Offer offer, Grower grower) {
-    String msg = "Your offer <" + offer.getAlmondVariety() + " for " 
+    String msg = "Your offer (ID " + offer.getId() + ") <" + offer.getAlmondVariety() + " for " 
         + offer.getPricePerPound() + "/lb.> has expired.";
     return sendUpdated(offer, grower, msg);
   }
@@ -89,7 +89,7 @@ public class OfferSMSMessageService implements OfferMessageService {
                 + "Offer Id: " + offer.getId() + "\n"
                 + "To respond to this bid, respond with the offer Id followed by the number of pounds "
                 + "that you would like to accept (0 for rejection).\n" 
-                + "-" + /*add handler's contact's name in addition?*/  offer.getHandler().getCompanyName(); 
+                + "-" + offer.getHandler().getCompanyName() + " " + offer.getHandler().getEmailAddress();
     return body;
   } 
 

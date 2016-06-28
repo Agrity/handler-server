@@ -80,7 +80,7 @@ public class MessageReceivingController extends Controller {
 
     Offer offer = grower.offerLookupByID(offerID);
     if (offer == null) {
-      Logger.error("OfferId: " + offerID + " does not exist. From: " + phoneNum);
+      Logger.error("OfferID " + offerID + " does not exist. From: " + phoneNum);
       return ok("OfferId: " + offerID + " does not exist.");
     }
 
@@ -96,7 +96,8 @@ public class MessageReceivingController extends Controller {
       if (result.isValid()) {
         Logger.info("Offer: " + offer.getId() + " was accepted by: " + grower.getFullName()
                   + " for " + almondPounds + "lbs.");
-        return ok("Congratulations! You accepted the bid!");
+        return ok("Congratulations! Your offer (ID " + offer.getId() + ") <" + offer.getAlmondVariety() + " for " 
+        + offer.getPricePerPound() + "/lb.> has been accepted.");
 
       } else {
         Logger.info("Offer: " + offer.getId() + " could not be accepted by: " + grower.getFullName()

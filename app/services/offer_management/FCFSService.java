@@ -102,7 +102,7 @@ public class FCFSService implements OfferManagementService {
 
   private String formatUpdateMessage(){
     return "Your offer number " + Long.toString(offer.getId()) + " has been updated. \n"
-        + "\tOffer number " + Long.toString(offer.getId()) + "now contains the following specs: \n"
+        + "\tOffer number " + Long.toString(offer.getId()) + " now contains the following specs: \n"
         + "\t\tAlmond type: " + offer.getAlmondVariety() +"\n\t\tPrice per pound: " 
         + offer.getPricePerPound() + "\n\t\tPOUNDS REMAINING: " 
         + Long.toString(poundsRemaining);
