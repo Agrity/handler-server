@@ -60,9 +60,10 @@ public class MessageReceivingController extends Controller {
     try {
       smsMessage = bodyMap.get("Body")[0]; 
     } catch (NullPointerException e) {
-      boolean sent = sendResponse("Please respond with a non-empty SMS message.", phoneNum);
+      //boolean sent = sendResponse("Please respond with a non-empty SMS message.", phoneNum);
       Logger.error("Empty SMS message received from: " + phoneNum);
-      return badRequest("Empty SMS message received from: " + phoneNum);
+      //return badRequest("Empty SMS message received from: " + phoneNum);
+      return ok("Please respond with a non-empty SMS message.");
     }
 
     /* if we reach here we have non-null smsMessage from phoneNum in format +11234567890 */
@@ -70,18 +71,20 @@ public class MessageReceivingController extends Controller {
     EbeanGrowerService ebean = new EbeanGrowerService(); 
     Grower grower = ebean.growerLookupByPhoneNum(phoneNum);
     if (grower == null) {
-      boolean sent = sendResponse("This phone number is not authorized in Agrity's grower list.", phoneNum);
+      //boolean sent = sendResponse("This phone number is not authorized in Agrity's grower list.", phoneNum);
       Logger.error("Message received from " + phoneNum + " does not correspond to a grower in our system.");
-      return badRequest("Message received from " + phoneNum + " does not correspond to a grower in our system.");
+      //return badRequest("Message received from " + phoneNum + " does not correspond to a grower in our system.");
+      return ok("This phone number is not authorized in Agrity's grower list.");
     }
 
     /* if we reach here, we received a SMS message from a valid grower */
 
     SMSParser parser = new SMSParser(smsMessage);
     if (!parser.isValid()) {
-      sendResponse(parser.getErrorMessage(), phoneNum);
+      //sendResponse(parser.getErrorMessage(), phoneNum);
       Logger.error(parser.getErrorMessage());
-      return badRequest(parser.getErrorMessage());
+      //return badRequest(parser.getErrorMessage());
+      return ok(parser.getErrorMessage());
     }
  
     Long offerID = parser.getOfferID();
@@ -91,40 +94,44 @@ public class MessageReceivingController extends Controller {
 
     Offer offer = grower.offerLookupByID(offerID);
     if (offer == null) {
-      boolean sent = sendResponse("OfferId: " + offerID + " does not exist.", phoneNum);
+      //boolean sent = sendResponse("OfferId: " + offerID + " does not exist.", phoneNum);
       Logger.error("OfferId: " + offerID + " does not exist. From: " + phoneNum);
-      return badRequest("OfferId: " + offerID + " does not exist. From: " + phoneNum);
+      //return badRequest("OfferId: " + offerID + " does not exist. From: " + phoneNum);
+      return ok("OfferId: " + offerID + " does not exist.");
     }
 
     Logger.info("The valid offerID is: " + offerID + " the amount accepted is: " + almondPounds);
-    updateOffer(grower, offer, almondPounds);
-    return ok("Grower response ingested properly");
+    return updateOffer(grower, offer, almondPounds);
   } 
 
   /* === TODO: Grower request call? === */
   /* === TODO: More robust/detailed responses === */
-  private void updateOffer(Grower grower, Offer offer, Integer almondPounds) {
+  private Result updateOffer(Grower grower, Offer offer, Integer almondPounds) {
     if (almondPounds > 0) {
       OfferResponseResult result = offer.growerAcceptOffer(grower.getId(), almondPounds);
       if (result.isValid()) {
-        boolean sent = messageService.sendUpdated(offer, grower, "Congratulations! You accepted the bid!");
+        //boolean sent = messageService.sendUpdated(offer, grower, "Congratulations! You accepted the bid!");
         Logger.info("Offer: " + offer.getId() + " was accepted by: " + grower.getFullName()
                   + " for " + almondPounds + "lbs.");
+        return ok("Congratulations! You accepted the bid!");
       } else {
-        boolean sent = messageService.sendUpdated(offer, grower, result.getInvalidResponseMessage());
+        //boolean sent = messageService.sendUpdated(offer, grower, result.getInvalidResponseMessage());
         Logger.info("Offer: " + offer.getId() + " could not be accepted by: " + grower.getFullName()
                   + " for " + almondPounds + "lbs. " + result.getInvalidResponseMessage());
+        return ok(result.getInvalidResponseMessage());
       }
     } else {
       OfferResponseResult result = offer.growerRejectOffer(grower.getId());
       if (result.isValid()) {
-        boolean sent = messageService.sendUpdated(offer, grower, 
-                                  "Bid #" + offer.getId() + " has successfully been rejected.");
+        //boolean sent = messageService.sendUpdated(offer, grower, 
+        //                          "Bid #" + offer.getId() + " has successfully been rejected.");
         Logger.info("Offer: " + offer.getId() + " was rejected by: " + grower.getFullName());
+        return ok("Bid #" + offer.getId() + " has successfully been rejected.");
       } else {
-        boolean sent = messageService.sendUpdated(offer, grower, result.getInvalidResponseMessage());
+        //boolean sent = messageService.sendUpdated(offer, grower, result.getInvalidResponseMessage());
         Logger.info("Offer: " + offer.getId() + " could not be rejected by: " 
                   + grower.getFullName() + result.getInvalidResponseMessage());
+        return ok(result.getInvalidResponseMessage());
       }
     }
   }
