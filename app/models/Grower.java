@@ -46,6 +46,7 @@ public class Grower extends BaseModel implements PrettyString {
   /**
    * TODO: Change to phone number format, construct own model so that can be consistant.
    */
+  @OneToMany(cascade = CascadeType.ALL)
   @Constraints.Required
   public List<PhoneNumber> phoneNumbers;
 
