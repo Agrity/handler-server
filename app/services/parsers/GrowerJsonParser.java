@@ -208,6 +208,7 @@ public class GrowerJsonParser extends BaseParser {
 
     // Phone numbers should be formatted as an array of strings.
     if (!phoneNums.isArray()) {
+      Logger.error("Phone Number Format Invalid: array of strings expected.");
       setInvalid("Phone Number Format Invalid: array of strings expected.");
       return null;
     }
@@ -219,6 +220,7 @@ public class GrowerJsonParser extends BaseParser {
 
       // Ensure phone number is valid.
       if (!PhoneMessageService.verifyPhoneNumber(phoneNum)) {
+        Logger.error("Invalid Phone Number: [" + node + "] is not a valid Phone Number.");
         setInvalid("Invalid Phone Number: [" + node + "] is not a valid Phone Number.");
         return null;
       }
