@@ -63,7 +63,7 @@ public class OfferSMSMessageService implements OfferMessageService {
 
   public boolean sendUpdated(Offer offer, Grower grower, String msg) {
     boolean success = true;
-    for (String phoneNumber: grower.getPhoneNumbers()) {
+    for (String phoneNumber: grower.getPhoneNums()) {
       List<NameValuePair> params = new ArrayList<NameValuePair>(); 
       params.add(new BasicNameValuePair("To", phoneNumber));    
       params.add(new BasicNameValuePair("From", TwilioFields.getTwilioNumber())); 

@@ -157,7 +157,7 @@ public class Grower extends BaseModel implements PrettyString {
   }
 
   @JsonIgnore
-  public List<String> getPhoneNumbers() {
+  public List<String> getPhoneNums() {
     //List<String> list = new ArrayList<>();
     //list.add("+18155926350");
     //return list;
