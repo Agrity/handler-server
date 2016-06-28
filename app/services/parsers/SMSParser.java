@@ -13,6 +13,8 @@ public class SMSParser extends BaseParser {
 
   private Long offerID;
   private Integer almoundPounds;
+  private static final String errorResponse = 
+                    "Please format message as \"[ID#] [# pounds Accepted]\". Could not process bid response.";
 
   public SMSParser(String smsMessage) {
     super();
@@ -20,7 +22,7 @@ public class SMSParser extends BaseParser {
     String[] splited = smsMessage.split("\\s+");
 
     if (splited.length != 2) {
-    	setInvalid("Please format message as \"[ID#] [# pounds Accepted]\". Could not process bid response.");
+    	setInvalid(errorResponse);
     	return;
     }
 
@@ -47,7 +49,7 @@ public class SMSParser extends BaseParser {
   private Long parseID(String firstHalf) {
   	Long result = parseLong(firstHalf);
   	if (result == null) {
-  	  setInvalid("Offer ID is not formatted correctly. Please format message as \"[ID#] [# pounds Accepted]\". Could not process bid response.");
+  	  setInvalid("Offer ID is not formatted correctly. " + errorResponse);
   	}
   	return result;
   }
@@ -56,7 +58,7 @@ public class SMSParser extends BaseParser {
   private Integer parsePounds(String secondHalf) {
   	Integer result = parseInteger(secondHalf);
   	if (result == null) {
-  	  setInvalid("Number of pounds accepted is not formatted correctly. Please format message as \"[ID#] [# pounds Accepted]\". Could not process bid response.");
+  	  setInvalid("Number of pounds accepted is not formatted correctly. " + errorResponse);
   	}
   	return result;
   }

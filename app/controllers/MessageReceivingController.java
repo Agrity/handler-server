@@ -89,7 +89,6 @@ public class MessageReceivingController extends Controller {
   } 
 
   /* === TODO: Grower request call? === */
-  /* === TODO: More robust/detailed responses === */
   private Result updateOffer(Grower grower, Offer offer, Integer almondPounds) {
     if (almondPounds > 0) {
       OfferResponseResult result = offer.growerAcceptOffer(grower.getId(), almondPounds);
