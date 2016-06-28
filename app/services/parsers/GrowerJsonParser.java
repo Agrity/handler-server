@@ -76,6 +76,7 @@ public class GrowerJsonParser extends BaseParser {
 
     phoneNumbers = parsePhoneNumbers(data);
     if (phoneNumbers == null) {
+      Logger.error("Error parsing phone numbers while creating grower \n\n");
       // Parser set to invalid with proper error message.
       return;
     }
@@ -199,6 +200,8 @@ public class GrowerJsonParser extends BaseParser {
    */
   private List<String> parsePhoneNumbers(JsonNode data) {
     // Phone numbers not present in json node. Returning empty list.
+
+    Logger.info("Attempting to parse phone numbers while creating grower\n\n");
 
     if (!data.has(GrowerJsonConstants.PHONE_NUMBERS)) {
       Logger.info("there are no phone numbers \n\n");
