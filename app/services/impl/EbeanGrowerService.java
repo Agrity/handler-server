@@ -42,7 +42,7 @@ public class EbeanGrowerService implements GrowerService {
   }
 
   public Grower growerLookupByPhoneNum(String phoneNum) {
-    List<Grower> growers = FINDER.all();//getAll(); /* TODO: investigate how we call getAll here! */
+    List<Grower> growers = getAll(); /* TODO: investigate how we call getAll here! */
     for (Grower grower: growers) {
       for (String curPhoneNum: grower.getPhoneNumbers()) {
         Logger.info("These are the curPhoneNums being looked up: " + curPhoneNum + "   " + phoneNum + "\n\n");

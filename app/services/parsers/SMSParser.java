@@ -52,6 +52,7 @@ public class SMSParser extends BaseParser {
   	return result;
   }
 
+  /* === TODO: Parse for comma too? */
   private Integer parsePounds(String secondHalf) {
   	Integer result = parseInteger(secondHalf);
   	if (result == null) {
