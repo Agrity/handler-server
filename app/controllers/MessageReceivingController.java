@@ -10,7 +10,6 @@ import play.mvc.Result;
 import services.messaging.offer.OfferSMSMessageService;
 import models.Offer;
 import play.Logger;
-import models.OfferResponse;
 import models.OfferResponse.ResponseStatus;
 import models.Grower;
 import models.OfferResponseResult;
@@ -19,13 +18,6 @@ import com.avaje.ebean.Model.Finder;
 import services.impl.EbeanGrowerService;
 
 import services.messaging.MessageServiceConstants.TwilioFields;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import com.twilio.sdk.*;
-import com.twilio.sdk.resource.factory.*;
-import com.twilio.sdk.resource.instance.*;
-import com.twilio.sdk.resource.list.*;
-import com.twilio.sdk.TwilioRestResponse;
 import services.parsers.SMSParser;
 
 public class MessageReceivingController extends Controller {
@@ -60,9 +52,7 @@ public class MessageReceivingController extends Controller {
     try {
       smsMessage = bodyMap.get("Body")[0]; 
     } catch (NullPointerException e) {
-      //boolean sent = sendResponse("Please respond with a non-empty SMS message.", phoneNum);
       Logger.error("Empty SMS message received from: " + phoneNum);
-      //return badRequest("Empty SMS message received from: " + phoneNum);
       return ok("Please respond with a non-empty SMS message.");
     }
 
@@ -71,9 +61,7 @@ public class MessageReceivingController extends Controller {
     EbeanGrowerService ebean = new EbeanGrowerService(); 
     Grower grower = ebean.growerLookupByPhoneNum(phoneNum);
     if (grower == null) {
-      //boolean sent = sendResponse("This phone number is not authorized in Agrity's grower list.", phoneNum);
       Logger.error("Message received from " + phoneNum + " does not correspond to a grower in our system.");
-      //return badRequest("Message received from " + phoneNum + " does not correspond to a grower in our system.");
       return ok("This phone number is not authorized in Agrity's grower list.");
     }
 
@@ -81,9 +69,7 @@ public class MessageReceivingController extends Controller {
 
     SMSParser parser = new SMSParser(smsMessage);
     if (!parser.isValid()) {
-      //sendResponse(parser.getErrorMessage(), phoneNum);
       Logger.error(parser.getErrorMessage());
-      //return badRequest(parser.getErrorMessage());
       return ok(parser.getErrorMessage());
     }
  
@@ -94,9 +80,7 @@ public class MessageReceivingController extends Controller {
 
     Offer offer = grower.offerLookupByID(offerID);
     if (offer == null) {
-      //boolean sent = sendResponse("OfferId: " + offerID + " does not exist.", phoneNum);
       Logger.error("OfferId: " + offerID + " does not exist. From: " + phoneNum);
-      //return badRequest("OfferId: " + offerID + " does not exist. From: " + phoneNum);
       return ok("OfferId: " + offerID + " does not exist.");
     }
 
@@ -109,46 +93,29 @@ public class MessageReceivingController extends Controller {
   private Result updateOffer(Grower grower, Offer offer, Integer almondPounds) {
     if (almondPounds > 0) {
       OfferResponseResult result = offer.growerAcceptOffer(grower.getId(), almondPounds);
+
       if (result.isValid()) {
-        //boolean sent = messageService.sendUpdated(offer, grower, "Congratulations! You accepted the bid!");
         Logger.info("Offer: " + offer.getId() + " was accepted by: " + grower.getFullName()
                   + " for " + almondPounds + "lbs.");
         return ok("Congratulations! You accepted the bid!");
+
       } else {
-        //boolean sent = messageService.sendUpdated(offer, grower, result.getInvalidResponseMessage());
         Logger.info("Offer: " + offer.getId() + " could not be accepted by: " + grower.getFullName()
                   + " for " + almondPounds + "lbs. " + result.getInvalidResponseMessage());
         return ok(result.getInvalidResponseMessage());
       }
+
     } else {
       OfferResponseResult result = offer.growerRejectOffer(grower.getId());
       if (result.isValid()) {
-        //boolean sent = messageService.sendUpdated(offer, grower, 
-        //                          "Bid #" + offer.getId() + " has successfully been rejected.");
         Logger.info("Offer: " + offer.getId() + " was rejected by: " + grower.getFullName());
         return ok("Bid #" + offer.getId() + " has successfully been rejected.");
+
       } else {
-        //boolean sent = messageService.sendUpdated(offer, grower, result.getInvalidResponseMessage());
         Logger.info("Offer: " + offer.getId() + " could not be rejected by: " 
                   + grower.getFullName() + result.getInvalidResponseMessage());
         return ok(result.getInvalidResponseMessage());
       }
     }
-  }
-
-  /* === TODO: Get rid of this helper function because we do same process in OfferSMSMessageService
-   * However, we need this for now as we need to send error messages without having valid grower/offer === */
-  public boolean sendResponse(String msg, String phoneNum) {
-    List<NameValuePair> params = new ArrayList<NameValuePair>(); 
-    params.add(new BasicNameValuePair("To", phoneNum));    
-    params.add(new BasicNameValuePair("From", TwilioFields.getTwilioNumber())); 
-    params.add(new BasicNameValuePair("Body", msg));
-    try {
-      Message message = TwilioFields.getMessageFactory().create(params);
-    } catch (TwilioRestException e) {
-      Logger.error("=== Error Sending SMS Message === to " + phoneNum + " " + e.getErrorMessage() + "\n\n");
-      return false;
-    }
-    return true;
   }
 }
