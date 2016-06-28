@@ -1,13 +1,12 @@
 package services.impl;
 
 import com.avaje.ebean.Model.Finder;
-
 import java.util.List;
 
 import models.Grower;
+import models.PhoneNumber;
 
 import services.GrowerService;
-
 import play.Logger;
 
 public class EbeanGrowerService implements GrowerService {
@@ -44,9 +43,10 @@ public class EbeanGrowerService implements GrowerService {
   public Grower growerLookupByPhoneNum(String phoneNum) {
     List<Grower> growers = getAll(); 
     for (Grower grower: growers) {
-      for (String curPhoneNum: grower.getPhoneNums()) {
-        Logger.info("These are the curPhoneNums being looked up: " + curPhoneNum + "   " + phoneNum + "\n\n");
-        if (curPhoneNum.equals(phoneNum)) {
+      for (PhoneNumber curPhoneNum: grower.getPhoneNums()) {
+        Logger.info("These are the curPhoneNums being looked up: " + curPhoneNum.getPhoneNumber()
+                 + "   " + phoneNum + "\n\n");
+        if (curPhoneNum.getPhoneNumber().equals(phoneNum)) {
           return grower;
         }
       }

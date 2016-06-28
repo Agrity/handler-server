@@ -8,6 +8,7 @@ import java.util.List;
 import models.EmailAddress;
 import models.Grower;
 import models.Handler;
+import models.PhoneNumber;
 
 import services.EmailService;
 import services.PhoneMessageService;
@@ -45,7 +46,7 @@ public class GrowerJsonParser extends BaseParser {
   private String firstName;
   private String lastName;
   private List<EmailAddress> emailAddresses;
-  private List<String> phoneNumbers;
+  private List<PhoneNumber> phoneNumbers;
 
   public GrowerJsonParser(JsonNode data) {
     super();
@@ -120,7 +121,7 @@ public class GrowerJsonParser extends BaseParser {
     return emailAddresses;
   }
 
-  public List<String> getPhoneNumbers() {
+  public List<PhoneNumber> getPhoneNumbers() {
     ensureValid();
     if (phoneNumbers != null) Logger.info("Phone number: " + phoneNumbers.get(0) + "\n\n");
     return phoneNumbers;
@@ -199,7 +200,7 @@ public class GrowerJsonParser extends BaseParser {
    *
    * WARNING: Parser set to invalid if error is encountered.
    */
-  private List<String> parsePhoneNumbers(JsonNode data) {
+  private List<PhoneNumber> parsePhoneNumbers(JsonNode data) {
     // Phone numbers not present in json node. Returning empty list.
 
     Logger.info("Attempting to parse phone numbers while creating grower\n\n");
@@ -233,7 +234,7 @@ public class GrowerJsonParser extends BaseParser {
       processedPhoneNumbers.add(phoneNum);
     }
 
-    return processedPhoneNumbers;
+    return PhoneMessageService.stringToPhoneNumberList(processedPhoneNumbers);
   }
 
   private static class GrowerJsonConstants {

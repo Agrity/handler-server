@@ -11,6 +11,7 @@ import java.util.List;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
+import models.PhoneNumber;
 import models.Grower;
 import models.Offer;
 import play.Logger;
@@ -63,16 +64,17 @@ public class OfferSMSMessageService implements OfferMessageService {
 
   public boolean sendUpdated(Offer offer, Grower grower, String msg) {
     boolean success = true;
-    for (String phoneNumber: grower.getPhoneNums()) {
+    for (PhoneNumber phoneNumber: grower.getPhoneNums()) {
       List<NameValuePair> params = new ArrayList<NameValuePair>(); 
-      params.add(new BasicNameValuePair("To", phoneNumber));    
+      params.add(new BasicNameValuePair("To", phoneNumber.getPhoneNumber()));    
       params.add(new BasicNameValuePair("From", TwilioFields.getTwilioNumber())); 
       params.add(new BasicNameValuePair("Body", msg));
       try {
         Message message = TwilioFields.getMessageFactory().create(params);
       } catch (TwilioRestException e) {
         success = false;
-        Logger.error("=== Error Sending SMS Message === to " + phoneNumber + " " + e.getErrorMessage() + "\n\n");
+        Logger.error("=== Error Sending SMS Message === to " + phoneNumber.getPhoneNumber()
+                   + " " + e.getErrorMessage() + "\n\n");
       }
     }
     return success;

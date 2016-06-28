@@ -47,7 +47,7 @@ public class Grower extends BaseModel implements PrettyString {
    * TODO: Change to phone number format, construct own model so that can be consistant.
    */
   @Constraints.Required
-  public List<String> phoneNumbers;
+  public List<PhoneNumber> phoneNumbers;
 
 
   // TODO Remove OfferResponses and Offers from Growers if possible.
@@ -89,7 +89,7 @@ public class Grower extends BaseModel implements PrettyString {
   }
 
   public Grower(Handler handler, String firstName, String lastName,
-      List<EmailAddress> emailAddresses, List<String> phoneNumbers) {
+      List<EmailAddress> emailAddresses, List<PhoneNumber> phoneNumbers) {
     super();
 
     this.firstName = firstName;
@@ -157,7 +157,7 @@ public class Grower extends BaseModel implements PrettyString {
   }
 
   @JsonIgnore
-  public List<String> getPhoneNums() {
+  public List<PhoneNumber> getPhoneNums() {
     //List<String> list = new ArrayList<>();
     //list.add("+18155926350");
     //return list;
