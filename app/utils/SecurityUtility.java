@@ -6,8 +6,6 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import play.Logger;
-
 public class SecurityUtility {
   public static byte[] getSha512(String value) {
       try {
