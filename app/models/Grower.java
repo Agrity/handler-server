@@ -77,6 +77,17 @@ public class Grower extends BaseModel implements PrettyString {
 
   /* ========== Member Functions ========== */
 
+  public Grower(Handler handler, String firstName, String lastName) {
+    super();
+
+    this.handler = handler;
+    this.firstName = firstName;
+    this.lastName = lastName;
+
+    this.emailAddresses = new ArrayList<>();
+    this.phoneNumbers = new ArrayList<>();
+  }
+
   public Grower(Handler handler, String firstName, String lastName,
       List<EmailAddress> emailAddresses, List<String> phoneNumbers) {
     super();
