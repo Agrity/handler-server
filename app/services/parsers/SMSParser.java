@@ -48,18 +48,22 @@ public class SMSParser extends BaseParser {
 
   private Long parseID(String firstHalf) {
   	Long result = parseLong(firstHalf);
+
   	if (result == null) {
   	  setInvalid("Offer ID is not formatted correctly. " + errorResponse);
   	}
+
   	return result;
   }
 
-  /* === TODO: Parse for comma too? */
   private Integer parsePounds(String secondHalf) {
-  	Integer result = parseInteger(secondHalf);
+    secondHalf = secondHalf.replace(",", "");
+    Integer result = parseInteger(secondHalf);
+
   	if (result == null) {
   	  setInvalid("Number of pounds accepted is not formatted correctly. " + errorResponse);
   	}
+
   	return result;
   }
 }
