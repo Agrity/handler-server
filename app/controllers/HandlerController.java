@@ -117,7 +117,8 @@ public class HandlerController extends Controller {
     }
 
     try {
-      return ok(jsonMapper.writeValueAsString(growerService.getByHandler(handler.getId())));
+      return ok(jsonMapper.writeValueAsString(growerService.getByHandler(handler.getId())))
+          .withHeader("Access-Control-Allow-Origin","*");
     } catch (JsonProcessingException e) {
       return internalServerError(JsonMsgUtils.caughtException(e.toString()));
     }

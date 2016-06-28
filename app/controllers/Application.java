@@ -9,6 +9,13 @@ public class Application extends Controller {
     return ok("Home.");
   }
 
+  public Result options(String path) {
+    return ok("")
+      .withHeader("Access-Control-Allow-Origin","*")
+      .withHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+      .withHeader("Access-Control-Allow-Headers", "X-ADMIN-TOKEN, X-HANDLER-TOKEN, Content-Type");
+  }
+
   public Result reset() {
     //if (!init()) {
     //  List<Grower> growerList = Grower.find.all();

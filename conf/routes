@@ -13,6 +13,8 @@ GET     /assets/*file                         controllers.Assets.versioned(path=
 
 GET     /                                               controllers.Application.home()
 
+OPTIONS /*path                                          controllers.Application.options(path: String)
+
 # ========== Admin Handler ========== #
 
 

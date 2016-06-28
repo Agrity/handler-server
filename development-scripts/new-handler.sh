@@ -2,14 +2,20 @@
 
 COMPANY_NAME=$1
 EMAIL_ADDRESS=$2
+PASSWORD=$3
 
 if ! [[ -z $COMPANY_NAME ]]; then
   if ! [[ -z $EMAIL_ADDRESS ]]; then
+
+    if [[ -z $PASSWORD ]]; then
+      PASSWORD="dummy_password"
+    fi
+
     curl \
       --header "Content-type: application/json" \
       --header "X-ADMIN-TOKEN: development-use-only" \
       --request POST \
-      --data "{ \"company_name\" : \"$COMPANY_NAME\", \"email_address\" : \"$EMAIL_ADDRESS\", \"password\" : \"dummy_password\" }" \
+      --data "{ \"company_name\" : \"$COMPANY_NAME\", \"email_address\" : \"$EMAIL_ADDRESS\", \"password\" : \"$PASSWORD\" }" \
       localhost:9000/admin/handlers
 
   else

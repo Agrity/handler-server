@@ -11,7 +11,7 @@ if ! [[ -z $EMAIL_ADDRESS ]]; then
     --header "Content-type: application/json" \
     --request POST \
     --data "{ \"email_address\" : \"$EMAIL_ADDRESS\", \"password\" : \"$PASSWORD\" }" \
-    localhost:9000/login
+    localhost:9000/handler/login
 
 else
   echo "ERROR: Please provide a email address."

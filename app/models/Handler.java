@@ -49,8 +49,12 @@ public class Handler extends BaseModel implements PrettyString {
   private String password;
 
   // Hashed password saved to database.
-  @Column(length = 64, nullable = false)
-  private byte[] shaPassword;
+  @Column(nullable = false)
+  private String shaPassword;
+
+  public String getShaPassword() {
+    return shaPassword;
+  }
 
 
   // Used to keep track of user signed in on a given device. Will be stored here and in browser
@@ -97,8 +101,9 @@ public class Handler extends BaseModel implements PrettyString {
   }
 
   public void setPassword(String password) {
+    Logger.error("Password: " + password);
     this.password = password;
-    shaPassword = SecurityUtility.getSha512(password);
+    this.shaPassword = SecurityUtility.hashPassword(password);
   }
 
   public String createToken() {
