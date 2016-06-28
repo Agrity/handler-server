@@ -43,10 +43,10 @@ public class EbeanGrowerService implements GrowerService {
   public Grower growerLookupByPhoneNum(String phoneNum) {
     List<Grower> growers = getAll(); 
     for (Grower grower: growers) {
-      for (PhoneNumber curPhoneNum: grower.getPhoneNums()) {
-        Logger.info("These are the curPhoneNums being looked up: " + curPhoneNum.getPhoneNumber()
+      for (String curPhoneNum: grower.getPhoneNumsStrings()) {
+        Logger.info("These are the curPhoneNums being looked up: " + curPhoneNum
                  + "   " + phoneNum + "\n\n");
-        if (curPhoneNum.getPhoneNumber().equals(phoneNum)) {
+        if (curPhoneNum.equals(phoneNum)) {
           return grower;
         }
       }

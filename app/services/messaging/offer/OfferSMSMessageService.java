@@ -64,16 +64,16 @@ public class OfferSMSMessageService implements OfferMessageService {
 
   public boolean sendUpdated(Offer offer, Grower grower, String msg) {
     boolean success = true;
-    for (PhoneNumber phoneNumber: grower.getPhoneNums()) {
+    for (String phoneNumber: grower.getPhoneNumsStrings()) {
       List<NameValuePair> params = new ArrayList<NameValuePair>(); 
-      params.add(new BasicNameValuePair("To", phoneNumber.getPhoneNumber()));    
+      params.add(new BasicNameValuePair("To", phoneNumber));    
       params.add(new BasicNameValuePair("From", TwilioFields.getTwilioNumber())); 
       params.add(new BasicNameValuePair("Body", msg));
       try {
         Message message = TwilioFields.getMessageFactory().create(params);
       } catch (TwilioRestException e) {
         success = false;
-        Logger.error("=== Error Sending SMS Message === to " + phoneNumber.getPhoneNumber()
+        Logger.error("=== Error Sending SMS Message === to " + phoneNumber
                    + " " + e.getErrorMessage() + "\n\n");
       }
     }

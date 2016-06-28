@@ -158,10 +158,14 @@ public class Grower extends BaseModel implements PrettyString {
 
   @JsonIgnore
   public List<PhoneNumber> getPhoneNums() {
-    //List<String> list = new ArrayList<>();
-    //list.add("+18155926350");
-    //return list;
     return phoneNumbers;
+  }
+
+  public List<String> getPhoneNumsStrings() {
+    return phoneNumbers
+      .stream()
+      .map(PhoneNumber::getPhoneNumber)
+      .collect(Collectors.toList());
   }
 
   public Offer offerLookupByID(Long offerID) {
