@@ -97,9 +97,7 @@ public class Grower extends BaseModel implements PrettyString {
     this.lastName = lastName;
     this.handler = handler;
     this.emailAddresses = emailAddresses;
-
-    // TODO Fix When Phonenumbers Functional
-    this.phoneNumbers = phoneNumbers; /* TODO: investigate saving the phone numbers */
+    this.phoneNumbers = phoneNumbers;
   }
 
   public Handler getHandler() {
@@ -109,10 +107,6 @@ public class Grower extends BaseModel implements PrettyString {
   public String getFullName() {
     return firstName + " " + lastName;
   }
-
-  //public String getPrefferedContact() {
-    //return emailAddresses.isEmpty() ? null : emailAddresses.get(0).toString();
-  //}
 
   @JsonIgnore
   public List<Offer> getAcceptedOffers() {
@@ -195,10 +189,6 @@ public class Grower extends BaseModel implements PrettyString {
 
     builder.append("] [ ");
 
-    // TODO Uncomment after transitioned Phone Numbers into their own model.
-    //for (String number : phoneNumbers) {
-    //  builder.append(number + ", ");
-    //}
     builder.append(" ]\n");
 
     return builder.toString();
