@@ -14,7 +14,7 @@ public class SMSParser extends BaseParser {
   private Long offerID;
   private Integer almoundPounds;
   private static final String errorResponse = 
-                    "Please format message as \"[ID#] [# pounds Accepted]\". Could not process bid response.";
+                    "Please format message as \"[ID#] [# pounds Accepting]\". Could not process bid response.";
 
   public SMSParser(String smsMessage) {
     super();
