@@ -8,6 +8,8 @@ import models.Grower;
 import models.Handler;
 import models.Offer;
 
+import play.Logger;
+
 import services.HandlerService;
 
 import utils.SecurityUtility;
@@ -36,11 +38,20 @@ public class EbeanHandlerService implements HandlerService {
 
   @Override
   public Handler getByEmailAddressAndPassword(String emailAddress, String password) {
-    return FINDER
-        .where()
-        .eq("email_address", emailAddress.toLowerCase())
-        .eq("sha_password", SecurityUtility.getSha512(password))
-        .findUnique();
+    Handler handler
+        = FINDER
+            .where()
+            .eq("email_address", emailAddress.toLowerCase())
+            .findUnique();
+
+    if (handler == null) {
+      Logger.error("Handler not able to be found");
+      return null;
+    }
+
+    return SecurityUtility.checkPassword(password, handler.getShaPassword())
+      ? handler
+      : null;
   }
 
   @Override

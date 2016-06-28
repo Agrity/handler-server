@@ -28,7 +28,7 @@ create table handler (
   updated_at                    timestamp,
   company_name                  varchar(255) not null,
   email_address                 varchar(255) not null,
-  sha_password                  varbinary(64) not null,
+  sha_password                  varchar(255) not null,
   auth_token                    varchar(255),
   constraint pk_handler primary key (id)
 );

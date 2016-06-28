@@ -11,6 +11,9 @@ GET     /assets/*file                         controllers.Assets.versioned(path=
 
 # ============================= API Responses =================================================== #
 
+GET     /                                               controllers.Application.home()
+
+OPTIONS /*path                                          controllers.Application.options(path: String)
 
 # ========== Admin Handler ========== #
 

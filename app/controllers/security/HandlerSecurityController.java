@@ -6,18 +6,23 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import javax.inject.Inject;
 
 import models.Handler;
+
+import play.Logger;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Security;
+
 import services.HandlerService;
 import services.parsers.LoginJsonParser;
 
+import utils.ResponseHeaders;
+
 public class HandlerSecurityController extends Controller {
 
-  public static final String AUTH_TOKEN_HEADER = "X-AUTH-TOKEN";
+  public static final String AUTH_TOKEN_HEADER = "X-HANDLER-TOKEN";
   public static final String AUTH_TOKEN = "auth_token";
 
   public static final String HANDLER_KEY = "handler";
@@ -29,7 +34,6 @@ public class HandlerSecurityController extends Controller {
     this.handlerService = handlerService;
   }
 
-
   public static Handler getHandler() {
     return (Handler)Http.Context.current().args.get(HANDLER_KEY);
   }
@@ -37,6 +41,7 @@ public class HandlerSecurityController extends Controller {
   // Returns an authToken
   @BodyParser.Of(BodyParser.Json.class)
   public Result login() {
+    ResponseHeaders.addResponseHeaders(response());
 
     JsonNode data = request().body().asJson();
 
@@ -49,15 +54,16 @@ public class HandlerSecurityController extends Controller {
 
     if (!parser.isValid()) {
       // TODO Change to Valid Error JSON
+      Logger.info("Login Parsing Error: " + parser.getErrorMessage());
       return badRequest(parser.getErrorMessage());
     }
 
-
     Handler handler = handlerService.getByEmailAddressAndPassword(
-        parser.getEmailAddress(), parser.getPassword());
+        parser.getEmailAddress().toLowerCase(), parser.getPassword());
 
     if (handler == null) {
       // TODO Change to Invalid Login Credentials Error.
+      Logger.error("Invalid Login Credentials.");
       return unauthorized();
     }
 
@@ -76,12 +82,15 @@ public class HandlerSecurityController extends Controller {
 
   @Security.Authenticated(HandlerSecured.class)
   public Result logout() {
+    ResponseHeaders.addResponseHeaders(response());
+
     response().discardCookie(AUTH_TOKEN);
 
     Handler curHandler = getHandler();
     if (curHandler != null)
         curHandler.deleteAuthToken();
 
-    return redirect("/");
+
+    return ok("Successfully logged out.");
   }
 }
