@@ -3,6 +3,8 @@ package controllers;
 import play.mvc.Controller;
 import play.mvc.Result;
 
+import utils.ResponseHeaders;
+
 public class Application extends Controller {
 
   public Result home() {
@@ -10,10 +12,8 @@ public class Application extends Controller {
   }
 
   public Result options(String path) {
-    return ok("")
-      .withHeader("Access-Control-Allow-Origin","*")
-      .withHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-      .withHeader("Access-Control-Allow-Headers", "X-ADMIN-TOKEN, X-HANDLER-TOKEN, Content-Type");
+    ResponseHeaders.addResponseHeaders(response());
+    return ok("");
   }
 
   public Result reset() {

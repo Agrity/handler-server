@@ -3,6 +3,7 @@ package controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 
 import java.util.List;
@@ -11,7 +12,6 @@ import models.Grower;
 import models.Handler;
 import models.Offer;
 
-import play.Logger;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -31,6 +31,7 @@ import services.parsers.OfferJsonParser;
 import services.parsers.OfferJsonParser.ManagementTypeInfo;
 
 import utils.JsonMsgUtils;
+import utils.ResponseHeaders;
 
 @Security.Authenticated(HandlerSecured.class)
 public class HandlerController extends Controller {
@@ -57,6 +58,8 @@ public class HandlerController extends Controller {
   }
 
   public Result getHandler() {
+    ResponseHeaders.addResponseHeaders(response());
+
     Handler handler = HandlerSecurityController.getHandler();
 
     if (handler == null) {
@@ -74,6 +77,8 @@ public class HandlerController extends Controller {
   // returned.
   @BodyParser.Of(BodyParser.Json.class)
   public Result createGrower() {
+    ResponseHeaders.addResponseHeaders(response());
+
     Handler handler = HandlerSecurityController.getHandler();
 
     if (handler == null) {
@@ -84,6 +89,11 @@ public class HandlerController extends Controller {
 
     if (data == null) {
       return badRequest(JsonMsgUtils.expectingData());
+    }
+
+    if (data.isObject()) {
+      // TODO Change String to Literal to Constant.
+      ((ObjectNode) data).put("handler_id", handler.getId());
     }
 
     GrowerJsonParser parser = new GrowerJsonParser(data);
@@ -110,6 +120,8 @@ public class HandlerController extends Controller {
   }
 
   public Result getAllGrowers() {
+    ResponseHeaders.addResponseHeaders(response());
+
     Handler handler = HandlerSecurityController.getHandler();
 
     if (handler == null) {
@@ -117,14 +129,15 @@ public class HandlerController extends Controller {
     }
 
     try {
-      return ok(jsonMapper.writeValueAsString(growerService.getByHandler(handler.getId())))
-          .withHeader("Access-Control-Allow-Origin","*");
+      return ok(jsonMapper.writeValueAsString(growerService.getByHandler(handler.getId())));
     } catch (JsonProcessingException e) {
       return internalServerError(JsonMsgUtils.caughtException(e.toString()));
     }
   }
 
   public Result getGrower(long growerId) {
+    ResponseHeaders.addResponseHeaders(response());
+
     Handler handler = HandlerSecurityController.getHandler();
 
     if (handler == null) {
@@ -151,6 +164,8 @@ public class HandlerController extends Controller {
   // returned.
   @BodyParser.Of(BodyParser.Json.class)
   public Result createOffer() {
+    ResponseHeaders.addResponseHeaders(response());
+
     Handler handler = HandlerSecurityController.getHandler();
 
     if (handler == null) {
@@ -198,6 +213,8 @@ public class HandlerController extends Controller {
   }
 
   public Result getAllOffers() {
+    ResponseHeaders.addResponseHeaders(response());
+
     Handler handler = HandlerSecurityController.getHandler();
 
     if (handler == null) {
@@ -210,7 +227,7 @@ public class HandlerController extends Controller {
     if (handlerOffers == null) {
       return notFound(JsonMsgUtils.handlerNotFoundMessage(handler.getId()));
     }
-    
+
     try {
       return ok(jsonMapper.writeValueAsString(handlerOffers));
     } catch (JsonProcessingException e) {
@@ -219,6 +236,8 @@ public class HandlerController extends Controller {
   }
 
   public Result getOffer(long offerId) {
+    ResponseHeaders.addResponseHeaders(response());
+
     Handler handler = HandlerSecurityController.getHandler();
 
     if (handler == null) {
@@ -242,6 +261,8 @@ public class HandlerController extends Controller {
   }
   
   public Result sendOffer(long id) {
+    ResponseHeaders.addResponseHeaders(response());
+
     Handler handler = HandlerSecurityController.getHandler();
 
     if (handler == null) {
@@ -259,13 +280,13 @@ public class HandlerController extends Controller {
     
     boolean emailSuccess = offerMessageService.send(offer);
 
+
     return emailSuccess
         ? ok(JsonMsgUtils.successfullEmail())
         : internalServerError(JsonMsgUtils.emailsNotSent());
   }
 
   private Result handlerNotFound() {
-    Logger.error("Handler logged in but returned null.");
     return redirect("/handler/logout");
   }
 }

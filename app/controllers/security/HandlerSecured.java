@@ -11,6 +11,8 @@ import play.mvc.Security;
 
 import services.HandlerService;
 
+import utils.ResponseHeaders;
+
 public class HandlerSecured extends Security.Authenticator {
 
   private HandlerService handlerService;
@@ -24,8 +26,6 @@ public class HandlerSecured extends Security.Authenticator {
   public String getUsername(Context ctx) {
     String authTokenHeaderValue
       = ctx.request().getHeader(HandlerSecurityController.AUTH_TOKEN_HEADER);
-
-    //Logger.debug(ctx.request().headers().toString());
 
     Logger.debug("Recieved Token: " + authTokenHeaderValue);
     if (authTokenHeaderValue != null) {
@@ -43,6 +43,8 @@ public class HandlerSecured extends Security.Authenticator {
 
   @Override
   public Result onUnauthorized(Context ctx) {
+    ResponseHeaders.addResponseHeaders(ctx.response());
+
     // TODO Redirect to Login.
     Logger.info("Unauthorized Access");
     return unauthorized("Please Log In");

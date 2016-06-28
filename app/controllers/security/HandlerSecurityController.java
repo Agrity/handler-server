@@ -18,6 +18,8 @@ import play.mvc.Security;
 import services.HandlerService;
 import services.parsers.LoginJsonParser;
 
+import utils.ResponseHeaders;
+
 public class HandlerSecurityController extends Controller {
 
   public static final String AUTH_TOKEN_HEADER = "X-HANDLER-TOKEN";
@@ -39,6 +41,7 @@ public class HandlerSecurityController extends Controller {
   // Returns an authToken
   @BodyParser.Of(BodyParser.Json.class)
   public Result login() {
+    ResponseHeaders.addResponseHeaders(response());
 
     JsonNode data = request().body().asJson();
 
@@ -74,21 +77,20 @@ public class HandlerSecurityController extends Controller {
     ObjectNode authTokenJson = Json.newObject();
     authTokenJson.put(AUTH_TOKEN, authToken);
 
-    return ok(authTokenJson)
-      .withHeader("Access-Control-Allow-Origin","*")
-      // TODO Remove below.
-      .withHeader("Content-Type", "application/json");
+    return ok(authTokenJson);
   }
 
   @Security.Authenticated(HandlerSecured.class)
   public Result logout() {
+    ResponseHeaders.addResponseHeaders(response());
+
     response().discardCookie(AUTH_TOKEN);
 
     Handler curHandler = getHandler();
     if (curHandler != null)
         curHandler.deleteAuthToken();
 
-    return ok("Successfully logged out.")
-      .withHeader("Access-Control-Allow-Origin", "*");
+
+    return ok("Successfully logged out.");
   }
 }
