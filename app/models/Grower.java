@@ -77,18 +77,6 @@ public class Grower extends BaseModel implements PrettyString {
 
   /* ========== Member Functions ========== */
 
-  public Grower(Handler handler, String firstName, String lastName) {
-    super();
-
-    this.handler = handler;
-    this.firstName = firstName;
-    this.lastName = lastName;
-
-    this.emailAddresses = new ArrayList<>();
-    this.phoneNumbers = new ArrayList<>();
-    phoneNumbers.add("+18155926350");
-  }
-
   public Grower(Handler handler, String firstName, String lastName,
       List<EmailAddress> emailAddresses, List<String> phoneNumbers) {
     super();
@@ -99,8 +87,8 @@ public class Grower extends BaseModel implements PrettyString {
     this.emailAddresses = emailAddresses;
 
     // TODO Fix When Phonenumbers Functional
-    //this.phoneNumbers = phoneNumbers; /* TODO: investigate saving the phone numbers */
-    this.phoneNumbers = new ArrayList<>(); 
+    this.phoneNumbers = phoneNumbers; /* TODO: investigate saving the phone numbers */
+    //this.phoneNumbers = new ArrayList<>(); 
     phoneNumbers.add("+18155926350");
   }
 
@@ -160,10 +148,10 @@ public class Grower extends BaseModel implements PrettyString {
   }
 
   public List<String> getPhoneNumbers() {
-    List<String> list = new ArrayList<>();
-    list.add("+18155926350");
-    return list;
-    //return phoneNumbers;
+    //List<String> list = new ArrayList<>();
+    //list.add("+18155926350");
+    //return list;
+    return phoneNumbers;
   }
 
   public Offer offerLookupByID(Long offerID) {
