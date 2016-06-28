@@ -201,6 +201,7 @@ public class GrowerJsonParser extends BaseParser {
     // Phone numbers not present in json node. Returning empty list.
 
     if (!data.has(GrowerJsonConstants.PHONE_NUMBERS)) {
+      Logger.info("there are no phone numbers \n\n");
       return new ArrayList<>();
     }
 
