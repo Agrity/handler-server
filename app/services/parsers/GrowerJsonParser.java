@@ -219,11 +219,7 @@ public class GrowerJsonParser extends BaseParser {
 
       // Ensure phone number is valid.
       if (!PhoneMessageService.verifyPhoneNumber(phoneNum)) {
-<<<<<<< HEAD
-        setInvalid("Invalid Email Address: [" + node + "] is not a valid email address.");
-=======
         setInvalid("Invalid Phone Number: [" + node + "] is not a valid Phone Number.");
->>>>>>> master
         return null;
       }
 
