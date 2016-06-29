@@ -39,6 +39,7 @@ create table offer (
   updated_at                    timestamp,
   handler_id                    bigint,
   almond_variety                varchar(2),
+  almond_size                   varchar(255),
   almond_pounds                 integer,
   price_per_pound               varchar(255),
   payment_date                  date,
