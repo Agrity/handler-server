@@ -1,8 +1,12 @@
 package services;
 
 import java.time.LocalDate;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 public class DateService {
+
+  private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
   public static boolean verifyDateString(String dateString) {
     // TODO Implement
@@ -15,13 +19,15 @@ public class DateService {
    * 
    * WARNING: Error will be thrown if dateString is not a validFormat.
    */
-  public static LocalDate stringToDate(String dateString) {
+  public static Date stringToDate(String dateString) {
     if (!verifyDateString(dateString)) {
       throw new RuntimeException("Invalid Date string passed to date service.");
     }
+    
+    return dateFormat.parse(dateString);
+  }
 
-    // TODO Implement
-
-    return LocalDate.now();
+  public static String dateToString(Date date) {
+    return dateFormat.format(date);
   }
 }

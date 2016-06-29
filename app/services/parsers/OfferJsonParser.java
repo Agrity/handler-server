@@ -20,6 +20,8 @@ import services.offer_management.WaterfallService;
 import services.offer_management.FCFSService;
 import services.offer_management.OfferManagementService;
 
+import java.util.Date;
+
 /**
  * Class to parse json data to create new Offer.
  *
@@ -63,7 +65,8 @@ public class OfferJsonParser extends JsonParser {
   private String almondSize;
   private Integer almondPounds;
   private String pricePerPound;
-  private LocalDate paymentDate;
+  private Date startPaymentDate;
+  private Date endPaymentDate;
   private ManagementTypeInfo managementType;
   private String comment;
 
@@ -112,8 +115,14 @@ public class OfferJsonParser extends JsonParser {
       return;
     }
 
-    paymentDate = parsePaymentDate(data);
-    if (paymentDate == null) {
+    startPaymentDate = parseStartPaymentDate(data);
+    if (startPaymentDate == null) {
+      // Parser set to invalid with proper error message.
+      return;
+    }
+
+    endPaymentDate = parseEndPaymentDate(data);
+    if (endPaymentDate == null) {
       // Parser set to invalid with proper error message.
       return;
     }
@@ -312,15 +321,34 @@ public class OfferJsonParser extends JsonParser {
     return "$" + pricePerPound;
   }
 
-  private LocalDate parsePaymentDate(JsonNode data) {
+  private Date parseStartPaymentDate(JsonNode data) {
     // Check payment date is preseent.
-    if (!data.has(OfferJsonConstants.PAYMENT_DATE)) {
-      setInvalid(missingParameterError(OfferJsonConstants.PAYMENT_DATE));
+    if (!data.has(OfferJsonConstants.START_PAYMENT_DATE)) {
+      setInvalid(missingParameterError(OfferJsonConstants.START_PAYMENT_DATE));
       return null;
 
     } 
     
-    String dateString = data.get(OfferJsonConstants.PAYMENT_DATE).asText();
+    String dateString = data.get(OfferJsonConstants.START_PAYMENT_DATE).asText();
+
+    if (!DateService.verifyDateString(dateString)) {
+      // TODO: Determine Date Format
+      setInvalid("Date String Format Invalid: string with TODO format expected.\n"); 
+      return null;
+    }
+
+    return DateService.stringToDate(dateString);
+  }
+
+  private Date parseEndPaymentDate(JsonNode data) {
+    // Check payment date is preseent.
+    if (!data.has(OfferJsonConstants.END_PAYMENT_DATE)) {
+      setInvalid(missingParameterError(OfferJsonConstants.END_PAYMENT_DATE));
+      return null;
+
+    } 
+    
+    String dateString = data.get(OfferJsonConstants.END_PAYMENT_DATE).asText();
 
     if (!DateService.verifyDateString(dateString)) {
       // TODO: Determine Date Format
