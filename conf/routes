@@ -80,6 +80,8 @@ POST    /handler/growers                         controllers.HandlerController.c
 
 GET     /handler/growers/:growerId               controllers.HandlerController.getGrower(growerId: Long)
 
+GET     /handler/growers/:growerId/offers        controllers.HandlerController.getGrowersOffers(growerId: Long)
+
 GET     /handler/offers                          controllers.HandlerController.getAllOffers()
 
 POST    /handler/offers                          controllers.HandlerController.createOffer()

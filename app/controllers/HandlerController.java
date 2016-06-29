@@ -258,6 +258,37 @@ public class HandlerController extends Controller {
       return internalServerError(JsonMsgUtils.caughtException(e.toString()));
     }
   }
+
+  public Result getGrowersOffers(long growerId) {
+    ResponseHeaders.addResponseHeaders(response());
+
+    Handler handler = HandlerSecurityController.getHandler();
+
+    if (handler == null) {
+      return handlerNotFound();
+    }
+
+    Grower grower = growerService.getById(growerId);
+    if (grower == null) {
+      return notFound(JsonMsgUtils.growerNotFoundMessage(growerId));
+    }
+
+    if (!handlerService.checkHandlerOwnsGrower(handler, grower)) {
+      return badRequest(JsonMsgUtils.handlerDoesNotOwnGrowerMessage(handler, grower));
+    }
+
+    List<Offer> offers = offerService.getByGrower(growerId);
+    if (offers == null) {
+      return notFound(
+          JsonMsgUtils.caughtException("Could not get offers for grower with id " + growerId));
+    }
+
+    try {
+      return ok(jsonMapper.writeValueAsString(offers));
+    } catch (JsonProcessingException e) {
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
+    }
+  }
   
   public Result sendOffer(long id) {
     ResponseHeaders.addResponseHeaders(response());
