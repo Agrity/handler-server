@@ -106,6 +106,16 @@ public class Grower extends BaseModel implements PrettyString {
     return handler;
   }
 
+  public String getFirstName() {
+    return firstName;
+  }
+
+  public String getLastName() {
+    return lastName;
+  }
+
+
+  @JsonIgnore
   public String getFullName() {
     return firstName + " " + lastName;
   }

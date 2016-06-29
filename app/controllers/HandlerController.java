@@ -91,10 +91,7 @@ public class HandlerController extends Controller {
       return badRequest(JsonMsgUtils.expectingData());
     }
 
-    if (data.isObject()) {
-      // TODO Change String to Literal to Constant.
-      ((ObjectNode) data).put("handler_id", handler.getId());
-    }
+    addCurrentHandlerId(handler, data);
 
     GrowerJsonParser parser = new GrowerJsonParser(data);
 
@@ -177,6 +174,8 @@ public class HandlerController extends Controller {
     if (data == null) {
       return badRequest(JsonMsgUtils.expectingData());
     }
+
+    addCurrentHandlerId(handler, data);
 
     OfferJsonParser parser = new OfferJsonParser(data);
 
@@ -288,5 +287,12 @@ public class HandlerController extends Controller {
 
   private Result handlerNotFound() {
     return redirect("/handler/logout");
+  }
+
+  private void addCurrentHandlerId(Handler handler, JsonNode data) {
+    if (data.isObject()) {
+      // TODO Change String to Literal to Constant.
+      ((ObjectNode) data).put("handler_id", handler.getId());
+    }
   }
 }
