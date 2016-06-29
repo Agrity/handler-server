@@ -155,7 +155,8 @@ public class OfferJsonParser extends JsonParser {
         getAlmondSize(),
         getAlmondPounds(),
         getPricePerPound(),
-        getPaymentDate(),
+        getStartPaymentDate(),
+        getEndPaymentDate(),
         getComment());
 
     return newOffer;
@@ -191,9 +192,14 @@ public class OfferJsonParser extends JsonParser {
     return pricePerPound;
   }
 
-  public LocalDate getPaymentDate() {
+  public Date getStartPaymentDate() {
     ensureValid();
-    return paymentDate;
+    return startPaymentDate;
+  }
+
+  public Date getEndPaymentDate() {
+    ensureValid();
+    return endPaymentDate;
   }
 
   public ManagementTypeInfo getManagementType() {
@@ -419,7 +425,9 @@ public class OfferJsonParser extends JsonParser {
 
     private static final String PRICE_PER_POUND = "price_per_pound";
 
-    private static final String PAYMENT_DATE = "payment_date";
+    private static final String START_PAYMENT_DATE = "start_payment_date";
+
+    private static final String END_PAYMENT_DATE = "end_payment_date";
 
     private static final String MANAGEMENT_TYPE = "management_type";
 
