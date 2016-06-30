@@ -54,11 +54,11 @@ GET     /admin/offers/:id                               controllers.AdminOfferCo
 
 GET     /admin/offers/:id/send                          controllers.AdminOfferController.sendOffer(id: Long)
 
-GET     /admin/offers/:offerId/accept/:growerId/:amount controllers.AdminOfferController.acceptOffer(offerId: Long, growerId: Long, amount: Long)
+GET     /admin/offers/:offerId/accept/:growerId               controllers.AdminOfferController.acceptOffer(offerId: Long, growerId: Long)
 
-GET     /admin/offers/:offerId/reject/:growerId         controllers.AdminOfferController.rejectOffer(offerId: Long, growerId: Long)
+GET     /admin/offers/:offerId/reject/:growerId               controllers.AdminOfferController.rejectOffer(offerId: Long, growerId: Long)
 
-GET     /admin/offers/:offerId/requestcall/:growerId    controllers.AdminOfferController.requestCall(offerId: Long, growerId: Long)
+GET     /admin/offers/:offerId/requestcall/:growerId          controllers.AdminOfferController.requestCall(offerId: Long, growerId: Long)
 
 
 # ========== Authentication ========== #
@@ -94,8 +94,16 @@ GET     /handler/offers/:id/send                 controllers.HandlerController.s
 # ========== **TEMP** Response to Offer ========== #
 
 
-GET     /offers/:offerId/accept/:growerId/:amount controllers.AdminOfferController.acceptOffer(offerId: Long, growerId: Long, amount: Long)
+GET     /offers/:offerId/accept/:growerId controllers.AdminOfferController.acceptOffer(offerId: Long, growerId: Long)
 
 GET     /offers/:offerId/reject/:growerId         controllers.AdminOfferController.rejectOffer(offerId: Long, growerId: Long)
 
 GET     /offers/:offerId/requestcall/:growerId    controllers.AdminOfferController.requestCall(offerId: Long, growerId: Long)
+
+# ========== Message Recieving ========== #
+
+GET     /messaging/response/twilio                controllers.MessageReceivingController.receiveTwilioResponse()
+
+POST    /messaging/response/twilio                controllers.MessageReceivingController.receiveTwilioResponse()
+
+GET	    /messaging/response/twilio/number         controllers.MessageReceivingController.numberTwilioResponses()

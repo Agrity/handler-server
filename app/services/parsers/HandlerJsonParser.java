@@ -16,7 +16,7 @@ import models.Handler;
  *    PASSWORD: ...
  *  }
  */
-public class HandlerJsonParser extends JsonParser {
+public class HandlerJsonParser extends BaseParser {
   // Parsed variables
   private String companyName;
   private String emailAddress;

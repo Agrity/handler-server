@@ -10,7 +10,7 @@ import services.impl.EbeanHandlerService;
 /**
  * Base class to parse json data. Intended to be extended for specific json data types.
  */
-public abstract class JsonParser {
+public abstract class BaseParser {
   // Error variables
   private boolean valid;
   private String errorMessage;
@@ -19,7 +19,7 @@ public abstract class JsonParser {
 
   protected final HandlerService handlerService;
 
-  public JsonParser() {
+  public BaseParser() {
     // TODO -- Extremely Hacky -- Change to Dependency Injection.
     //      See Guice AssistedInjection
     handlerService = new EbeanHandlerService();
@@ -116,6 +116,20 @@ public abstract class JsonParser {
 
     try {
       Long num = Long.parseLong(numStr);
+      return num;
+
+    } catch (NumberFormatException e) {
+      return null;
+    }
+  }
+
+  protected static Integer parseInteger(String numStr) {
+    if (numStr == null) {
+      return null;
+    }
+
+    try {
+      Integer num = Integer.parseInt(numStr);
       return num;
 
     } catch (NumberFormatException e) {

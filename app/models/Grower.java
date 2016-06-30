@@ -46,8 +46,9 @@ public class Grower extends BaseModel implements PrettyString {
   /**
    * TODO: Change to phone number format, construct own model so that can be consistant.
    */
-  //@Constraints.Required
-  //public List<String> phoneNumbers;
+  @OneToMany(cascade = CascadeType.ALL)
+  @Constraints.Required
+  public List<PhoneNumber> phoneNumbers;
 
 
   // TODO Remove OfferResponses and Offers from Growers if possible.
@@ -85,21 +86,18 @@ public class Grower extends BaseModel implements PrettyString {
     this.lastName = lastName;
 
     this.emailAddresses = new ArrayList<>();
-    //this.phoneNumbers = new ArrayList<>();
+    this.phoneNumbers = new ArrayList<>();
   }
 
   public Grower(Handler handler, String firstName, String lastName,
-      List<EmailAddress> emailAddresses, List<String> phoneNumbers) {
+      List<EmailAddress> emailAddresses, List<PhoneNumber> phoneNumbers) {
     super();
 
     this.firstName = firstName;
     this.lastName = lastName;
     this.handler = handler;
     this.emailAddresses = emailAddresses;
-
-    // TODO Fix When Phonenumbers Functional
-    // this.phoneNumbers = phoneNumbers;
-    //this.phoneNumbers = new ArrayList<>();
+    this.phoneNumbers = phoneNumbers;
   }
 
   public Handler getHandler() {
@@ -118,10 +116,6 @@ public class Grower extends BaseModel implements PrettyString {
   @JsonIgnore
   public String getFullName() {
     return firstName + " " + lastName;
-  }
-
-  public String getPrefferedContact() {
-    return emailAddresses.isEmpty() ? null : emailAddresses.get(0).toString();
   }
 
   @JsonIgnore
@@ -167,6 +161,27 @@ public class Grower extends BaseModel implements PrettyString {
       .collect(Collectors.toList());
   }
 
+  @JsonIgnore
+  public List<PhoneNumber> getPhoneNums() {
+    return phoneNumbers;
+  }
+
+  public List<String> getPhoneNumsStrings() {
+    return phoneNumbers
+      .stream()
+      .map(PhoneNumber::getPhoneNumber)
+      .collect(Collectors.toList());
+  }
+
+  public Offer offerLookupByID(Long offerID) {
+    for (Offer offer: offers) {
+      if (offer.getId() == offerID) {
+        return offer;
+      }
+    }
+    return null;
+  }
+
   @Override
   public String toString() {
     // TODO
@@ -184,10 +199,6 @@ public class Grower extends BaseModel implements PrettyString {
 
     builder.append("] [ ");
 
-    // TODO Uncomment after transitioned Phone Numbers into their own model.
-    //for (String number : phoneNumbers) {
-    //  builder.append(number + ", ");
-    //}
     builder.append(" ]\n");
 
     return builder.toString();
