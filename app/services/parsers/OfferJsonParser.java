@@ -55,7 +55,7 @@ import services.offer_management.OfferManagementService;
  *    COMMENT: ... ,
  *  }
  */
-public class OfferJsonParser extends JsonParser {
+public class OfferJsonParser extends BaseParser {
 
   private Handler handler;
   private List<Grower> growers;

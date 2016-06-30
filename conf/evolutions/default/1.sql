@@ -66,6 +66,15 @@ create table offer_response (
   constraint pk_offer_response primary key (id)
 );
 
+create table phone_number (
+  id                            bigint auto_increment not null,
+  grower_id                     bigint not null,
+  created_at                    timestamp,
+  updated_at                    timestamp,
+  phone_number                  varchar(255),
+  constraint pk_phone_number primary key (id)
+);
+
 alter table email_address add constraint fk_email_address_grower_id foreign key (grower_id) references grower (id) on delete restrict on update restrict;
 create index ix_email_address_grower_id on email_address (grower_id);
 
@@ -86,6 +95,9 @@ create index ix_offer_response_grower_id on offer_response (grower_id);
 
 alter table offer_response add constraint fk_offer_response_offer_id foreign key (offer_id) references offer (id) on delete restrict on update restrict;
 create index ix_offer_response_offer_id on offer_response (offer_id);
+
+alter table phone_number add constraint fk_phone_number_grower_id foreign key (grower_id) references grower (id) on delete restrict on update restrict;
+create index ix_phone_number_grower_id on phone_number (grower_id);
 
 
 # --- !Downs
@@ -111,6 +123,9 @@ drop index if exists ix_offer_response_grower_id;
 alter table offer_response drop constraint if exists fk_offer_response_offer_id;
 drop index if exists ix_offer_response_offer_id;
 
+alter table phone_number drop constraint if exists fk_phone_number_grower_id;
+drop index if exists ix_phone_number_grower_id;
+
 drop table if exists email_address;
 
 drop table if exists grower;
@@ -122,4 +137,6 @@ drop table if exists offer;
 drop table if exists offer_grower;
 
 drop table if exists offer_response;
+
+drop table if exists phone_number;
 
