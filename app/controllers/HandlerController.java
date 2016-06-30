@@ -91,10 +91,7 @@ public class HandlerController extends Controller {
       return badRequest(JsonMsgUtils.expectingData());
     }
 
-    if (data.isObject()) {
-      // TODO Change String to Literal to Constant.
-      ((ObjectNode) data).put("handler_id", handler.getId());
-    }
+    addCurrentHandlerId(handler, data);
 
     GrowerJsonParser parser = new GrowerJsonParser(data);
 
@@ -178,6 +175,8 @@ public class HandlerController extends Controller {
       return badRequest(JsonMsgUtils.expectingData());
     }
 
+    addCurrentHandlerId(handler, data);
+
     OfferJsonParser parser = new OfferJsonParser(data);
 
     if (!parser.isValid()) {
@@ -259,6 +258,37 @@ public class HandlerController extends Controller {
       return internalServerError(JsonMsgUtils.caughtException(e.toString()));
     }
   }
+
+  public Result getGrowersOffers(long growerId) {
+    ResponseHeaders.addResponseHeaders(response());
+
+    Handler handler = HandlerSecurityController.getHandler();
+
+    if (handler == null) {
+      return handlerNotFound();
+    }
+
+    Grower grower = growerService.getById(growerId);
+    if (grower == null) {
+      return notFound(JsonMsgUtils.growerNotFoundMessage(growerId));
+    }
+
+    if (!handlerService.checkHandlerOwnsGrower(handler, grower)) {
+      return badRequest(JsonMsgUtils.handlerDoesNotOwnGrowerMessage(handler, grower));
+    }
+
+    List<Offer> offers = offerService.getByGrower(growerId);
+    if (offers == null) {
+      return notFound(
+          JsonMsgUtils.caughtException("Could not get offers for grower with id " + growerId));
+    }
+
+    try {
+      return ok(jsonMapper.writeValueAsString(offers));
+    } catch (JsonProcessingException e) {
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
+    }
+  }
   
   public Result sendOffer(long id) {
     ResponseHeaders.addResponseHeaders(response());
@@ -288,5 +318,12 @@ public class HandlerController extends Controller {
 
   private Result handlerNotFound() {
     return redirect("/handler/logout");
+  }
+
+  private void addCurrentHandlerId(Handler handler, JsonNode data) {
+    if (data.isObject()) {
+      // TODO Change String to Literal to Constant.
+      ((ObjectNode) data).put("handler_id", handler.getId());
+    }
   }
 }

@@ -53,15 +53,17 @@ public class Offer extends BaseModel implements PrettyString {
   @Constraints.Required
   private AlmondVariety almondVariety;
 
-  /* === TODO Almond Size Here === */
+  // TODO Change to AlmondSize Size within Almond model.
+  @Constraints.Required
+  private String almondSize;
 
   @Constraints.Required
   private Integer almondPounds;
 
+  // TODO Change to MonetaryAmount.
   @Constraints.Required
   private String pricePerPound;
 
-  // TODO Change to Java 8 Date and Time
   @Formats.DateTime(pattern = "dd/MM/yyyy")
   private LocalDate paymentDate;
 
@@ -82,7 +84,7 @@ public class Offer extends BaseModel implements PrettyString {
 
 
   public Offer(Handler handler, List<Grower> allGrowers, AlmondVariety almondVariety,
-      Integer almondPounds, String pricePerPound, LocalDate paymentDate, String comment) {
+      String almondSize, Integer almondPounds, String pricePerPound, LocalDate paymentDate, String comment) {
     super();
 
     this.handler = handler;
@@ -94,6 +96,7 @@ public class Offer extends BaseModel implements PrettyString {
 
     this.growers = allGrowers;
     this.almondVariety = almondVariety;
+    this.almondSize = almondSize;
     this.almondPounds = almondPounds;
     this.pricePerPound = pricePerPound;
     this.paymentDate = paymentDate;
@@ -115,6 +118,10 @@ public class Offer extends BaseModel implements PrettyString {
 
   public AlmondVariety getAlmondVariety() {
     return almondVariety;
+  }
+
+  public String getAlmondSize() {
+    return almondSize;
   }
 
 

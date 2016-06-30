@@ -18,8 +18,7 @@ import services.GrowerService;
 import services.impl.EbeanGrowerService;
 import services.offer_management.WaterfallService;
 import services.offer_management.FCFSService;
-
-import java.lang.reflect.Constructor;
+import services.offer_management.OfferManagementService;
 
 /**
  * Class to parse json data to create new Offer.
@@ -35,6 +34,9 @@ import java.lang.reflect.Constructor;
  *    ],
  *
  *    ALMOND_VARIETY: ... ,
+ *
+ *    (TODO Change from String to Actual Almond Size)
+ *    ALMOND_SIZE: ... ,
  *
  *    ALMOND_POUNDS: ... ,
  *
@@ -58,6 +60,7 @@ public class OfferJsonParser extends BaseParser {
   private Handler handler;
   private List<Grower> growers;
   private AlmondVariety almondVariety;
+  private String almondSize;
   private Integer almondPounds;
   private String pricePerPound;
   private LocalDate paymentDate;
@@ -87,6 +90,12 @@ public class OfferJsonParser extends BaseParser {
 
     almondVariety = parseAlmondVariety(data);
     if (almondVariety == null) {
+      // Parser set to invalid with proper error message.
+      return;
+    }
+
+    almondSize = parseAlmondSize(data);
+    if (almondSize == null) {
       // Parser set to invalid with proper error message.
       return;
     }
@@ -134,6 +143,7 @@ public class OfferJsonParser extends BaseParser {
         getHandler(),
         getGrowers(),
         getAlmondVariety(),
+        getAlmondSize(),
         getAlmondPounds(),
         getPricePerPound(),
         getPaymentDate(),
@@ -155,6 +165,11 @@ public class OfferJsonParser extends BaseParser {
   public AlmondVariety getAlmondVariety() {
     ensureValid();
     return almondVariety;
+  }
+
+  public String getAlmondSize() {
+    ensureValid();
+    return almondSize;
   }
 
   public Integer getAlmondPounds() {
@@ -246,6 +261,18 @@ public class OfferJsonParser extends BaseParser {
     }
 
     return almondVariety;
+  }
+
+  private String parseAlmondSize(JsonNode data) {
+    // Check almound size is present.
+    if (!data.has(OfferJsonConstants.ALMOND_SIZE)) {
+      setInvalid(missingParameterError(OfferJsonConstants.ALMOND_SIZE));
+      return null;
+    } 
+
+    // TODO Add checks to verify correctly formatted almond size.
+    
+    return data.get(OfferJsonConstants.ALMOND_SIZE).asText();
   }
 
   private Integer parseAlmondPounds(JsonNode data) {
@@ -359,6 +386,7 @@ public class OfferJsonParser extends BaseParser {
     private static final String GROWER_IDS = "grower_ids";
 
     private static final String ALMOND_VARIETY = "almond_variety";
+    private static final String ALMOND_SIZE = "almond_size";
     private static final String ALMOND_POUNDS = "almond_pounds";
 
     private static final String PRICE_PER_POUND = "price_per_pound";
@@ -379,15 +407,15 @@ public class OfferJsonParser extends BaseParser {
   }
 
   public static class ManagementTypeInfo {
-    private Class typeClass;
+    private Class<? extends OfferManagementService> typeClass;
     private Duration delay;
 
-      ManagementTypeInfo(Class c, Duration d) {
+      ManagementTypeInfo(Class<? extends OfferManagementService> c, Duration d) {
         this.typeClass = c;
         this.delay = d;
       }
 
-      public Class getClassType() { return typeClass; }
+      public Class<? extends OfferManagementService> getClassType() { return typeClass; }
       public Duration getDelay() { return delay; }
 
   }

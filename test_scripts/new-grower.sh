@@ -6,7 +6,7 @@ if [[ -z $1 ]]; then
     --header "X-ADMIN-TOKEN: development-use-only" \
     --request POST \
     --data '{ "handler_id" : 1, "first_name" : "F_NAME", "last_name" : "L_NAME", "email_addresses" :  [] }' \
-    localhost:9000/admin/growers
+    http://server.test.agrity.net/admin/growers
 else
   echo "ERROR: do not use any arguements."
 fi

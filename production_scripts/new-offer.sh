@@ -6,7 +6,7 @@ if [[ -z $1 ]]; then
     --header "X-ADMIN-TOKEN: development-use-only" \
     --request POST \
     --data '{ "handler_id" : 1, "grower_ids" : [1], "almond_variety" : "NP", "almond_size" : "23/25", "almond_pounds" :  100000,  "price_per_pound" : "2.23", "payment_date" : "testing", "management_type" : { "type" : "FCFSService", "delay" : 10}, "comment" : "This is an awesome test comment", "email_addresses" : "ryscot@gmail.com" }' \
-    localhost:9000/admin/offers
+    http://server.agrity.net/admin/offers
   echo # Insert Blank Line
 else
   echo "ERROR: do not use any arguements."

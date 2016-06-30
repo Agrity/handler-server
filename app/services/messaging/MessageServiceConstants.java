@@ -14,10 +14,10 @@ public abstract class MessageServiceConstants {
   public static class EmailFields {
     // Used for SendGrid
     private static final String FROM_NAME = "Agrity";
-    private static final String FROM_EMAIL_ADDRESS = "agritycommodities@gmail.com";
+    private static final String FROM_EMAIL_ADDRESS = "noreply@agrity.net";
 
     // Used for Raw Email
-    private static final String FROM_ADDRESS = "Agrity <agritycommodities@gmail.com>";
+    private static final String FROM_ADDRESS = "Agrity <noreply@agrity.net>";
 
     public static String getFromName() {
       return FROM_NAME;
