@@ -122,7 +122,6 @@ public class GrowerJsonParser extends BaseParser {
 
   public List<PhoneNumber> getPhoneNumbers() {
     ensureValid();
-    if (phoneNumbers != null) Logger.info("Phone number: " + phoneNumbers.get(0) + "\n\n");
     return phoneNumbers;
   }
 

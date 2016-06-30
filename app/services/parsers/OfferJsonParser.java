@@ -329,13 +329,23 @@ public class OfferJsonParser extends BaseParser {
 
   private Date parseStartPaymentDate(JsonNode data) {
     // Check payment date is preseent.
-    if (!data.has(OfferJsonConstants.START_PAYMENT_DATE)) {
-      setInvalid(missingParameterError(OfferJsonConstants.START_PAYMENT_DATE));
+    if (!data.has(OfferJsonConstants.START_PAYMENT_MONTH)) {
+      setInvalid(missingParameterError(OfferJsonConstants.START_PAYMENT_MONTH));
       return null;
 
     } 
     
-    String dateString = data.get(OfferJsonConstants.START_PAYMENT_DATE).asText();
+    String dateMonth = data.get(OfferJsonConstants.START_PAYMENT_MONTH).asText();
+
+    if (!data.has(OfferJsonConstants.START_PAYMENT_YEAR)) {
+      setInvalid(missingParameterError(OfferJsonConstants.START_PAYMENT_YEAR));
+      return null;
+
+    } 
+    
+    String dateYear = data.get(OfferJsonConstants.START_PAYMENT_YEAR).asText();
+
+    String dateString = dateMonth + " " + dateYear;
 
     if (!DateService.verifyDateString(dateString)) {
       // TODO: Determine Date Format
@@ -348,13 +358,23 @@ public class OfferJsonParser extends BaseParser {
 
   private Date parseEndPaymentDate(JsonNode data) {
     // Check payment date is preseent.
-    if (!data.has(OfferJsonConstants.END_PAYMENT_DATE)) {
-      setInvalid(missingParameterError(OfferJsonConstants.END_PAYMENT_DATE));
+    if (!data.has(OfferJsonConstants.END_PAYMENT_MONTH)) {
+      setInvalid(missingParameterError(OfferJsonConstants.END_PAYMENT_MONTH));
       return null;
 
     } 
     
-    String dateString = data.get(OfferJsonConstants.END_PAYMENT_DATE).asText();
+    String dateMonth = data.get(OfferJsonConstants.END_PAYMENT_MONTH).asText();
+
+    if (!data.has(OfferJsonConstants.END_PAYMENT_YEAR)) {
+      setInvalid(missingParameterError(OfferJsonConstants.END_PAYMENT_YEAR));
+      return null;
+
+    } 
+    
+    String dateYear = data.get(OfferJsonConstants.END_PAYMENT_YEAR).asText();
+
+    String dateString = dateMonth + " " + dateYear;
 
     if (!DateService.verifyDateString(dateString)) {
       // TODO: Determine Date Format
@@ -425,9 +445,13 @@ public class OfferJsonParser extends BaseParser {
 
     private static final String PRICE_PER_POUND = "price_per_pound";
 
-    private static final String START_PAYMENT_DATE = "start_payment_date";
+    private static final String START_PAYMENT_MONTH = "start_payment_month";
 
-    private static final String END_PAYMENT_DATE = "end_payment_date";
+    private static final String START_PAYMENT_YEAR = "start_payment_year";
+
+    private static final String END_PAYMENT_MONTH = "end_payment_month";
+
+    private static final String END_PAYMENT_YEAR = "end_payment_year";
 
     private static final String MANAGEMENT_TYPE = "management_type";
 
