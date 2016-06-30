@@ -65,8 +65,8 @@ public class OfferJsonParser extends BaseParser {
   private String almondSize;
   private Integer almondPounds;
   private String pricePerPound;
-  private Date startPaymentDate;
-  private Date endPaymentDate;
+  private LocalDate startPaymentDate;
+  private LocalDate endPaymentDate;
   private ManagementTypeInfo managementType;
   private String comment;
 
@@ -192,12 +192,12 @@ public class OfferJsonParser extends BaseParser {
     return pricePerPound;
   }
 
-  public Date getStartPaymentDate() {
+  public LocalDate getStartPaymentDate() {
     ensureValid();
     return startPaymentDate;
   }
 
-  public Date getEndPaymentDate() {
+  public LocalDate getEndPaymentDate() {
     ensureValid();
     return endPaymentDate;
   }
@@ -327,25 +327,15 @@ public class OfferJsonParser extends BaseParser {
     return "$" + pricePerPound;
   }
 
-  private Date parseStartPaymentDate(JsonNode data) {
+  private LocalDate parseStartPaymentDate(JsonNode data) {
     // Check payment date is preseent.
-    if (!data.has(OfferJsonConstants.START_PAYMENT_MONTH)) {
-      setInvalid(missingParameterError(OfferJsonConstants.START_PAYMENT_MONTH));
+    if (!data.has(OfferJsonConstants.START_PAYMENT_DATE)) {
+      setInvalid(missingParameterError(OfferJsonConstants.START_PAYMENT_DATE));
       return null;
 
     } 
     
-    String dateMonth = data.get(OfferJsonConstants.START_PAYMENT_MONTH).asText();
-
-    if (!data.has(OfferJsonConstants.START_PAYMENT_YEAR)) {
-      setInvalid(missingParameterError(OfferJsonConstants.START_PAYMENT_YEAR));
-      return null;
-
-    } 
-    
-    String dateYear = data.get(OfferJsonConstants.START_PAYMENT_YEAR).asText();
-
-    String dateString = dateMonth + " " + dateYear;
+    String dateString = data.get(OfferJsonConstants.START_PAYMENT_DATE).asText();
 
     if (!DateService.verifyDateString(dateString)) {
       // TODO: Determine Date Format
@@ -356,25 +346,25 @@ public class OfferJsonParser extends BaseParser {
     return DateService.stringToDate(dateString);
   }
 
-  private Date parseEndPaymentDate(JsonNode data) {
+  private LocalDate parseEndPaymentDate(JsonNode data) {
     // Check payment date is preseent.
-    if (!data.has(OfferJsonConstants.END_PAYMENT_MONTH)) {
-      setInvalid(missingParameterError(OfferJsonConstants.END_PAYMENT_MONTH));
+    if (!data.has(OfferJsonConstants.END_PAYMENT_DATE)) {
+      setInvalid(missingParameterError(OfferJsonConstants.END_PAYMENT_DATE));
       return null;
 
     } 
     
-    String dateMonth = data.get(OfferJsonConstants.END_PAYMENT_MONTH).asText();
+   // String dateMonth = data.get(OfferJsonConstants.END_PAYMENT_MONTH).asText();
 
-    if (!data.has(OfferJsonConstants.END_PAYMENT_YEAR)) {
-      setInvalid(missingParameterError(OfferJsonConstants.END_PAYMENT_YEAR));
-      return null;
+   // if (!data.has(OfferJsonConstants.END_PAYMENT_YEAR)) {
+   //   setInvalid(missingParameterError(OfferJsonConstants.END_PAYMENT_YEAR));
+   //   return null;
 
-    } 
+    //} 
     
-    String dateYear = data.get(OfferJsonConstants.END_PAYMENT_YEAR).asText();
+    String dateString = data.get(OfferJsonConstants.END_PAYMENT_DATE).asText();
 
-    String dateString = dateMonth + " " + dateYear;
+  
 
     if (!DateService.verifyDateString(dateString)) {
       // TODO: Determine Date Format
@@ -445,13 +435,9 @@ public class OfferJsonParser extends BaseParser {
 
     private static final String PRICE_PER_POUND = "price_per_pound";
 
-    private static final String START_PAYMENT_MONTH = "start_payment_month";
+    private static final String START_PAYMENT_DATE = "start_payment_date";
 
-    private static final String START_PAYMENT_YEAR = "start_payment_year";
-
-    private static final String END_PAYMENT_MONTH = "end_payment_month";
-
-    private static final String END_PAYMENT_YEAR = "end_payment_year";
+    private static final String END_PAYMENT_DATE = "end_payment_date";
 
     private static final String MANAGEMENT_TYPE = "management_type";
 
