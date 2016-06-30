@@ -219,6 +219,8 @@ public class GrowerJsonParser extends BaseParser {
 
     for (JsonNode node : phoneNums) {
       String phoneNum = node.asText();
+      
+      phoneNum = "+1" + phoneNum;
 
       // Ensure phone number is valid.
       if (!PhoneMessageService.verifyPhoneNumber(phoneNum)) {
@@ -226,7 +228,7 @@ public class GrowerJsonParser extends BaseParser {
         return null;
       }
 
-      phoneNum = "+1" + phoneNum;
+     
 
       processedPhoneNumbers.add(phoneNum);
     }
