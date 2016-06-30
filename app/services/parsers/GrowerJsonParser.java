@@ -226,6 +226,8 @@ public class GrowerJsonParser extends BaseParser {
         return null;
       }
 
+      phoneNum = "+1" + phoneNum;
+
       processedPhoneNumbers.add(phoneNum);
     }
 
