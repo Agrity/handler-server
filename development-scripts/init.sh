@@ -1,6 +1,6 @@
 #!/bin/bash
 
-./new-handler.sh "Test Company A" "r@d.com" "pass"
+./new-handler.sh "Admin Company" "admin@admin.com" "admin"
 
 ./new-grower.sh
 
