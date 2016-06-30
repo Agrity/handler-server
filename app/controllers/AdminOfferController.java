@@ -43,14 +43,14 @@ public class AdminOfferController extends Controller {
   }
 
   // TODO Not Secured. Implement non-admin means of responding to offer.
-  public Result acceptOffer(long offerId, long growerId, long amount) {
+  public Result acceptOffer(long offerId, long growerId) {
     Offer offer = offerService.getById(offerId);
     if (offer == null) {
       return notFound(JsonMsgUtils.offerNotFoundMessage(offerId));
     }
 
     // TODO Change to actual pounds accepted once implemented.
-    OfferResponseResult success = offer.growerAcceptOffer(growerId, amount);
+    OfferResponseResult success = offer.growerAcceptOffer(growerId, offer.getAlmondPounds());
     
     return success.isValid() ? ok(JsonMsgUtils.successfullAccept())
         : internalServerError(JsonMsgUtils.offerNotAccepted(success.getInvalidResponseMessage()));
