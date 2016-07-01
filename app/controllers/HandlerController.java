@@ -8,6 +8,8 @@ import com.google.inject.Inject;
 
 import java.util.List;
 
+import play.Logger;
+
 import models.Grower;
 import models.Handler;
 import models.Offer;
@@ -230,6 +232,7 @@ public class HandlerController extends Controller {
     try {
       return ok(jsonMapper.writeValueAsString(handlerOffers));
     } catch (JsonProcessingException e) {
+      Logger.error(e.toString());
       return internalServerError(JsonMsgUtils.caughtException(e.toString()));
     }
   }

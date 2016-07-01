@@ -69,9 +69,9 @@ public class Offer extends BaseModel implements PrettyString {
 
   //@Formats.DateTime(pattern = "dd/MM/yyyy")
   //private LocalDate paymentDate;
-  private Date startPaymentDate;
+  private LocalDate startPaymentDate;
 
-  private Date endPaymentDate;
+  private LocalDate endPaymentDate;
 
   @Column(columnDefinition = "TEXT")
   private String comment = "";
@@ -90,8 +90,8 @@ public class Offer extends BaseModel implements PrettyString {
 
 
   public Offer(Handler handler, List<Grower> allGrowers, AlmondVariety almondVariety,
-      String almondSize, Integer almondPounds, String pricePerPound, Date startPaymentDate,
-      Date endPaymentDate, String comment) {
+      String almondSize, Integer almondPounds, String pricePerPound, LocalDate startPaymentDate,
+      LocalDate endPaymentDate, String comment) {
     super();
 
     this.handler = handler;
@@ -147,11 +147,11 @@ public class Offer extends BaseModel implements PrettyString {
     return NumberFormat.getIntegerInstance().format(almondPounds);
   }
 
-  public Date getStartPaymentDate() {
+  public LocalDate getStartPaymentDate() {
     return startPaymentDate;
   }
 
-  public Date getEndPaymentDate() {
+  public LocalDate getEndPaymentDate() {
     return endPaymentDate;
   }
 
