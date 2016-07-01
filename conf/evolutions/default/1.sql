@@ -42,8 +42,13 @@ create table offer (
   almond_size                   varchar(255),
   almond_pounds                 integer,
   price_per_pound               varchar(255),
+<<<<<<< HEAD
   start_payment_date            date,
   end_payment_date              date,
+=======
+  start_payment_date            timestamp,
+  end_payment_date              timestamp,
+>>>>>>> master
   comment                       TEXT,
   offer_currently_open          boolean,
   constraint ck_offer_almond_variety check (almond_variety in ('PD','FR','PR','MI','MT','PL','BT','SN','NP','CR')),
