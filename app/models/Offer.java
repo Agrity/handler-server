@@ -28,6 +28,9 @@ import play.data.validation.Constraints;
 
 import services.offer_management.OfferManagementService;
 
+import services.DateService;
+import java.util.Date;
+
 @Entity
 public class Offer extends BaseModel implements PrettyString {
 
@@ -64,8 +67,11 @@ public class Offer extends BaseModel implements PrettyString {
   @Constraints.Required
   private String pricePerPound;
 
-  @Formats.DateTime(pattern = "dd/MM/yyyy")
-  private LocalDate paymentDate;
+  //@Formats.DateTime(pattern = "dd/MM/yyyy")
+  //private LocalDate paymentDate;
+  private LocalDate startPaymentDate;
+
+  private LocalDate endPaymentDate;
 
   @Column(columnDefinition = "TEXT")
   private String comment = "";
@@ -84,7 +90,8 @@ public class Offer extends BaseModel implements PrettyString {
 
 
   public Offer(Handler handler, List<Grower> allGrowers, AlmondVariety almondVariety,
-      String almondSize, Integer almondPounds, String pricePerPound, LocalDate paymentDate, String comment) {
+      String almondSize, Integer almondPounds, String pricePerPound, LocalDate startPaymentDate,
+      LocalDate endPaymentDate, String comment) {
     super();
 
     this.handler = handler;
@@ -99,7 +106,8 @@ public class Offer extends BaseModel implements PrettyString {
     this.almondSize = almondSize;
     this.almondPounds = almondPounds;
     this.pricePerPound = pricePerPound;
-    this.paymentDate = paymentDate;
+    this.startPaymentDate = startPaymentDate;
+    this.endPaymentDate = endPaymentDate;
     this.comment = comment;
   }
 
@@ -139,9 +147,20 @@ public class Offer extends BaseModel implements PrettyString {
     return NumberFormat.getIntegerInstance().format(almondPounds);
   }
 
+  public LocalDate getStartPaymentDate() {
+    return startPaymentDate;
+  }
 
-  public LocalDate getPaymentDate() {
-    return paymentDate;
+  public LocalDate getEndPaymentDate() {
+    return endPaymentDate;
+  }
+
+  public String getStartPaymentDateAsString() {
+    return DateService.dateToString(startPaymentDate);
+  }
+
+  public String getEndPaymentDateAsString() {
+    return DateService.dateToString(endPaymentDate);
   }
 
   public String getComment() {

@@ -122,7 +122,6 @@ public class GrowerJsonParser extends BaseParser {
 
   public List<PhoneNumber> getPhoneNumbers() {
     ensureValid();
-    if (phoneNumbers != null) Logger.info("Phone number: " + phoneNumbers.get(0) + "\n\n");
     return phoneNumbers;
   }
 
@@ -219,6 +218,8 @@ public class GrowerJsonParser extends BaseParser {
 
     for (JsonNode node : phoneNums) {
       String phoneNum = node.asText();
+      
+      phoneNum = "+1" + phoneNum;
 
       // Ensure phone number is valid.
       if (!PhoneMessageService.verifyPhoneNumber(phoneNum)) {
@@ -226,7 +227,7 @@ public class GrowerJsonParser extends BaseParser {
         return null;
       }
 
-      phoneNum = "+1" + phoneNum;
+     
 
       processedPhoneNumbers.add(phoneNum);
     }

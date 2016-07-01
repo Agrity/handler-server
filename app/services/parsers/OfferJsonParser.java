@@ -13,12 +13,16 @@ import models.Grower;
 import models.Handler;
 import models.Offer;
 
+import play.Logger;
+
 import services.DateService;
 import services.GrowerService;
 import services.impl.EbeanGrowerService;
 import services.offer_management.WaterfallService;
 import services.offer_management.FCFSService;
 import services.offer_management.OfferManagementService;
+
+import java.util.Date;
 
 /**
  * Class to parse json data to create new Offer.
@@ -63,7 +67,8 @@ public class OfferJsonParser extends BaseParser {
   private String almondSize;
   private Integer almondPounds;
   private String pricePerPound;
-  private LocalDate paymentDate;
+  private LocalDate startPaymentDate;
+  private LocalDate endPaymentDate;
   private ManagementTypeInfo managementType;
   private String comment;
 
@@ -112,8 +117,14 @@ public class OfferJsonParser extends BaseParser {
       return;
     }
 
-    paymentDate = parsePaymentDate(data);
-    if (paymentDate == null) {
+    startPaymentDate = parseStartPaymentDate(data);
+    if (startPaymentDate == null) {
+      // Parser set to invalid with proper error message.
+      return;
+    }
+
+    endPaymentDate = parseEndPaymentDate(data);
+    if (endPaymentDate == null) {
       // Parser set to invalid with proper error message.
       return;
     }
@@ -146,7 +157,8 @@ public class OfferJsonParser extends BaseParser {
         getAlmondSize(),
         getAlmondPounds(),
         getPricePerPound(),
-        getPaymentDate(),
+        getStartPaymentDate(),
+        getEndPaymentDate(),
         getComment());
 
     return newOffer;
@@ -182,9 +194,14 @@ public class OfferJsonParser extends BaseParser {
     return pricePerPound;
   }
 
-  public LocalDate getPaymentDate() {
+  public LocalDate getStartPaymentDate() {
     ensureValid();
-    return paymentDate;
+    return startPaymentDate;
+  }
+
+  public LocalDate getEndPaymentDate() {
+    ensureValid();
+    return endPaymentDate;
   }
 
   public ManagementTypeInfo getManagementType() {
@@ -199,6 +216,7 @@ public class OfferJsonParser extends BaseParser {
 
   private List<Grower> parseGrowers(JsonNode data) {
     // Check grower ids are present.
+    Logger.info("parsing growers...\n\n");
     if (!data.has(OfferJsonConstants.GROWER_IDS)) {
       setInvalid(missingParameterError(OfferJsonConstants.GROWER_IDS));
       return null;
@@ -247,6 +265,7 @@ public class OfferJsonParser extends BaseParser {
 
   private AlmondVariety parseAlmondVariety(JsonNode data) {
     // Check almound variety is preseent.
+    Logger.info("parsing almond variety...\n\n");
     if (!data.has(OfferJsonConstants.ALMOND_VARIETY)) {
       setInvalid(missingParameterError(OfferJsonConstants.ALMOND_VARIETY));
       return null;
@@ -265,6 +284,7 @@ public class OfferJsonParser extends BaseParser {
 
   private String parseAlmondSize(JsonNode data) {
     // Check almound size is present.
+    Logger.info("parsing almond size...\n\n");
     if (!data.has(OfferJsonConstants.ALMOND_SIZE)) {
       setInvalid(missingParameterError(OfferJsonConstants.ALMOND_SIZE));
       return null;
@@ -277,6 +297,7 @@ public class OfferJsonParser extends BaseParser {
 
   private Integer parseAlmondPounds(JsonNode data) {
     // Check almound pounds is present.
+    Logger.info("parsing almond pounds...\n\n");
     if (!data.has(OfferJsonConstants.ALMOND_POUNDS)) {
       setInvalid(missingParameterError(OfferJsonConstants.ALMOND_POUNDS));
       return null;
@@ -295,6 +316,7 @@ public class OfferJsonParser extends BaseParser {
 
   private String parsePricePerPound(JsonNode data) {
     // Check price per pound is present.
+    Logger.info("parsing price per pound...\n\n");
     if (!data.has(OfferJsonConstants.PRICE_PER_POUND)) {
       setInvalid(missingParameterError(OfferJsonConstants.PRICE_PER_POUND));
       return null;
@@ -312,15 +334,46 @@ public class OfferJsonParser extends BaseParser {
     return "$" + pricePerPound;
   }
 
-  private LocalDate parsePaymentDate(JsonNode data) {
+  private LocalDate parseStartPaymentDate(JsonNode data) {
     // Check payment date is preseent.
-    if (!data.has(OfferJsonConstants.PAYMENT_DATE)) {
-      setInvalid(missingParameterError(OfferJsonConstants.PAYMENT_DATE));
+    Logger.info("parsing start payment date...\n\n");
+    if (!data.has(OfferJsonConstants.START_PAYMENT_DATE)) {
+      setInvalid(missingParameterError(OfferJsonConstants.START_PAYMENT_DATE));
       return null;
 
     } 
     
-    String dateString = data.get(OfferJsonConstants.PAYMENT_DATE).asText();
+    String dateString = data.get(OfferJsonConstants.START_PAYMENT_DATE).asText();
+
+    if (!DateService.verifyDateString(dateString)) {
+      // TODO: Determine Date Format
+      setInvalid("Date String Format Invalid: string with TODO format expected.\n"); 
+      return null;
+    }
+
+    return DateService.stringToDate(dateString);
+  }
+
+  private LocalDate parseEndPaymentDate(JsonNode data) {
+    // Check payment date is preseent.
+    Logger.info("parsing end payment date...\n\n");
+    if (!data.has(OfferJsonConstants.END_PAYMENT_DATE)) {
+      setInvalid(missingParameterError(OfferJsonConstants.END_PAYMENT_DATE));
+      return null;
+
+    } 
+    
+   // String dateMonth = data.get(OfferJsonConstants.END_PAYMENT_MONTH).asText();
+
+   // if (!data.has(OfferJsonConstants.END_PAYMENT_YEAR)) {
+   //   setInvalid(missingParameterError(OfferJsonConstants.END_PAYMENT_YEAR));
+   //   return null;
+
+    //} 
+    
+    String dateString = data.get(OfferJsonConstants.END_PAYMENT_DATE).asText();
+
+  
 
     if (!DateService.verifyDateString(dateString)) {
       // TODO: Determine Date Format
@@ -332,6 +385,7 @@ public class OfferJsonParser extends BaseParser {
   }
 
   private ManagementTypeInfo parseManagementType(JsonNode data) {
+    Logger.info("parsing management type...\n\n");
     if (!data.has(OfferJsonConstants.MANAGEMENT_TYPE)) {
       setInvalid(missingParameterError(OfferJsonConstants.MANAGEMENT_TYPE));
       return null;
@@ -367,6 +421,7 @@ public class OfferJsonParser extends BaseParser {
 
 
   private String parseComment(JsonNode data) {
+    Logger.info("parsing comment...\n\n");
     // Check comment is present.
     if (!data.has(OfferJsonConstants.COMMENT)) {
       return "";
@@ -391,7 +446,9 @@ public class OfferJsonParser extends BaseParser {
 
     private static final String PRICE_PER_POUND = "price_per_pound";
 
-    private static final String PAYMENT_DATE = "payment_date";
+    private static final String START_PAYMENT_DATE = "start_payment_date";
+
+    private static final String END_PAYMENT_DATE = "end_payment_date";
 
     private static final String MANAGEMENT_TYPE = "management_type";
 
