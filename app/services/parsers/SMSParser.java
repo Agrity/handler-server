@@ -8,6 +8,7 @@ package services.parsers;
  * Offer ID Number followed by whitespace followed by Number pounds accepted.
  * NOTE: Does NOT accpet anything outside of this format (e.g. comma in pounds number)
  */
+import play.Logger;
 
 public class SMSParser extends BaseParser {
 
@@ -23,17 +24,20 @@ public class SMSParser extends BaseParser {
     String[] splited = smsMessage.split("\\s+");
 
     if (splited.length != 2) {
+      Logger.error("invalid length\n\n");
     	setInvalid(errorResponse);
     	return;
     }
 
     offerID = parseID(splited[0]);
     if (offerID == null) {
+      Logger.error("invalid ID\n\n");
     	return;
     }
 
     String command = splited[1];
     if (!formatted(command)) {
+      Logger.error("invalid command \n\n");
       return;
     }
 
@@ -42,10 +46,10 @@ public class SMSParser extends BaseParser {
 
   private boolean formatted(String command) {
     command = command.toLowerCase();
-    if (command == "accept") {
+    if (command.equals("accept")) {
       accepted = true;
       return true;
-    } else if (command == "reject") {
+    } else if (command.equals("reject")) {
       accepted = false;
       return true;
     } 
