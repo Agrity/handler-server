@@ -74,7 +74,7 @@ public class MessageReceivingController extends Controller {
     }
  
     Long offerID = parser.getOfferID();
-    Integer almondPounds = parser.getAlmoundPounds();
+    boolean accepted = parser.getAccepted();
     
     /* if we reach here, the SMS message has a well-formatted offerID and almondAmount response */
 
@@ -84,28 +84,28 @@ public class MessageReceivingController extends Controller {
       return ok("OfferId: " + offerID + " does not exist.");
     }
 
-    Logger.info("The valid offerID is: " + offerID + " the amount accepted is: " + almondPounds);
-    return updateOffer(grower, offer, almondPounds);
+    Logger.info("The valid offerID is: " + offerID);
+    return updateOffer(grower, offer, accepted);
   } 
 
   /* === TODO: Grower request call? === */
-  private Result updateOffer(Grower grower, Offer offer, Integer almondPounds) {
-    if (almondPounds > 0) {
-      OfferResponseResult result = offer.growerAcceptOffer(grower.getId(), almondPounds);
+  private Result updateOffer(Grower grower, Offer offer, boolean accepted) {
+    if (accepted) {
+      OfferResponseResult result = offer.growerAcceptOffer(grower.getId(), offer.getAlmondPounds());
 
       if (result.isValid()) {
-        Logger.info("Offer: " + offer.getId() + " was accepted by: " + grower.getFullName()
-                  + " for " + almondPounds + "lbs.");
+        Logger.info("Offer: " + offer.getId() + " was accepted by: " + grower.getFullName());
         return ok("Congratulations! Your offer (ID " + offer.getId() + ") <" + offer.getAlmondVariety() + " for " 
         + offer.getPricePerPound() + "/lb.> has been accepted.");
 
       } else {
         Logger.info("Offer: " + offer.getId() + " could not be accepted by: " + grower.getFullName()
-                  + " for " + almondPounds + "lbs. " + result.getInvalidResponseMessage());
+                  + " for " + result.getInvalidResponseMessage());
         return ok(result.getInvalidResponseMessage());
       }
 
     } else {
+
       OfferResponseResult result = offer.growerRejectOffer(grower.getId());
       if (result.isValid()) {
         Logger.info("Offer: " + offer.getId() + " was rejected by: " + grower.getFullName());
