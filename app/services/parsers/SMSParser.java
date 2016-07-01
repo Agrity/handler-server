@@ -29,18 +29,11 @@ public class SMSParser extends BaseParser {
 
     offerID = parseID(splited[0]);
     if (offerID == null) {
-      setInvalid(errorResponse);
     	return;
     }
 
     String command = splited[1];
-    if (command == null) {
-      setInvalid(errorResponse);
-    	return;
-    }
-
     if (!formatted(command)) {
-      setInvalid(errorResponse);
       return;
     }
 
@@ -56,6 +49,7 @@ public class SMSParser extends BaseParser {
       accepted = false;
       return true;
     } 
+    setInvalid(errorResponse);
     return false;
   }
 
