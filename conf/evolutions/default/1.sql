@@ -4,7 +4,7 @@
 # --- !Ups
 
 create table email_address (
-  id                            bigint auto_increment not null,
+  id                            bigserial not null,
   grower_id                     bigint not null,
   created_at                    timestamp,
   updated_at                    timestamp,
@@ -13,7 +13,7 @@ create table email_address (
 );
 
 create table grower (
-  id                            bigint auto_increment not null,
+  id                            bigserial not null,
   created_at                    timestamp,
   updated_at                    timestamp,
   handler_id                    bigint,
@@ -23,7 +23,7 @@ create table grower (
 );
 
 create table handler (
-  id                            bigint auto_increment not null,
+  id                            bigserial not null,
   created_at                    timestamp,
   updated_at                    timestamp,
   company_name                  varchar(255) not null,
@@ -34,7 +34,7 @@ create table handler (
 );
 
 create table offer (
-  id                            bigint auto_increment not null,
+  id                            bigserial not null,
   created_at                    timestamp,
   updated_at                    timestamp,
   handler_id                    bigint,
@@ -56,7 +56,7 @@ create table offer_grower (
 );
 
 create table offer_response (
-  id                            bigint auto_increment not null,
+  id                            bigserial not null,
   created_at                    timestamp,
   updated_at                    timestamp,
   grower_id                     bigint,
@@ -67,7 +67,7 @@ create table offer_response (
 );
 
 create table phone_number (
-  id                            bigint auto_increment not null,
+  id                            bigserial not null,
   grower_id                     bigint not null,
   created_at                    timestamp,
   updated_at                    timestamp,
@@ -102,41 +102,41 @@ create index ix_phone_number_grower_id on phone_number (grower_id);
 
 # --- !Downs
 
-alter table email_address drop constraint if exists fk_email_address_grower_id;
+alter table if exists email_address drop constraint if exists fk_email_address_grower_id;
 drop index if exists ix_email_address_grower_id;
 
-alter table grower drop constraint if exists fk_grower_handler_id;
+alter table if exists grower drop constraint if exists fk_grower_handler_id;
 drop index if exists ix_grower_handler_id;
 
-alter table offer drop constraint if exists fk_offer_handler_id;
+alter table if exists offer drop constraint if exists fk_offer_handler_id;
 drop index if exists ix_offer_handler_id;
 
-alter table offer_grower drop constraint if exists fk_offer_grower_offer;
+alter table if exists offer_grower drop constraint if exists fk_offer_grower_offer;
 drop index if exists ix_offer_grower_offer;
 
-alter table offer_grower drop constraint if exists fk_offer_grower_grower;
+alter table if exists offer_grower drop constraint if exists fk_offer_grower_grower;
 drop index if exists ix_offer_grower_grower;
 
-alter table offer_response drop constraint if exists fk_offer_response_grower_id;
+alter table if exists offer_response drop constraint if exists fk_offer_response_grower_id;
 drop index if exists ix_offer_response_grower_id;
 
-alter table offer_response drop constraint if exists fk_offer_response_offer_id;
+alter table if exists offer_response drop constraint if exists fk_offer_response_offer_id;
 drop index if exists ix_offer_response_offer_id;
 
-alter table phone_number drop constraint if exists fk_phone_number_grower_id;
+alter table if exists phone_number drop constraint if exists fk_phone_number_grower_id;
 drop index if exists ix_phone_number_grower_id;
 
-drop table if exists email_address;
+drop table if exists email_address cascade;
 
-drop table if exists grower;
+drop table if exists grower cascade;
 
-drop table if exists handler;
+drop table if exists handler cascade;
 
-drop table if exists offer;
+drop table if exists offer cascade;
 
-drop table if exists offer_grower;
+drop table if exists offer_grower cascade;
 
-drop table if exists offer_response;
+drop table if exists offer_response cascade;
 
-drop table if exists phone_number;
+drop table if exists phone_number cascade;
 

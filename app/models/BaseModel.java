@@ -19,7 +19,7 @@ public class BaseModel extends Model {
 
   @Id
   @Constraints.Min(10)
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   protected Long id;
 
   @Column(name = "created_at")
