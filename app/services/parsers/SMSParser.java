@@ -13,8 +13,9 @@ public class SMSParser extends BaseParser {
 
   private Long offerID;
   private Integer almoundPounds;
+  private boolean accepted;
   private static final String errorResponse = 
-                    "Please format message as \"[ID#] [# pounds Accepting]\". Could not process bid response.";
+                    "Please format message as \"[ID#] [Accept/Reject]\". Could not process bid response.";
 
   public SMSParser(String smsMessage) {
     super();
@@ -28,18 +29,42 @@ public class SMSParser extends BaseParser {
 
     offerID = parseID(splited[0]);
     if (offerID == null) {
+      setInvalid(errorResponse);
     	return;
     }
 
-    almoundPounds = parsePounds(splited[1]);
-    if (almoundPounds == null) {
+    String command = splited[1];
+    if (command == null) {
+      setInvalid(errorResponse);
     	return;
     }
+
+    if (!formatted(command)) {
+      setInvalid(errorResponse);
+      return;
+    }
+
     setValid();
+  }
+
+  private boolean formatted(String command) {
+    command = command.toLowerCase();
+    if (command == "accept") {
+      accepted = true;
+      return true;
+    } else if (command == "reject") {
+      accepted = false;
+      return true;
+    } 
+    return false;
   }
 
   public Long getOfferID() {
   	return offerID;
+  }
+
+  public boolean getAccepted() {
+    return accepted;
   }
 
   public Integer getAlmoundPounds() {
