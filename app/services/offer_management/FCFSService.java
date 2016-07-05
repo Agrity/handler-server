@@ -76,13 +76,9 @@ public class FCFSService implements OfferManagementService {
       cancellable.cancel();
       offer.closeOffer(OfferStatus.ACCEPTED);
       sendClosedToRemaining();
-
     } else if(growerIDs.isEmpty()) {
-      if(poundsRemaining == offer.getAlmondPounds()) {
-        offer.closeOffer(OfferStatus.REJECTED);
-      } else {
-        offer.closeOffer(OfferStatus.PARTIAL);
-      }    
+        offer.closeOffer(OfferStatus.PARTIAL); 
+        cancellable.cancel(); 
     } else {
       sendUpdatedToRemaining();
     }
@@ -94,6 +90,7 @@ public class FCFSService implements OfferManagementService {
   public OfferResponseResult reject(long growerId) {
     growerIDs.remove((Long) growerId);
     if(growerIDs.isEmpty()) {
+      cancellable.cancel();
       if(poundsRemaining == offer.getAlmondPounds()) {
         offer.closeOffer(OfferStatus.REJECTED);
       } else {
