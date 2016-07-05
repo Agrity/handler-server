@@ -187,6 +187,7 @@ public class Offer extends BaseModel implements PrettyString {
     save();
   }
 
+
   public List<Grower> getAcceptedGrowers() {
     return getGrowersWithResponse(ResponseStatus.ACCEPTED);
   }
