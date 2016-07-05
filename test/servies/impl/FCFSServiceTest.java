@@ -67,13 +67,75 @@ public class FCFSServiceTest extends EbeanTest {
     assertThat(offer, is(notNullValue()));
     saveModel(offer);
 
-    FCFSService FCFSservice = new FCFSService(offer, Duration.ofMillis(1000));
+    FCFSService service = new FCFSService(offer, Duration.ofMillis(1000));
     assertThat(offer.getOfferCurrentlyOpen(), is(true));
     
     try {
       Thread.sleep(1500);
     } catch(InterruptedException ex) {
       Thread.currentThread().interrupt();
+    }
+    
+    assertThat(offer.getOfferCurrentlyOpen(), is(false)); 
+   
+  }
+
+  @Test
+  public void testAllReject() {
+    Offer offer
+      = new Offer(
+          UNUSED_HANDLER,
+          UNUSED_GROWERS,
+          UNUSED_VARIETY,
+          UNUSED_SIZE,
+          UNUSED_POUNDS,
+          UNUSED_PRICE,
+          UNUSED_DATE,
+          UNUSED_DATE2,
+          UNUSED_COMMENT,
+          UNUSED_MANAGEMENT_TYPE);
+
+    assertThat(offer, is(notNullValue()));
+    saveModel(offer);
+
+    FCFSService service = new FCFSService(offer, Duration.ofMillis(5000));
+    assertThat(offer.getOfferCurrentlyOpen(), is(true));
+    
+    for(Grower g : UNUSED_GROWERS) {
+      service.reject(g.getId());
+    }  
+    assertThat(offer.getOfferCurrentlyOpen(), is(false)); 
+   
+  }
+
+  @Test
+  public void testOneAcceptPartial() {
+    Offer offer
+      = new Offer(
+          UNUSED_HANDLER,
+          UNUSED_GROWERS,
+          UNUSED_VARIETY,
+          UNUSED_SIZE,
+          UNUSED_POUNDS,
+          UNUSED_PRICE,
+          UNUSED_DATE,
+          UNUSED_DATE2,
+          UNUSED_COMMENT,
+          UNUSED_MANAGEMENT_TYPE);
+
+    assertThat(offer, is(notNullValue()));
+    saveModel(offer);
+
+    FCFSService service = new FCFSService(offer, Duration.ofMillis(5000));
+    assertThat(offer.getOfferCurrentlyOpen(), is(true));
+    
+    for(int i = 0; i < UNUSED_GROWERS.size(); i++) {
+      if(i == 0) {
+        service.accept(offer.getAlmondPounds() / 2, UNUSED_GROWERS.get(i).getId());
+        assertThat(offer.getOfferCurrentlyOpen(), is(true));
+      } else {
+        service.reject(UNUSED_GROWERS.get(i).getId());
+      }
     }
     
     assertThat(offer.getOfferCurrentlyOpen(), is(false)); 
@@ -98,10 +160,10 @@ public class FCFSServiceTest extends EbeanTest {
     assertThat(offer, is(notNullValue()));
     saveModel(offer);
 
-    FCFSService FCFSservice = new FCFSService(offer, Duration.ofMillis(10000));
+    FCFSService service = new FCFSService(offer, Duration.ofMillis(10000));
     
     assertThat(offer.getOfferCurrentlyOpen(), is(true));
-    FCFSservice.accept(offer.getAlmondPounds(), UNUSED_GROWERS.get(0).getId());
+    service.accept(offer.getAlmondPounds(), UNUSED_GROWERS.get(0).getId());
     assertThat(offer.getOfferCurrentlyOpen(), is(false)); 
   }
   
@@ -123,12 +185,12 @@ public class FCFSServiceTest extends EbeanTest {
    assertThat(offer, is(notNullValue()));
    saveModel(offer);
 
-   FCFSService FCFSservice = new FCFSService(offer, Duration.ofMillis(10000));
+   FCFSService service = new FCFSService(offer, Duration.ofMillis(10000));
    
    assertThat(offer.getOfferCurrentlyOpen(), is((true)));
-   FCFSservice.accept(offer.getAlmondPounds() / 2, UNUSED_GROWERS.get(0).getId());
+   service.accept(offer.getAlmondPounds() / 2, UNUSED_GROWERS.get(0).getId());
    assertThat(offer.getOfferCurrentlyOpen(), is((true)));
-   FCFSservice.accept(offer.getAlmondPounds() - (offer.getAlmondPounds()/2), UNUSED_GROWERS.get(1).getId());
+   service.accept(offer.getAlmondPounds() - (offer.getAlmondPounds()/2), UNUSED_GROWERS.get(1).getId());
    assertThat(offer.getOfferCurrentlyOpen(), is(false));
  }
   
@@ -150,10 +212,10 @@ public class FCFSServiceTest extends EbeanTest {
    assertThat(offer, is(notNullValue()));
    saveModel(offer);
 
-   FCFSService FCFSservice = new FCFSService(offer, Duration.ofMillis(1000));
+   FCFSService service = new FCFSService(offer, Duration.ofMillis(1000));
    
    assertThat(offer.getOfferCurrentlyOpen(), is((true)));
-   FCFSservice.accept(offer.getAlmondPounds() / 2, UNUSED_GROWERS.get(0).getId());
+   service.accept(offer.getAlmondPounds() / 2, UNUSED_GROWERS.get(0).getId());
    assertThat(offer.getOfferCurrentlyOpen(), is(true));
    try {
      Thread.sleep(1500);
