@@ -46,9 +46,11 @@ public class OfferServiceTest extends EbeanTest {
   }};
 
   private static final AlmondVariety UNUSED_VARIETY = AlmondVariety.NONPAREIL;
+  private static final String UNUSED_SIZE = "23/25";
   private static final Integer UNUSED_POUNDS = 44_000;
   private static final String UNUSED_PRICE = "$2.66";
   private static final LocalDate UNUSED_DATE = LocalDate.of(2015, Month.JANUARY, 1);
+  private static final LocalDate UNUSED_DATE2 = LocalDate.of(2016, Month.JANUARY, 1);
   private static final String UNUSED_COMMENT = "Test Comment.";
 
   // TODO Change to Injected.
@@ -68,9 +70,11 @@ public class OfferServiceTest extends EbeanTest {
             HANDLER_1,
             GROWER_LIST,
             UNUSED_VARIETY,
+            UNUSED_SIZE,
             UNUSED_POUNDS,
             UNUSED_PRICE,
             UNUSED_DATE,
+            UNUSED_DATE2,
             UNUSED_COMMENT);
 
     Offer offer2
@@ -78,9 +82,11 @@ public class OfferServiceTest extends EbeanTest {
             HANDLER_2,
             GROWER_LIST,
             UNUSED_VARIETY,
+            UNUSED_SIZE,
             UNUSED_POUNDS,
             UNUSED_PRICE,
             UNUSED_DATE,
+            UNUSED_DATE2,
             UNUSED_COMMENT);
 
     saveModel(offer1);
@@ -116,9 +122,11 @@ public class OfferServiceTest extends EbeanTest {
             HANDLER_1,
             GROWER_LIST,
             UNUSED_VARIETY,
+            UNUSED_SIZE,
             UNUSED_POUNDS,
             UNUSED_PRICE,
             UNUSED_DATE,
+            UNUSED_DATE2,
             UNUSED_COMMENT);
 
     saveModel(offer);
@@ -143,9 +151,11 @@ public class OfferServiceTest extends EbeanTest {
             HANDLER_1,
             offer1Growers,
             UNUSED_VARIETY,
+            UNUSED_SIZE,
             UNUSED_POUNDS,
             UNUSED_PRICE,
             UNUSED_DATE,
+            UNUSED_DATE2,
             UNUSED_COMMENT);
 
     Offer offer2
@@ -153,9 +163,11 @@ public class OfferServiceTest extends EbeanTest {
             HANDLER_1,
             offer2Growers,
             UNUSED_VARIETY,
+            UNUSED_SIZE,
             UNUSED_POUNDS,
             UNUSED_PRICE,
             UNUSED_DATE,
+            UNUSED_DATE2,
             UNUSED_COMMENT);
 
     // Should not be returned in any searches.
@@ -164,9 +176,11 @@ public class OfferServiceTest extends EbeanTest {
             HANDLER_1,
             new ArrayList<>(),
             UNUSED_VARIETY,
+            UNUSED_SIZE,
             UNUSED_POUNDS,
             UNUSED_PRICE,
             UNUSED_DATE,
+            UNUSED_DATE2,
             UNUSED_COMMENT);
 
     saveModel(offer1);
@@ -193,9 +207,11 @@ public class OfferServiceTest extends EbeanTest {
             HANDLER_1,
             unusedGrowers,
             UNUSED_VARIETY,
+            UNUSED_SIZE,
             UNUSED_POUNDS,
             UNUSED_PRICE,
             UNUSED_DATE,
+            UNUSED_DATE2,
             UNUSED_COMMENT);
 
     Offer offer1_2
@@ -203,9 +219,11 @@ public class OfferServiceTest extends EbeanTest {
             HANDLER_1,
             unusedGrowers,
             UNUSED_VARIETY,
+            UNUSED_SIZE,
             UNUSED_POUNDS,
             UNUSED_PRICE,
             UNUSED_DATE,
+            UNUSED_DATE2,
             UNUSED_COMMENT);
 
     Offer offer2
@@ -213,9 +231,11 @@ public class OfferServiceTest extends EbeanTest {
             HANDLER_2,
             unusedGrowers,
             UNUSED_VARIETY,
+            UNUSED_SIZE,
             UNUSED_POUNDS,
             UNUSED_PRICE,
             UNUSED_DATE,
+            UNUSED_DATE2,
             UNUSED_COMMENT);
 
     Handler unusedHandler = new Handler("Unused Handler", UNUSED_EMAIL_ADDRESS, UNUSED_PASSWORD);
@@ -226,9 +246,11 @@ public class OfferServiceTest extends EbeanTest {
             unusedHandler,
             unusedGrowers,
             UNUSED_VARIETY,
+            UNUSED_SIZE,
             UNUSED_POUNDS,
             UNUSED_PRICE,
             UNUSED_DATE,
+            UNUSED_DATE2,
             UNUSED_COMMENT);
 
     saveModel(offer1_1);

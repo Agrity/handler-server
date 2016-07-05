@@ -19,6 +19,7 @@ import models.Almond.AlmondVariety;
 import models.Grower;
 import models.Handler;
 import models.Offer;
+import models.Offer.OfferStatus;
 import services.offer_management.FCFSService;
 import test_helpers.EbeanTest;
 
@@ -34,9 +35,11 @@ public class FCFSServiceTest extends EbeanTest {
     .build();
 
 	private static final AlmondVariety UNUSED_VARIETY = AlmondVariety.NONPAREIL;
+  private static final String UNUSED_SIZE = "23/25";
 	private static final Integer UNUSED_POUNDS = 44_000;
 	private static final String UNUSED_PRICE = "$2.66";
 	private static final LocalDate UNUSED_DATE = LocalDate.of(2015, Month.JANUARY, 1);
+  private static final LocalDate UNUSED_DATE2 = LocalDate.of(2016, Month.JANUARY, 1);
 	private static final String UNUSED_COMMENT = "Test Comment.";
 
   @BeforeClass
@@ -52,9 +55,11 @@ public class FCFSServiceTest extends EbeanTest {
           UNUSED_HANDLER,
           UNUSED_GROWERS,
           UNUSED_VARIETY,
+          UNUSED_SIZE,
           UNUSED_POUNDS,
           UNUSED_PRICE,
           UNUSED_DATE,
+          UNUSED_DATE2,
           UNUSED_COMMENT);
 
     assertThat(offer, is(notNullValue()));
@@ -80,9 +85,11 @@ public class FCFSServiceTest extends EbeanTest {
           UNUSED_HANDLER,
           UNUSED_GROWERS,
           UNUSED_VARIETY,
+          UNUSED_SIZE,
           UNUSED_POUNDS,
           UNUSED_PRICE,
           UNUSED_DATE,
+          UNUSED_DATE2,
           UNUSED_COMMENT);
 
     assertThat(offer, is(notNullValue()));
@@ -102,9 +109,11 @@ public class FCFSServiceTest extends EbeanTest {
          UNUSED_HANDLER,
          UNUSED_GROWERS,
          UNUSED_VARIETY,
+         UNUSED_SIZE,
          UNUSED_POUNDS,
          UNUSED_PRICE,
          UNUSED_DATE,
+         UNUSED_DATE2,
          UNUSED_COMMENT);
 
    assertThat(offer, is(notNullValue()));
@@ -112,9 +121,9 @@ public class FCFSServiceTest extends EbeanTest {
 
    FCFSService FCFSservice = new FCFSService(offer, Duration.ofMillis(10000));
    
-   assertThat(offer.getOfferCurrentlyOpen(), is(true));
+   assertThat(offer.getOfferCurrentlyOpen(), is((true)));
    FCFSservice.accept(offer.getAlmondPounds() / 2, UNUSED_GROWERS.get(0).getId());
-   assertThat(offer.getOfferCurrentlyOpen(), is(true));
+   assertThat(offer.getOfferCurrentlyOpen(), is((true)));
    FCFSservice.accept(offer.getAlmondPounds() - (offer.getAlmondPounds()/2), UNUSED_GROWERS.get(1).getId());
    assertThat(offer.getOfferCurrentlyOpen(), is(false));
  }
@@ -126,9 +135,11 @@ public class FCFSServiceTest extends EbeanTest {
          UNUSED_HANDLER,
          UNUSED_GROWERS,
          UNUSED_VARIETY,
+         UNUSED_SIZE,
          UNUSED_POUNDS,
          UNUSED_PRICE,
          UNUSED_DATE,
+         UNUSED_DATE2,
          UNUSED_COMMENT);
 
    assertThat(offer, is(notNullValue()));
@@ -136,7 +147,7 @@ public class FCFSServiceTest extends EbeanTest {
 
    FCFSService FCFSservice = new FCFSService(offer, Duration.ofMillis(1000));
    
-   assertThat(offer.getOfferCurrentlyOpen(), is(true));
+   assertThat(offer.getOfferCurrentlyOpen(), is((true)));
    FCFSservice.accept(offer.getAlmondPounds() / 2, UNUSED_GROWERS.get(0).getId());
    assertThat(offer.getOfferCurrentlyOpen(), is(true));
    try {
