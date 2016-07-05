@@ -23,24 +23,24 @@ import models.Offer.OfferStatus;
 import services.offer_management.FCFSService;
 import test_helpers.EbeanTest;
 
-public class FCFSServiceTest extends EbeanTest {	
-    private static final String UNUSED_EMAIL_ADDRESS = "unused@domain.com";
-    private static final String UNUSED_PASSWORD = "dummy_password"; 
-	private static final Handler UNUSED_HANDLER = new Handler("Test Company", UNUSED_EMAIL_ADDRESS, UNUSED_PASSWORD);
-	private static final List<Grower> UNUSED_GROWERS = new ImmutableList.Builder<Grower>()
-		.add(new Grower(UNUSED_HANDLER, "F1", "L1"))
-		.add(new Grower(UNUSED_HANDLER, "F2", "L2"))
+public class FCFSServiceTest extends EbeanTest {  
+  private static final String UNUSED_EMAIL_ADDRESS = "unused@domain.com";
+  private static final String UNUSED_PASSWORD = "dummy_password"; 
+  private static final Handler UNUSED_HANDLER = new Handler("Test Company", UNUSED_EMAIL_ADDRESS, UNUSED_PASSWORD);
+  private static final List<Grower> UNUSED_GROWERS = new ImmutableList.Builder<Grower>()
+    .add(new Grower(UNUSED_HANDLER, "F1", "L1"))
+    .add(new Grower(UNUSED_HANDLER, "F2", "L2"))
     .add(new Grower(UNUSED_HANDLER, "F3", "L3"))
     .add(new Grower(UNUSED_HANDLER, "F4", "L4"))
     .build();
 
-	private static final AlmondVariety UNUSED_VARIETY = AlmondVariety.NONPAREIL;
+  private static final AlmondVariety UNUSED_VARIETY = AlmondVariety.NONPAREIL;
   private static final String UNUSED_SIZE = "23/25";
-	private static final Integer UNUSED_POUNDS = 44_000;
-	private static final String UNUSED_PRICE = "$2.66";
-	private static final LocalDate UNUSED_DATE = LocalDate.of(2015, Month.JANUARY, 1);
+  private static final Integer UNUSED_POUNDS = 44_000;
+  private static final String UNUSED_PRICE = "$2.66";
+  private static final LocalDate UNUSED_DATE = LocalDate.of(2015, Month.JANUARY, 1);
   private static final LocalDate UNUSED_DATE2 = LocalDate.of(2016, Month.JANUARY, 1);
-	private static final String UNUSED_COMMENT = "Test Comment.";
+  private static final String UNUSED_COMMENT = "Test Comment.";
 
   @BeforeClass
   public static void loadInitialData() {
@@ -104,7 +104,7 @@ public class FCFSServiceTest extends EbeanTest {
   
   @Test 
   public void testAcceptedInHalves() { 
-  	 Offer offer
+     Offer offer
      = new Offer(
          UNUSED_HANDLER,
          UNUSED_GROWERS,
@@ -130,7 +130,7 @@ public class FCFSServiceTest extends EbeanTest {
   
   @Test 
   public void testHalfAcceptedThenExpired() { 
-  	 Offer offer
+     Offer offer
      = new Offer(
          UNUSED_HANDLER,
          UNUSED_GROWERS,
