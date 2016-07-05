@@ -3,6 +3,7 @@ package services.offer_management;
 import java.time.Duration;
 
 import models.Offer;
+import models.Offer.OfferStatus;
 import models.OfferResponseResult;
 import models.Grower;
 
@@ -38,7 +39,11 @@ public class FCFSService implements OfferManagementService {
         .scheduleOnce(FiniteDuration.create(timeAllowed.toMillis(), TimeUnit.MILLISECONDS), new Runnable() {
           @Override
           public void run() {
-            offer.closeOffer();
+            if(poundsRemaining == pounds) {
+              offer.closeOffer(OfferStatus.REJECTED);
+            } else {
+              offer.closeOffer(OfferStatus.PARTIAL);
+            }
             emailService.sendClosed(offer);
             smsService.sendClosed(offer);
           }
@@ -54,7 +59,7 @@ public class FCFSService implements OfferManagementService {
 
     if (poundsRemaining == 0) {
       cancellable.cancel();
-      offer.closeOffer();
+      offer.closeOffer(OfferStatus.ACCEPTED);
       sendClosedToRemaining();
       return OfferResponseResult.getValidResult();
     }

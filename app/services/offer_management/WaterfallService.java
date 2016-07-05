@@ -65,7 +65,7 @@ public class WaterfallService implements OfferManagementService {
         smsService.send(offer,growersInLine.get(0));
         cancellable = scheduleTimer();
       } else {
-        offer.closeOffer();
+        offer.closeOffer(false);
       }    
     }
     else {
@@ -90,7 +90,7 @@ public class WaterfallService implements OfferManagementService {
 
     if (poundsRemaining == 0) {
       cancellable.cancel();
-      offer.closeOffer();
+      offer.closeOffer(true);
     }
 
     else {

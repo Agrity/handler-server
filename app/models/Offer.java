@@ -34,6 +34,13 @@ import java.util.Date;
 @Entity
 public class Offer extends BaseModel implements PrettyString {
 
+  public static enum OfferStatus{
+    OPEN, 
+    REJECTED, 
+    ACCEPTED,
+    PARTIAL,
+  }
+
 
   /* ======================================= Attributes ======================================= */
 
@@ -76,7 +83,7 @@ public class Offer extends BaseModel implements PrettyString {
   @Column(columnDefinition = "TEXT")
   private String comment = "";
 
-  private boolean offerCurrentlyOpen = true;
+  private OfferStatus offerCurrentlyOpen = OPEN;
 
 
   /* ==================================== Static Functions ==================================== */
@@ -168,18 +175,17 @@ public class Offer extends BaseModel implements PrettyString {
   }
 
   public boolean getOfferCurrentlyOpen() {
-    return offerCurrentlyOpen;
+    return offerCurrentlyOpen == OfferStatus.OPEN;
   }
 
 
   /* === Member Functions === */
 
-  public void closeOffer() {
-    offerCurrentlyOpen = false;
+  public void closeOffer(OfferStatus offerStatus) {
+    offerCurrentlyOpen = offerStatus;
     OfferManagementService.removeOfferManagementService(this);
     save();
   }
-
 
   public List<Grower> getAcceptedGrowers() {
     return getGrowersWithResponse(ResponseStatus.ACCEPTED);
