@@ -2,6 +2,8 @@ package services.offer_management;
 
 import java.time.Duration;
 
+import java.util.*;
+
 import models.Offer;
 import models.Offer.OfferStatus;
 import models.OfferResponseResult;
@@ -23,12 +25,15 @@ public class FCFSService implements OfferManagementService {
   
   private Cancellable cancellable;
   private long poundsRemaining;
+  private List<Long> growerIDs;
   OfferSendGridMessageService emailService = new OfferSendGridMessageService();
   OfferSMSMessageService smsService = new OfferSMSMessageService();
 
   public FCFSService(Offer offer, Duration timeAllowed) {
     this.offer = offer;
     this.poundsRemaining = offer.getAlmondPounds();
+
+    growerIDs = getGrowerIDList();
 
     emailService.send(offer);
     smsService.send(offer);
@@ -50,6 +55,14 @@ public class FCFSService implements OfferManagementService {
         }, Akka.system().dispatcher());
   }
 
+  private List<Long> getGrowerIDList() {
+    List<Long> growers = new ArrayList<>();
+    for(Grower g : offer.getAllGrowers()) {
+      growers.add(g.getId());
+    }
+    return growers;
+  }
+
   @Override
   public OfferResponseResult accept(long pounds, long growerId) {
     
@@ -57,19 +70,36 @@ public class FCFSService implements OfferManagementService {
       return OfferResponseResult.getInvalidResult("Only " + poundsRemaining + " pounds remain. Can not accept offer for " + pounds + " pounds.");
     }
 
+    growerIDs.remove((Long) growerId);
+
     if (poundsRemaining == 0) {
       cancellable.cancel();
       offer.closeOffer(OfferStatus.ACCEPTED);
       sendClosedToRemaining();
-      return OfferResponseResult.getValidResult();
+
+    } else if(growerIDs.isEmpty()) {
+      if(poundsRemaining == offer.getAlmondPounds()) {
+        offer.closeOffer(OfferStatus.REJECTED);
+      } else {
+        offer.closeOffer(OfferStatus.PARTIAL);
+      }    
+    } else {
+      sendUpdatedToRemaining();
     }
-    
-    sendUpdatedToRemaining();
+
     return OfferResponseResult.getValidResult();
   }
 
   @Override
   public OfferResponseResult reject(long growerId) {
+    growerIDs.remove((Long) growerId);
+    if(growerIDs.isEmpty()) {
+      if(poundsRemaining == offer.getAlmondPounds()) {
+        offer.closeOffer(OfferStatus.REJECTED);
+      } else {
+        offer.closeOffer(OfferStatus.PARTIAL);
+      }
+    }
     return OfferResponseResult.getValidResult();
   }
 
