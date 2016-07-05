@@ -83,6 +83,8 @@ public class Offer extends BaseModel implements PrettyString {
   @Column(columnDefinition = "TEXT")
   private String comment = "";
 
+  private String managementService;
+
   private OfferStatus offerCurrentlyOpen = OfferStatus.OPEN;
 
 
@@ -98,7 +100,7 @@ public class Offer extends BaseModel implements PrettyString {
 
   public Offer(Handler handler, List<Grower> allGrowers, AlmondVariety almondVariety,
       String almondSize, Integer almondPounds, String pricePerPound, LocalDate startPaymentDate,
-      LocalDate endPaymentDate, String comment) {
+      LocalDate endPaymentDate, String comment, String managementService) {
     super();
 
     this.handler = handler;
@@ -116,6 +118,7 @@ public class Offer extends BaseModel implements PrettyString {
     this.startPaymentDate = startPaymentDate;
     this.endPaymentDate = endPaymentDate;
     this.comment = comment;
+    this.managementService = managementService;
   }
 
 
@@ -176,6 +179,10 @@ public class Offer extends BaseModel implements PrettyString {
 
   public boolean getOfferCurrentlyOpen() {
     return offerCurrentlyOpen == OfferStatus.OPEN;
+  }
+
+  public String getManagamentService() {
+    return managementService;
   }
 
 
