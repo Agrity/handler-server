@@ -39,7 +39,7 @@ public class FCFSService implements OfferManagementService {
         .scheduleOnce(FiniteDuration.create(timeAllowed.toMillis(), TimeUnit.MILLISECONDS), new Runnable() {
           @Override
           public void run() {
-            if(poundsRemaining == pounds) {
+            if(poundsRemaining == offer.getAlmondPounds()) {
               offer.closeOffer(OfferStatus.REJECTED);
             } else {
               offer.closeOffer(OfferStatus.PARTIAL);

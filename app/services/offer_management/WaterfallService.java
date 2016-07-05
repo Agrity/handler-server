@@ -3,6 +3,7 @@ package services.offer_management;
 import java.util.*;
 
 import models.Offer;
+import models.Offer.OfferStatus;
 import models.OfferResponseResult;
 import models.Grower;
 import java.time.Duration;
@@ -65,7 +66,11 @@ public class WaterfallService implements OfferManagementService {
         smsService.send(offer,growersInLine.get(0));
         cancellable = scheduleTimer();
       } else {
-        offer.closeOffer(false);
+        if(poundsRemaining == offer.getAlmondPounds()) {
+          offer.closeOffer(OfferStatus.REJECTED);
+        } else {
+          offer.closeOffer(OfferStatus.PARTIAL);
+        }
       }    
     }
     else {
@@ -90,7 +95,7 @@ public class WaterfallService implements OfferManagementService {
 
     if (poundsRemaining == 0) {
       cancellable.cancel();
-      offer.closeOffer(true);
+      offer.closeOffer(OfferStatus.ACCEPTED);
     }
 
     else {

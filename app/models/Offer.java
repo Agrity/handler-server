@@ -83,7 +83,7 @@ public class Offer extends BaseModel implements PrettyString {
   @Column(columnDefinition = "TEXT")
   private String comment = "";
 
-  private OfferStatus offerCurrentlyOpen = OPEN;
+  private OfferStatus offerCurrentlyOpen = OfferStatus.OPEN;
 
 
   /* ==================================== Static Functions ==================================== */
@@ -231,7 +231,7 @@ public class Offer extends BaseModel implements PrettyString {
 
 
   public OfferResponseResult growerAcceptOffer(Long growerId, long pounds) {
-    if (!offerCurrentlyOpen) {
+    if (offerCurrentlyOpen != OfferStatus.OPEN) {
       return OfferResponseResult.getInvalidResult("Cannot accept offer because the offer has already closed.");
     }
       
@@ -267,7 +267,7 @@ public class Offer extends BaseModel implements PrettyString {
   }
 
   public OfferResponseResult growerRejectOffer(Long growerId) {
-    if (!offerCurrentlyOpen) {
+    if (offerCurrentlyOpen != OfferStatus.OPEN) {
       return OfferResponseResult.getInvalidResult("There is no need to reject the offer because the offer has closed.");
     } 
     
@@ -303,7 +303,7 @@ public class Offer extends BaseModel implements PrettyString {
   }
 
   public OfferResponseResult growerRequestCall(Long growerId) {
-    if (!offerCurrentlyOpen) {
+    if (offerCurrentlyOpen != OfferStatus.OPEN) {
       return OfferResponseResult.getInvalidResult("Can not request call because the offer has already closed.");
     }  
 
