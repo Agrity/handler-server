@@ -159,7 +159,8 @@ public class OfferJsonParser extends BaseParser {
         getPricePerPound(),
         getStartPaymentDate(),
         getEndPaymentDate(),
-        getComment());
+        getComment(),
+        getManagementType().className());
 
     return newOffer;
   }
@@ -473,6 +474,7 @@ public class OfferJsonParser extends BaseParser {
       }
 
       public Class<? extends OfferManagementService> getClassType() { return typeClass; }
+      public String className() { return typeClass.getName(); }
       public Duration getDelay() { return delay; }
 
   }

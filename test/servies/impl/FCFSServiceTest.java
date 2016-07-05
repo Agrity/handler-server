@@ -41,6 +41,7 @@ public class FCFSServiceTest extends EbeanTest {
   private static final LocalDate UNUSED_DATE = LocalDate.of(2015, Month.JANUARY, 1);
   private static final LocalDate UNUSED_DATE2 = LocalDate.of(2016, Month.JANUARY, 1);
   private static final String UNUSED_COMMENT = "Test Comment.";
+  private static final String UNUSED_MANAGEMENT_TYPE = "FCFSService";
 
   @BeforeClass
   public static void loadInitialData() {
@@ -60,7 +61,8 @@ public class FCFSServiceTest extends EbeanTest {
           UNUSED_PRICE,
           UNUSED_DATE,
           UNUSED_DATE2,
-          UNUSED_COMMENT);
+          UNUSED_COMMENT,
+          UNUSED_MANAGEMENT_TYPE);
 
     assertThat(offer, is(notNullValue()));
     saveModel(offer);
@@ -90,7 +92,8 @@ public class FCFSServiceTest extends EbeanTest {
           UNUSED_PRICE,
           UNUSED_DATE,
           UNUSED_DATE2,
-          UNUSED_COMMENT);
+          UNUSED_COMMENT, 
+          UNUSED_MANAGEMENT_TYPE);
 
     assertThat(offer, is(notNullValue()));
     saveModel(offer);
@@ -114,7 +117,8 @@ public class FCFSServiceTest extends EbeanTest {
          UNUSED_PRICE,
          UNUSED_DATE,
          UNUSED_DATE2,
-         UNUSED_COMMENT);
+         UNUSED_COMMENT, 
+         UNUSED_MANAGEMENT_TYPE);
 
    assertThat(offer, is(notNullValue()));
    saveModel(offer);
@@ -140,7 +144,8 @@ public class FCFSServiceTest extends EbeanTest {
          UNUSED_PRICE,
          UNUSED_DATE,
          UNUSED_DATE2,
-         UNUSED_COMMENT);
+         UNUSED_COMMENT, 
+         UNUSED_MANAGEMENT_TYPE);
 
    assertThat(offer, is(notNullValue()));
    saveModel(offer);

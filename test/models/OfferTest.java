@@ -44,6 +44,7 @@ public class OfferTest extends EbeanTest {
   private static final LocalDate UNUSED_DATE = LocalDate.of(2015, Month.JANUARY, 1);
   private static final LocalDate UNUSED_DATE2 = LocalDate.of(2016, Month.JANUARY, 1);
   private static final String UNUSED_COMMENT = "Test Comment.";
+  private static final String UNUSED_MANAGEMET_TYPE = "FCFSService";
 
   @BeforeClass
   public static void loadInitialData() {
@@ -63,7 +64,8 @@ public class OfferTest extends EbeanTest {
             UNUSED_PRICE,
             UNUSED_DATE,
             UNUSED_DATE2,
-            UNUSED_COMMENT);
+            UNUSED_COMMENT,
+            UNUSED_MANAGEMET_TYPE);
 
     assertThat(offer, is(notNullValue()));
     saveModel(offer);
@@ -91,7 +93,8 @@ public class OfferTest extends EbeanTest {
             UNUSED_PRICE,
             UNUSED_DATE,
             UNUSED_DATE2,
-            UNUSED_COMMENT);
+            UNUSED_COMMENT,
+            UNUSED_MANAGEMET_TYPE);
 
     assertThat(offer.getHandler().getId(), is(equalTo(handlerId)));
   }
@@ -117,7 +120,8 @@ public class OfferTest extends EbeanTest {
             UNUSED_PRICE,
             UNUSED_DATE,
             UNUSED_DATE2,
-            UNUSED_COMMENT);
+            UNUSED_COMMENT,
+            UNUSED_MANAGEMET_TYPE);
 
     saveModel(offer);
 
@@ -144,7 +148,8 @@ public class OfferTest extends EbeanTest {
             UNUSED_PRICE,
             UNUSED_DATE,
             UNUSED_DATE2,
-            UNUSED_COMMENT);
+            UNUSED_COMMENT,
+            UNUSED_MANAGEMET_TYPE);
 
     assertThat(offer.getAlmondVariety(), is(equalTo(almondVariety)));
   }
@@ -163,7 +168,8 @@ public class OfferTest extends EbeanTest {
             UNUSED_PRICE,
             UNUSED_DATE,
             UNUSED_DATE2,
-            UNUSED_COMMENT);
+            UNUSED_COMMENT,
+            UNUSED_MANAGEMET_TYPE);
 
     assertThat(offer.getAlmondPounds(), is(equalTo(almondPounds)));
   }
@@ -183,7 +189,8 @@ public class OfferTest extends EbeanTest {
             pricePerPound,
             UNUSED_DATE,
             UNUSED_DATE2,
-            UNUSED_COMMENT);
+            UNUSED_COMMENT,
+            UNUSED_MANAGEMET_TYPE);
 
     assertThat(offer.getPricePerPound(), is(equalTo(pricePerPound)));
   }
@@ -204,7 +211,8 @@ public class OfferTest extends EbeanTest {
             UNUSED_PRICE,
             paymentDate,
             UNUSED_DATE2,
-            UNUSED_COMMENT);
+            UNUSED_COMMENT,
+            UNUSED_MANAGEMET_TYPE);
 
     assertThat(offer.getStartPaymentDate(), is(equalTo(paymentDate)));
   }
@@ -224,7 +232,8 @@ public class OfferTest extends EbeanTest {
             UNUSED_PRICE,
             UNUSED_DATE,
             paymentDate,
-            UNUSED_COMMENT);
+            UNUSED_COMMENT,
+            UNUSED_MANAGEMET_TYPE);
 
     assertThat(offer.getEndPaymentDate(), is(equalTo(paymentDate)));
   }
@@ -244,7 +253,8 @@ public class OfferTest extends EbeanTest {
             UNUSED_PRICE,
             UNUSED_DATE,
             UNUSED_DATE2,
-            comment);
+            comment,
+            UNUSED_MANAGEMET_TYPE);
 
     assertThat(offer.getComment(), is(equalTo(comment)));
   }
@@ -270,7 +280,8 @@ public class OfferTest extends EbeanTest {
             UNUSED_PRICE,
             UNUSED_DATE,
             UNUSED_DATE2,
-            UNUSED_COMMENT);
+            UNUSED_COMMENT,
+            UNUSED_MANAGEMET_TYPE);
 
     saveModel(offer);
 
@@ -304,7 +315,8 @@ public class OfferTest extends EbeanTest {
             UNUSED_PRICE,
             UNUSED_DATE,
             UNUSED_DATE2,
-            UNUSED_COMMENT);
+            UNUSED_COMMENT,
+            UNUSED_MANAGEMET_TYPE);
 
     saveModel(offer);
 
@@ -355,7 +367,8 @@ public class OfferTest extends EbeanTest {
             UNUSED_PRICE,
             UNUSED_DATE,
             UNUSED_DATE2,
-            UNUSED_COMMENT);
+            UNUSED_COMMENT,
+            UNUSED_MANAGEMET_TYPE);
 
     saveModel(offer);
 
@@ -406,7 +419,8 @@ public class OfferTest extends EbeanTest {
             UNUSED_PRICE,
             UNUSED_DATE,
             UNUSED_DATE2,
-            UNUSED_COMMENT);
+            UNUSED_COMMENT,
+            UNUSED_MANAGEMET_TYPE);
 
     saveModel(offer);
 
@@ -458,7 +472,8 @@ public class OfferTest extends EbeanTest {
             UNUSED_PRICE,
             UNUSED_DATE,
             UNUSED_DATE2,
-            UNUSED_COMMENT);
+            UNUSED_COMMENT,
+            UNUSED_MANAGEMET_TYPE);
 
     saveModel(offer);
 

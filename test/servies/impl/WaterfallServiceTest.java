@@ -43,6 +43,7 @@ public class WaterfallServiceTest extends EbeanTest {
   private static final LocalDate UNUSED_DATE = LocalDate.of(2015, Month.JANUARY, 1);
   private static final LocalDate UNUSED_DATE2 = LocalDate.of(2016, Month.JANUARY, 1);
   private static final String UNUSED_COMMENT = "Test Comment.";
+  private static final String UNUSED_MANAGEMENT_TYPE = "WaterfallService";
 
   @BeforeClass
   public static void loadInitialData() {
@@ -53,7 +54,7 @@ public class WaterfallServiceTest extends EbeanTest {
   @Test
   public void testExpired() {
     Offer offer = new Offer(UNUSED_HANDLER, UNUSED_GROWERS, UNUSED_VARIETY, UNUSED_SIZE, UNUSED_POUNDS,
-        UNUSED_PRICE, UNUSED_DATE, UNUSED_DATE2, UNUSED_COMMENT);
+        UNUSED_PRICE, UNUSED_DATE, UNUSED_DATE2, UNUSED_COMMENT, UNUSED_MANAGEMENT_TYPE);
 
     assertThat(offer, is(notNullValue()));
     saveModel(offer);
@@ -76,7 +77,7 @@ public class WaterfallServiceTest extends EbeanTest {
   @Test
   public void testAllRejected() {
     Offer offer = new Offer(UNUSED_HANDLER, UNUSED_GROWERS, UNUSED_VARIETY, UNUSED_SIZE, UNUSED_POUNDS,
-        UNUSED_PRICE, UNUSED_DATE, UNUSED_DATE2, UNUSED_COMMENT);
+        UNUSED_PRICE, UNUSED_DATE, UNUSED_DATE2, UNUSED_COMMENT, UNUSED_MANAGEMENT_TYPE);
 
     assertThat(offer, is(notNullValue()));
     saveModel(offer);
@@ -97,7 +98,7 @@ public class WaterfallServiceTest extends EbeanTest {
   @Test
   public void testFirstAccepted() {
     Offer offer = new Offer(UNUSED_HANDLER, UNUSED_GROWERS, UNUSED_VARIETY, UNUSED_SIZE, UNUSED_POUNDS,
-        UNUSED_PRICE, UNUSED_DATE, UNUSED_DATE2, UNUSED_COMMENT);
+        UNUSED_PRICE, UNUSED_DATE, UNUSED_DATE2, UNUSED_COMMENT, UNUSED_MANAGEMENT_TYPE);
 
     assertThat(offer, is(notNullValue()));
     saveModel(offer);
@@ -118,7 +119,7 @@ public class WaterfallServiceTest extends EbeanTest {
   @Test
   public void test2Reject3rdAccepts() {
     Offer offer = new Offer(UNUSED_HANDLER, UNUSED_GROWERS, UNUSED_VARIETY, UNUSED_SIZE, UNUSED_POUNDS,
-        UNUSED_PRICE, UNUSED_DATE, UNUSED_DATE2, UNUSED_COMMENT);
+        UNUSED_PRICE, UNUSED_DATE, UNUSED_DATE2, UNUSED_COMMENT, UNUSED_MANAGEMENT_TYPE);
 
     assertThat(offer, is(notNullValue()));
     saveModel(offer);
@@ -146,7 +147,7 @@ public class WaterfallServiceTest extends EbeanTest {
   @Test
   public void test3rdAccepts() {
     Offer offer = new Offer(UNUSED_HANDLER, UNUSED_GROWERS, UNUSED_VARIETY, UNUSED_SIZE, UNUSED_POUNDS,
-        UNUSED_PRICE, UNUSED_DATE, UNUSED_DATE2, UNUSED_COMMENT);
+        UNUSED_PRICE, UNUSED_DATE, UNUSED_DATE2, UNUSED_COMMENT, UNUSED_MANAGEMENT_TYPE);
 
     assertThat(offer, is(notNullValue()));
     saveModel(offer);
@@ -179,7 +180,7 @@ public class WaterfallServiceTest extends EbeanTest {
   @Test
   public void testMixed() {
     Offer offer = new Offer(UNUSED_HANDLER, UNUSED_GROWERS, UNUSED_VARIETY, UNUSED_SIZE, UNUSED_POUNDS,
-        UNUSED_PRICE, UNUSED_DATE, UNUSED_DATE2, UNUSED_COMMENT);
+        UNUSED_PRICE, UNUSED_DATE, UNUSED_DATE2, UNUSED_COMMENT, UNUSED_MANAGEMENT_TYPE);
 
     assertThat(offer, is(notNullValue()));
     saveModel(offer);
@@ -228,7 +229,7 @@ public class WaterfallServiceTest extends EbeanTest {
   @Test
   public void testFirstRejects_SecondAcceptsHalf_ThirdExpires_FourthAcceptsRemaining() {
     Offer offer = new Offer(UNUSED_HANDLER, UNUSED_GROWERS, UNUSED_VARIETY, UNUSED_SIZE, UNUSED_POUNDS,
-        UNUSED_PRICE, UNUSED_DATE, UNUSED_DATE2, UNUSED_COMMENT);
+        UNUSED_PRICE, UNUSED_DATE, UNUSED_DATE2, UNUSED_COMMENT, UNUSED_MANAGEMENT_TYPE);
 
     assertThat(offer, is(notNullValue()));
     saveModel(offer);
@@ -266,7 +267,7 @@ public class WaterfallServiceTest extends EbeanTest {
   @Test
   public void testFirstAcceptsHalf_SecondRejects_ThirdAcceptsRemaining() {
     Offer offer = new Offer(UNUSED_HANDLER, UNUSED_GROWERS, UNUSED_VARIETY, UNUSED_SIZE, UNUSED_POUNDS,
-        UNUSED_PRICE, UNUSED_DATE, UNUSED_DATE2, UNUSED_COMMENT);
+        UNUSED_PRICE, UNUSED_DATE, UNUSED_DATE2, UNUSED_COMMENT, UNUSED_MANAGEMENT_TYPE);
 
     assertThat(offer, is(notNullValue()));
     saveModel(offer);

@@ -52,6 +52,7 @@ public class OfferServiceTest extends EbeanTest {
   private static final LocalDate UNUSED_DATE = LocalDate.of(2015, Month.JANUARY, 1);
   private static final LocalDate UNUSED_DATE2 = LocalDate.of(2016, Month.JANUARY, 1);
   private static final String UNUSED_COMMENT = "Test Comment.";
+  private static final String UNUSED_MANAGEMENT_TYPE = "FCFSService";
 
   // TODO Change to Injected.
   private static final OfferService offerService = new EbeanOfferService();
@@ -75,7 +76,8 @@ public class OfferServiceTest extends EbeanTest {
             UNUSED_PRICE,
             UNUSED_DATE,
             UNUSED_DATE2,
-            UNUSED_COMMENT);
+            UNUSED_COMMENT,
+            UNUSED_MANAGEMENT_TYPE);
 
     Offer offer2
         = new Offer(
@@ -87,7 +89,8 @@ public class OfferServiceTest extends EbeanTest {
             UNUSED_PRICE,
             UNUSED_DATE,
             UNUSED_DATE2,
-            UNUSED_COMMENT);
+            UNUSED_COMMENT,
+            UNUSED_MANAGEMENT_TYPE);
 
     saveModel(offer1);
     saveModel(offer2);
@@ -127,7 +130,8 @@ public class OfferServiceTest extends EbeanTest {
             UNUSED_PRICE,
             UNUSED_DATE,
             UNUSED_DATE2,
-            UNUSED_COMMENT);
+            UNUSED_COMMENT,
+            UNUSED_MANAGEMENT_TYPE);
 
     saveModel(offer);
 
@@ -156,7 +160,8 @@ public class OfferServiceTest extends EbeanTest {
             UNUSED_PRICE,
             UNUSED_DATE,
             UNUSED_DATE2,
-            UNUSED_COMMENT);
+            UNUSED_COMMENT,
+            UNUSED_MANAGEMENT_TYPE);
 
     Offer offer2
         = new Offer(
@@ -168,7 +173,8 @@ public class OfferServiceTest extends EbeanTest {
             UNUSED_PRICE,
             UNUSED_DATE,
             UNUSED_DATE2,
-            UNUSED_COMMENT);
+            UNUSED_COMMENT,
+            UNUSED_MANAGEMENT_TYPE);
 
     // Should not be returned in any searches.
     Offer unusedOffer
@@ -181,7 +187,8 @@ public class OfferServiceTest extends EbeanTest {
             UNUSED_PRICE,
             UNUSED_DATE,
             UNUSED_DATE2,
-            UNUSED_COMMENT);
+            UNUSED_COMMENT,
+            UNUSED_MANAGEMENT_TYPE);
 
     saveModel(offer1);
     saveModel(offer2);
@@ -212,7 +219,8 @@ public class OfferServiceTest extends EbeanTest {
             UNUSED_PRICE,
             UNUSED_DATE,
             UNUSED_DATE2,
-            UNUSED_COMMENT);
+            UNUSED_COMMENT,
+            UNUSED_MANAGEMENT_TYPE);
 
     Offer offer1_2
         = new Offer(
@@ -224,7 +232,8 @@ public class OfferServiceTest extends EbeanTest {
             UNUSED_PRICE,
             UNUSED_DATE,
             UNUSED_DATE2,
-            UNUSED_COMMENT);
+            UNUSED_COMMENT,
+            UNUSED_MANAGEMENT_TYPE);
 
     Offer offer2
         = new Offer(
@@ -236,7 +245,8 @@ public class OfferServiceTest extends EbeanTest {
             UNUSED_PRICE,
             UNUSED_DATE,
             UNUSED_DATE2,
-            UNUSED_COMMENT);
+            UNUSED_COMMENT,
+            UNUSED_MANAGEMENT_TYPE);
 
     Handler unusedHandler = new Handler("Unused Handler", UNUSED_EMAIL_ADDRESS, UNUSED_PASSWORD);
 
@@ -251,7 +261,8 @@ public class OfferServiceTest extends EbeanTest {
             UNUSED_PRICE,
             UNUSED_DATE,
             UNUSED_DATE2,
-            UNUSED_COMMENT);
+            UNUSED_COMMENT,
+            UNUSED_MANAGEMENT_TYPE);
 
     saveModel(offer1_1);
     saveModel(offer1_2);
