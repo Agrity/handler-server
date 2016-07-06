@@ -34,6 +34,13 @@ import java.util.Date;
 @Entity
 public class Offer extends BaseModel implements PrettyString {
 
+  public static enum OfferStatus{
+    OPEN, 
+    REJECTED, 
+    ACCEPTED,
+    PARTIAL,
+  }
+
 
   /* ======================================= Attributes ======================================= */
 
@@ -76,7 +83,9 @@ public class Offer extends BaseModel implements PrettyString {
   @Column(columnDefinition = "TEXT")
   private String comment = "";
 
-  private boolean offerCurrentlyOpen = true;
+  private String managementService;
+
+  private OfferStatus offerCurrentlyOpen = OfferStatus.OPEN;
 
 
   /* ==================================== Static Functions ==================================== */
@@ -91,7 +100,7 @@ public class Offer extends BaseModel implements PrettyString {
 
   public Offer(Handler handler, List<Grower> allGrowers, AlmondVariety almondVariety,
       String almondSize, Integer almondPounds, String pricePerPound, LocalDate startPaymentDate,
-      LocalDate endPaymentDate, String comment) {
+      LocalDate endPaymentDate, String comment, String managementService) {
     super();
 
     this.handler = handler;
@@ -109,6 +118,7 @@ public class Offer extends BaseModel implements PrettyString {
     this.startPaymentDate = startPaymentDate;
     this.endPaymentDate = endPaymentDate;
     this.comment = comment;
+    this.managementService = managementService;
   }
 
 
@@ -168,7 +178,11 @@ public class Offer extends BaseModel implements PrettyString {
   }
 
   public boolean getOfferCurrentlyOpen() {
-    return offerCurrentlyOpen;
+    return offerCurrentlyOpen == OfferStatus.OPEN;
+  }
+
+  public String getManagamentService() {
+    return managementService;
   }
 
 
@@ -204,8 +218,8 @@ public class Offer extends BaseModel implements PrettyString {
 
   /* === Member Functions === */
 
-  public void closeOffer() {
-    offerCurrentlyOpen = false;
+  public void closeOffer(OfferStatus offerStatus) {
+    offerCurrentlyOpen = offerStatus;
     OfferManagementService.removeOfferManagementService(this);
     save();
   }
@@ -255,7 +269,7 @@ public class Offer extends BaseModel implements PrettyString {
 
 
   public OfferResponseResult growerAcceptOffer(Long growerId, long pounds) {
-    if (!offerCurrentlyOpen) {
+    if (offerCurrentlyOpen != OfferStatus.OPEN) {
       return OfferResponseResult.getInvalidResult("Cannot accept offer because the offer has already closed.");
     }
       
@@ -291,7 +305,7 @@ public class Offer extends BaseModel implements PrettyString {
   }
 
   public OfferResponseResult growerRejectOffer(Long growerId) {
-    if (!offerCurrentlyOpen) {
+    if (offerCurrentlyOpen != OfferStatus.OPEN) {
       return OfferResponseResult.getInvalidResult("There is no need to reject the offer because the offer has closed.");
     } 
     
@@ -327,7 +341,7 @@ public class Offer extends BaseModel implements PrettyString {
   }
 
   public OfferResponseResult growerRequestCall(Long growerId) {
-    if (!offerCurrentlyOpen) {
+    if (offerCurrentlyOpen != OfferStatus.OPEN) {
       return OfferResponseResult.getInvalidResult("Can not request call because the offer has already closed.");
     }  
 
