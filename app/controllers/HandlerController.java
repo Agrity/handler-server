@@ -186,7 +186,7 @@ public class HandlerController extends Controller {
     }
 
     grower.delete();
-    return ok("Grower " + Long.toString(growerId) + " deleted.");
+    return ok(JsonMsgUtils.growerDeleted(growerId));
   }
 
   public Result updateGrower(long growerId) {
