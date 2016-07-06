@@ -213,6 +213,68 @@ public class HandlerController extends Controller {
     }
   }
 
+  public Result updateOffer(long offerId) {
+    ResponseHeaders.addResponseHeaders(response());
+
+    Handler handler = HandlerSecurityController.getHandler();
+
+    if (handler == null) {
+      return handlerNotFound();
+    }
+
+    JsonNode data = request().body().asJson();
+
+    if (data == null) {
+      return badRequest(JsonMsgUtils.expectingData());
+    }
+
+    addCurrentHandlerId(handler, data);
+
+    OfferJsonParser parser = new OfferJsonParser(data);
+
+    if (!parser.isValid()) {
+      return badRequest(JsonMsgUtils.caughtException(parser.getErrorMessage()));
+    }
+
+    if (!parser.getHandler().equals(handler)) {
+      JsonMsgUtils.caughtException(
+          "Can only create offers that belong to "
+          + handler.getCompanyName() + ".");
+    }
+  
+    Offer offer = offerService.getById(offerId);
+    parser.updateOffer(offer);
+    offer.save();
+
+    try {
+      return created(jsonMapper.writeValueAsString(offer));
+    } catch (JsonProcessingException e) {
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
+    }    
+  }
+
+  public Result deleteOffer(long offerId) {
+    ResponseHeaders.addResponseHeaders(response());
+
+    Handler handler = HandlerSecurityController.getHandler();
+
+    if (handler == null) {
+      return handlerNotFound();
+    }
+
+    Offer offer = offerService.getById(offerId);
+    if (offer == null) {
+      return notFound(JsonMsgUtils.offerNotFoundMessage(offerId));
+    }
+
+    if (!handlerService.checkHandlerOwnsOffer(handler, offer)) {
+      return badRequest(JsonMsgUtils.handlerDoesNotOwnOfferMessage(handler, offer));
+    }
+
+    offer.delete();
+    return ok(JsonMsgUtils.offerDeleted(offerId));
+  }
+
   public Result getAllOffers() {
     ResponseHeaders.addResponseHeaders(response());
 
