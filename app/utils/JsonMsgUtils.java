@@ -81,6 +81,10 @@ public class JsonMsgUtils {
     return validToJson("Emails sent successfully!");
   }
 
+  public static ObjectNode offerDeleted(long offerId) {
+    return validToJson("Offer " + offerId + " deleted.");
+  }
+
   private static ObjectNode validToJson(String msg) {
     ObjectNode result = Json.newObject();
     result.put("valid", msg);  

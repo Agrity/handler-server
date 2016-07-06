@@ -157,6 +157,18 @@ public class AdminOfferController extends Controller {
   }
 
   @Security.Authenticated(AdminSecured.class)
+  public Result deleteOffer(long id) {
+    Offer offer = offerService.getById(id);
+
+    if (offer == null) {
+      return notFound(JsonMsgUtils.offerNotFoundMessage(id));
+    }
+
+    offer.delete();
+    return ok(JsonMsgUtils.offerDeleted(id));
+  }  
+
+  @Security.Authenticated(AdminSecured.class)
   public Result getAllHandlerOffers(long handlerId) {
     List<Offer> handlerOffers = offerService.getByHandler(handlerId);
 
