@@ -2,64 +2,53 @@ package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import models.interfaces.PrettyString;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.OneToMany;
-import javax.persistence.Transient;
-
-import models.interfaces.PrettyString;
 
 import play.Logger;
 import play.data.validation.Constraints;
 
-import utils.SecurityUtility;
-
-@Entity
-public class Handler extends User implements PrettyString {
+public class Trader extends User implements PrettyString {
 
   @OneToMany
   @Constraints.Required
   @JsonIgnore
-  private List<Grower> growersList;
+  private List<Handler> handlerList;
 
   /* ====================================== Constructors ====================================== */
 
-
-  public Handler(String companyName, String emailAddress, String password) {
+  public Trader(String companyName, String emailAddress, String password) {
     setCompanyName(companyName);
     setEmailAddress(emailAddress);
     setPassword(password);
-    growersList = new ArrayList<>();
+    handlerList = new ArrayList<>();
   }
 
   /* ==================================== Member Accessors ==================================== */
 
-  public List<Grower> getGrowersList() {
-    return growersList;
+  public List<Handler> getHandlerList() {
+    return handlerList;
   }
 
-  /* =================================== Memeber Functions ==================================== */
-
+   /* =================================== Memeber Functions ==================================== */
 
   @Override
   public String toString() {
-    return "(" + id + ") " + companyName + " : " + getGrowersList().size();
+    return "(" + id + ") " + companyName + " : " + getHandlerList().size();
   }
   
   public String toPrettyString() {
     StringBuilder builder = new StringBuilder();
     builder.append("(" + id + ") " + companyName + ":\n");
 
-    if (growersList.isEmpty()) {
+    if (handlerList.isEmpty()) {
       builder.append(" [] ");
 
     } else {
-      for (Grower grower : growersList) {
-        builder.append("-- " + grower.toPrettyString());
+      for (Handler handler : handlerList) {
+        builder.append("-- " + handler.toPrettyString());
       }
     }
 
