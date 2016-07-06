@@ -38,9 +38,9 @@ GET     /admin/growers                                  controllers.AdminGrowerC
 
 POST    /admin/growers                                  controllers.AdminGrowerController.createGrower()
 
-DELETE  /admin/growers/:id/delete                       controllers.AdminGrowerController.deleteGrower(id: Long)
+DELETE  /admin/growers/:id                              controllers.AdminGrowerController.deleteGrower(id: Long)
 
-PUT     /admin/growers/:id/update                       controllers.AdminGrowerController.updateGrower(id: Long)
+PUT     /admin/growers/:id                              controllers.AdminGrowerController.updateGrower(id: Long)
 
 GET     /admin/growers/:id                              controllers.AdminGrowerController.getGrower(id: Long)
 
@@ -84,9 +84,9 @@ POST    /handler/growers                         controllers.HandlerController.c
 
 GET     /handler/growers/:growerId               controllers.HandlerController.getGrower(growerId: Long)
 
-DELETE  /handler/growers/:growerId/delete        controllers.HandlerController.deleteGrower(growerId: Long)
+DELETE  /handler/growers/:growerId               controllers.HandlerController.deleteGrower(growerId: Long)
 
-PUT     /handler/growers/:growerId/update        controllers.HandlerController.updateGrower(growerId: Long)
+PUT     /handler/growers/:growerId               controllers.HandlerController.updateGrower(growerId: Long)
 
 GET     /handler/offers/:id/send                 controllers.HandlerController.sendOffer(id: Long)
 
