@@ -44,6 +44,13 @@ public class Handler extends User implements PrettyString {
 
   /* =================================== Memeber Functions ==================================== */
 
+  public void setEmailAddress(String emailAddress) {
+    this.emailAddress = emailAddress.toLowerCase();
+  }
+
+  public String getEmailAddress() {
+    return emailAddress;
+  }
 
   @Override
   public String toString() {

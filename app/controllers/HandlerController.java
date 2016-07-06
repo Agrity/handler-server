@@ -18,6 +18,7 @@ import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
+import play.mvc.Http.Status;
 
 import controllers.security.HandlerSecured;
 import controllers.security.HandlerSecurityController;
@@ -159,6 +160,90 @@ public class HandlerController extends Controller {
     }
   }
 
+  public Result deleteGrower(long growerId) {
+    ResponseHeaders.addResponseHeaders(response());
+
+    Handler handler = HandlerSecurityController.getHandler();
+
+    if (handler == null) {
+      return handlerNotFound();
+    }
+
+    Grower grower = growerService.getById(growerId);
+    if (grower == null) {
+      return notFound(JsonMsgUtils.growerNotFoundMessage(growerId));
+    }
+
+    if (!handlerService.checkHandlerOwnsGrower(handler, grower)) {
+      return badRequest(JsonMsgUtils.handlerDoesNotOwnGrowerMessage(handler, grower));
+    }
+
+    for(Offer off: offerService.getByGrower(growerId)) {
+      if(off.getOfferCurrentlyOpen()) {
+        //Conflict response
+        return status(409, JsonMsgUtils.growerInOffer(growerId, off.getId()));
+      }
+    }
+
+    grower.delete();
+    return ok(JsonMsgUtils.growerDeleted(growerId));
+  }
+
+  public Result updateGrower(long growerId) {
+    ResponseHeaders.addResponseHeaders(response());
+
+    Handler handler = HandlerSecurityController.getHandler();
+
+    if (handler == null) {
+      return handlerNotFound();
+    }
+
+    JsonNode data = request().body().asJson();
+
+    if (data == null) {
+      return badRequest(JsonMsgUtils.expectingData());
+    }
+
+    addCurrentHandlerId(handler, data);
+
+    Grower grower = growerService.getById(growerId);
+    if (grower == null) {
+      return notFound(JsonMsgUtils.growerNotFoundMessage(growerId));
+    }
+
+    GrowerJsonParser parser = new GrowerJsonParser(data);
+
+    if (!parser.isValid()) {
+      return badRequest(JsonMsgUtils.caughtException(parser.getErrorMessage()));
+    }
+
+    if (!parser.getHandler().equals(handler)) {
+      JsonMsgUtils.caughtException(
+          "Can only update growers that belong to "
+          + handler.getCompanyName() + ".");
+    }
+
+    if (!handlerService.checkHandlerOwnsGrower(handler, grower)) {
+      return badRequest(JsonMsgUtils.handlerDoesNotOwnGrowerMessage(handler, grower));
+    }
+
+    for(Offer off: offerService.getByGrower(growerId)) {
+      if(off.getOfferCurrentlyOpen()) {
+        //Conflict response
+        return status(409, JsonMsgUtils.growerInOffer(growerId, off.getId()));
+      }
+    }
+
+    parser.updateGrower(grower);
+    grower.save();
+
+    try {
+      return created(jsonMapper.writeValueAsString(grower));
+    } catch (JsonProcessingException e) {
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
+    }
+  }
+
   // Annotation ensures that POST request is of type application/json. If not HTTP 400 response
   // returned.
   @BodyParser.Of(BodyParser.Json.class)
@@ -211,6 +296,68 @@ public class HandlerController extends Controller {
     } catch (JsonProcessingException e) {
       return internalServerError(JsonMsgUtils.caughtException(e.toString()));
     }
+  }
+
+  public Result updateOffer(long offerId) {
+    ResponseHeaders.addResponseHeaders(response());
+
+    Handler handler = HandlerSecurityController.getHandler();
+
+    if (handler == null) {
+      return handlerNotFound();
+    }
+
+    JsonNode data = request().body().asJson();
+
+    if (data == null) {
+      return badRequest(JsonMsgUtils.expectingData());
+    }
+
+    addCurrentHandlerId(handler, data);
+
+    OfferJsonParser parser = new OfferJsonParser(data);
+
+    if (!parser.isValid()) {
+      return badRequest(JsonMsgUtils.caughtException(parser.getErrorMessage()));
+    }
+
+    if (!parser.getHandler().equals(handler)) {
+      JsonMsgUtils.caughtException(
+          "Can only create offers that belong to "
+          + handler.getCompanyName() + ".");
+    }
+  
+    Offer offer = offerService.getById(offerId);
+    parser.updateOffer(offer);
+    offer.save();
+
+    try {
+      return created(jsonMapper.writeValueAsString(offer));
+    } catch (JsonProcessingException e) {
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
+    }    
+  }
+
+  public Result deleteOffer(long offerId) {
+    ResponseHeaders.addResponseHeaders(response());
+
+    Handler handler = HandlerSecurityController.getHandler();
+
+    if (handler == null) {
+      return handlerNotFound();
+    }
+
+    Offer offer = offerService.getById(offerId);
+    if (offer == null) {
+      return notFound(JsonMsgUtils.offerNotFoundMessage(offerId));
+    }
+
+    if (!handlerService.checkHandlerOwnsOffer(handler, offer)) {
+      return badRequest(JsonMsgUtils.handlerDoesNotOwnOfferMessage(handler, offer));
+    }
+
+    offer.delete();
+    return ok(JsonMsgUtils.offerDeleted(offerId));
   }
 
   public Result getAllOffers() {

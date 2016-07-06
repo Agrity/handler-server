@@ -159,9 +159,25 @@ public class OfferJsonParser extends BaseParser {
         getPricePerPound(),
         getStartPaymentDate(),
         getEndPaymentDate(),
-        getComment());
+        getComment(),
+        getManagementType().className());
 
     return newOffer;
+  }
+
+  public void updateOffer(Offer offer) {
+    if (!isValid()) {
+      throw new RuntimeException("Attempted to create Offer from invalid parser.\n");
+    }
+
+    offer.setAlmondVariety(getAlmondVariety());
+    offer.setAlmondSize(getAlmondSize());
+    offer.setAlmondPounds(getAlmondPounds());
+    offer.setPricePerPound(getPricePerPound());
+    offer.setStartPaymentDate(getStartPaymentDate());
+    offer.setEndPaymentDate(getEndPaymentDate());
+    offer.setComment(getComment());
+
   }
 
   public Handler getHandler() {
@@ -473,6 +489,7 @@ public class OfferJsonParser extends BaseParser {
       }
 
       public Class<? extends OfferManagementService> getClassType() { return typeClass; }
+      public String className() { return typeClass.getName(); }
       public Duration getDelay() { return delay; }
 
   }

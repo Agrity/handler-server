@@ -4,7 +4,11 @@
 # --- !Ups
 
 create table email_address (
+<<<<<<< HEAD
   id                            bigint not null,
+=======
+  id                            bigint auto_increment not null,
+>>>>>>> master
   grower_id                     bigint not null,
   created_at                    timestamp,
   updated_at                    timestamp,
@@ -14,7 +18,11 @@ create table email_address (
 create sequence email_address_seq;
 
 create table grower (
+<<<<<<< HEAD
   id                            bigint not null,
+=======
+  id                            bigint auto_increment not null,
+>>>>>>> master
   created_at                    timestamp,
   updated_at                    timestamp,
   handler_id                    bigint,
@@ -25,7 +33,11 @@ create table grower (
 create sequence grower_seq;
 
 create table handler (
+<<<<<<< HEAD
   id                            bigint not null,
+=======
+  id                            bigint auto_increment not null,
+>>>>>>> master
   created_at                    timestamp,
   updated_at                    timestamp,
   company_name                  varchar(255) not null,
@@ -37,7 +49,11 @@ create table handler (
 create sequence handler_seq;
 
 create table offer (
+<<<<<<< HEAD
   id                            bigint not null,
+=======
+  id                            bigint auto_increment not null,
+>>>>>>> master
   created_at                    timestamp,
   updated_at                    timestamp,
   handler_id                    bigint,
@@ -48,8 +64,10 @@ create table offer (
   start_payment_date            date,
   end_payment_date              date,
   comment                       TEXT,
-  offer_currently_open          boolean,
+  management_service            varchar(255),
+  offer_currently_open          integer,
   constraint ck_offer_almond_variety check (almond_variety in ('PD','FR','PR','MI','MT','PL','BT','SN','NP','CR')),
+  constraint ck_offer_offer_currently_open check (offer_currently_open in (0,1,2,3)),
   constraint pk_offer primary key (id)
 );
 create sequence offer_seq;
@@ -61,7 +79,11 @@ create table offer_grower (
 );
 
 create table offer_response (
+<<<<<<< HEAD
   id                            bigint not null,
+=======
+  id                            bigint auto_increment not null,
+>>>>>>> master
   created_at                    timestamp,
   updated_at                    timestamp,
   grower_id                     bigint,
@@ -73,7 +95,11 @@ create table offer_response (
 create sequence offer_response_seq;
 
 create table phone_number (
+<<<<<<< HEAD
   id                            bigint not null,
+=======
+  id                            bigint auto_increment not null,
+>>>>>>> master
   grower_id                     bigint not null,
   created_at                    timestamp,
   updated_at                    timestamp,
@@ -157,6 +183,7 @@ drop index if exists ix_offer_response_offer_id;
 alter table phone_number drop constraint if exists fk_phone_number_grower_id;
 drop index if exists ix_phone_number_grower_id;
 
+<<<<<<< HEAD
 alter table trader_handler drop constraint if exists fk_trader_handler_trader;
 drop index if exists ix_trader_handler_trader;
 
@@ -187,4 +214,19 @@ drop table if exists trader;
 drop sequence if exists trader_seq;
 
 drop table if exists trader_handler;
+=======
+drop table if exists email_address;
+
+drop table if exists grower;
+
+drop table if exists handler;
+
+drop table if exists offer;
+
+drop table if exists offer_grower;
+
+drop table if exists offer_response;
+
+drop table if exists phone_number;
+>>>>>>> master
 

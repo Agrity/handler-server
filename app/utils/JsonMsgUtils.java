@@ -57,6 +57,11 @@ public class JsonMsgUtils {
     return errorToJson("Expecting Some Data.\n");
   }
 
+  public static ObjectNode growerInOffer(long growerId, long offerId) {
+    return errorToJson("Grower " + Long.toString(growerId) + " still in offer " 
+      + Long.toString(offerId));
+  }
+
   private static ObjectNode errorToJson(String msg) {
     ObjectNode result = Json.newObject();
     result.put("error", msg);  
@@ -79,6 +84,14 @@ public class JsonMsgUtils {
 
   public static ObjectNode successfullEmail() {
     return validToJson("Emails sent successfully!");
+  }
+
+  public static ObjectNode offerDeleted(long offerId) {
+    return validToJson("Offer " + offerId + " deleted.");
+  }
+
+  public static ObjectNode growerDeleted(long growerId) {
+    return validToJson("Grower " + Long.toString(growerId) +" successfully deleted");
   }
 
   private static ObjectNode validToJson(String msg) {
