@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.persistence.SequenceGenerator;
 
 import play.data.validation.Constraints;
 
@@ -19,7 +20,7 @@ public class BaseModel extends Model {
 
   @Id
   @Constraints.Min(10)
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   protected Long id;
 
   @Column(name = "created_at")
