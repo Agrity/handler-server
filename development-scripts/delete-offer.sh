@@ -8,7 +8,7 @@ if ! [[ -z $OFFER_ID ]]; then
     --header "X-ADMIN-TOKEN: development-use-only" \
     --request DELETE \ 
     localhost:9000/admin/offers/:$OFFER_ID
-
+  echo # Insert Blank Line
 else 
   echo "ERROR: Please provide an offer id to delete."
 fi
