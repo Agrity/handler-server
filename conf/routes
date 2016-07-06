@@ -50,9 +50,9 @@ GET     /admin/offers                                   controllers.AdminOfferCo
 
 POST    /admin/offers                                   controllers.AdminOfferController.createOffer()
 
-DELETE	/admin/offers/:id  								controllers.AdminOfferController.deleteOffer(id: Long)
+DELETE  /admin/offers/:id                 controllers.AdminOfferController.deleteOffer(id: Long)
 
-PUT		/admin/offers/:id  								controllers.AdminOfferController.updateOffer(id: Long)
+PUT   /admin/offers/:id                 controllers.AdminOfferController.updateOffer(id: Long)
 
 GET     /admin/offers/:id                               controllers.AdminOfferController.getOffer(id: Long)
 
@@ -90,7 +90,11 @@ GET     /handler/offers                          controllers.HandlerController.g
 
 POST    /handler/offers                          controllers.HandlerController.createOffer()
 
-GET     /handler/offers/:offerId                 controllers.HandlerController.getOffer(offerId : Long)
+DELETE  /handler/offers/:offerId                 controllers.HandlerController.deleteOffer(offerId: Long)
+
+PUT     /handler/offers/:offerId                 controllers.HandlerController.updateOffer(offerId: Long) 
+
+GET     /handler/offers/:offerId                 controllers.HandlerController.getOffer(offerId: Long)
 
 GET     /handler/offers/:id/send                 controllers.HandlerController.sendOffer(id: Long)
 
@@ -110,4 +114,4 @@ GET     /messaging/response/twilio                controllers.MessageReceivingCo
 
 POST    /messaging/response/twilio                controllers.MessageReceivingController.receiveTwilioResponse()
 
-GET	    /messaging/response/twilio/number         controllers.MessageReceivingController.numberTwilioResponses()
+GET     /messaging/response/twilio/number         controllers.MessageReceivingController.numberTwilioResponses()
