@@ -6,13 +6,16 @@ import models.interfaces.PrettyString;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 
 import play.Logger;
 import play.data.validation.Constraints;
+import javax.persistence.Entity;
 
+@Entity
 public class Trader extends User implements PrettyString {
 
-  @OneToMany
+  @ManyToMany
   @Constraints.Required
   @JsonIgnore
   private List<Handler> handlerList;

@@ -8,9 +8,9 @@ import javax.persistence.Transient;
 import javax.persistence.Entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.UUID;
+import javax.persistence.MappedSuperclass;
 
-
-@Entity
+@MappedSuperclass
 public class User extends BaseModel {
 
 	@Constraints.Required
