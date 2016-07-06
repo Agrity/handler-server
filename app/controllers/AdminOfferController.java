@@ -133,6 +133,32 @@ public class AdminOfferController extends Controller {
   }
 
   @Security.Authenticated(AdminSecured.class)
+  @BodyParser.Of(BodyParser.Json.class)
+  public Result updateOffer(long id) {
+    JsonNode data = request().body().asJson();
+
+    if(data == null) {
+      return badRequest(JsonMsgUtils.expectingData());
+    }
+
+    OfferJsonParser parser = new OfferJsonParser(data);
+
+    if(!parser.isValid()) {
+      return badRequest(JsonMsgUtils.caughtException(parser.getErrorMessage()));
+    }
+
+    Offer offer = offerService.getById(id);
+    parser.updateOffer(offer);
+    offer.save();
+
+    try {
+      return created(jsonMapper.writeValueAsString(offer));
+    } catch (JsonProcessingException e) {
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
+    }
+  }
+
+  @Security.Authenticated(AdminSecured.class)
   public Result getAllOffers() {
     try {
       return ok(jsonMapper.writeValueAsString(offerService.getAll()));
@@ -155,6 +181,18 @@ public class AdminOfferController extends Controller {
       return internalServerError(JsonMsgUtils.caughtException(e.toString()));
     }
   }
+
+  @Security.Authenticated(AdminSecured.class)
+  public Result deleteOffer(long id) {
+    Offer offer = offerService.getById(id);
+
+    if (offer == null) {
+      return notFound(JsonMsgUtils.offerNotFoundMessage(id));
+    }
+
+    offer.delete();
+    return ok(JsonMsgUtils.offerDeleted(id));
+  }  
 
   @Security.Authenticated(AdminSecured.class)
   public Result getAllHandlerOffers(long handlerId) {

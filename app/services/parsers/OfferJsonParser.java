@@ -165,6 +165,21 @@ public class OfferJsonParser extends BaseParser {
     return newOffer;
   }
 
+  public void updateOffer(Offer offer) {
+    if (!isValid()) {
+      throw new RuntimeException("Attempted to create Offer from invalid parser.\n");
+    }
+
+    offer.setAlmondVariety(getAlmondVariety());
+    offer.setAlmondSize(getAlmondSize());
+    offer.setAlmondPounds(getAlmondPounds());
+    offer.setPricePerPound(getPricePerPound());
+    offer.setStartPaymentDate(getStartPaymentDate());
+    offer.setEndPaymentDate(getEndPaymentDate());
+    offer.setComment(getComment());
+
+  }
+
   public Handler getHandler() {
     ensureValid();
     return handler;

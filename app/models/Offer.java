@@ -186,6 +186,36 @@ public class Offer extends BaseModel implements PrettyString {
   }
 
 
+  /* === Setter Functions === */
+
+  public void setAlmondVariety(AlmondVariety newVariety) {
+    almondVariety = newVariety;
+  }
+
+  public void setAlmondSize(String newSize) {
+    almondSize = newSize;
+  }
+
+  public void setAlmondPounds(Integer newLbs) {
+    almondPounds = newLbs;
+  }
+
+  public void setPricePerPound(String newPpp) {
+    pricePerPound = newPpp;
+  }
+
+  public void setStartPaymentDate(LocalDate newStart) {
+    startPaymentDate = newStart;
+  }
+
+  public void setEndPaymentDate(LocalDate newEnd) {
+    endPaymentDate = newEnd;
+  }
+
+  public void setComment(String newComment) {
+    comment = newComment;
+  }
+
   /* === Member Functions === */
 
   public void closeOffer(OfferStatus offerStatus) {
