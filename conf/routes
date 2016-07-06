@@ -50,19 +50,19 @@ GET     /admin/offers                                   controllers.AdminOfferCo
 
 POST    /admin/offers                                   controllers.AdminOfferController.createOffer()
 
-DELETE  /admin/offers/:id                 controllers.AdminOfferController.deleteOffer(id: Long)
+DELETE  /admin/offers/:id                               controllers.AdminOfferController.deleteOffer(id: Long)
 
-PUT   /admin/offers/:id                 controllers.AdminOfferController.updateOffer(id: Long)
+PUT     /admin/offers/:id                               controllers.AdminOfferController.updateOffer(id: Long)
 
 GET     /admin/offers/:id                               controllers.AdminOfferController.getOffer(id: Long)
 
 GET     /admin/offers/:id/send                          controllers.AdminOfferController.sendOffer(id: Long)
 
-GET     /admin/offers/:offerId/accept/:growerId               controllers.AdminOfferController.acceptOffer(offerId: Long, growerId: Long)
+GET     /admin/offers/:offerId/accept/:growerId         controllers.AdminOfferController.acceptOffer(offerId: Long, growerId: Long)
 
-GET     /admin/offers/:offerId/reject/:growerId               controllers.AdminOfferController.rejectOffer(offerId: Long, growerId: Long)
+GET     /admin/offers/:offerId/reject/:growerId         controllers.AdminOfferController.rejectOffer(offerId: Long, growerId: Long)
 
-GET     /admin/offers/:offerId/requestcall/:growerId          controllers.AdminOfferController.requestCall(offerId: Long, growerId: Long)
+GET     /admin/offers/:offerId/requestcall/:growerId    controllers.AdminOfferController.requestCall(offerId: Long, growerId: Long)
 
 
 # ========== Authentication ========== #
