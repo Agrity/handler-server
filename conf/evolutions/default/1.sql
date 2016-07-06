@@ -4,16 +4,25 @@
 # --- !Ups
 
 create table email_address (
+<<<<<<< HEAD
+  id                            bigint not null,
+=======
   id                            bigint auto_increment not null,
+>>>>>>> master
   grower_id                     bigint not null,
   created_at                    timestamp,
   updated_at                    timestamp,
   email_address                 varchar(255),
   constraint pk_email_address primary key (id)
 );
+create sequence email_address_seq;
 
 create table grower (
+<<<<<<< HEAD
+  id                            bigint not null,
+=======
   id                            bigint auto_increment not null,
+>>>>>>> master
   created_at                    timestamp,
   updated_at                    timestamp,
   handler_id                    bigint,
@@ -21,9 +30,14 @@ create table grower (
   last_name                     varchar(255),
   constraint pk_grower primary key (id)
 );
+create sequence grower_seq;
 
 create table handler (
+<<<<<<< HEAD
+  id                            bigint not null,
+=======
   id                            bigint auto_increment not null,
+>>>>>>> master
   created_at                    timestamp,
   updated_at                    timestamp,
   company_name                  varchar(255) not null,
@@ -32,9 +46,14 @@ create table handler (
   auth_token                    varchar(255),
   constraint pk_handler primary key (id)
 );
+create sequence handler_seq;
 
 create table offer (
+<<<<<<< HEAD
+  id                            bigint not null,
+=======
   id                            bigint auto_increment not null,
+>>>>>>> master
   created_at                    timestamp,
   updated_at                    timestamp,
   handler_id                    bigint,
@@ -51,6 +70,7 @@ create table offer (
   constraint ck_offer_offer_currently_open check (offer_currently_open in (0,1,2,3)),
   constraint pk_offer primary key (id)
 );
+create sequence offer_seq;
 
 create table offer_grower (
   offer_id                      bigint not null,
@@ -59,7 +79,11 @@ create table offer_grower (
 );
 
 create table offer_response (
+<<<<<<< HEAD
+  id                            bigint not null,
+=======
   id                            bigint auto_increment not null,
+>>>>>>> master
   created_at                    timestamp,
   updated_at                    timestamp,
   grower_id                     bigint,
@@ -68,14 +92,38 @@ create table offer_response (
   constraint ck_offer_response_response_status check (response_status in (0,1,2,3)),
   constraint pk_offer_response primary key (id)
 );
+create sequence offer_response_seq;
 
 create table phone_number (
+<<<<<<< HEAD
+  id                            bigint not null,
+=======
   id                            bigint auto_increment not null,
+>>>>>>> master
   grower_id                     bigint not null,
   created_at                    timestamp,
   updated_at                    timestamp,
   phone_number                  varchar(255),
   constraint pk_phone_number primary key (id)
+);
+create sequence phone_number_seq;
+
+create table trader (
+  id                            bigint not null,
+  created_at                    timestamp,
+  updated_at                    timestamp,
+  company_name                  varchar(255) not null,
+  email_address                 varchar(255) not null,
+  sha_password                  varchar(255) not null,
+  auth_token                    varchar(255),
+  constraint pk_trader primary key (id)
+);
+create sequence trader_seq;
+
+create table trader_handler (
+  trader_id                     bigint not null,
+  handler_id                    bigint not null,
+  constraint pk_trader_handler primary key (trader_id,handler_id)
 );
 
 alter table email_address add constraint fk_email_address_grower_id foreign key (grower_id) references grower (id) on delete restrict on update restrict;
@@ -101,6 +149,12 @@ create index ix_offer_response_offer_id on offer_response (offer_id);
 
 alter table phone_number add constraint fk_phone_number_grower_id foreign key (grower_id) references grower (id) on delete restrict on update restrict;
 create index ix_phone_number_grower_id on phone_number (grower_id);
+
+alter table trader_handler add constraint fk_trader_handler_trader foreign key (trader_id) references trader (id) on delete restrict on update restrict;
+create index ix_trader_handler_trader on trader_handler (trader_id);
+
+alter table trader_handler add constraint fk_trader_handler_handler foreign key (handler_id) references handler (id) on delete restrict on update restrict;
+create index ix_trader_handler_handler on trader_handler (handler_id);
 
 
 # --- !Downs
@@ -129,6 +183,38 @@ drop index if exists ix_offer_response_offer_id;
 alter table phone_number drop constraint if exists fk_phone_number_grower_id;
 drop index if exists ix_phone_number_grower_id;
 
+<<<<<<< HEAD
+alter table trader_handler drop constraint if exists fk_trader_handler_trader;
+drop index if exists ix_trader_handler_trader;
+
+alter table trader_handler drop constraint if exists fk_trader_handler_handler;
+drop index if exists ix_trader_handler_handler;
+
+drop table if exists email_address;
+drop sequence if exists email_address_seq;
+
+drop table if exists grower;
+drop sequence if exists grower_seq;
+
+drop table if exists handler;
+drop sequence if exists handler_seq;
+
+drop table if exists offer;
+drop sequence if exists offer_seq;
+
+drop table if exists offer_grower;
+
+drop table if exists offer_response;
+drop sequence if exists offer_response_seq;
+
+drop table if exists phone_number;
+drop sequence if exists phone_number_seq;
+
+drop table if exists trader;
+drop sequence if exists trader_seq;
+
+drop table if exists trader_handler;
+=======
 drop table if exists email_address;
 
 drop table if exists grower;
@@ -142,4 +228,5 @@ drop table if exists offer_grower;
 drop table if exists offer_response;
 
 drop table if exists phone_number;
+>>>>>>> master
 
