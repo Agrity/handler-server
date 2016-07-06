@@ -100,6 +100,18 @@ public class GrowerJsonParser extends BaseParser {
     return newGrower;
   }
 
+  public void updateGrower(Grower grower) {
+    if (!isValid()) {
+      throw new RuntimeException("Attempted to update Grower from invalid parser.\n");
+    }
+
+    grower.setFirstName(getFirstName());
+    grower.setLastName(getLastName());
+    grower.setPhoneNumbers(getPhoneNumbers());
+    grower.setEmailAddresses(getEmailAddresses()); 
+
+  }
+
   public Handler getHandler() {
     ensureValid();
     return handler;

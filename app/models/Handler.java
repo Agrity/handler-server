@@ -101,7 +101,6 @@ public class Handler extends BaseModel implements PrettyString {
   }
 
   public void setPassword(String password) {
-    Logger.error("Password: " + password);
     this.password = password;
     this.shaPassword = SecurityUtility.hashPassword(password);
   }
@@ -119,7 +118,7 @@ public class Handler extends BaseModel implements PrettyString {
   }
 
 
-  /* =================================== Memeber Functions ==================================== */
+  /* =================================== Member Functions ==================================== */
 
 
   @Override

@@ -173,6 +173,22 @@ public class Grower extends BaseModel implements PrettyString {
       .collect(Collectors.toList());
   }
 
+  public void setFirstName(String name) {
+    firstName = name;
+  }
+
+  public void setLastName(String name) {
+    lastName = name;
+  }
+
+  public void setPhoneNumbers(List<PhoneNumber> numbers) {
+    phoneNumbers = numbers;
+  }
+
+  public void setEmailAddresses(List<EmailAddress> emails) {
+    emailAddresses = emails;
+  }
+
   public Offer offerLookupByID(Long offerID) {
     for (Offer offer: offers) {
       if (offer.getId().equals(offerID)) {
