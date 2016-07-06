@@ -175,7 +175,7 @@ public class Grower extends BaseModel implements PrettyString {
 
   public Offer offerLookupByID(Long offerID) {
     for (Offer offer: offers) {
-      if (offer.getId() == offerID) {
+      if (offer.getId().equals(offerID)) {
         return offer;
       }
     }
