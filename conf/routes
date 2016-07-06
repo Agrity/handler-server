@@ -80,6 +80,12 @@ POST    /handler/growers                         controllers.HandlerController.c
 
 GET     /handler/growers/:growerId               controllers.HandlerController.getGrower(growerId: Long)
 
+DELETE  /handler/growers/:growerId/delete        controllers.HandlerController.deleteGrower(growerId: Long)
+
+PUT     /handler/growers/:growerId/update        controllers.HandlerController.updateGrower(growerId: Long)
+
+GET     /handler/offers/:id/send                 controllers.HandlerController.sendOffer(id: Long)
+
 GET     /handler/growers/:growerId/offers        controllers.HandlerController.getGrowersOffers(growerId: Long)
 
 GET     /handler/offers                          controllers.HandlerController.getAllOffers()
@@ -87,8 +93,6 @@ GET     /handler/offers                          controllers.HandlerController.g
 POST    /handler/offers                          controllers.HandlerController.createOffer()
 
 GET     /handler/offers/:offerId                 controllers.HandlerController.getOffer(offerId : Long)
-
-GET     /handler/offers/:id/send                 controllers.HandlerController.sendOffer(id: Long)
 
 
 # ========== **TEMP** Response to Offer ========== #
@@ -106,4 +110,4 @@ GET     /messaging/response/twilio                controllers.MessageReceivingCo
 
 POST    /messaging/response/twilio                controllers.MessageReceivingController.receiveTwilioResponse()
 
-GET	    /messaging/response/twilio/number         controllers.MessageReceivingController.numberTwilioResponses()
+GET     /messaging/response/twilio/number         controllers.MessageReceivingController.numberTwilioResponses()

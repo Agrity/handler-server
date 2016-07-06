@@ -118,7 +118,7 @@ public class Handler extends BaseModel implements PrettyString {
   }
 
 
-  /* =================================== Memeber Functions ==================================== */
+  /* =================================== Member Functions ==================================== */
 
 
   @Override

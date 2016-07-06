@@ -57,6 +57,11 @@ public class JsonMsgUtils {
     return errorToJson("Expecting Some Data.\n");
   }
 
+  public static ObjectNode growerInOffer(long growerId, long offerId) {
+    return errorToJson("Grower " + Long.toString(growerId) + " still in offer " 
+      + Long.toString(offerId));
+  }
+
   private static ObjectNode errorToJson(String msg) {
     ObjectNode result = Json.newObject();
     result.put("error", msg);  
