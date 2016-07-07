@@ -39,12 +39,12 @@ public class Trader extends User implements PrettyString {
 
   @Override
   public String toString() {
-    return "(" + id + ") " + companyName + " : " + getHandlerList().size();
+    return "(" + id + ") " + getCompanyName() + " : " + getHandlerList().size();
   }
   
   public String toPrettyString() {
     StringBuilder builder = new StringBuilder();
-    builder.append("(" + id + ") " + companyName + ":\n");
+    builder.append("(" + id + ") " + getCompanyName() + ":\n");
 
     if (handlerList.isEmpty()) {
       builder.append(" [] ");

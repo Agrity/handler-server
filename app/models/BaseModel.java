@@ -16,7 +16,7 @@ import javax.persistence.SequenceGenerator;
 import play.data.validation.Constraints;
 
 @MappedSuperclass
-public class BaseModel extends Model {
+public abstract class BaseModel extends Model {
 
   @Id
   @Constraints.Min(10)
