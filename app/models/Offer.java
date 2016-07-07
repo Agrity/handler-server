@@ -193,6 +193,10 @@ public class Offer extends BaseModel implements PrettyString {
     return expirationTime;
   }
 
+  public String getExpirationTimeAsString() {
+    return expirationTime.toString();
+  }
+
 
   /* === Setter Functions === */
 

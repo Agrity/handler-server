@@ -423,6 +423,9 @@ public class OfferJsonParser extends BaseParser {
       setInvalid(missingParameterError(OfferJsonConstants.DELAY_KEY));
       return null;
     }
+
+    LocalDateTime currentTime = LocalDateTime.now();
+    expirationTime = currentTime.plusMinutes(delayInt);
   
     if(typeMap.has(OfferJsonConstants.TYPE_KEY)) {
       String className = typeMap.get(OfferJsonConstants.TYPE_KEY).asText();
@@ -437,9 +440,6 @@ public class OfferJsonParser extends BaseParser {
           return null;          
       }
     } 
-
-    LocalDateTime currentTime = LocalDateTime.now();
-    expirationTime = currentTime.plusMinutes(delayInt);
 
     setInvalid(missingParameterError(OfferJsonConstants.TYPE_KEY));
     return null;
