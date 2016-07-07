@@ -84,12 +84,13 @@ public class OfferSMSMessageService implements OfferMessageService {
     String body = "Hi " + curGrower.getFullName() + ",\n"
                 + "Here are the specs for a new bid: \n"
                 + offer.getAlmondVariety() + "\n"
-                /* === TODO: Almond Size === */
+                + offer.getAlmondSize() + "\n"
                 + offer.getAlmondPoundsString() + "lbs\n"
                 + offer.getPricePerPound() + "/lb\n" 
                 + offer.getComment() + "\n"
                 + "Bid Id: " + offer.getId() + "\n"
-                + "To respond to this bid, respond with the bid Id followed by Accept or Reject.\n" 
+                + "To respond to this bid, respond with the bid Id (" + offer.getId() + ") "
+                + "followed by the amount of pounds you would like to accept (0 for rejection).\n" 
                 + "-" + offer.getHandler().getCompanyName() + " " + offer.getHandler().getEmailAddress();
     return body;
   } 
