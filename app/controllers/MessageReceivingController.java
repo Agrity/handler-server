@@ -75,31 +75,32 @@ public class MessageReceivingController extends Controller {
  
     Long offerID = parser.getOfferID();
     boolean accepted = parser.getAccepted();
+    Integer almondPounds = parser.getAlmondPounds();
     
     /* if we reach here, the SMS message has a well-formatted offerID and almondAmount response */
 
     Offer offer = grower.offerLookupByID(offerID);
     if (offer == null) {
       Logger.error("OfferID " + offerID + " does not exist. From: " + phoneNum);
-      return ok("OfferId: " + offerID + " does not exist.");
+      return ok("Bid: " + offerID + " does not exist.");
     }
 
     Logger.info("The valid offerID is: " + offerID);
-    return updateOffer(grower, offer, accepted);
+    return updateOffer(grower, offer, accepted, almondPounds);
   } 
 
   /* === TODO: Grower request call? === */
-  private Result updateOffer(Grower grower, Offer offer, boolean accepted) {
+  private Result updateOffer(Grower grower, Offer offer, boolean accepted, Integer almondPounds) {
     if (accepted) {
-      OfferResponseResult result = offer.growerAcceptOffer(grower.getId(), offer.getAlmondPounds());
+      OfferResponseResult result = offer.growerAcceptOffer(grower.getId(), almondPounds);
 
       if (result.isValid()) {
-        Logger.info("Offer: " + offer.getId() + " was accepted by: " + grower.getFullName());
-        return ok("Congratulations! Your offer (ID " + offer.getId() + ") <" + offer.getAlmondVariety() + " for " 
-        + offer.getPricePerPound() + "/lb.> has been accepted.");
+        Logger.info("Bid: " + offer.getId() + " was accepted by: " + grower.getFullName());
+        return ok("Congratulations! Your bid (ID " + offer.getId() + ") <" + offer.getAlmondVariety() + " for " 
+        + offer.getPricePerPound() + "/lb.> has been accepted for " + almondPounds + "lbs.");
 
       } else {
-        Logger.info("Offer: " + offer.getId() + " could not be accepted by: " + grower.getFullName()
+        Logger.info("Bid: " + offer.getId() + " could not be accepted by: " + grower.getFullName()
                   + " for " + result.getInvalidResponseMessage());
         return ok(result.getInvalidResponseMessage());
       }
@@ -108,11 +109,11 @@ public class MessageReceivingController extends Controller {
 
       OfferResponseResult result = offer.growerRejectOffer(grower.getId());
       if (result.isValid()) {
-        Logger.info("Offer: " + offer.getId() + " was rejected by: " + grower.getFullName());
+        Logger.info("Bid: " + offer.getId() + " was rejected by: " + grower.getFullName());
         return ok("Bid #" + offer.getId() + " has successfully been rejected.");
 
       } else {
-        Logger.info("Offer: " + offer.getId() + " could not be rejected by: " 
+        Logger.info("Bid: " + offer.getId() + " could not be rejected by: " 
                   + grower.getFullName() + result.getInvalidResponseMessage());
         return ok(result.getInvalidResponseMessage());
       }
