@@ -73,9 +73,9 @@ public class MessageReceivingController extends Controller {
       return ok(parser.getErrorMessage());
     }
  
-    Long offerID = parser.getOfferID();
+    Long offerID = parser.getID();
     boolean accepted = parser.getAccepted();
-    Integer almondPounds = parser.getAlmondPounds();
+    Integer almondPounds = parser.getPounds();
     
     /* if we reach here, the SMS message has a well-formatted offerID and almondAmount response */
 
