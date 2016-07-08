@@ -41,6 +41,8 @@ public class SMSParser extends BaseParser {
       return;
     }
 
+    accepted = parseAccepted();
+
     setValid();
   }
 
@@ -74,12 +76,14 @@ public class SMSParser extends BaseParser {
   	  setInvalid("Number of pounds accepted is not formatted correctly. " + errorResponse);
   	}
 
-    if (pounds.equals(0)) {
+  	return result;
+  }
+
+  private boolean parseAccepted() {
+     if (pounds.equals(0)) {
       accepted = false;
     } else {
       accepted = true;
     }
-
-  	return result;
   }
 }

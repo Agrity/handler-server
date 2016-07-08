@@ -82,7 +82,7 @@ public class OfferSMSMessageService implements OfferMessageService {
 
   private String createBodyText(Grower curGrower, Offer offer) {
     String body = "Hi " + curGrower.getFullName() + ",\n"
-                + "Here are the specs for a new bid: \n"
+                + "You have received a new bid: \n"
                 + offer.getAlmondVariety() + "\n"
                 + offer.getAlmondSize() + "\n"
                 + offer.getAlmondPoundsString() + "lbs\n"
