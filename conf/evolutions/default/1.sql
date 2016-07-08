@@ -96,6 +96,18 @@ create table trader_handler (
   constraint pk_trader_handler primary key (trader_id,handler_id)
 );
 
+create table trader_bid (
+  id                            bigint auto_increment not null,
+  created_at                    timestamp,
+  updated_at                    timestamp,
+  almond_variety                varchar(2),
+  almond_pounds                 integer,
+  price_per_pound               varchar(255),
+  comment                       TEXT,
+  constraint ck_trader_bid_almond_variety check (almond_variety in ('PD','FR','PR','MI','MT','PL','BT','SN','NP','CR')),
+  constraint pk_trader_bid primary key (id)
+);
+
 alter table email_address add constraint fk_email_address_grower_id foreign key (grower_id) references grower (id) on delete restrict on update restrict;
 create index ix_email_address_grower_id on email_address (grower_id);
 
@@ -176,4 +188,6 @@ drop table if exists phone_number;
 drop table if exists trader;
 
 drop table if exists trader_handler;
+
+drop table if exists trader_bid;
 

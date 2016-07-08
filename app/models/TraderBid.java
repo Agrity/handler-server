@@ -5,6 +5,11 @@ import javax.persistence.Entity;
 
 import models.Almond.AlmondVariety;
 
+/** ============================================ TODO ======================================================
+ * Add any other fields & getters/setters that we need for TraderBid (e.g. responses)
+ * Add functionality (e.g. accepting/rejecting a bid)
+ */
+
 @Entity
 public class TraderBid extends BaseBid implements PrettyString {
 
