@@ -13,9 +13,8 @@ public abstract class BaseBid extends BaseModel {
 	@Constraints.Required
   private AlmondVariety almondVariety;
 
-  // TODO Change to AlmondSize Size within Almond model.
   @Constraints.Required
-  private String almondSize;
+  private Integer almondPounds;
 
 /* ======================================= Getters ======================================= */
 
@@ -23,9 +22,8 @@ public abstract class BaseBid extends BaseModel {
     return almondVariety;
   }
 
-
-  public String getAlmondSize() {
-    return almondSize;
+  public Integer getAlmondPounds() {
+    return almondPounds;
   }
 
 /* ======================================= Setters ======================================= */
@@ -34,8 +32,8 @@ public abstract class BaseBid extends BaseModel {
     almondVariety = newVariety;
   }
 
-  public void setAlmondSize(String newSize) {
-    almondSize = newSize;
+  public void setAlmondPounds(Integer newLbs) {
+    almondPounds = newLbs;
   }
 
 }

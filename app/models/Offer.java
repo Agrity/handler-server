@@ -57,18 +57,9 @@ public class Offer extends BaseBid implements PrettyString {
   @Constraints.Required
   private List<Grower> growers = new ArrayList<>();
 
-  // TODO Figure out Why this can't use reflection
-  //@Constraints.Required
-  //public MonetaryAmount price;
-
-  
-
   // TODO Change to AlmondSize Size within Almond model.
   @Constraints.Required
   private String almondSize;
-
-  @Constraints.Required
-  private Integer almondPounds;
 
   // TODO Change to MonetaryAmount.
   @Constraints.Required
@@ -113,10 +104,9 @@ public class Offer extends BaseBid implements PrettyString {
       .collect(Collectors.toSet());
 
     this.growers = allGrowers;
-    //this.almondVariety = almondVariety;
     setAlmondVariety(almondVariety);
     this.almondSize = almondSize;
-    this.almondPounds = almondPounds;
+    setAlmondPounds(almondPounds);
     this.pricePerPound = pricePerPound;
     this.startPaymentDate = startPaymentDate;
     this.endPaymentDate = endPaymentDate;
@@ -138,15 +128,8 @@ public class Offer extends BaseBid implements PrettyString {
     return growers;
   }
 
-
-
   public String getAlmondSize() {
     return almondSize;
-  }
-
-
-  public Integer getAlmondPounds() {
-    return almondPounds;
   }
 
   public String getPricePerPound() {
@@ -156,7 +139,7 @@ public class Offer extends BaseBid implements PrettyString {
 
   @JsonIgnore
   public String getAlmondPoundsString() {
-    return NumberFormat.getIntegerInstance().format(almondPounds);
+    return NumberFormat.getIntegerInstance().format(getAlmondPounds());
   }
 
   public LocalDate getStartPaymentDate() {
@@ -198,14 +181,8 @@ public class Offer extends BaseBid implements PrettyString {
 
   /* === Setter Functions === */
 
-
-
   public void setAlmondSize(String newSize) {
     almondSize = newSize;
-  }
-
-  public void setAlmondPounds(Integer newLbs) {
-    almondPounds = newLbs;
   }
 
   public void setPricePerPound(String newPpp) {
@@ -377,7 +354,7 @@ public class Offer extends BaseBid implements PrettyString {
 
   @Override
   public String toPrettyString() {
-    return "(" + id + ") " + getAlmondVariety() + " [ " + almondPounds + " ] ( " + pricePerPound + " )\n"
+    return "(" + id + ") " + getAlmondVariety() + " [ " + getAlmondPounds() + " ] ( " + pricePerPound + " )\n"
       + "Growers: " + getAllGrowers() + "\n"
       + "\tAccepted: " + getAcceptedGrowers() + "\n"
       + "\tRejected: " + getRejectedGrowers() + "\n"
