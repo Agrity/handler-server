@@ -139,9 +139,4 @@ public class FCFSService implements OfferManagementService {
         + offer.getPricePerPound() + "\n\t\tPOUNDS REMAINING: " 
         + Long.toString(poundsRemaining);
   }
-
-  @Override
-  public long getPoundsRemaining() {
-    return poundsRemaining;
-  }
 }
