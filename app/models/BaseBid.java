@@ -1,7 +1,11 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.MappedSuperclass;
 import play.data.validation.Constraints;
+import java.text.NumberFormat;
+import javax.persistence.Column;
 
 import models.Almond.AlmondVariety;
 
@@ -16,6 +20,12 @@ public abstract class BaseBid extends BaseModel {
   @Constraints.Required
   private Integer almondPounds;
 
+  @Constraints.Required
+  private String pricePerPound;
+
+  @Column(columnDefinition = "TEXT")
+  private String comment = "";
+
 /* ======================================= Getters ======================================= */
 
   public AlmondVariety getAlmondVariety() {
@@ -26,6 +36,19 @@ public abstract class BaseBid extends BaseModel {
     return almondPounds;
   }
 
+   @JsonIgnore
+  public String getAlmondPoundsString() {
+    return NumberFormat.getIntegerInstance().format(getAlmondPounds());
+  }
+
+  public String getPricePerPound() {
+    return pricePerPound;
+  }
+
+  public String getComment() {
+    return comment;
+  }
+
 /* ======================================= Setters ======================================= */
 
   public void setAlmondVariety(AlmondVariety newVariety) {
@@ -34,6 +57,14 @@ public abstract class BaseBid extends BaseModel {
 
   public void setAlmondPounds(Integer newLbs) {
     almondPounds = newLbs;
+  }
+
+   public void setPricePerPound(String newPpp) {
+    pricePerPound = newPpp;
+  }
+
+  public void setComment(String newComment) {
+    comment = newComment;
   }
 
 }

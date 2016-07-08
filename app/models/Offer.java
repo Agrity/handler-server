@@ -61,12 +61,6 @@ public class Offer extends BaseBid implements PrettyString {
   @Constraints.Required
   private String almondSize;
 
-  // TODO Change to MonetaryAmount.
-  @Constraints.Required
-  private String pricePerPound;
-
-  //@Formats.DateTime(pattern = "dd/MM/yyyy")
-  //private LocalDate paymentDate;
   private LocalDate startPaymentDate;
 
   private LocalDate endPaymentDate;
@@ -107,7 +101,7 @@ public class Offer extends BaseBid implements PrettyString {
     setAlmondVariety(almondVariety);
     this.almondSize = almondSize;
     setAlmondPounds(almondPounds);
-    this.pricePerPound = pricePerPound;
+    setPricePerPound(pricePerPound);
     this.startPaymentDate = startPaymentDate;
     this.endPaymentDate = endPaymentDate;
     this.comment = comment;
@@ -130,16 +124,6 @@ public class Offer extends BaseBid implements PrettyString {
 
   public String getAlmondSize() {
     return almondSize;
-  }
-
-  public String getPricePerPound() {
-    return pricePerPound;
-  }
-
-
-  @JsonIgnore
-  public String getAlmondPoundsString() {
-    return NumberFormat.getIntegerInstance().format(getAlmondPounds());
   }
 
   public LocalDate getStartPaymentDate() {
@@ -183,10 +167,6 @@ public class Offer extends BaseBid implements PrettyString {
 
   public void setAlmondSize(String newSize) {
     almondSize = newSize;
-  }
-
-  public void setPricePerPound(String newPpp) {
-    pricePerPound = newPpp;
   }
 
   public void setStartPaymentDate(LocalDate newStart) {
@@ -354,7 +334,7 @@ public class Offer extends BaseBid implements PrettyString {
 
   @Override
   public String toPrettyString() {
-    return "(" + id + ") " + getAlmondVariety() + " [ " + getAlmondPounds() + " ] ( " + pricePerPound + " )\n"
+    return "(" + id + ") " + getAlmondVariety() + " [ " + getAlmondPounds() + " ] ( " + getPricePerPound() + " )\n"
       + "Growers: " + getAllGrowers() + "\n"
       + "\tAccepted: " + getAcceptedGrowers() + "\n"
       + "\tRejected: " + getRejectedGrowers() + "\n"
