@@ -47,6 +47,7 @@ create table offer (
   comment                       TEXT,
   management_service            varchar(255),
   offer_currently_open          integer,
+  expiration_time               timestamp,
   constraint ck_offer_almond_variety check (almond_variety in ('PD','FR','PR','MI','MT','PL','BT','SN','NP','CR')),
   constraint ck_offer_offer_currently_open check (offer_currently_open in (0,1,2,3)),
   constraint pk_offer primary key (id)
