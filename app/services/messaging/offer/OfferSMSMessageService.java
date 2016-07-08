@@ -88,10 +88,11 @@ public class OfferSMSMessageService implements OfferMessageService {
                 + offer.getAlmondPoundsString() + "lbs\n"
                 + offer.getPricePerPound() + "/lb\n" 
                 + offer.getComment() + "\n"
-                + "Bid Id: " + offer.getId() + "\n"
+                + "-" + offer.getHandler().getCompanyName() + " " + 
+                + offer.getHandler().getEmailAddress() + "\n\n"
+                //+ "Bid Id: " + offer.getId() + "\n"
                 + "Respond with the bid Id (" + offer.getId() + ") "
-                + "followed by the amount of pounds you would like to accept (0 for rejection).\n" 
-                + "-" + offer.getHandler().getCompanyName() + " " + offer.getHandler().getEmailAddress();
+                + "followed by the amount of pounds you would like to accept (0 for rejection).";
     return body;
   } 
 
