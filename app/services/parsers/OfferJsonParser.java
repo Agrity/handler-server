@@ -3,6 +3,7 @@ package services.parsers;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +71,7 @@ public class OfferJsonParser extends BaseParser {
   private LocalDate startPaymentDate;
   private LocalDate endPaymentDate;
   private ManagementTypeInfo managementType;
+  private LocalDateTime expirationTime;
   private String comment;
 
   private final GrowerService growerService;
@@ -160,7 +162,8 @@ public class OfferJsonParser extends BaseParser {
         getStartPaymentDate(),
         getEndPaymentDate(),
         getComment(),
-        getManagementType().className());
+        getManagementType().className(),
+        getExpirationTime());
 
     return newOffer;
   }
@@ -228,6 +231,10 @@ public class OfferJsonParser extends BaseParser {
   public String getComment() {
     ensureValid();
     return comment;
+  }
+
+  public LocalDateTime getExpirationTime() {
+    return expirationTime;
   }
 
   private List<Grower> parseGrowers(JsonNode data) {
@@ -416,6 +423,9 @@ public class OfferJsonParser extends BaseParser {
       setInvalid(missingParameterError(OfferJsonConstants.DELAY_KEY));
       return null;
     }
+
+    LocalDateTime currentTime = LocalDateTime.now();
+    expirationTime = currentTime.plusMinutes(delayInt);
   
     if(typeMap.has(OfferJsonConstants.TYPE_KEY)) {
       String className = typeMap.get(OfferJsonConstants.TYPE_KEY).asText();

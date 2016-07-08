@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -87,6 +88,8 @@ public class Offer extends BaseModel implements PrettyString {
 
   private OfferStatus offerCurrentlyOpen = OfferStatus.OPEN;
 
+  private LocalDateTime expirationTime;
+
 
   /* ==================================== Static Functions ==================================== */
 
@@ -100,7 +103,7 @@ public class Offer extends BaseModel implements PrettyString {
 
   public Offer(Handler handler, List<Grower> allGrowers, AlmondVariety almondVariety,
       String almondSize, Integer almondPounds, String pricePerPound, LocalDate startPaymentDate,
-      LocalDate endPaymentDate, String comment, String managementService) {
+      LocalDate endPaymentDate, String comment, String managementService, LocalDateTime expirationTime) {
     super();
 
     this.handler = handler;
@@ -119,6 +122,7 @@ public class Offer extends BaseModel implements PrettyString {
     this.endPaymentDate = endPaymentDate;
     this.comment = comment;
     this.managementService = managementService;
+    this.expirationTime = expirationTime;
   }
 
 
@@ -183,6 +187,14 @@ public class Offer extends BaseModel implements PrettyString {
 
   public String getManagamentService() {
     return managementService;
+  }
+
+  public LocalDateTime getExpirationTime() {
+    return expirationTime;
+  }
+
+  public String getExpirationTimeAsString() {
+    return expirationTime.toString();
   }
 
 

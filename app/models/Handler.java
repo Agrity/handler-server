@@ -44,22 +44,14 @@ public class Handler extends User implements PrettyString {
 
   /* =================================== Memeber Functions ==================================== */
 
-  public void setEmailAddress(String emailAddress) {
-    this.emailAddress = emailAddress.toLowerCase();
-  }
-
-  public String getEmailAddress() {
-    return emailAddress;
-  }
-
   @Override
   public String toString() {
-    return "(" + id + ") " + companyName + " : " + getGrowersList().size();
+    return "(" + id + ") " + getCompanyName() + " : " + getGrowersList().size();
   }
   
   public String toPrettyString() {
     StringBuilder builder = new StringBuilder();
-    builder.append("(" + id + ") " + companyName + ":\n");
+    builder.append("(" + id + ") " + getCompanyName() + ":\n");
 
     if (growersList.isEmpty()) {
       builder.append(" [] ");
