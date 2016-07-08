@@ -22,4 +22,5 @@ public interface OfferManagementService {
 	public OfferResponseResult accept(long pounds, long growerId);
 	public OfferResponseResult reject(long growerId);
 
+  public long getPoundsRemaining();
 }

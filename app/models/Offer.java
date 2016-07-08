@@ -185,7 +185,7 @@ public class Offer extends BaseModel implements PrettyString {
     return offerCurrentlyOpen == OfferStatus.OPEN;
   }
 
-  public String getManagamentService() {
+  public String getManagementService() {
     return managementService;
   }
 

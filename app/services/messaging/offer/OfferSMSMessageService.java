@@ -16,6 +16,7 @@ import models.Grower;
 import models.Offer;
 import play.Logger;
 import services.messaging.MessageServiceConstants.TwilioFields;
+import services.offer_management.OfferManagementService;
 
 /* === TODO: Add logging on message sending === */
 
@@ -81,6 +82,8 @@ public class OfferSMSMessageService implements OfferMessageService {
   }
 
   private String createBodyText(Grower curGrower, Offer offer) {
+    OfferManagementService service = OfferManagementService.getOfferManagementService(offer);
+    Long id = offer.getId();
     String body = "Hi " + curGrower.getFullName() + ",\n"
                 + "You have received a new bid: \n"
                 + offer.getAlmondVariety() + "\n"
@@ -90,9 +93,10 @@ public class OfferSMSMessageService implements OfferMessageService {
                 + offer.getComment() + "\n"
                 + "-" + offer.getHandler().getCompanyName() + " " 
                 + offer.getHandler().getEmailAddress() + "\n\n"
-                + "Respond with the bid ID(" + offer.getId() + ") "
+                + "Respond with the bid ID(" + id + ") "
                 + "followed by the amount of pounds you would like to accept (0 for rejection).\n"
-                + "Bid ID: " + offer.getId();
+                + "Bid ID: " + id + "\n"
+                + "Example: " + id + " " + service.getPoundsRemaining();
     return body;
   } 
 
