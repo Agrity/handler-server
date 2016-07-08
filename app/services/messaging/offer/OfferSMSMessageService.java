@@ -90,7 +90,7 @@ public class OfferSMSMessageService implements OfferMessageService {
                 + offer.getComment() + "\n"
                 + "Bid Id: " + offer.getId() + "\n"
                 + "To respond to this bid, respond with the bid Id (" + offer.getId() + ") "
-                + "followed by the amount of pounds you would like to accept (0 for rejection).\n" 
+                + "followed by either the amount of pounds you would like to accept or 0 for rejection).\n" 
                 + "-" + offer.getHandler().getCompanyName() + " " + offer.getHandler().getEmailAddress();
     return body;
   } 
