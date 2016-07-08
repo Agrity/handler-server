@@ -67,4 +67,10 @@ public abstract class BaseBid extends BaseModel {
     comment = newComment;
   }
 
+/* ======================================= Member Functions ======================================= */
+
+  @Override
+  public String toString() {
+    return "(" + id + ") " + getAlmondVariety();
+  }
 }
