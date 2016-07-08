@@ -11,11 +11,11 @@ import java.util.UUID;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public class User extends BaseModel {
+public abstract class User extends BaseModel {
 
 	@Constraints.Required
   @Column(name = DBConstants.HandlerColumns.COMPANY_NAME, nullable = false)
-  protected String companyName;
+  private String companyName;
 
 	/* ===================================== Authentication ===================================== */
 
@@ -24,7 +24,7 @@ public class User extends BaseModel {
   //
   // WARNING: Is expected to always be lowercase.
   @Column(nullable = false)
-  protected String emailAddress;
+  private String emailAddress;
 
   // Cleartext password. Not Saved to database.
   @Transient
@@ -32,24 +32,15 @@ public class User extends BaseModel {
   @Constraints.MinLength(6)
   @Constraints.MaxLength(256)
   @JsonIgnore
-  protected String password;
+  private String password;
 
   // Hashed password saved to database.
   @Column(nullable = false)
-  protected String shaPassword;
-
-  public String getShaPassword() {
-    return shaPassword;
-  }
-
+  private String shaPassword;
 
   // Used to keep track of user signed in on a given device. Will be stored here and in browser
   // when logged in, and will be erased when logged out.
   private String authToken;
-
-  public String getAuthToken() {
-    return authToken;
-  }
 
   /* ==================================== Member Accessors ==================================== */
 
@@ -77,6 +68,14 @@ public class User extends BaseModel {
     this.shaPassword = SecurityUtility.hashPassword(password);
   }
 
+  public String getPassword() {
+    return password;
+  }
+
+  public String getShaPassword() {
+    return shaPassword;
+  } 
+
   public String createToken() {
     authToken = UUID.randomUUID().toString();
     Logger.debug("Auth Token Created (" + id + "): " + authToken);
@@ -87,5 +86,9 @@ public class User extends BaseModel {
   public void deleteAuthToken() {
     authToken = null;
     save();
+  }
+
+   public String getAuthToken() {
+    return authToken;
   }
 }
