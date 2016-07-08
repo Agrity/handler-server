@@ -5,7 +5,7 @@ if [[ -z $1 ]]; then
     --header "Content-type: application/json" \
     --header "X-ADMIN-TOKEN: development-use-only" \
     --request POST \
-    --data '{ "handler_id" : 1, "grower_ids" : [1], "almond_variety" : "NP", "almond_pounds" :  100000,  "price_per_pound" : "2.23", "payment_date" : "testing", "management_type" : { "type" : "FCFSService", "delay" : 10}, "comment" : "This is an awesome test comment", "email_addresses" : "brossi15621@gmail.com" }' \
+    --data '{ "handler_id" : 1, "grower_ids" : [1], "almond_variety" : "NP", "almond_size" : "23/25", "almond_pounds" :  100000,  "price_per_pound" : "2.23", "start_payment_date" : "June 2015", "end_payment_date" : "June 2016", "management_type" : { "type" : "FCFSService", "delay" : 10}, "comment" : "This is an awesome test comment", "email_addresses" : "brossi15621@gmail.com" }' \
     radiant-cove-44181.herokuapp.com/admin/offers
   echo # Insert Blank Line
 else

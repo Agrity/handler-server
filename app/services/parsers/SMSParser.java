@@ -74,6 +74,12 @@ public class SMSParser extends BaseParser {
   	  setInvalid("Number of pounds accepted is not formatted correctly. " + errorResponse);
   	}
 
+    if (pounds.equals(0)) {
+      accepted = false;
+    } else {
+      accepted = true;
+    }
+
   	return result;
   }
 }
