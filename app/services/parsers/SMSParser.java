@@ -13,10 +13,10 @@ import play.Logger;
 public class SMSParser extends BaseParser {
 
   private Long offerID;
-  private Integer almoundPounds;
+  private Integer pounds;
   private boolean accepted;
   private static final String errorResponse = 
-                    "Please format message as \"[ID#] [Accept/Reject]\". Could not process bid response.";
+                    "Please format message as \"[ID#] [#lbs Accepting]\". Could not process bid response.";
 
   public SMSParser(String smsMessage) {
     super();
@@ -35,29 +35,18 @@ public class SMSParser extends BaseParser {
     	return;
     }
 
-    String command = splited[1];
-    if (!formatted(command)) {
+    pounds = parsePounds(splited[1]);
+    if (pounds == null) {
       Logger.error("invalid command \n\n");
       return;
     }
 
+    accepted = parseAccepted();
+
     setValid();
   }
 
-  private boolean formatted(String command) {
-    command = command.toLowerCase();
-    if (command.equals("accept")) {
-      accepted = true;
-      return true;
-    } else if (command.equals("reject")) {
-      accepted = false;
-      return true;
-    } 
-    setInvalid(errorResponse);
-    return false;
-  }
-
-  public Long getOfferID() {
+  public Long getID() {
   	return offerID;
   }
 
@@ -65,8 +54,8 @@ public class SMSParser extends BaseParser {
     return accepted;
   }
 
-  public Integer getAlmoundPounds() {
-  	return almoundPounds;
+  public Integer getPounds() {
+  	return pounds;
   }
 
   private Long parseID(String firstHalf) {
@@ -88,5 +77,13 @@ public class SMSParser extends BaseParser {
   	}
 
   	return result;
+  }
+
+  private boolean parseAccepted() {
+     if (pounds.equals(0)) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }
