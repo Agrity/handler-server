@@ -150,7 +150,7 @@ public class Offer extends BaseBid implements PrettyString {
     return offerCurrentlyOpen == OfferStatus.OPEN;
   }
 
-  public String getManagamentService() {
+  public String getManagementService() {
     return managementService;
   }
 

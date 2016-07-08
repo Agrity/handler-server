@@ -16,6 +16,7 @@ import models.Grower;
 import models.Offer;
 import play.Logger;
 import services.messaging.MessageServiceConstants.TwilioFields;
+import services.offer_management.OfferManagementService;
 
 /* === TODO: Add logging on message sending === */
 
@@ -47,7 +48,7 @@ public class OfferSMSMessageService implements OfferMessageService {
   }
 
   public boolean sendClosed(Offer offer, Grower grower) {
-    String msg = "Your offer (ID " + offer.getId() + ") <" + offer.getAlmondVariety() + " for " 
+    String msg = "Your bid (ID " + offer.getId() + ") <" + offer.getAlmondVariety() + " for " 
         + offer.getPricePerPound() + "/lb.> has expired.";
     return sendUpdated(offer, grower, msg);
   }
@@ -81,16 +82,20 @@ public class OfferSMSMessageService implements OfferMessageService {
   }
 
   private String createBodyText(Grower curGrower, Offer offer) {
+    Long id = offer.getId();
     String body = "Hi " + curGrower.getFullName() + ",\n"
-                + "Here are the specs for a new bid: \n"
+                + "You have received a new bid: \n"
                 + offer.getAlmondVariety() + "\n"
-                /* === TODO: Almond Size === */
+                + offer.getAlmondSize() + "\n"
                 + offer.getAlmondPoundsString() + "lbs\n"
                 + offer.getPricePerPound() + "/lb\n" 
                 + offer.getComment() + "\n"
-                + "Offer Id: " + offer.getId() + "\n"
-                + "To respond to this bid, respond with the offer Id followed by Accept or Reject.\n" 
-                + "-" + offer.getHandler().getCompanyName() + " " + offer.getHandler().getEmailAddress();
+                + "-" + offer.getHandler().getCompanyName() + " " 
+                + offer.getHandler().getEmailAddress() + "\n\n"
+                + "Respond with the bid ID(" + id + ") "
+                + "followed by the amount of pounds you would like to accept (0 for rejection).\n"
+                + "Bid ID: " + id + "\n"
+                + "Example: " + id + " 10,000";
     return body;
   } 
 
