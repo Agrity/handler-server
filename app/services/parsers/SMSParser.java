@@ -81,9 +81,9 @@ public class SMSParser extends BaseParser {
 
   private boolean parseAccepted() {
      if (pounds.equals(0)) {
-      accepted = false;
+      return false;
     } else {
-      accepted = true;
+      return true;
     }
   }
 }
