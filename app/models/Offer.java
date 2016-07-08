@@ -33,7 +33,7 @@ import services.DateService;
 import java.util.Date;
 
 @Entity
-public class Offer extends BaseModel implements PrettyString {
+public class Offer extends BaseBid implements PrettyString {
 
   public static enum OfferStatus{
     OPEN, 
@@ -61,8 +61,7 @@ public class Offer extends BaseModel implements PrettyString {
   //@Constraints.Required
   //public MonetaryAmount price;
 
-  @Constraints.Required
-  private AlmondVariety almondVariety;
+  
 
   // TODO Change to AlmondSize Size within Almond model.
   @Constraints.Required
@@ -114,7 +113,8 @@ public class Offer extends BaseModel implements PrettyString {
       .collect(Collectors.toSet());
 
     this.growers = allGrowers;
-    this.almondVariety = almondVariety;
+    //this.almondVariety = almondVariety;
+    setAlmondVariety(almondVariety);
     this.almondSize = almondSize;
     this.almondPounds = almondPounds;
     this.pricePerPound = pricePerPound;
@@ -138,9 +138,7 @@ public class Offer extends BaseModel implements PrettyString {
     return growers;
   }
 
-  public AlmondVariety getAlmondVariety() {
-    return almondVariety;
-  }
+
 
   public String getAlmondSize() {
     return almondSize;
@@ -200,9 +198,7 @@ public class Offer extends BaseModel implements PrettyString {
 
   /* === Setter Functions === */
 
-  public void setAlmondVariety(AlmondVariety newVariety) {
-    almondVariety = newVariety;
-  }
+
 
   public void setAlmondSize(String newSize) {
     almondSize = newSize;
@@ -376,12 +372,12 @@ public class Offer extends BaseModel implements PrettyString {
 
   @Override
   public String toString() {
-    return "(" + id + ") " + almondVariety;
+    return "(" + id + ") " + getAlmondVariety();
   }
 
   @Override
   public String toPrettyString() {
-    return "(" + id + ") " + almondVariety + " [ " + almondPounds + " ] ( " + pricePerPound + " )\n"
+    return "(" + id + ") " + getAlmondVariety() + " [ " + almondPounds + " ] ( " + pricePerPound + " )\n"
       + "Growers: " + getAllGrowers() + "\n"
       + "\tAccepted: " + getAcceptedGrowers() + "\n"
       + "\tRejected: " + getRejectedGrowers() + "\n"
