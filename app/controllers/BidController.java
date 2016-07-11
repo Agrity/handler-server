@@ -6,28 +6,34 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 
 import services.OfferService;
-import services.messaging.offer.OfferMessageService;
+import services.GrowerService;
 
 import models.Offer;
+import models.OfferResponseResult;
+import models.Grower;
+
+import play.mvc.BodyParser;
+import play.mvc.Controller;
+import play.mvc.Result;
 
 import utils.JsonMsgUtils;
 
 public class BidController extends Controller {
   
   private final OfferService offerService;
-  private final OfferMessageService offerMessageService;
+  private final GrowerService growerService;
 
-  private final ObjectMapper jsonMapper;
+ // private final ObjectMapper jsonMapper;
 
   @Inject
-  public BidController(OfferService offerService, OfferMessageService offerMessageService) {
+  public BidController(OfferService offerService, GrowerService growerService) {
     this.offerService = offerService;
-    this.offerMessageService = offerMessageService;
+    this.growerService = growerService;
 
-    this.jsonMapper = new ObjectMapper();
+  //  this.jsonMapper = new ObjectMapper();
   }
 
-   public Result acceptOffer(long offerId, long growerId) {
+  public Result acceptOffer(long offerId, long growerId) {
     Offer offer = offerService.getById(offerId);
     if (offer == null) {
       return notFound(JsonMsgUtils.offerNotFoundMessage(offerId));
@@ -40,7 +46,6 @@ public class BidController extends Controller {
         : internalServerError(JsonMsgUtils.offerNotAccepted(success.getInvalidResponseMessage()));
   }
 
-  // TODO Not Secured. Implement non-admin means of responding to offer.
   public Result rejectOffer(long offerId, long growerId) {
     Offer offer = offerService.getById(offerId);
     if (offer == null) {
@@ -51,6 +56,18 @@ public class BidController extends Controller {
 
     return success.isValid() ? ok(JsonMsgUtils.successfullReject())
         : internalServerError(JsonMsgUtils.offerNotRejected(success.getInvalidResponseMessage()));
+  }
+
+  public Result displayPartialPage(long offerId, long growerId) {
+    Offer offer = offerService.getById(offerId);
+    if (offer == null) {
+      return notFound(JsonMsgUtils.offerNotFoundMessage(offerId));
+    }
+    Grower grower = growerService.getById(growerId);
+    if (grower == null) {
+      return notFound(JsonMsgUtils.offerNotFoundMessage(growerId));
+    }
+    return ok(views.html.partialAcceptPage.render(offer, grower));
   }
 
 }
