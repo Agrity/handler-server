@@ -4,7 +4,7 @@
 # --- !Ups
 
 create table email_address (
-  id                            bigint auto_increment not null,
+  id                            bigserial not null,
   grower_id                     bigint not null,
   created_at                    timestamp,
   updated_at                    timestamp,
@@ -13,7 +13,7 @@ create table email_address (
 );
 
 create table grower (
-  id                            bigint auto_increment not null,
+  id                            bigserial not null,
   created_at                    timestamp,
   updated_at                    timestamp,
   handler_id                    bigint,
@@ -23,7 +23,7 @@ create table grower (
 );
 
 create table handler (
-  id                            bigint auto_increment not null,
+  id                            bigserial not null,
   created_at                    timestamp,
   updated_at                    timestamp,
   company_name                  varchar(255) not null,
@@ -34,7 +34,7 @@ create table handler (
 );
 
 create table offer (
-  id                            bigint auto_increment not null,
+  id                            bigserial not null,
   created_at                    timestamp,
   updated_at                    timestamp,
   handler_id                    bigint,
@@ -42,14 +42,11 @@ create table offer (
   almond_size                   varchar(255),
   almond_pounds                 integer,
   price_per_pound               varchar(255),
-  start_payment_date            date,
-  end_payment_date              date,
+  start_payment_date            timestamp,
+  end_payment_date              timestamp,
   comment                       TEXT,
-  management_service            varchar(255),
-  offer_currently_open          integer,
-  expiration_time               timestamp,
+  offer_currently_open          boolean,
   constraint ck_offer_almond_variety check (almond_variety in ('PD','FR','PR','MI','MT','PL','BT','SN','NP','CR')),
-  constraint ck_offer_offer_currently_open check (offer_currently_open in (0,1,2,3)),
   constraint pk_offer primary key (id)
 );
 
@@ -60,7 +57,7 @@ create table offer_grower (
 );
 
 create table offer_response (
-  id                            bigint auto_increment not null,
+  id                            bigserial not null,
   created_at                    timestamp,
   updated_at                    timestamp,
   grower_id                     bigint,
@@ -71,29 +68,12 @@ create table offer_response (
 );
 
 create table phone_number (
-  id                            bigint auto_increment not null,
+  id                            bigserial not null,
   grower_id                     bigint not null,
   created_at                    timestamp,
   updated_at                    timestamp,
   phone_number                  varchar(255),
   constraint pk_phone_number primary key (id)
-);
-
-create table trader (
-  id                            bigint auto_increment not null,
-  created_at                    timestamp,
-  updated_at                    timestamp,
-  company_name                  varchar(255) not null,
-  email_address                 varchar(255) not null,
-  sha_password                  varchar(255) not null,
-  auth_token                    varchar(255),
-  constraint pk_trader primary key (id)
-);
-
-create table trader_handler (
-  trader_id                     bigint not null,
-  handler_id                    bigint not null,
-  constraint pk_trader_handler primary key (trader_id,handler_id)
 );
 
 alter table email_address add constraint fk_email_address_grower_id foreign key (grower_id) references grower (id) on delete restrict on update restrict;
@@ -120,60 +100,44 @@ create index ix_offer_response_offer_id on offer_response (offer_id);
 alter table phone_number add constraint fk_phone_number_grower_id foreign key (grower_id) references grower (id) on delete restrict on update restrict;
 create index ix_phone_number_grower_id on phone_number (grower_id);
 
-alter table trader_handler add constraint fk_trader_handler_trader foreign key (trader_id) references trader (id) on delete restrict on update restrict;
-create index ix_trader_handler_trader on trader_handler (trader_id);
-
-alter table trader_handler add constraint fk_trader_handler_handler foreign key (handler_id) references handler (id) on delete restrict on update restrict;
-create index ix_trader_handler_handler on trader_handler (handler_id);
-
 
 # --- !Downs
 
-alter table email_address drop constraint if exists fk_email_address_grower_id;
+alter table if exists email_address drop constraint if exists fk_email_address_grower_id;
 drop index if exists ix_email_address_grower_id;
 
-alter table grower drop constraint if exists fk_grower_handler_id;
+alter table if exists grower drop constraint if exists fk_grower_handler_id;
 drop index if exists ix_grower_handler_id;
 
-alter table offer drop constraint if exists fk_offer_handler_id;
+alter table if exists offer drop constraint if exists fk_offer_handler_id;
 drop index if exists ix_offer_handler_id;
 
-alter table offer_grower drop constraint if exists fk_offer_grower_offer;
+alter table if exists offer_grower drop constraint if exists fk_offer_grower_offer;
 drop index if exists ix_offer_grower_offer;
 
-alter table offer_grower drop constraint if exists fk_offer_grower_grower;
+alter table if exists offer_grower drop constraint if exists fk_offer_grower_grower;
 drop index if exists ix_offer_grower_grower;
 
-alter table offer_response drop constraint if exists fk_offer_response_grower_id;
+alter table if exists offer_response drop constraint if exists fk_offer_response_grower_id;
 drop index if exists ix_offer_response_grower_id;
 
-alter table offer_response drop constraint if exists fk_offer_response_offer_id;
+alter table if exists offer_response drop constraint if exists fk_offer_response_offer_id;
 drop index if exists ix_offer_response_offer_id;
 
-alter table phone_number drop constraint if exists fk_phone_number_grower_id;
+alter table if exists phone_number drop constraint if exists fk_phone_number_grower_id;
 drop index if exists ix_phone_number_grower_id;
 
-alter table trader_handler drop constraint if exists fk_trader_handler_trader;
-drop index if exists ix_trader_handler_trader;
+drop table if exists email_address cascade;
 
-alter table trader_handler drop constraint if exists fk_trader_handler_handler;
-drop index if exists ix_trader_handler_handler;
+drop table if exists grower cascade;
 
-drop table if exists email_address;
+drop table if exists handler cascade;
 
-drop table if exists grower;
+drop table if exists offer cascade;
 
-drop table if exists handler;
+drop table if exists offer_grower cascade;
 
-drop table if exists offer;
+drop table if exists offer_response cascade;
 
-drop table if exists offer_grower;
-
-drop table if exists offer_response;
-
-drop table if exists phone_number;
-
-drop table if exists trader;
-
-drop table if exists trader_handler;
+drop table if exists phone_number cascade;
 
