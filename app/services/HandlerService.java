@@ -6,7 +6,7 @@ import java.util.List;
 
 import models.Grower;
 import models.Handler;
-import models.Offer;
+import models.HandlerBid;
 
 import services.impl.EbeanHandlerService;
 
@@ -29,5 +29,5 @@ public interface HandlerService {
 
   public boolean checkHandlerOwnsGrower(Handler handler, Grower grower);
 
-  public boolean checkHandlerOwnsOffer(Handler handler, Offer offer);
+  public boolean checkHandlerOwnsBid(Handler handler, HandlerBid handlerBid);
 }

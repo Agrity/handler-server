@@ -21,21 +21,21 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import models.Almond.AlmondVariety;
-import models.OfferResponse.ResponseStatus;
+import models.BidResponse.ResponseStatus;
 import models.interfaces.PrettyString;
 import play.Logger;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
 
-import services.offer_management.OfferManagementService;
+import services.bid_management.BidManagementService;
 
 import services.DateService;
 import java.util.Date;
 
 @Entity
-public class Offer extends BaseBid implements PrettyString {
+public class HandlerBid extends BaseBid implements PrettyString {
 
-  public static enum OfferStatus{
+  public static enum BidStatus{
     OPEN, 
     REJECTED, 
     ACCEPTED,
@@ -51,7 +51,7 @@ public class Offer extends BaseBid implements PrettyString {
 
   @OneToMany(cascade = CascadeType.ALL)
   @Constraints.Required
-  private Set<OfferResponse> offerResponses = new HashSet<>();
+  private Set<BidResponse> bidResponses = new HashSet<>();
 
   @ManyToMany(cascade = CascadeType.ALL)
   @Constraints.Required
@@ -70,7 +70,7 @@ public class Offer extends BaseBid implements PrettyString {
 
   private String managementService;
 
-  private OfferStatus offerCurrentlyOpen = OfferStatus.OPEN;
+  private BidStatus bidCurrentlyOpen = BidStatus.OPEN;
 
   private LocalDateTime expirationTime;
 
@@ -78,23 +78,23 @@ public class Offer extends BaseBid implements PrettyString {
   /* ==================================== Static Functions ==================================== */
 
 
-  public static Finder<Long, Offer> find = new Finder<Long, Offer>(Offer.class);
+  public static Finder<Long, HandlerBid> find = new Finder<Long, HandlerBid>(HandlerBid.class);
 
 
   /* ===================================== Implementation ===================================== */
 
 
 
-  public Offer(Handler handler, List<Grower> allGrowers, AlmondVariety almondVariety,
+  public HandlerBid(Handler handler, List<Grower> allGrowers, AlmondVariety almondVariety,
       String almondSize, Integer almondPounds, String pricePerPound, LocalDate startPaymentDate,
       LocalDate endPaymentDate, String comment, String managementService, LocalDateTime expirationTime) {
     super();
 
     this.handler = handler;
 
-    offerResponses =
+    bidResponses =
       allGrowers.stream()
-      .map(grower -> new OfferResponse(grower))
+      .map(grower -> new BidResponse(grower))
       .collect(Collectors.toSet());
 
     this.growers = allGrowers;
@@ -146,8 +146,8 @@ public class Offer extends BaseBid implements PrettyString {
     return comment;
   }
 
-  public boolean getOfferCurrentlyOpen() {
-    return offerCurrentlyOpen == OfferStatus.OPEN;
+  public boolean getBidCurrentlyOpen() {
+    return bidCurrentlyOpen == BidStatus.OPEN;
   }
 
   public String getManagementService() {
@@ -177,15 +177,12 @@ public class Offer extends BaseBid implements PrettyString {
     endPaymentDate = newEnd;
   }
 
-  public void setComment(String newComment) {
-    comment = newComment;
-  }
 
   /* === Member Functions === */
 
-  public void closeOffer(OfferStatus offerStatus) {
-    offerCurrentlyOpen = offerStatus;
-    OfferManagementService.removeOfferManagementService(this);
+  public void closeBid(BidStatus status) {
+    bidCurrentlyOpen = BidStatus.REJECTED;
+    BidManagementService.removeBidManagementService(this);
     save();
   }
 
@@ -207,24 +204,24 @@ public class Offer extends BaseBid implements PrettyString {
   }
 
   private List<Grower> getGrowersWithResponse(ResponseStatus response) {
-    return offerResponses.stream()
-      .filter(offerResponse -> offerResponse.getResponseStatus().equals(response))
-      .map(offerResponse -> offerResponse.getGrower())
+    return bidResponses.stream()
+      .filter(BidResponse -> BidResponse.getResponseStatus().equals(response))
+      .map(BidResponse -> BidResponse.getGrower())
       .collect(Collectors.toList());
   }
 
 
   @JsonIgnore
-  public List<ResponseStatus> getAllOfferResponseStatuses() {
-    return offerResponses.stream()
-      .map(offerResponse -> offerResponse.getResponseStatus())
+  public List<ResponseStatus> getAllbidResponsestatuses() {
+    return bidResponses.stream()
+      .map(BidResponse -> BidResponse.getResponseStatus())
       .collect(Collectors.toList());
   }
 
-  public OfferResponse getGrowerOfferResponse(long growerId) {
+  public BidResponse getGrowerBidResponse(long growerId) {
     try {
-      return offerResponses.stream()
-        .filter(offerResponse -> offerResponse.getGrower().getId().equals(growerId))
+      return bidResponses.stream()
+        .filter(BidResponse -> BidResponse.getGrower().getId().equals(growerId))
         .findFirst()
         .get();
     } catch(NoSuchElementException e) {
@@ -233,98 +230,98 @@ public class Offer extends BaseBid implements PrettyString {
   }
 
 
-  public OfferResponseResult growerAcceptOffer(Long growerId, long pounds) {
-    if (offerCurrentlyOpen != OfferStatus.OPEN) {
-      return OfferResponseResult.getInvalidResult("Cannot accept offer because the offer has already closed.");
+  public BidResponseResult growerAcceptBid(Long growerId, long pounds) {
+    if (bidCurrentlyOpen != BidStatus.OPEN) {
+      return BidResponseResult.getInvalidResult("Cannot accept HandlerBid because the HandlerBid has already closed.");
     }
       
-    OfferResponse growerResponse = getGrowerOfferResponse(growerId);
+    BidResponse growerResponse = getGrowerBidResponse(growerId);
 
     if (growerResponse == null) {
-      Logger.error("growerResponse returned null for growerId: " + growerId + " and offerID: " + getId());
-      return OfferResponseResult.getInvalidResult("Cannot accept offer."); // TODO: What to tell grower when this inexplicable error happens.
+      Logger.error("growerResponse returned null for growerId: " + growerId + " and HandlerBidID: " + getId());
+      return BidResponseResult.getInvalidResult("Cannot accept HandlerBid."); // TODO: What to tell grower when this inexplicable error happens.
     }
     
     growerResponse.refresh();
     if (growerResponse.getResponseStatus() != ResponseStatus.NO_RESPONSE
         && growerResponse.getResponseStatus() != ResponseStatus.REQUEST_CALL) {
-      return OfferResponseResult.getInvalidResult("Cannot accept offer because grower has already responded to offer.");
+      return BidResponseResult.getInvalidResult("Cannot accept HandlerBid because grower has already responded to HandlerBid.");
     }  
       
     
-    OfferManagementService managementService
-        = OfferManagementService.getOfferManagementService(this);
+    BidManagementService managementService
+        = BidManagementService.getBidManagementService(this);
 
     if (managementService != null) {
-      OfferResponseResult offerResponseResult = managementService.accept(pounds, growerId);
-      if (!offerResponseResult.isValid()) {
-        return offerResponseResult;
+      BidResponseResult BidResponseResult = managementService.accept(pounds, growerId);
+      if (!BidResponseResult.isValid()) {
+        return BidResponseResult;
       }
     } 
     else {
       // TODO: Determine whether to log error. 
-      // Logger.error("managementService returned null for offerID: " + getId());
+      // Logger.error("managementService returned null for HandlerBidID: " + getId());
     }
 
-    return setGrowerResponseForOffer(growerId, ResponseStatus.ACCEPTED);
+    return setGrowerResponseForBid(growerId, ResponseStatus.ACCEPTED);
   }
 
-  public OfferResponseResult growerRejectOffer(Long growerId) {
-    if (offerCurrentlyOpen != OfferStatus.OPEN) {
-      return OfferResponseResult.getInvalidResult("There is no need to reject the offer because the offer has closed.");
+  public BidResponseResult growerRejectBid(Long growerId) {
+    if (bidCurrentlyOpen != BidStatus.OPEN) {
+      return BidResponseResult.getInvalidResult("There is no need to reject the HandlerBid because the HandlerBid has closed.");
     } 
     
-    OfferResponse growerResponse = getGrowerOfferResponse(growerId);
+    BidResponse growerResponse = getGrowerBidResponse(growerId);
 
     if (growerResponse == null) {
-      Logger.error("growerResponse returned null for growerId: " + growerId + " and offerID: " + getId());
-      return OfferResponseResult.getInvalidResult("Cannot reject the offer."); // TODO: What to tell grower when this inexplicable error happens.
+      Logger.error("growerResponse returned null for growerId: " + growerId + " and HandlerBidID: " + getId());
+      return BidResponseResult.getInvalidResult("Cannot reject the HandlerBid."); // TODO: What to tell grower when this inexplicable error happens.
     }
     
     growerResponse.refresh();
     if (growerResponse.getResponseStatus() != ResponseStatus.NO_RESPONSE
         && growerResponse.getResponseStatus() != ResponseStatus.REQUEST_CALL) {
-      return OfferResponseResult.getInvalidResult("Cannot accept offer because grower has already responded to offer.");
+      return BidResponseResult.getInvalidResult("Cannot accept HandlerBid because grower has already responded to HandlerBid.");
     }
     
 
-    OfferManagementService managementService
-        = OfferManagementService.getOfferManagementService(this);
+    BidManagementService managementService
+        = BidManagementService.getBidManagementService(this);
 
     if (managementService != null) {
-      OfferResponseResult offerResponseResult = managementService.reject(growerId);
-      if (!offerResponseResult.isValid()) {
-        return offerResponseResult;
+      BidResponseResult bidResponseResult = managementService.reject(growerId);
+      if (!bidResponseResult.isValid()) {
+        return bidResponseResult;
       }
     } 
     else {
       // TODO: Determine whether to log error. 
-      // Logger.error("managementService returned null for offerID: " + getId());
+      // Logger.error("managementService returned null for HandlerBidID: " + getId());
     }
 
-    return setGrowerResponseForOffer(growerId, ResponseStatus.REJECTED);
+    return setGrowerResponseForBid(growerId, ResponseStatus.REJECTED);
   }
 
-  public OfferResponseResult growerRequestCall(Long growerId) {
-    if (offerCurrentlyOpen != OfferStatus.OPEN) {
-      return OfferResponseResult.getInvalidResult("Can not request call because the offer has already closed.");
+  public BidResponseResult growerRequestCall(Long growerId) {
+    if (bidCurrentlyOpen != BidStatus.OPEN) {
+      return BidResponseResult.getInvalidResult("Can not request call because the HandlerBid has already closed.");
     }  
 
-    return setGrowerResponseForOffer(growerId, ResponseStatus.REQUEST_CALL);
+    return setGrowerResponseForBid(growerId, ResponseStatus.REQUEST_CALL);
   }
 
-  private OfferResponseResult setGrowerResponseForOffer(Long growerId, ResponseStatus growerResponse) {
-    OfferResponse growerOfferResponse = getGrowerOfferResponse(growerId);
-    if (growerOfferResponse == null) {
-      Logger.error("growerResponse returned null for growerId: " + growerId + " and offerID: " + getId());
-      return OfferResponseResult.getInvalidResult("Cannot accept offer."); // TODO: What to tell grower when this inexplicable error happens.
+  private BidResponseResult setGrowerResponseForBid(Long growerId, ResponseStatus growerResponse) {
+    BidResponse growerBidResponse = getGrowerBidResponse(growerId);
+    if (growerBidResponse == null) {
+      Logger.error("growerResponse returned null for growerId: " + growerId + " and HandlerBidID: " + getId());
+      return BidResponseResult.getInvalidResult("Cannot accept HandlerBid."); // TODO: What to tell grower when this inexplicable error happens.
 
     }
     
-    growerOfferResponse.setResponseStatus(growerResponse);
-    growerOfferResponse.save();
+    growerBidResponse.setResponseStatus(growerResponse);
+    growerBidResponse.save();
     
-    return OfferResponseResult.getValidResult(); 
+    return BidResponseResult.getValidResult(); 
   }
 
   @Override

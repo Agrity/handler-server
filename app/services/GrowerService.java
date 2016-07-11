@@ -17,7 +17,7 @@ public interface GrowerService {
 
   public List<Grower> getByHandler(long handlerId);
 
-  public List<Grower> getByOffer(long offerId);
+  public List<Grower> getByBid(long bidId);
 
   public Grower growerLookupByPhoneNum(String phoneNum);
 

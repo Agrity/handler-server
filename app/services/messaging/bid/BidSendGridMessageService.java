@@ -1,4 +1,4 @@
-package services.messaging.offer;
+package services.messaging.bid;
 
 import com.sendgrid.Content;
 import com.sendgrid.Email;
@@ -15,14 +15,14 @@ import java.io.IOException;
 import java.util.List;
 
 import models.Grower;
-import models.Offer;
+import models.HandlerBid;
 
 import play.Logger;
 
 import services.messaging.MessageServiceConstants;
-import services.offer_management.OfferManagementService;
+import services.bid_management.BidManagementService;
 
-public class OfferSendGridMessageService implements OfferMessageService {
+public class BidSendGridMessageService implements BidMessageService {
 
   private static final String SENDGRID_API_KEY = "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";
 
@@ -31,20 +31,20 @@ public class OfferSendGridMessageService implements OfferMessageService {
   private static final Email FROM_EMAIL
       = new Email(MessageServiceConstants.EmailFields.getFromEmailAddress());
 
-  public OfferSendGridMessageService() {}
+  public BidSendGridMessageService() {}
 
   @Override
-  public boolean send(Offer offer) {
+  public boolean send(HandlerBid handlerBid) {
     boolean success = true;
 
-    for (Grower grower : offer.getAllGrowers()) {
-      if(!send(offer, grower)) success = false;
+    for (Grower grower : handlerBid.getAllGrowers()) {
+      if(!send(handlerBid, grower)) success = false;
     }
 
     return success;
   }
 
-  public boolean send(Offer offer, Grower grower) {
+  public boolean send(HandlerBid handlerBid, Grower grower) {
     boolean success = true;
     List<String> growerEmailAddresses = grower.getEmailAddressStrings();
     for (String emailAddr : growerEmailAddresses) {
@@ -53,12 +53,12 @@ public class OfferSendGridMessageService implements OfferMessageService {
       Content content
       = new Content(
         "text/html",
-        MessageServiceConstants.EmailFields.getEmailHTMLContent(offer, grower));
+        MessageServiceConstants.EmailFields.getEmailHTMLContent(handlerBid, grower));
 
       Mail mail
       = new Mail(
         FROM_EMAIL,
-        MessageServiceConstants.EmailFields.getSubjectLineNewOffer(),
+        MessageServiceConstants.EmailFields.getSubjectLineNewBid(),
         toEmail,
         content);
 
@@ -67,17 +67,17 @@ public class OfferSendGridMessageService implements OfferMessageService {
     return success;    
   }
 
-  public boolean sendClosed(Offer offer) {
+  public boolean sendClosed(HandlerBid handlerBid) {
     boolean success = true;
 
-    for (Grower grower : offer.getAllGrowers()) {
-      if(!sendClosed(offer, grower)) success = false;
+    for (Grower grower : handlerBid.getAllGrowers()) {
+      if(!sendClosed(handlerBid, grower)) success = false;
     }
 
     return success; 
   }
 
-  public boolean sendClosed(Offer offer, Grower grower) {
+  public boolean sendClosed(HandlerBid handlerBid, Grower grower) {
     boolean success = true;
     List<String> growerEmailAddresses = grower.getEmailAddressStrings();
     for (String emailAddr : growerEmailAddresses) {
@@ -86,13 +86,13 @@ public class OfferSendGridMessageService implements OfferMessageService {
       Content content
       = new Content(
         "text/plain",
-        "Your offer <" + offer.getAlmondVariety() + " for " 
-        + offer.getPricePerPound() + "/lb.> has expired.");
+        "Your bid <" + handlerBid.getAlmondVariety() + " for " 
+        + handlerBid.getPricePerPound() + "/lb.> has expired.");
 
       Mail mail
       = new Mail(
         FROM_EMAIL,
-        MessageServiceConstants.EmailFields.getSubjectLineExpired(offer.getId()),
+        MessageServiceConstants.EmailFields.getSubjectLineExpired(handlerBid.getId()),
         toEmail,
         content);
 
@@ -101,17 +101,17 @@ public class OfferSendGridMessageService implements OfferMessageService {
     return success; 
   }
 
-  public boolean sendUpdated(Offer offer, String msg) {
+  public boolean sendUpdated(HandlerBid handlerBid, String msg) {
     boolean success = true;
 
-    for (Grower grower : offer.getAllGrowers()) {
-      if(!sendUpdated(offer, grower, msg)) success = false;
+    for (Grower grower : handlerBid.getAllGrowers()) {
+      if(!sendUpdated(handlerBid, grower, msg)) success = false;
     }
 
     return success; 
   }
 
-  public boolean sendUpdated(Offer offer, Grower grower, String msg) {
+  public boolean sendUpdated(HandlerBid handlerBid, Grower grower, String msg) {
     boolean success = true;
     List<String> growerEmailAddresses = grower.getEmailAddressStrings();
     for (String emailAddr : growerEmailAddresses) {
@@ -122,7 +122,7 @@ public class OfferSendGridMessageService implements OfferMessageService {
       Mail mail
       = new Mail(
         FROM_EMAIL,
-        MessageServiceConstants.EmailFields.getSubjectLineUpdated(offer.getId()),
+        MessageServiceConstants.EmailFields.getSubjectLineUpdated(handlerBid.getId()),
         toEmail,
         content);
 

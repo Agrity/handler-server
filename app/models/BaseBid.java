@@ -12,7 +12,9 @@ import models.Almond.AlmondVariety;
 @MappedSuperclass
 public abstract class BaseBid extends BaseModel {
 
-/* ======================================= Attributes ======================================= */
+
+  /* ======================================= Attributes ======================================= */
+
 
 	@Constraints.Required
   private AlmondVariety almondVariety;
@@ -26,7 +28,9 @@ public abstract class BaseBid extends BaseModel {
   @Column(columnDefinition = "TEXT")
   private String comment = "";
 
-/* ======================================= Getters ======================================= */
+
+  /* ======================================= Attribute Accessors ======================================= */
+
 
   public AlmondVariety getAlmondVariety() {
     return almondVariety;
@@ -49,7 +53,9 @@ public abstract class BaseBid extends BaseModel {
     return comment;
   }
 
-/* ======================================= Setters ======================================= */
+
+  /* ======================================= Attribute Setters ======================================= */
+
 
   public void setAlmondVariety(AlmondVariety newVariety) {
     almondVariety = newVariety;
@@ -67,7 +73,9 @@ public abstract class BaseBid extends BaseModel {
     comment = newComment;
   }
 
-/* ======================================= Member Functions ======================================= */
+
+  /* ======================================= Member Functions ======================================= */
+
 
   @Override
   public String toString() {

@@ -69,7 +69,7 @@ public abstract class BaseParser {
 
 
   /* 
-   * For use in Grower/OfferJsonParser's.
+   * For use in Grower/HandlerBidJsonParser's.
    *
    * Attempt to extract the Handler from the given json data, via the HANDLER_ID field. If there
    * is an error, the parser will be set to invalid with appropriate error message, and null will

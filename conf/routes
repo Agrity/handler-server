@@ -28,7 +28,7 @@ GET     /admin/handlers/:id/growers                     controllers.AdminHandler
 
 GET     /admin/handlers/:id/growers/:growerId           controllers.AdminHandlerController.getGrower(id: Long, growerId: Long)
 
-GET     /admin/handlers/:id/offers                      controllers.AdminOfferController.getAllHandlerOffers(id: Long)
+GET     /admin/handlers/:id/bids                      controllers.AdminHandlerBidController.getAllHandlerBids(id: Long)
 
 
 # ========== Admin Grower ========== #
@@ -44,29 +44,29 @@ PUT     /admin/growers/:id                              controllers.AdminGrowerC
 
 GET     /admin/growers/:id                              controllers.AdminGrowerController.getGrower(id: Long)
 
-GET     /admin/growers/:id/offers                       controllers.AdminOfferController.getAllGrowerOffers(id: Long)
+GET     /admin/growers/:id/bids                       controllers.AdminHandlerBidController.getAllGrowerBids(id: Long)
 
 
-# ========== Admin Offer ========== #
+# ========== Admin HandlerBid ========== #
 
 
-GET     /admin/offers                                   controllers.AdminOfferController.getAllOffers()
+GET     /admin/bids                                   controllers.AdminHandlerBidController.getAllBids()
 
-POST    /admin/offers                                   controllers.AdminOfferController.createOffer()
+POST    /admin/bids                                   controllers.AdminHandlerBidController.createBid()
 
-DELETE  /admin/offers/:id                               controllers.AdminOfferController.deleteOffer(id: Long)
+DELETE  /admin/bids/:id                               controllers.AdminHandlerBidController.deleteBid(id: Long)
 
-PUT     /admin/offers/:id                               controllers.AdminOfferController.updateOffer(id: Long)
+PUT     /admin/bids/:id                               controllers.AdminHandlerBidController.updateBid(id: Long)
 
-GET     /admin/offers/:id                               controllers.AdminOfferController.getOffer(id: Long)
+GET     /admin/bids/:id                               controllers.AdminHandlerBidController.getBid(id: Long)
 
-GET     /admin/offers/:id/send                          controllers.AdminOfferController.sendOffer(id: Long)
+GET     /admin/bids/:id/send                          controllers.AdminHandlerBidController.sendBid(id: Long)
 
-GET     /admin/offers/:offerId/accept/:growerId         controllers.AdminOfferController.acceptOffer(offerId: Long, growerId: Long)
+GET     /admin/bids/:bidId/accept/:growerId         controllers.AdminHandlerBidController.acceptBid(bidId: Long, growerId: Long)
 
-GET     /admin/offers/:offerId/reject/:growerId         controllers.AdminOfferController.rejectOffer(offerId: Long, growerId: Long)
+GET     /admin/bids/:bidId/reject/:growerId         controllers.AdminHandlerBidController.rejectBid(bidId: Long, growerId: Long)
 
-GET     /admin/offers/:offerId/requestcall/:growerId    controllers.AdminOfferController.requestCall(offerId: Long, growerId: Long)
+GET     /admin/bids/:bidId/requestcall/:growerId    controllers.AdminHandlerBidController.requestCall(bidId: Long, growerId: Long)
 
 
 # ========== Authentication ========== #
@@ -92,29 +92,29 @@ DELETE  /handler/growers/:growerId               controllers.HandlerController.d
 
 PUT     /handler/growers/:growerId               controllers.HandlerController.updateGrower(growerId: Long)
 
-GET     /handler/offers/:id/send                 controllers.HandlerController.sendOffer(id: Long)
+GET     /handler/bids/:id/send                 controllers.HandlerController.sendBid(id: Long)
 
-GET     /handler/growers/:growerId/offers        controllers.HandlerController.getGrowersOffers(growerId: Long)
+GET     /handler/growers/:growerId/bids        controllers.HandlerController.getGrowersBids(growerId: Long)
 
-GET     /handler/offers                          controllers.HandlerController.getAllOffers()
+GET     /handler/bids                          controllers.HandlerController.getAllBids()
 
-POST    /handler/offers                          controllers.HandlerController.createOffer()
+POST    /handler/bids                          controllers.HandlerController.createBid()
 
-DELETE  /handler/offers/:offerId                 controllers.HandlerController.deleteOffer(offerId: Long)
+DELETE  /handler/bids/:bidId                 controllers.HandlerController.deleteBid(bidId: Long)
 
-PUT     /handler/offers/:offerId                 controllers.HandlerController.updateOffer(offerId: Long) 
+PUT     /handler/bids/:bidId                 controllers.HandlerController.updateBid(bidId: Long) 
 
-GET     /handler/offers/:offerId                 controllers.HandlerController.getOffer(offerId: Long)
-
-
-# ========== **TEMP** Response to Offer ========== #
+GET     /handler/bids/:bidId                 controllers.HandlerController.getBid(bidId: Long)
 
 
-GET     /offers/:offerId/accept/:growerId controllers.AdminOfferController.acceptOffer(offerId: Long, growerId: Long)
+# ========== **TEMP** Response to Bid ========== #
 
-GET     /offers/:offerId/reject/:growerId         controllers.AdminOfferController.rejectOffer(offerId: Long, growerId: Long)
 
-GET     /offers/:offerId/requestcall/:growerId    controllers.AdminOfferController.requestCall(offerId: Long, growerId: Long)
+GET     /bids/:bidId/accept/:growerId controllers.AdminHandlerBidController.acceptBid(bidId: Long, growerId: Long)
+
+GET     /bids/:bidId/reject/:growerId         controllers.AdminHandlerBidController.rejectBid(bidId: Long, growerId: Long)
+
+GET     /bids/:bidId/requestcall/:growerId    controllers.AdminHandlerBidController.requestCall(bidId: Long, growerId: Long)
 
 # ========== Message Recieving ========== #
 

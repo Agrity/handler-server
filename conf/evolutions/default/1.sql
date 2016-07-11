@@ -108,6 +108,12 @@ create table trader_bid (
   constraint pk_trader_bid primary key (id)
 );
 
+create table trader_bid_handler (
+  trader_bid_id                 bigint not null,
+  handler_id                    bigint not null,
+  constraint pk_trader_bid_handler primary key (trader_bid_id,handler_id)
+);
+
 alter table email_address add constraint fk_email_address_grower_id foreign key (grower_id) references grower (id) on delete restrict on update restrict;
 create index ix_email_address_grower_id on email_address (grower_id);
 
@@ -137,6 +143,12 @@ create index ix_trader_handler_trader on trader_handler (trader_id);
 
 alter table trader_handler add constraint fk_trader_handler_handler foreign key (handler_id) references handler (id) on delete restrict on update restrict;
 create index ix_trader_handler_handler on trader_handler (handler_id);
+
+alter table trader_bid_handler add constraint fk_trader_bid_handler_trader_bid foreign key (trader_bid_id) references trader_bid (id) on delete restrict on update restrict;
+create index ix_trader_bid_handler_trader_bid on trader_bid_handler (trader_bid_id);
+
+alter table trader_bid_handler add constraint fk_trader_bid_handler_handler foreign key (handler_id) references handler (id) on delete restrict on update restrict;
+create index ix_trader_bid_handler_handler on trader_bid_handler (handler_id);
 
 
 # --- !Downs
@@ -171,6 +183,12 @@ drop index if exists ix_trader_handler_trader;
 alter table trader_handler drop constraint if exists fk_trader_handler_handler;
 drop index if exists ix_trader_handler_handler;
 
+alter table trader_bid_handler drop constraint if exists fk_trader_bid_handler_trader_bid;
+drop index if exists ix_trader_bid_handler_trader_bid;
+
+alter table trader_bid_handler drop constraint if exists fk_trader_bid_handler_handler;
+drop index if exists ix_trader_bid_handler_handler;
+
 drop table if exists email_address;
 
 drop table if exists grower;
@@ -190,4 +208,6 @@ drop table if exists trader;
 drop table if exists trader_handler;
 
 drop table if exists trader_bid;
+
+drop table if exists trader_bid_handler;
 

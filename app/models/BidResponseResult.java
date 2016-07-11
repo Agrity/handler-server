@@ -1,10 +1,10 @@
 package models;
 
-  public class OfferResponseResult { 
+  public class BidResponseResult { 
     private Boolean valid;
     private String invalidResponseMessage; 
     
-    public OfferResponseResult(Boolean bool, String message) {
+    public BidResponseResult(Boolean bool, String message) {
       this.valid = bool;
       this.invalidResponseMessage = message; 
     }
@@ -20,11 +20,11 @@ package models;
       return invalidResponseMessage;
     }
     
-    public static OfferResponseResult getValidResult() {
-      return new OfferResponseResult(true, null);
+    public static BidResponseResult getValidResult() {
+      return new BidResponseResult(true, null);
     }
     
-    public static OfferResponseResult getInvalidResult(String invalidResponseMessage) {
-      return new OfferResponseResult(false, invalidResponseMessage);
+    public static BidResponseResult getInvalidResult(String invalidResponseMessage) {
+      return new BidResponseResult(false, invalidResponseMessage);
     }  
  }

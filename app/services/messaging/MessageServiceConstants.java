@@ -2,7 +2,7 @@ package services.messaging;
 
 import models.EmailAddress;
 import models.Grower;
-import models.Offer;
+import models.HandlerBid;
 
 import com.twilio.sdk.*;
 import com.twilio.sdk.resource.factory.*;
@@ -27,8 +27,8 @@ public abstract class MessageServiceConstants {
       return FROM_EMAIL_ADDRESS;
     }
 
-    public static String getEmailHTMLContent(Offer offer, Grower grower) {
-      return views.html.emailOfferBody.render(offer, grower).toString();
+    public static String getEmailHTMLContent(HandlerBid handlerBid, Grower grower) {
+      return views.html.emailBidBody.render(handlerBid, grower).toString();
     }
 
     public static String getFromAddress() {
@@ -39,16 +39,16 @@ public abstract class MessageServiceConstants {
       return name + " <" + emailAddress + ">";
     }
 
-    public static String getSubjectLineNewOffer() {
-      return "[Action Required] New Almond Transaction Offer";
+    public static String getSubjectLineNewBid() {
+      return "[Action Required] New Almond Transaction Bid";
     }
 
     public static String getSubjectLineExpired(Long id) {
-      return "Offer " + Long.toString(id) + " Expired";
+      return "Bid " + Long.toString(id) + " Expired";
     }
 
     public static String getSubjectLineUpdated(Long id) {
-      return "Offer " + Long.toString(id) + " Updated";
+      return "Bid " + Long.toString(id) + " Updated";
     }
   }
 

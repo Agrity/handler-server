@@ -7,12 +7,12 @@ import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
 
-import services.messaging.offer.OfferSMSMessageService;
-import models.Offer;
+import services.messaging.bid.BidSMSMessageService;
+import models.HandlerBid;
 import play.Logger;
-import models.OfferResponse.ResponseStatus;
+import models.BidResponse.ResponseStatus;
 import models.Grower;
-import models.OfferResponseResult;
+import models.BidResponseResult;
 
 import com.avaje.ebean.Model.Finder;
 import services.impl.EbeanGrowerService;
@@ -24,10 +24,10 @@ public class MessageReceivingController extends Controller {
 
   private static Integer numResponses = 0;
 
-  private final OfferSMSMessageService messageService;
+  private final BidSMSMessageService messageService;
 
   @Inject
-  public MessageReceivingController(OfferSMSMessageService messageService) {
+  public MessageReceivingController(BidSMSMessageService messageService) {
     this.messageService = messageService;
   }
 
@@ -35,7 +35,7 @@ public class MessageReceivingController extends Controller {
     return ok("Number Responses Recieved: " + numResponses);
   }
 
-  /* === TODO: How is offer updated if grower doesn't go through Twilio to accept from handler? === */
+  /* === TODO: How is bid updated if grower doesn't go through Twilio to accept from handler? === */
 
   public Result receiveTwilioResponse() {
     numResponses++;
@@ -73,47 +73,47 @@ public class MessageReceivingController extends Controller {
       return ok(parser.getErrorMessage());
     }
  
-    Long offerID = parser.getID();
+    Long bidID = parser.getID();
     boolean accepted = parser.getAccepted();
     Integer almondPounds = parser.getPounds();
     
-    /* if we reach here, the SMS message has a well-formatted offerID and almondAmount response */
+    /* if we reach here, the SMS message has a well-formatted bidID and almondAmount response */
 
-    Offer offer = grower.offerLookupByID(offerID);
-    if (offer == null) {
-      Logger.error("OfferID " + offerID + " does not exist. From: " + phoneNum);
-      return ok("Bid: " + offerID + " does not exist.");
+    HandlerBid handlerBid = grower.bidLookupByID(bidID);
+    if (handlerBid == null) {
+      Logger.error("BidID " + bidID + " does not exist. From: " + phoneNum);
+      return ok("Bid: " + bidID + " does not exist.");
     }
 
-    Logger.info("The valid offerID is: " + offerID);
-    return updateOffer(grower, offer, accepted, almondPounds);
+    Logger.info("The valid bidID is: " + bidID);
+    return updateBid(grower, handlerBid, accepted, almondPounds);
   } 
 
   /* === TODO: Grower request call? === */
-  private Result updateOffer(Grower grower, Offer offer, boolean accepted, Integer almondPounds) {
+  private Result updateBid(Grower grower, HandlerBid handlerBid, boolean accepted, Integer almondPounds) {
     if (accepted) {
-      OfferResponseResult result = offer.growerAcceptOffer(grower.getId(), almondPounds);
+      BidResponseResult result = handlerBid.growerAcceptBid(grower.getId(), almondPounds);
 
       if (result.isValid()) {
-        Logger.info("Bid: " + offer.getId() + " was accepted by: " + grower.getFullName());
-        return ok("Congratulations! Your bid (ID " + offer.getId() + ") <" + offer.getAlmondVariety() + " for " 
-        + offer.getPricePerPound() + "/lb.> has been accepted for " + almondPounds + "lbs.");
+        Logger.info("Bid: " + handlerBid.getId() + " was accepted by: " + grower.getFullName());
+        return ok("Congratulations! Your bid (ID " + handlerBid.getId() + ") <" + handlerBid.getAlmondVariety() + " for " 
+        + handlerBid.getPricePerPound() + "/lb.> has been accepted for " + almondPounds + "lbs.");
 
       } else {
-        Logger.info("Bid: " + offer.getId() + " could not be accepted by: " + grower.getFullName()
+        Logger.info("Bid: " + handlerBid.getId() + " could not be accepted by: " + grower.getFullName()
                   + " for " + result.getInvalidResponseMessage());
         return ok(result.getInvalidResponseMessage());
       }
 
     } else {
 
-      OfferResponseResult result = offer.growerRejectOffer(grower.getId());
+      BidResponseResult result = handlerBid.growerRejectBid(grower.getId());
       if (result.isValid()) {
-        Logger.info("Bid: " + offer.getId() + " was rejected by: " + grower.getFullName());
-        return ok("Bid #" + offer.getId() + " has successfully been rejected.");
+        Logger.info("Bid: " + handlerBid.getId() + " was rejected by: " + grower.getFullName());
+        return ok("Bid #" + handlerBid.getId() + " has successfully been rejected.");
 
       } else {
-        Logger.info("Bid: " + offer.getId() + " could not be rejected by: " 
+        Logger.info("Bid: " + handlerBid.getId() + " could not be rejected by: " 
                   + grower.getFullName() + result.getInvalidResponseMessage());
         return ok(result.getInvalidResponseMessage());
       }

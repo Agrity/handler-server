@@ -7,7 +7,7 @@ import com.google.inject.Inject;
 
 import controllers.security.AdminSecured;
 import models.Grower;
-import models.Offer;
+import models.HandlerBid;
 
 import play.mvc.BodyParser;
 import play.mvc.Controller;
@@ -15,7 +15,7 @@ import play.mvc.Result;
 import play.mvc.Security;
 
 import services.GrowerService;
-import services.OfferService;
+import services.HandlerBidService;
 import services.parsers.GrowerJsonParser;
 
 import utils.JsonMsgUtils;
@@ -24,13 +24,13 @@ import utils.JsonMsgUtils;
 public class AdminGrowerController extends Controller {
 
   private final GrowerService growerService;
-  private final OfferService offerService;
+  private final HandlerBidService handlerBidService;
   private final ObjectMapper jsonMapper;
 
   @Inject
-  public AdminGrowerController(GrowerService growerService, OfferService offerService) {
+  public AdminGrowerController(GrowerService growerService, HandlerBidService handlerBidService) {
     this.growerService = growerService;
-    this.offerService = offerService;
+    this.handlerBidService = handlerBidService;
     this.jsonMapper = new ObjectMapper();
   }
 
@@ -79,10 +79,10 @@ public class AdminGrowerController extends Controller {
       return badRequest(JsonMsgUtils.caughtException(parser.getErrorMessage()));
     }
 
-    for(Offer off: offerService.getByGrower(growerId)) {
-      if(off.getOfferCurrentlyOpen()) {
+    for(HandlerBid handlerBid: handlerBidService.getByGrower(growerId)) {
+      if(handlerBid.getBidCurrentlyOpen()) {
         //Conflict response
-        return status(409, JsonMsgUtils.growerInOffer(growerId, off.getId()));
+        return status(409, JsonMsgUtils.growerInBid(growerId, handlerBid.getId()));
       }
     }
 
@@ -104,10 +104,10 @@ public class AdminGrowerController extends Controller {
       return notFound(JsonMsgUtils.growerNotFoundMessage(growerId));
     }
 
-    for(Offer off: offerService.getByGrower(growerId)) {
-      if(off.getOfferCurrentlyOpen()) {
+    for(HandlerBid handlerBid: handlerBidService.getByGrower(growerId)) {
+      if (handlerBid.getBidCurrentlyOpen()) {
         //Conflict response
-        return status(409, JsonMsgUtils.growerInOffer(growerId, off.getId()));
+        return status(409, JsonMsgUtils.growerInBid(growerId, handlerBid.getId()));
       }
     }
 
