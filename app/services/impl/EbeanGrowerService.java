@@ -33,10 +33,10 @@ public class EbeanGrowerService implements GrowerService {
   }
 
   @Override
-  public List<Grower> getByOffer(long offerId) {
+  public List<Grower> getByBid(long bidId) {
     // TODO Assert Grower Exists, or Return Null
     return FINDER.where()
-        .eq("offers.id", offerId)
+        .eq("bids.id", bidId)
         .findList();
   }
 

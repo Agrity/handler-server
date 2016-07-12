@@ -6,7 +6,7 @@ import java.util.List;
 
 import models.Trader;
 import models.Handler;
-import models.Offer;
+import models.TraderBid;
 
 import services.impl.EbeanTraderService;
 

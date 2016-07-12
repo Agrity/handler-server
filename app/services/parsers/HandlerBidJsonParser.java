@@ -12,21 +12,21 @@ import models.Almond;
 import models.Almond.AlmondVariety;
 import models.Grower;
 import models.Handler;
-import models.Offer;
+import models.HandlerBid;
 
 import play.Logger;
 
 import services.DateService;
 import services.GrowerService;
 import services.impl.EbeanGrowerService;
-import services.offer_management.WaterfallService;
-import services.offer_management.FCFSService;
-import services.offer_management.OfferManagementService;
+import services.bid_management.WaterfallService;
+import services.bid_management.FCFSService;
+import services.bid_management.BidManagementService;
 
 import java.util.Date;
 
 /**
- * Class to parse json data to create new Offer.
+ * Class to parse json data to create new HandlerBid.
  *
  * Expected Json Structure:
  *  {
@@ -60,7 +60,7 @@ import java.util.Date;
  *    COMMENT: ... ,
  *  }
  */
-public class OfferJsonParser extends BaseParser {
+public class HandlerBidJsonParser extends BaseParser {
 
   private Handler handler;
   private List<Grower> growers;
@@ -76,7 +76,7 @@ public class OfferJsonParser extends BaseParser {
 
   private final GrowerService growerService;
 
-  public OfferJsonParser(JsonNode data) {
+  public HandlerBidJsonParser(JsonNode data) {
     super();
 
     // TODO -- Extremely Hacky -- Change to Dependency Injection.
@@ -147,12 +147,12 @@ public class OfferJsonParser extends BaseParser {
     setValid();
   }
 
-  public Offer formOffer() {
+  public HandlerBid formBid() {
     if (!isValid()) {
-      throw new RuntimeException("Attempted to create Offer from invalid parser.\n");
+      throw new RuntimeException("Attempted to create bid from invalid parser.\n");
     }
 
-    Offer newOffer = new Offer(
+    HandlerBid newBid = new HandlerBid(
         getHandler(),
         getGrowers(),
         getAlmondVariety(),
@@ -165,21 +165,21 @@ public class OfferJsonParser extends BaseParser {
         getManagementType().className(),
         getExpirationTime());
 
-    return newOffer;
+    return newBid;
   }
 
-  public void updateOffer(Offer offer) {
+  public void updateBid(HandlerBid handlerBid) {
     if (!isValid()) {
-      throw new RuntimeException("Attempted to create Offer from invalid parser.\n");
+      throw new RuntimeException("Attempted to create bid from invalid parser.\n");
     }
 
-    offer.setAlmondVariety(getAlmondVariety());
-    offer.setAlmondSize(getAlmondSize());
-    offer.setAlmondPounds(getAlmondPounds());
-    offer.setPricePerPound(getPricePerPound());
-    offer.setStartPaymentDate(getStartPaymentDate());
-    offer.setEndPaymentDate(getEndPaymentDate());
-    offer.setComment(getComment());
+    handlerBid.setAlmondVariety(getAlmondVariety());
+    handlerBid.setAlmondSize(getAlmondSize());
+    handlerBid.setAlmondPounds(getAlmondPounds());
+    handlerBid.setPricePerPound(getPricePerPound());
+    handlerBid.setStartPaymentDate(getStartPaymentDate());
+    handlerBid.setEndPaymentDate(getEndPaymentDate());
+    handlerBid.setComment(getComment());
 
   }
 
@@ -240,13 +240,13 @@ public class OfferJsonParser extends BaseParser {
   private List<Grower> parseGrowers(JsonNode data) {
     // Check grower ids are present.
     Logger.info("parsing growers...\n\n");
-    if (!data.has(OfferJsonConstants.GROWER_IDS)) {
-      setInvalid(missingParameterError(OfferJsonConstants.GROWER_IDS));
+    if (!data.has(HandlerBidJsonConstants.GROWER_IDS)) {
+      setInvalid(missingParameterError(HandlerBidJsonConstants.GROWER_IDS));
       return null;
 
     } 
     
-    JsonNode growerIds = data.get(OfferJsonConstants.GROWER_IDS);
+    JsonNode growerIds = data.get(HandlerBidJsonConstants.GROWER_IDS);
 
     // Grower IDs should be formatted as an array of strings.
     if (!growerIds.isArray()) {
@@ -289,13 +289,13 @@ public class OfferJsonParser extends BaseParser {
   private AlmondVariety parseAlmondVariety(JsonNode data) {
     // Check almound variety is preseent.
     Logger.info("parsing almond variety...\n\n");
-    if (!data.has(OfferJsonConstants.ALMOND_VARIETY)) {
-      setInvalid(missingParameterError(OfferJsonConstants.ALMOND_VARIETY));
+    if (!data.has(HandlerBidJsonConstants.ALMOND_VARIETY)) {
+      setInvalid(missingParameterError(HandlerBidJsonConstants.ALMOND_VARIETY));
       return null;
     } 
     
     AlmondVariety almondVariety =
-        Almond.stringToAlmondVariety(data.get(OfferJsonConstants.ALMOND_VARIETY).asText());
+        Almond.stringToAlmondVariety(data.get(HandlerBidJsonConstants.ALMOND_VARIETY).asText());
 
     if (almondVariety == null) {
       setInvalid("Almond Variety Format Invalid: string of valid almond variety expected.\n");
@@ -308,26 +308,26 @@ public class OfferJsonParser extends BaseParser {
   private String parseAlmondSize(JsonNode data) {
     // Check almound size is present.
     Logger.info("parsing almond size...\n\n");
-    if (!data.has(OfferJsonConstants.ALMOND_SIZE)) {
-      setInvalid(missingParameterError(OfferJsonConstants.ALMOND_SIZE));
+    if (!data.has(HandlerBidJsonConstants.ALMOND_SIZE)) {
+      setInvalid(missingParameterError(HandlerBidJsonConstants.ALMOND_SIZE));
       return null;
     } 
 
     // TODO Add checks to verify correctly formatted almond size.
     
-    return data.get(OfferJsonConstants.ALMOND_SIZE).asText();
+    return data.get(HandlerBidJsonConstants.ALMOND_SIZE).asText();
   }
 
   private Integer parseAlmondPounds(JsonNode data) {
     // Check almound pounds is present.
     Logger.info("parsing almond pounds...\n\n");
-    if (!data.has(OfferJsonConstants.ALMOND_POUNDS)) {
-      setInvalid(missingParameterError(OfferJsonConstants.ALMOND_POUNDS));
+    if (!data.has(HandlerBidJsonConstants.ALMOND_POUNDS)) {
+      setInvalid(missingParameterError(HandlerBidJsonConstants.ALMOND_POUNDS));
       return null;
 
     } 
     
-    Long almondPounds = parseLong(data.get(OfferJsonConstants.ALMOND_POUNDS).asText());
+    Long almondPounds = parseLong(data.get(HandlerBidJsonConstants.ALMOND_POUNDS).asText());
 
     if (almondPounds == null) {
       setInvalid("Almond Pound Format Invalid: integer expected.\n");
@@ -340,14 +340,14 @@ public class OfferJsonParser extends BaseParser {
   private String parsePricePerPound(JsonNode data) {
     // Check price per pound is present.
     Logger.info("parsing price per pound...\n\n");
-    if (!data.has(OfferJsonConstants.PRICE_PER_POUND)) {
-      setInvalid(missingParameterError(OfferJsonConstants.PRICE_PER_POUND));
+    if (!data.has(HandlerBidJsonConstants.PRICE_PER_POUND)) {
+      setInvalid(missingParameterError(HandlerBidJsonConstants.PRICE_PER_POUND));
       return null;
 
     } 
     
     // TODO Change To Monetary Value
-    String pricePerPound = data.get(OfferJsonConstants.PRICE_PER_POUND).asText();
+    String pricePerPound = data.get(HandlerBidJsonConstants.PRICE_PER_POUND).asText();
 
     if (pricePerPound == null) {
       setInvalid("Almond Price Per Pound Format Invalid: monetary value string expected.\n");
@@ -360,13 +360,13 @@ public class OfferJsonParser extends BaseParser {
   private LocalDate parseStartPaymentDate(JsonNode data) {
     // Check payment date is preseent.
     Logger.info("parsing start payment date...\n\n");
-    if (!data.has(OfferJsonConstants.START_PAYMENT_DATE)) {
-      setInvalid(missingParameterError(OfferJsonConstants.START_PAYMENT_DATE));
+    if (!data.has(HandlerBidJsonConstants.START_PAYMENT_DATE)) {
+      setInvalid(missingParameterError(HandlerBidJsonConstants.START_PAYMENT_DATE));
       return null;
 
     } 
     
-    String dateString = data.get(OfferJsonConstants.START_PAYMENT_DATE).asText();
+    String dateString = data.get(HandlerBidJsonConstants.START_PAYMENT_DATE).asText();
 
     if (!DateService.verifyDateString(dateString)) {
       // TODO: Determine Date Format
@@ -380,23 +380,13 @@ public class OfferJsonParser extends BaseParser {
   private LocalDate parseEndPaymentDate(JsonNode data) {
     // Check payment date is preseent.
     Logger.info("parsing end payment date...\n\n");
-    if (!data.has(OfferJsonConstants.END_PAYMENT_DATE)) {
-      setInvalid(missingParameterError(OfferJsonConstants.END_PAYMENT_DATE));
+    if (!data.has(HandlerBidJsonConstants.END_PAYMENT_DATE)) {
+      setInvalid(missingParameterError(HandlerBidJsonConstants.END_PAYMENT_DATE));
       return null;
 
     } 
     
-   // String dateMonth = data.get(OfferJsonConstants.END_PAYMENT_MONTH).asText();
-
-   // if (!data.has(OfferJsonConstants.END_PAYMENT_YEAR)) {
-   //   setInvalid(missingParameterError(OfferJsonConstants.END_PAYMENT_YEAR));
-   //   return null;
-
-    //} 
-    
-    String dateString = data.get(OfferJsonConstants.END_PAYMENT_DATE).asText();
-
-  
+    String dateString = data.get(HandlerBidJsonConstants.END_PAYMENT_DATE).asText();
 
     if (!DateService.verifyDateString(dateString)) {
       // TODO: Determine Date Format
@@ -409,31 +399,31 @@ public class OfferJsonParser extends BaseParser {
 
   private ManagementTypeInfo parseManagementType(JsonNode data) {
     Logger.info("parsing management type...\n\n");
-    if (!data.has(OfferJsonConstants.MANAGEMENT_TYPE)) {
-      setInvalid(missingParameterError(OfferJsonConstants.MANAGEMENT_TYPE));
+    if (!data.has(HandlerBidJsonConstants.MANAGEMENT_TYPE)) {
+      setInvalid(missingParameterError(HandlerBidJsonConstants.MANAGEMENT_TYPE));
       return null;
     }
 
-    JsonNode typeMap = data.get(OfferJsonConstants.MANAGEMENT_TYPE);
+    JsonNode typeMap = data.get(HandlerBidJsonConstants.MANAGEMENT_TYPE);
 
     int delayInt;
-    if(typeMap.has(OfferJsonConstants.DELAY_KEY)) {
-      delayInt = typeMap.get(OfferJsonConstants.DELAY_KEY).asInt();
+    if(typeMap.has(HandlerBidJsonConstants.DELAY_KEY)) {
+      delayInt = typeMap.get(HandlerBidJsonConstants.DELAY_KEY).asInt();
     } else {
-      setInvalid(missingParameterError(OfferJsonConstants.DELAY_KEY));
+      setInvalid(missingParameterError(HandlerBidJsonConstants.DELAY_KEY));
       return null;
     }
 
     LocalDateTime currentTime = LocalDateTime.now();
     expirationTime = currentTime.plusMinutes(delayInt);
   
-    if(typeMap.has(OfferJsonConstants.TYPE_KEY)) {
-      String className = typeMap.get(OfferJsonConstants.TYPE_KEY).asText();
+    if(typeMap.has(HandlerBidJsonConstants.TYPE_KEY)) {
+      String className = typeMap.get(HandlerBidJsonConstants.TYPE_KEY).asText();
       Duration delayTime = Duration.ofMinutes(delayInt);
       switch(className) {
-        case OfferJsonConstants.ManagementTypes.WATERFALL:
+        case HandlerBidJsonConstants.ManagementTypes.WATERFALL:
           return new ManagementTypeInfo(WaterfallService.class, delayTime);
-        case OfferJsonConstants.ManagementTypes.FCFS: 
+        case HandlerBidJsonConstants.ManagementTypes.FCFS: 
           return new ManagementTypeInfo(FCFSService.class, delayTime);
         default:
           setInvalid("Management Type invalid: specified type " + className +" not found\n");
@@ -441,7 +431,7 @@ public class OfferJsonParser extends BaseParser {
       }
     } 
 
-    setInvalid(missingParameterError(OfferJsonConstants.TYPE_KEY));
+    setInvalid(missingParameterError(HandlerBidJsonConstants.TYPE_KEY));
     return null;
   }
 
@@ -449,11 +439,11 @@ public class OfferJsonParser extends BaseParser {
   private String parseComment(JsonNode data) {
     Logger.info("parsing comment...\n\n");
     // Check comment is present.
-    if (!data.has(OfferJsonConstants.COMMENT)) {
+    if (!data.has(HandlerBidJsonConstants.COMMENT)) {
       return "";
     } 
     
-    String commentString = data.get(OfferJsonConstants.COMMENT).asText();
+    String commentString = data.get(HandlerBidJsonConstants.COMMENT).asText();
 
     if (commentString == null) {
       setInvalid("Comment Format Invalid: string format expected.\n");
@@ -463,7 +453,7 @@ public class OfferJsonParser extends BaseParser {
     return commentString;
   }
 
-  private static class OfferJsonConstants {
+  private static class HandlerBidJsonConstants {
     private static final String GROWER_IDS = "grower_ids";
 
     private static final String ALMOND_VARIETY = "almond_variety";
@@ -490,15 +480,15 @@ public class OfferJsonParser extends BaseParser {
   }
 
   public static class ManagementTypeInfo {
-    private Class<? extends OfferManagementService> typeClass;
+    private Class<? extends BidManagementService> typeClass;
     private Duration delay;
 
-      ManagementTypeInfo(Class<? extends OfferManagementService> c, Duration d) {
+      ManagementTypeInfo(Class<? extends BidManagementService> c, Duration d) {
         this.typeClass = c;
         this.delay = d;
       }
 
-      public Class<? extends OfferManagementService> getClassType() { return typeClass; }
+      public Class<? extends BidManagementService> getClassType() { return typeClass; }
       public String className() { return typeClass.getName(); }
       public Duration getDelay() { return delay; }
 

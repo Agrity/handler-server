@@ -6,7 +6,7 @@ import java.util.List;
 
 import models.Grower;
 import models.Handler;
-import models.Offer;
+import models.HandlerBid;
 
 import play.Logger;
 
@@ -84,7 +84,7 @@ public class EbeanHandlerService implements HandlerService {
   }
 
   @Override
-  public boolean checkHandlerOwnsOffer(Handler handler, Offer offer) {
-    return handler.equals(offer.getHandler());
+  public boolean checkHandlerOwnsBid(Handler handler, HandlerBid handlerBid) {
+    return handler.equals(handlerBid.getHandler());
   }
 }

@@ -4,25 +4,25 @@ import com.avaje.ebean.Model.Finder;
 
 import java.util.List;
 
-import models.Offer;
+import models.HandlerBid;
 
-import services.OfferService;
+import services.HandlerBidService;
 
-public class EbeanOfferService implements OfferService {
+public class EbeanHandlerBidService implements HandlerBidService {
 
-  private static Finder<Long, Offer> FINDER = new Finder<>(Offer.class);
+  private static Finder<Long, HandlerBid> FINDER = new Finder<>(HandlerBid.class);
 
   @Override
-  public List<Offer> getAll() {
+  public List<HandlerBid> getAll() {
     return FINDER.all();
   }
 
   @Override
-  public Offer getById(long id) {
+  public HandlerBid getById(long id) {
     return FINDER.byId(id);
   }
 
-  public List<Offer> getByHandler(long handlerId) {
+  public List<HandlerBid> getByHandler(long handlerId) {
     // TODO Assert Handler Exists, or Return Null
     return FINDER.where()
         // TODO Fix this Column Name.
@@ -30,7 +30,7 @@ public class EbeanOfferService implements OfferService {
         .findList();
   }
 
-  public List<Offer> getByGrower(long growerId) {
+  public List<HandlerBid> getByGrower(long growerId) {
     // TODO Assert Grower Exists, or Return Null
     return FINDER.where()
         .eq("growers.id", growerId)
