@@ -6,6 +6,19 @@ import models.User;
 import models.Trader;
 import models.Handler;
 
+/**
+ * Class to parse json data to create new Handler.
+ *
+ * Expected Json Structure:
+ *  {
+ *    COMPANY_NAME: ...,
+ *
+ *    EMAIL_ADDRESS: ...,
+ *
+ *    PASSWORD: ...
+ *  }
+ */
+
 public class UserJsonParser extends BaseParser {
   // Parsed variables
   private String companyName;
