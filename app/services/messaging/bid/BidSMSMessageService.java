@@ -1,4 +1,4 @@
-package services.messaging.offer;
+package services.messaging.bid;
 
 import java.util.*;
 import com.twilio.sdk.*;
@@ -13,57 +13,57 @@ import org.apache.http.message.BasicNameValuePair;
 
 import models.PhoneNumber;
 import models.Grower;
-import models.Offer;
+import models.HandlerBid;
 import play.Logger;
 import services.messaging.MessageServiceConstants.TwilioFields;
-import services.offer_management.OfferManagementService;
+import services.bid_management.BidManagementService;
 
 /* === TODO: Add logging on message sending === */
 
-public class OfferSMSMessageService implements OfferMessageService {
+public class BidSMSMessageService implements BidMessageService {
   
   /* Takes an offer object and sends out SMS message containing bid to all growers using Twilio account */
-  public boolean send(Offer offer) {
+  public boolean send(HandlerBid handlerBid) {
     boolean success = true;
 
-    for (Grower grower : offer.getAllGrowers()) { 
-      if(!send(offer, grower)) success = false;
+    for (Grower grower : handlerBid.getAllGrowers()) { 
+      if(!send(handlerBid, grower)) success = false;
     }
 
     return success;
   }
     
-  public boolean send(Offer offer, Grower grower) {
-    return sendUpdated(offer, grower, createBodyText(grower, offer));
+  public boolean send(HandlerBid handlerBid, Grower grower) {
+    return sendUpdated(handlerBid, grower, createBodyText(grower, handlerBid));
   }
 
-  public boolean sendClosed(Offer offer) {
+  public boolean sendClosed(HandlerBid handlerBid) {
     boolean success = true;
 
-    for (Grower grower : offer.getAllGrowers()) {
-      if(!sendClosed(offer, grower)) success = false;
+    for (Grower grower : handlerBid.getAllGrowers()) {
+      if(!sendClosed(handlerBid, grower)) success = false;
     }
 
     return success; 
   }
 
-  public boolean sendClosed(Offer offer, Grower grower) {
-    String msg = "Your bid (ID " + offer.getId() + ") <" + offer.getAlmondVariety() + " for " 
-        + offer.getPricePerPound() + "/lb.> has expired.";
-    return sendUpdated(offer, grower, msg);
+  public boolean sendClosed(HandlerBid handlerBid, Grower grower) {
+    String msg = "Your bid (ID " + handlerBid.getId() + ") <" + handlerBid.getAlmondVariety() + " for " 
+        + handlerBid.getPricePerPound() + "/lb.> has expired.";
+    return sendUpdated(handlerBid, grower, msg);
   }
 
-  public boolean sendUpdated(Offer offer, String msg) {
+  public boolean sendUpdated(HandlerBid handlerBid, String msg) {
     boolean success = true;
 
-    for (Grower grower : offer.getAllGrowers()) {
-      if(!sendUpdated(offer, grower, msg)) success = false;
+    for (Grower grower : handlerBid.getAllGrowers()) {
+      if(!sendUpdated(handlerBid, grower, msg)) success = false;
     }
 
     return success; 
   }
 
-  public boolean sendUpdated(Offer offer, Grower grower, String msg) {
+  public boolean sendUpdated(HandlerBid handlerBid, Grower grower, String msg) {
     boolean success = true;
     for (String phoneNumber: grower.getPhoneNumsStrings()) {
       List<NameValuePair> params = new ArrayList<NameValuePair>(); 
@@ -81,17 +81,17 @@ public class OfferSMSMessageService implements OfferMessageService {
     return success;
   }
 
-  private String createBodyText(Grower curGrower, Offer offer) {
-    Long id = offer.getId();
+  private String createBodyText(Grower curGrower, HandlerBid handlerBid) {
+    Long id = handlerBid.getId();
     String body = "Hi " + curGrower.getFullName() + ",\n"
                 + "You have received a new bid: \n"
-                + offer.getAlmondVariety() + "\n"
-                + offer.getAlmondSize() + "\n"
-                + offer.getAlmondPoundsString() + "lbs\n"
-                + offer.getPricePerPound() + "/lb\n" 
-                + offer.getComment() + "\n"
-                + "-" + offer.getHandler().getCompanyName() + " " 
-                + offer.getHandler().getEmailAddress() + "\n\n"
+                + handlerBid.getAlmondVariety() + "\n"
+                + handlerBid.getAlmondSize() + "\n"
+                + handlerBid.getAlmondPoundsString() + "lbs\n"
+                + handlerBid.getPricePerPound() + "/lb\n" 
+                + handlerBid.getComment() + "\n"
+                + "-" + handlerBid.getHandler().getCompanyName() + " " 
+                + handlerBid.getHandler().getEmailAddress() + "\n\n"
                 + "Respond with the bid ID(" + id + ") "
                 + "followed by the amount of pounds you would like to accept (0 for rejection).\n"
                 + "Bid ID: " + id + "\n"

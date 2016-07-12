@@ -5,14 +5,14 @@ package services.parsers;
  * Expected String format:
  * "123 456789"
  *
- * Offer ID Number followed by whitespace followed by Number pounds accepted.
+ * Bid ID Number followed by whitespace followed by Number pounds accepted.
  * NOTE: Does NOT accpet anything outside of this format (e.g. comma in pounds number)
  */
 import play.Logger;
 
 public class SMSParser extends BaseParser {
 
-  private Long offerID;
+  private Long bidID;
   private Integer pounds;
   private boolean accepted;
   private static final String errorResponse = 
@@ -29,8 +29,8 @@ public class SMSParser extends BaseParser {
     	return;
     }
 
-    offerID = parseID(splited[0]);
-    if (offerID == null) {
+    bidID = parseID(splited[0]);
+    if (bidID == null) {
       Logger.error("invalid ID\n\n");
     	return;
     }
@@ -47,7 +47,7 @@ public class SMSParser extends BaseParser {
   }
 
   public Long getID() {
-  	return offerID;
+  	return bidID;
   }
 
   public boolean getAccepted() {
@@ -62,7 +62,7 @@ public class SMSParser extends BaseParser {
   	Long result = parseLong(firstHalf);
 
   	if (result == null) {
-  	  setInvalid("Offer ID is not formatted correctly. " + errorResponse);
+  	  setInvalid("Bid ID is not formatted correctly. " + errorResponse);
   	}
 
   	return result;

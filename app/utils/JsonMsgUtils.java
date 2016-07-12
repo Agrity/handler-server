@@ -2,7 +2,7 @@ package utils;
 
 import models.Grower;
 import models.Handler;
-import models.Offer;
+import models.HandlerBid;
 
 import play.libs.Json;
 
@@ -23,8 +23,8 @@ public class JsonMsgUtils {
     return errorToJson("Grower with id '" + id + "' could not be found\n");
   }
 
-  public static ObjectNode offerNotFoundMessage(Long id) {
-    return errorToJson("Offer with id '" + id + "' could not be found\n");
+  public static ObjectNode bidNotFoundMessage(Long id) {
+    return errorToJson("Bid with id '" + id + "' could not be found\n");
   }
 
   public static ObjectNode handlerDoesNotOwnGrowerMessage(Handler handler, Grower grower) {
@@ -32,17 +32,17 @@ public class JsonMsgUtils {
         + ".\n");
   }
 
-  public static ObjectNode handlerDoesNotOwnOfferMessage(Handler handler, Offer offer) {
-    return errorToJson("Handler " + handler.getCompanyName() + " does not own Offer " + offer.getId()
+  public static ObjectNode handlerDoesNotOwnBidMessage(Handler handler, HandlerBid handlerBid) {
+    return errorToJson("Handler " + handler.getCompanyName() + " does not own bid " + handlerBid.getId()
         + ".\n");
   }
 
-  public static ObjectNode offerNotAccepted(String invalidResponseMessage) {
-    return errorToJson("Offer Could not be Accepted: " + invalidResponseMessage + " \n");
+  public static ObjectNode bidNotAccepted(String invalidResponseMessage) {
+    return errorToJson("Bid Could not be Accepted: " + invalidResponseMessage + " \n");
   }
 
-  public static ObjectNode offerNotRejected(String invalidResponseMessage) {
-    return errorToJson("Offer Could not be Rejected: " + invalidResponseMessage + " \n");
+  public static ObjectNode bidNotRejected(String invalidResponseMessage) {
+    return errorToJson("Bod Could not be Rejected: " + invalidResponseMessage + " \n");
   }
 
   public static ObjectNode callNotRequested(String invalidResponseMessage) {
@@ -61,9 +61,9 @@ public class JsonMsgUtils {
     return errorToJson("Expecting Some Data.\n");
   }
 
-  public static ObjectNode growerInOffer(long growerId, long offerId) {
-    return errorToJson("Grower " + Long.toString(growerId) + " still in offer " 
-      + Long.toString(offerId));
+  public static ObjectNode growerInBid(long growerId, long bidId) {
+    return errorToJson("Grower " + Long.toString(growerId) + " still in bid " 
+      + Long.toString(bidId));
   }
 
   private static ObjectNode errorToJson(String msg) {
@@ -75,11 +75,11 @@ public class JsonMsgUtils {
 
   /* ==================== Json converters for successes =======================*/
   public static ObjectNode successfullAccept() {
-    return validToJson("Successfully Accepted Offer.");
+    return validToJson("Successfully Accepted Bid.");
   }
 
   public static ObjectNode successfullReject() {
-    return validToJson("Successfully Rejected Offer.");
+    return validToJson("Successfully Rejected Bid.");
   }
 
   public static ObjectNode successfullCallRequest() {
@@ -90,8 +90,8 @@ public class JsonMsgUtils {
     return validToJson("Emails sent successfully!");
   }
 
-  public static ObjectNode offerDeleted(long offerId) {
-    return validToJson("Offer " + offerId + " deleted.");
+  public static ObjectNode bidDeleted(long bidId) {
+    return validToJson("Bid " + bidId + " deleted.");
   }
 
   public static ObjectNode growerDeleted(long growerId) {

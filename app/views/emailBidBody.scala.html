@@ -1,0 +1,66 @@
+@(handlerBid: HandlerBid, grower: Grower, domain: String)
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.blue_grey-green.min.css" />
+  </head>
+  <body>
+    <table class="mdl-data-table mdl-shadow--2dp">
+      <thead>
+        <tr>
+          <th class="mdl-data-table__cell--non-numeric"><h1>New Bid From @handlerBid.getHandler().getCompanyName()</h2></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="mdl-data-table__cell--non-numeric"><h2>Almond Variety</h2></td>
+          <td><h4>@handlerBid.getAlmondVariety()</h4></td>
+        </tr>
+        <tr>
+          <td class="mdl-data-table__cell--non-numeric"><h2>Almond Pounds</h2></td>
+          <td><h4>@handlerBid.getAlmondPoundsString() lbs</h4></td>
+        </tr>
+        <tr>
+          <td class="mdl-data-table__cell--non-numeric"><h2>Price Per Pound</h2></td>
+          <td><h4>@handlerBid.getPricePerPound()</h4></td>
+        </tr>
+        <tr>
+          <td class="mdl-data-table__cell--non-numeric"><h2>Payment Date</h2></td>
+          <td><h4>Feature Still Under Construction</h4></td>
+        </tr>
+        <tr>
+          <td class="mdl-data-table__cell--non-numeric"><h2>Comments</h2></td>
+        </tr>
+        <tr>
+          <td class="mdl-data-table__cell--non-numeric"><p>@handlerBid.getComment()</p></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <br></br>
+    <br></br>
+    <br></br>
+
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>
+          <table border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td align="center" style="-webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px;" bgcolor="#008000"><a href="@domain/bids/@handlerBid.getId()/accept/@grower.getId()" target="_blank" style="font-size: 16px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; text-decoration: none; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; padding: 12px 18px; border: 1px solid #008000; display: inline-block; column-gap: 40px;">Accept</a></td>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+              <td align="center" style="-webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px;" bgcolor="#c0da00"><a href="@domain/handlerBids/@handlerBid.getId()/partial/@grower.getId()" target="_blank" style="font-size: 16px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; text-decoration: none; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; padding: 12px 18px; border: 1px solid #c0da00; display: inline-block;">Partial Accept</a></td>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+              <td align="center" style="-webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px;" bgcolor="#ff0000"><a href="@domain/handlerBids/@handlerBid.getId()/reject/@grower.getId()" target="_blank" style="font-size: 16px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; text-decoration: none; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; padding: 12px 18px; border: 1px solid #ff0000; display: inline-block;">Reject</a></td>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+              <td align="center" style="-webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px;" bgcolor="#3d598b"><a href="@domain/handlerBids/@handlerBid.getId()/requestcall/@grower.getId()" target="_blank" style="font-size: 16px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; text-decoration: none; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; padding: 12px 18px; border: 1px solid #3d598b; display: inline-block;">Request Call</a></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+    <h5>* Subject to Final Comfirmation *</h5>
+  </body>
+</html>

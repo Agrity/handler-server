@@ -3,9 +3,10 @@ package models;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
+import play.Logger;
 
 @Entity
-public class OfferResponse extends BaseModel {
+public class BidResponse extends BaseModel {
 
   public static enum ResponseStatus {
     NO_RESPONSE,
@@ -20,17 +21,17 @@ public class OfferResponse extends BaseModel {
   private Grower grower;
 
   @ManyToOne
-  private Offer offer;
+  private HandlerBid handlerBid;
 
   private ResponseStatus responseStatus;
 
 
-  public static Finder<Long, OfferResponse> find = new Finder<>(OfferResponse.class);
+  public static Finder<Long, BidResponse> find = new Finder<>(BidResponse.class);
 
 
   /* ===================================== Implementation ===================================== */
 
-  public OfferResponse(Grower grower) {
+  public BidResponse(Grower grower) {
     super();
 
     this.grower = grower;
@@ -40,7 +41,6 @@ public class OfferResponse extends BaseModel {
 
   /* === Attribute Accessors === */
 
-
   public Long getId() {
     return id;
   }
@@ -49,8 +49,8 @@ public class OfferResponse extends BaseModel {
     return grower;
   }
 
-  public Offer getOffer() {
-    return offer;
+  public HandlerBid getBid() {
+    return handlerBid;
   }
 
   public ResponseStatus getResponseStatus() {
@@ -63,6 +63,6 @@ public class OfferResponse extends BaseModel {
 
   @Override
   public String toString() {
-    return "(" + grower.getId() + ") -> (" + offer.getId() + ") " + grower.getFullName() + "\n";
+    return "(" + grower.getId() + ") -> (" + handlerBid.getId() + ") " + grower.getFullName() + "\n";
   }
 }

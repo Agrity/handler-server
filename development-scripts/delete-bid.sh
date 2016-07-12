@@ -1,14 +1,14 @@
 #!/bin/bash
 
-OFFER_ID=$1
+HANDLER_BID_ID=$1
 
-if ! [[ -z $OFFER_ID ]]; then
+if ! [[ -z $HANDLER_BID_ID ]]; then
  curl \
     --header "Content-type: application/json" \
     --header "X-ADMIN-TOKEN: development-use-only" \
     --request DELETE \
-    localhost:9000/admin/offers/$OFFER_ID
+    localhost:9000/admin/handlerBids/$HANDLER_BID_ID
   echo # Insert Blank Line
 else 
-  echo "ERROR: Please provide an offer id to delete."
+  echo "ERROR: Please provide an bid id to delete."
 fi

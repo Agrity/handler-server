@@ -22,9 +22,9 @@ public class DBConstants {
   }
 
   /*
-   * Explicitly named columns belonging to the Offer table.
+   * Explicitly named columns belonging to the HandlerBid table.
    */
-  public class OfferColumns {
-    public static final String ID = "offer_id";
+  public class HandlerBidColumns {
+    public static final String ID = "handler_bid_id";
   }
 }

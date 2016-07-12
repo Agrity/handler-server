@@ -4,4 +4,4 @@
 
 ./new-grower.sh
 
-./new-offer.sh
+./new-bid.sh

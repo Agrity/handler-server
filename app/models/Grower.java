@@ -12,7 +12,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import models.OfferResponse.ResponseStatus;
+import models.BidResponse.ResponseStatus;
 import models.interfaces.PrettyString;
 
 import play.data.validation.Constraints;
@@ -51,16 +51,16 @@ public class Grower extends BaseModel implements PrettyString {
   public List<PhoneNumber> phoneNumbers;
 
 
-  // TODO Remove OfferResponses and Offers from Growers if possible.
+  // TODO Remove BidResponses and Bidss from Growers if possible.
   @Constraints.Required
   @OneToMany(cascade = CascadeType.ALL)
   @JsonIgnore // Annotation here because no explicit getter
-  public List<OfferResponse> offerResponses = new ArrayList<>();
+  public List<BidResponse> bidResponses = new ArrayList<>();
 
   @Constraints.Required
   @ManyToMany(cascade = CascadeType.ALL, mappedBy = "growers")
   @JsonIgnore // Annotation here because no explicit getter
-  public List<Offer> offers = new ArrayList<>();
+  public List<HandlerBid> handlerBids = new ArrayList<>();
 
 
   /* ==================================== Static Functions ==================================== */
@@ -119,33 +119,33 @@ public class Grower extends BaseModel implements PrettyString {
   }
 
   @JsonIgnore
-  public List<Offer> getAcceptedOffers() {
-    return getOffersWithResponse(ResponseStatus.ACCEPTED);
+  public List<HandlerBid> getAcceptedBids() {
+    return getBidsWithResponse(ResponseStatus.ACCEPTED);
   }
   
   @JsonIgnore
-  public List<Offer> getRejectedOffers() {
-    return getOffersWithResponse(ResponseStatus.REJECTED);
+  public List<HandlerBid> getRejectedBids() {
+    return getBidsWithResponse(ResponseStatus.REJECTED);
   }
 
   @JsonIgnore
-  public List<Offer> getCallRequestedOffers() {
-    return getOffersWithResponse(ResponseStatus.REQUEST_CALL);
+  public List<HandlerBid> getCallRequestedBids() {
+    return getBidsWithResponse(ResponseStatus.REQUEST_CALL);
   }
 
   @JsonIgnore
-  public List<Offer> getNoResponseOffers() {
-    return getOffersWithResponse(ResponseStatus.NO_RESPONSE);
+  public List<HandlerBid> getNoResponseBids() {
+    return getBidsWithResponse(ResponseStatus.NO_RESPONSE);
   }
 
-  private List<Offer> getOffersWithResponse(ResponseStatus response) {
-    List<Offer> matchedOffers = new ArrayList<>();
-    for (OfferResponse growerOfferResponse : offerResponses) {
-      if (growerOfferResponse.getResponseStatus().equals(response)) {
-        matchedOffers.add(growerOfferResponse.getOffer());
+  private List<HandlerBid> getBidsWithResponse(ResponseStatus response) {
+    List<HandlerBid> matchedBids = new ArrayList<>();
+    for (BidResponse growerBidResponse : bidResponses) {
+      if (growerBidResponse.getResponseStatus().equals(response)) {
+        matchedBids.add(growerBidResponse.getBid());
       }
     }
-    return matchedOffers;
+    return matchedBids;
   }
 
   @JsonIgnore
@@ -189,10 +189,10 @@ public class Grower extends BaseModel implements PrettyString {
     emailAddresses = emails;
   }
 
-  public Offer offerLookupByID(Long offerID) {
-    for (Offer offer: offers) {
-      if (offer.getId().equals(offerID)) {
-        return offer;
+  public HandlerBid bidLookupByID(Long bidID) {
+    for (HandlerBid handlerBid: handlerBids) {
+      if (handlerBid.getId().equals(bidID)) {
+        return handlerBid;
       }
     }
     return null;
