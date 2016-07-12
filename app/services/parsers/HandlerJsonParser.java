@@ -16,35 +16,10 @@ import models.Handler;
  *    PASSWORD: ...
  *  }
  */
-public class HandlerJsonParser extends BaseParser {
+public class HandlerJsonParser extends UserParser {
   // Parsed variables
-  private String companyName;
-  private String emailAddress;
-  private String password;
-
   public HandlerJsonParser(JsonNode data) {
-    super();
-
-    companyName = parseCompanyName(data);
-    if (companyName == null) {
-      // Parser set to invalid with proper error message.
-      return;
-    }
-
-    emailAddress = parseEmailAddress(data);
-    if (emailAddress == null) {
-      // Parser set to invalid with proper error message.
-      return;
-    }
-
-    password = parsePassword(data);
-    if (password == null) {
-      // Parser set to invalid with proper error message.
-      return;
-    }
-
-    // Valid json data received and processed.
-    setValid();
+    super(data);
   }
 
   public Handler formHandler() {
@@ -55,27 +30,6 @@ public class HandlerJsonParser extends BaseParser {
         getCompanyName(),
         getEmailAddress(),
         getPassword());
-  }
-
-  // WARNING: Should only be called after isValid() has been checked to be true
-  public String getCompanyName() {
-    ensureValid();
-
-    return companyName;
-  }
-
-  // WARNING: Should only be called after isValid() has been checked to be true
-  public String getEmailAddress() {
-    ensureValid();
-
-    return emailAddress;
-  }
-
-  // WARNING: Should only be called after isValid() has been checked to be true
-  public String getPassword() {
-    ensureValid();
-
-    return password;
   }
 
   /* 
@@ -138,7 +92,7 @@ public class HandlerJsonParser extends BaseParser {
     return data.findValue(HandlerJsonConstants.PASSWORD).asText();
   }
 
-  private static class HandlerJsonConstants {
+  private static class UserJsonConstants {
     private static final String COMPANY_NAME = "company_name";
     private static final String EMAIL_ADDRESS = "email_address";
     private static final String PASSWORD = "password";
