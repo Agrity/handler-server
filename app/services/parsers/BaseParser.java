@@ -3,9 +3,12 @@ package services.parsers;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import models.Handler;
+import models.Trader;
 
 import services.HandlerService;
 import services.impl.EbeanHandlerService;
+import services.TraderService;
+import services.impl.EbeanTraderService;
 
 /**
  * Base class to parse json data. Intended to be extended for specific json data types.
@@ -18,11 +21,13 @@ public abstract class BaseParser {
   private boolean validitySet = false;
 
   protected final HandlerService handlerService;
+  protected final TraderService traderService;
 
   public BaseParser() {
     // TODO -- Extremely Hacky -- Change to Dependency Injection.
     //      See Guice AssistedInjection
     handlerService = new EbeanHandlerService();
+    traderService = new EbeanTraderService();
   }
 
   public boolean isValid() {
@@ -105,6 +110,33 @@ public abstract class BaseParser {
     return handler;
   }
 
+  protected Trader parseTrader(JsonNode data) {
+    // Check trader id is present.
+    if (!data.has(JsonConstants.TRADER_ID)) {
+      setInvalid(missingParameterError(JsonConstants.TRADER_ID));
+      return null;
+
+    } 
+
+    String traderIdStr = data.findValue(JsonConstants.TRADER_ID).asText();
+
+    // Ensure trader id is valid integer format.
+    Long traderId = parseLong(traderIdStr);
+    if (traderId == null) {
+      setInvalid("Trader id value [" + traderIdStr + "] is not a valid long integer.\n");
+      return null;
+    }
+    
+    // Check trader exists with given id.
+    Trader trader = traderService.getById(traderId);
+    if (trader == null) {
+      setInvalid("Trader does not exist with trader id [" + traderId + "].\n");
+      return null;
+    }
+
+    return trader;
+  }
+
   /*
    * Wrapper to parse given string to long. If string is null, or not in proper integer format,
    * null will be returned instead.
@@ -156,5 +188,6 @@ public abstract class BaseParser {
 
   protected static class JsonConstants {
     private static final String HANDLER_ID = "handler_id";
+    private static final String TRADER_ID = "trader_id";
   }
 }

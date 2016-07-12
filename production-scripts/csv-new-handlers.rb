@@ -7,8 +7,16 @@ if !ARGV[0] then
   exit
 end
 
+skip = true
+
 CSV.foreach(ARGV[0]) do |row|
-  #puts "#{row[0]} #{row[1]} #{row[2]}"
+  if skip then
+    if row[0] == '~~~' then
+      skip = false
+    end
+    next
+  end
+
   system("./new-handler.sh '#{row[0]}' '#{row[1]}' '#{row[2]}' >> result")
   system("echo >> result")
   system("echo >> result")
