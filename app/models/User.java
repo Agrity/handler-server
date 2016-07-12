@@ -13,9 +13,16 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public abstract class User extends BaseModel {
 
+  //TODO change name to UserColumns?
 	@Constraints.Required
   @Column(name = DBConstants.HandlerColumns.COMPANY_NAME, nullable = false)
   private String companyName;
+
+  @Constraints.Required
+  private String firstName;
+
+  @Constraints.Required
+  private String lastName;
 
 	/* ===================================== Authentication ===================================== */
 
@@ -53,6 +60,21 @@ public abstract class User extends BaseModel {
     return companyName;
   }
 
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
+
+  public String getFirstName() {
+    return firstName;
+  }
+
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
+
+  public String getLastName() {
+    return lastName;
+  }
 
   public void setEmailAddress(String emailAddress) {
     this.emailAddress = emailAddress.toLowerCase();

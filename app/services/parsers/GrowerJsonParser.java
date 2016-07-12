@@ -57,13 +57,13 @@ public class GrowerJsonParser extends BaseParser {
       return;
     }
     
-    firstName = parseGrowerName(data, GrowerJsonConstants.FIRST_NAME);
+    firstName = parseName(data, GrowerJsonConstants.FIRST_NAME);
     if (firstName == null) {
       // Parser set to invalid with proper error message.
       return;
     }
 
-    lastName = parseGrowerName(data, GrowerJsonConstants.LAST_NAME);
+    lastName = parseName(data, GrowerJsonConstants.LAST_NAME);
     if (lastName == null) {
       // Parser set to invalid with proper error message.
       return;
@@ -135,27 +135,6 @@ public class GrowerJsonParser extends BaseParser {
   public List<PhoneNumber> getPhoneNumbers() {
     ensureValid();
     return phoneNumbers;
-  }
-
-  /* 
-   * Attempt to extract the grower name from the given json data. Parameter name of the json data
-   * to be extracted is given by parameterName. If there is an error, the parser will be set to
-   * invalid with appropriate error message, and null will be returned.
-   *
-   * WARNING: Parser set to invalid if error is encountered.
-   */
-  private String parseGrowerName(JsonNode data, String paramaterName) {
-    // Ensure parameterName is present.
-    if (!data.has(paramaterName)) {
-      setInvalid(missingParameterError(paramaterName));
-      return null;
-    } 
-    String name = data.findValue(paramaterName).asText();
-    
-    
-    // TODO Check valid human name. (i.e. length, no numbers, etc.)
-    
-    return name;
   }
 
   /* 
