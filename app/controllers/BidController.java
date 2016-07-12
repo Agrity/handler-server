@@ -17,6 +17,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 
 import utils.JsonMsgUtils;
+import services.messaging.MessageServiceConstants;
 
 public class BidController extends Controller {
   
@@ -67,7 +68,7 @@ public class BidController extends Controller {
     if (grower == null) {
       return notFound(JsonMsgUtils.offerNotFoundMessage(growerId));
     }
-    return ok(views.html.partialAcceptPage.render(offer, grower));
+    return ok(views.html.partialAcceptPage.render(offer, grower, MessageServiceConstants.EmailFields.getDomain()));
   }
 
 }

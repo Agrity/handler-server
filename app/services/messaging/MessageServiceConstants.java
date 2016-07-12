@@ -15,6 +15,7 @@ public abstract class MessageServiceConstants {
     // Used for SendGrid
     private static final String FROM_NAME = "Agrity";
     private static final String FROM_EMAIL_ADDRESS = "noreply@agrity.net";
+    private static final String DOMAIN = "http://localhost:9000";
 
     // Used for Raw Email
     private static final String FROM_ADDRESS = "Agrity <noreply@agrity.net>";
@@ -27,8 +28,12 @@ public abstract class MessageServiceConstants {
       return FROM_EMAIL_ADDRESS;
     }
 
+    public static String getDomain() {
+      return DOMAIN;
+    }
+
     public static String getEmailHTMLContent(Offer offer, Grower grower) {
-      return views.html.emailOfferBody.render(offer, grower).toString();
+      return views.html.emailOfferBody.render(offer, grower, DOMAIN).toString();
     }
 
     public static String getFromAddress() {

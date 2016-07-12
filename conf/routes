@@ -116,7 +116,7 @@ GET     /offers/:offerId/reject/:growerId         controllers.BidController.reje
 
 GET     /offers/:offerId/requestcall/:growerId    controllers.AdminOfferController.requestCall(offerId: Long, growerId: Long)
 
-GET     /offers/:offerId/partial/:growerId    controllers.BidController.displayPartialPage(offerId: Long, growerId: Long)
+GET     /offers/:offerId/partial/:growerId        controllers.BidController.displayPartialPage(offerId: Long, growerId: Long)
 
 # ========== Message Recieving ========== #
 
