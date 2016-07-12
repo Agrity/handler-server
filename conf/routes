@@ -107,14 +107,18 @@ PUT     /handler/offers/:offerId                 controllers.HandlerController.u
 GET     /handler/offers/:offerId                 controllers.HandlerController.getOffer(offerId: Long)
 
 
-# ========== **TEMP** Response to Offer ========== #
+# ========== Response to Offer ========== #
 
 
-GET     /offers/:offerId/accept/:growerId controllers.AdminOfferController.acceptOffer(offerId: Long, growerId: Long)
+GET     /offers/:offerId/accept/:growerId         controllers.BidController.acceptOffer(offerId: Long, growerId: Long)
 
-GET     /offers/:offerId/reject/:growerId         controllers.AdminOfferController.rejectOffer(offerId: Long, growerId: Long)
+GET     /offers/:offerId/reject/:growerId         controllers.BidController.rejectOffer(offerId: Long, growerId: Long)
 
 GET     /offers/:offerId/requestcall/:growerId    controllers.AdminOfferController.requestCall(offerId: Long, growerId: Long)
+
+GET     /offers/:offerId/partial/:growerId        controllers.BidController.displayPartialPage(offerId: Long, growerId: Long)
+
+GET     /offers/:offerId/accept/:growerId/:pounds   controllers.BidController.acceptPartial(offerId: Long, growerId: Long, pounds: Long)
 
 # ========== Message Recieving ========== #
 
