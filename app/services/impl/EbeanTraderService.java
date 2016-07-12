@@ -22,8 +22,9 @@ public class EbeanTraderService implements TraderService {
     return FINDER.all();
   }
 
+  @Override
   public Trader getById(long id) {
-    return Finder.byId(id);
+    return FINDER.byId(id);
   }
 
   @Override
