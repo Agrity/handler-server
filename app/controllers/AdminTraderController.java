@@ -35,4 +35,52 @@ public class AdminTraderController extends Controller {
 
     this.jsonMapper = new ObjectMapper();
   }
+
+  // Annotation ensures that POST request is of type application/json. If not HTTP 400 response
+  // returned.
+  @BodyParser.Of(BodyParser.Json.class)
+  public Result createTrader() {
+    JsonNode data = request().body().asJson();
+
+    if (data == null) {
+      return badRequest(JsonMsgUtils.expectingData());
+    }
+
+    UserJsonParser parser = new UserJsonParser(data);
+
+    if (!parser.isValid()) {
+      return badRequest(JsonMsgUtils.caughtException(parser.getErrorMessage()));
+    }
+
+    Trader trader = parser.formTrader();
+    trader.save();
+
+    try {
+      return created(jsonMapper.writeValueAsString(trader));
+    } catch (JsonProcessingException e) {
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
+    }
+  }
+
+  public Result getAllTraders() {
+    try {
+      return ok(jsonMapper.writeValueAsString(traderService.getAll()));
+    } catch (JsonProcessingException e) {
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
+    }
+  }
+
+  public Result getTrader(long id) {
+    Trader trader = traderService.getById(id);
+
+    if (trader == null) {
+      return notFound(JsonMsgUtils.traderNotFoundMessage(id));
+    }
+
+    try {
+      return ok(jsonMapper.writeValueAsString(trader));
+    } catch (JsonProcessingException e) {
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
+    }
+  }
 }
