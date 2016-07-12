@@ -115,29 +115,22 @@ PUT     /handler/bids/:bidId                 controllers.HandlerController.updat
 GET     /handler/bids/:bidId                 controllers.HandlerController.getBid(bidId: Long)
 
 
-<<<<<<< HEAD
 # ========== **TEMP** Response to Bid ========== #
 
 
 GET     /bids/:bidId/accept/:growerId controllers.AdminHandlerBidController.acceptBid(bidId: Long, growerId: Long)
 
 GET     /bids/:bidId/reject/:growerId         controllers.AdminHandlerBidController.rejectBid(bidId: Long, growerId: Long)
-=======
-# ========== Response to Offer ========== #
-
-
-GET     /offers/:offerId/accept/:growerId         controllers.BidController.acceptOffer(offerId: Long, growerId: Long)
-
-GET     /offers/:offerId/reject/:growerId         controllers.BidController.rejectOffer(offerId: Long, growerId: Long)
->>>>>>> master
 
 GET     /bids/:bidId/requestcall/:growerId    controllers.AdminHandlerBidController.requestCall(bidId: Long, growerId: Long)
 
-GET     /offers/:offerId/partial/:growerId        controllers.BidController.displayPartialPage(offerId: Long, growerId: Long)
+GET     /bids/:bidId/partial/:growerId        controllers.BidController.displayPartialPage(offerId: Long, growerId: Long)
 
-GET     /offers/:offerId/accept/:growerId/:pounds   controllers.BidController.acceptPartial(offerId: Long, growerId: Long, pounds: Long)
+GET     /bids/:bidId/accept/:growerId/:pounds   controllers.BidController.acceptPartial(offerId: Long, growerId: Long, pounds: Long)
+
 
 # ========== Message Recieving ========== #
+
 
 GET     /messaging/response/twilio                controllers.MessageReceivingController.receiveTwilioResponse()
 

@@ -28,17 +28,15 @@ public abstract class MessageServiceConstants {
       return FROM_EMAIL_ADDRESS;
     }
 
-<<<<<<< HEAD
     public static String getEmailHTMLContent(HandlerBid handlerBid, Grower grower) {
       return views.html.emailBidBody.render(handlerBid, grower).toString();
-=======
+
     public static String getDomain() {
       return DOMAIN;
     }
 
-    public static String getEmailHTMLContent(Offer offer, Grower grower) {
-      return views.html.emailOfferBody.render(offer, grower, DOMAIN).toString();
->>>>>>> master
+    public static String getEmailHTMLContent(HandlerBid handlerBid, Grower grower) {
+      return views.html.emailBidBody.render(handlerBid, grower, DOMAIN).toString();
     }
 
     public static String getFromAddress() {
