@@ -25,6 +25,9 @@ public class UserJsonParser extends BaseParser {
   private String emailAddress;
   private String password;
 
+  private String firstName;
+  private String lastName;
+
   public UserJsonParser(JsonNode data) {
     super();
 
@@ -42,6 +45,18 @@ public class UserJsonParser extends BaseParser {
 
     password = parsePassword(data);
     if (password == null) {
+      // Parser set to invalid with proper error message.
+      return;
+    }
+
+    firstName = parseName(data, UserJsonConstants.FIRST_NAME);
+    if (firstName == null) {
+      // Parser set to invalid with proper error message.
+      return;
+    }
+
+    lastName = parseName(data, UserJsonConstants.LAST_NAME);
+    if (lastName == null) {
       // Parser set to invalid with proper error message.
       return;
     }
@@ -89,6 +104,16 @@ public class UserJsonParser extends BaseParser {
     ensureValid();
 
     return password;
+  }
+
+  public String getFirstName() {
+    ensureValid();
+    return firstName;
+  }
+
+  public String getLastName() {
+    ensureValid();
+    return lastName;
   }
 
   /* 
@@ -155,6 +180,10 @@ public class UserJsonParser extends BaseParser {
     private static final String COMPANY_NAME = "company_name";
     private static final String EMAIL_ADDRESS = "email_address";
     private static final String PASSWORD = "password";
+
+    private static final String FIRST_NAME = "first_name";
+    private static final String LAST_NAME = "last_name";
+
   }
 
 }
