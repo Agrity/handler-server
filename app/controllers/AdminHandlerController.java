@@ -16,7 +16,7 @@ import play.mvc.Security;
 
 import services.GrowerService;
 import services.HandlerService;
-import services.parsers.HandlerJsonParser;
+import services.parsers.UserJsonParser;
 
 import utils.JsonMsgUtils;
 
@@ -46,7 +46,7 @@ public class AdminHandlerController extends Controller {
       return badRequest(JsonMsgUtils.expectingData());
     }
 
-    HandlerJsonParser parser = new HandlerJsonParser(data);
+    UserJsonParser parser = new UserJsonParser(data);
 
     if (!parser.isValid()) {
       return badRequest(JsonMsgUtils.caughtException(parser.getErrorMessage()));

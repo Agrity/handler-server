@@ -15,6 +15,10 @@ public class JsonMsgUtils {
     return errorToJson("Handler with id '" + id + "' could not be found\n");
   } 
 
+  public static ObjectNode traderNotFoundMessage(Long id) {
+    return errorToJson("Trader with id '" + id + "' could not be found\n");
+  }
+
   public static ObjectNode growerNotFoundMessage(Long id) {
     return errorToJson("Grower with id '" + id + "' could not be found\n");
   }
