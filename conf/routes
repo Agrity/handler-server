@@ -11,129 +11,127 @@ GET     /assets/*file                         controllers.Assets.versioned(path=
 
 # ============================= API Responses =================================================== #
 
-GET     /                                               controllers.Application.home()
+GET     /                                                  controllers.Application.home()
 
-OPTIONS /*path                                          controllers.Application.options(path: String)
+OPTIONS /*path                                             controllers.Application.options(path: String)
 
 # ========== Admin Handler ========== #
 
 
-GET     /admin/handlers                                 controllers.AdminHandlerController.getAllHandlers()
+GET     /admin/handlers                                    controllers.AdminHandlerController.getAllHandlers()
 
-POST    /admin/handlers                                 controllers.AdminHandlerController.createHandler()
+POST    /admin/handlers                                    controllers.AdminHandlerController.createHandler()
 
-GET     /admin/handlers/:id                             controllers.AdminHandlerController.getHandler(id: Long)
+GET     /admin/handlers/:id                                controllers.AdminHandlerController.getHandler(id: Long)
 
-GET     /admin/handlers/:id/growers                     controllers.AdminHandlerController.getAllGrowers(id: Long)
+GET     /admin/handlers/:id/growers                        controllers.AdminHandlerController.getAllGrowers(id: Long)
 
-GET     /admin/handlers/:id/growers/:growerId           controllers.AdminHandlerController.getGrower(id: Long, growerId: Long)
+GET     /admin/handlers/:id/growers/:growerId              controllers.AdminHandlerController.getGrower(id: Long, growerId: Long)
 
-GET     /admin/handlers/:id/bids                      controllers.AdminHandlerBidController.getAllHandlerBids(id: Long)
+GET     /admin/handlers/:id/handlerBids                    controllers.AdminHandlerBidController.getAllHandlerBids(id: Long)
 
 # ========== Admin Trader ========== #
 
-GET      /admin/traders                                 controllers.AdminTraderController.getAllTraders()
+GET      /admin/traders                                    controllers.AdminTraderController.getAllTraders()
 
-POST     /admin/traders                                 controllers.AdminTraderController.createTrader()
+POST     /admin/traders                                    controllers.AdminTraderController.createTrader()
 
-GET      /admin/traders/:id                             controllers.AdminTraderController.getTrader(id: Long)
+GET      /admin/traders/:id                                controllers.AdminTraderController.getTrader(id: Long)
 
 
 # ========== Admin Grower ========== #
 
 
-GET     /admin/growers                                  controllers.AdminGrowerController.getAllGrowers()
+GET     /admin/growers                                     controllers.AdminGrowerController.getAllGrowers()
 
-POST    /admin/growers                                  controllers.AdminGrowerController.createGrower()
+POST    /admin/growers                                     controllers.AdminGrowerController.createGrower()
 
-DELETE  /admin/growers/:id                              controllers.AdminGrowerController.deleteGrower(id: Long)
+DELETE  /admin/growers/:id                                 controllers.AdminGrowerController.deleteGrower(id: Long)
 
-PUT     /admin/growers/:id                              controllers.AdminGrowerController.updateGrower(id: Long)
+PUT     /admin/growers/:id                                 controllers.AdminGrowerController.updateGrower(id: Long)
 
-GET     /admin/growers/:id                              controllers.AdminGrowerController.getGrower(id: Long)
+GET     /admin/growers/:id                                 controllers.AdminGrowerController.getGrower(id: Long)
 
-GET     /admin/growers/:id/bids                       controllers.AdminHandlerBidController.getAllGrowerBids(id: Long)
+GET     /admin/growers/:id/handlerBids                     controllers.AdminHandlerBidController.getAllGrowerBids(id: Long)
 
 
 # ========== Admin HandlerBid ========== #
 
 
-GET     /admin/bids                                   controllers.AdminHandlerBidController.getAllBids()
+GET     /admin/handlerBids                                 controllers.AdminHandlerBidController.getAllBids()
 
-POST    /admin/bids                                   controllers.AdminHandlerBidController.createBid()
+POST    /admin/handlerBids                                 controllers.AdminHandlerBidController.createBid()
 
-DELETE  /admin/bids/:id                               controllers.AdminHandlerBidController.deleteBid(id: Long)
+DELETE  /admin/handlerBids/:id                             controllers.AdminHandlerBidController.deleteBid(id: Long)
 
-PUT     /admin/bids/:id                               controllers.AdminHandlerBidController.updateBid(id: Long)
+PUT     /admin/handlerBids/:id                             controllers.AdminHandlerBidController.updateBid(id: Long)
 
-GET     /admin/bids/:id                               controllers.AdminHandlerBidController.getBid(id: Long)
+GET     /admin/handlerBids/:id                             controllers.AdminHandlerBidController.getBid(id: Long)
 
-GET     /admin/bids/:id/send                          controllers.AdminHandlerBidController.sendBid(id: Long)
+GET     /admin/handlerBids/:id/send                        controllers.AdminHandlerBidController.sendBid(id: Long)
 
-GET     /admin/bids/:bidId/accept/:growerId         controllers.AdminHandlerBidController.acceptBid(bidId: Long, growerId: Long)
+GET     /admin/handlerBids/:bidId/accept/:growerId         controllers.AdminHandlerBidController.acceptBid(bidId: Long, growerId: Long)
 
-GET     /admin/bids/:bidId/reject/:growerId         controllers.AdminHandlerBidController.rejectBid(bidId: Long, growerId: Long)
+GET     /admin/handlerBids/:bidId/reject/:growerId         controllers.AdminHandlerBidController.rejectBid(bidId: Long, growerId: Long)
 
-GET     /admin/bids/:bidId/requestcall/:growerId    controllers.AdminHandlerBidController.requestCall(bidId: Long, growerId: Long)
+GET     /admin/handlerBids/:bidId/requestcall/:growerId    controllers.AdminHandlerBidController.requestCall(bidId: Long, growerId: Long)
 
 
 # ========== Authentication ========== #
 
 
-POST    /handler/login                                    controllers.security.HandlerSecurityController.login()
+POST    /handler/login                                     controllers.security.HandlerSecurityController.login()
 
-POST    /handler/logout                                   controllers.security.HandlerSecurityController.logout()
+POST    /handler/logout                                    controllers.security.HandlerSecurityController.logout()
 
 
 # ========== Handler User ========== #
 
 
-GET     /handler                                 controllers.HandlerController.getHandler()
+GET     /handler                                           controllers.HandlerController.getHandler()
 
-GET     /handler/growers                         controllers.HandlerController.getAllGrowers()
+GET     /handler/growers                                   controllers.HandlerController.getAllGrowers()
 
-POST    /handler/growers                         controllers.HandlerController.createGrower()
+POST    /handler/growers                                   controllers.HandlerController.createGrower()
 
-GET     /handler/growers/:growerId               controllers.HandlerController.getGrower(growerId: Long)
+GET     /handler/growers/:growerId                         controllers.HandlerController.getGrower(growerId: Long)
 
-DELETE  /handler/growers/:growerId               controllers.HandlerController.deleteGrower(growerId: Long)
+DELETE  /handler/growers/:growerId                         controllers.HandlerController.deleteGrower(growerId: Long)
 
-PUT     /handler/growers/:growerId               controllers.HandlerController.updateGrower(growerId: Long)
+PUT     /handler/growers/:growerId                         controllers.HandlerController.updateGrower(growerId: Long)
 
-GET     /handler/bids/:id/send                 controllers.HandlerController.sendBid(id: Long)
+GET     /handler/handlerBids/:id/send                      controllers.HandlerController.sendBid(id: Long)
 
-GET     /handler/growers/:growerId/bids        controllers.HandlerController.getGrowersBids(growerId: Long)
+GET     /handler/growers/:growerId/handlerBids             controllers.HandlerController.getGrowersBids(growerId: Long)
 
-GET     /handler/bids                          controllers.HandlerController.getAllBids()
+GET     /handler/handlerBids                               controllers.HandlerController.getAllBids()
 
-POST    /handler/bids                          controllers.HandlerController.createBid()
+POST    /handler/handlerBids                               controllers.HandlerController.createBid()
 
-DELETE  /handler/bids/:bidId                 controllers.HandlerController.deleteBid(bidId: Long)
+DELETE  /handler/handlerBids/:bidId                        controllers.HandlerController.deleteBid(bidId: Long)
 
-PUT     /handler/bids/:bidId                 controllers.HandlerController.updateBid(bidId: Long) 
+PUT     /handler/handlerBids/:bidId                        controllers.HandlerController.updateBid(bidId: Long) 
 
-GET     /handler/bids/:bidId                 controllers.HandlerController.getBid(bidId: Long)
+GET     /handler/handlerBids/:bidId                        controllers.HandlerController.getBid(bidId: Long)
 
 
 # ========== **TEMP** Response to Bid ========== #
 
 
-GET     /bids/:bidId/accept/:growerId controllers.AdminHandlerBidController.acceptBid(bidId: Long, growerId: Long)
+GET     /handlerBids/:bidId/accept/:growerId               controllers.HandlerBidController.acceptBid(bidId: Long, growerId: Long)
 
-GET     /bids/:bidId/reject/:growerId         controllers.AdminHandlerBidController.rejectBid(bidId: Long, growerId: Long)
+GET     /handlerBids/:bidId/reject/:growerId               controllers.HandlerBidController.rejectBid(bidId: Long, growerId: Long)
 
-GET     /bids/:bidId/requestcall/:growerId    controllers.AdminHandlerBidController.requestCall(bidId: Long, growerId: Long)
+GET     /handlerBids/:bidId/partial/:growerId              controllers.HandlerBidController.displayPartialPage(bidId: Long, growerId: Long)
 
-GET     /bids/:bidId/partial/:growerId        controllers.BidController.displayPartialPage(offerId: Long, growerId: Long)
-
-GET     /bids/:bidId/accept/:growerId/:pounds   controllers.BidController.acceptPartial(offerId: Long, growerId: Long, pounds: Long)
+GET     /handlerBids/:bidId/accept/:growerId/:pounds       controllers.HandlerBidController.acceptPartial(bidId: Long, growerId: Long, pounds: Long)
 
 
 # ========== Message Recieving ========== #
 
 
-GET     /messaging/response/twilio                controllers.MessageReceivingController.receiveTwilioResponse()
+GET     /messaging/response/twilio                         controllers.MessageReceivingController.receiveTwilioResponse()
 
-POST    /messaging/response/twilio                controllers.MessageReceivingController.receiveTwilioResponse()
+POST    /messaging/response/twilio                         controllers.MessageReceivingController.receiveTwilioResponse()
 
-GET     /messaging/response/twilio/number         controllers.MessageReceivingController.numberTwilioResponses()
+GET     /messaging/response/twilio/number                  controllers.MessageReceivingController.numberTwilioResponses()
