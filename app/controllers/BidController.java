@@ -34,18 +34,32 @@ public class BidController extends Controller {
   //  this.jsonMapper = new ObjectMapper();
   }
 
+  /* Accept whole offer */
   public Result acceptOffer(long offerId, long growerId) {
     Offer offer = offerService.getById(offerId);
     if (offer == null) {
       return notFound(JsonMsgUtils.offerNotFoundMessage(offerId));
     }
 
-    // TODO Change to actual pounds accepted once implemented.
     OfferResponseResult success = offer.growerAcceptOffer(growerId, offer.getAlmondPounds());
     
     return success.isValid() ? ok(JsonMsgUtils.successfullAccept())
         : internalServerError(JsonMsgUtils.offerNotAccepted(success.getInvalidResponseMessage()));
   }
+
+  /* Partially accept offer */
+  public Result acceptPartial(long offerId, long growerId, long pounds) {
+    Offer offer = offerService.getById(offerId);
+    if (offer == null) {
+      return notFound(JsonMsgUtils.offerNotFoundMessage(offerId));
+    }
+
+    // TODO Change to actual pounds accepted once implemented.
+    OfferResponseResult success = offer.growerAcceptOffer(growerId, pounds);
+    
+    return success.isValid() ? ok(JsonMsgUtils.successfullAccept())
+        : internalServerError(JsonMsgUtils.offerNotAccepted(success.getInvalidResponseMessage()));
+  }  
 
   public Result rejectOffer(long offerId, long growerId) {
     Offer offer = offerService.getById(offerId);

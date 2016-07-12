@@ -118,6 +118,8 @@ GET     /offers/:offerId/requestcall/:growerId    controllers.AdminOfferControll
 
 GET     /offers/:offerId/partial/:growerId        controllers.BidController.displayPartialPage(offerId: Long, growerId: Long)
 
+GET     /offers/:offerId/accept/:growerId/:pounds   controllers.BidController.acceptPartial(offerId: Long, growerId: Long, pounds: Long)
+
 # ========== Message Recieving ========== #
 
 GET     /messaging/response/twilio                controllers.MessageReceivingController.receiveTwilioResponse()
