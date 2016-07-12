@@ -35,7 +35,7 @@ public class TraderSecurityController extends Controller {
   }
 
   public static Trader getTrader() {
-    return (Trader)Http.Context.current().args.get(HANDLER_KEY);
+    return (Trader)Http.Context.current().args.get(TRADER_KEY);
   }
 
   // Returns an authToken
