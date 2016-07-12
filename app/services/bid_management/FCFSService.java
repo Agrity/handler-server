@@ -5,7 +5,7 @@ import java.time.Duration;
 import java.util.*;
 
 import models.HandlerBid;
-import models.HandlerBid.BidStatus;
+import models.BaseBid.BidStatus;
 import models.BidResponseResult;
 import models.Grower;
 

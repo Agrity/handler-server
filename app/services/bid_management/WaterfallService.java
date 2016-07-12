@@ -3,7 +3,7 @@ package services.bid_management;
 import java.util.*;
 
 import models.HandlerBid;
-import models.HandlerBid.BidStatus;
+import models.BaseBid.BidStatus;
 import models.BidResponseResult;
 import models.Grower;
 import java.time.Duration;

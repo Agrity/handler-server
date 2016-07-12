@@ -37,15 +37,9 @@ import java.util.Date;
 @Entity
 public class HandlerBid extends BaseBid implements PrettyString {
 
-  public static enum BidStatus{
-    OPEN, 
-    REJECTED, 
-    ACCEPTED,
-    PARTIAL,
-  }
-
 
   /* ======================================= Attributes ======================================= */
+
 
   @ManyToOne
   @Constraints.Required
@@ -67,12 +61,6 @@ public class HandlerBid extends BaseBid implements PrettyString {
 
   private LocalDate endPaymentDate;
 
-  private String managementService;
-
-  private BidStatus bidCurrentlyOpen = BidStatus.OPEN;
-
-  private LocalDateTime expirationTime;
-
 
   /* ==================================== Static Functions ==================================== */
 
@@ -89,13 +77,12 @@ public class HandlerBid extends BaseBid implements PrettyString {
       LocalDate endPaymentDate, String comment, String managementService, LocalDateTime expirationTime) {
     super();
 
-    this.handler = handler;
-
     bidResponses =
       allGrowers.stream()
       .map(grower -> new BidResponse(grower))
       .collect(Collectors.toSet());
 
+    this.handler = handler;
     this.growers = allGrowers;
     setAlmondVariety(almondVariety);
     this.almondSize = almondSize;
@@ -104,8 +91,8 @@ public class HandlerBid extends BaseBid implements PrettyString {
     this.startPaymentDate = startPaymentDate;
     this.endPaymentDate = endPaymentDate;
     setComment(comment);
-    this.managementService = managementService;
-    this.expirationTime = expirationTime;
+    setManagementService(managementService);
+    setExpirationTime(expirationTime);
   }
 
 
@@ -141,24 +128,9 @@ public class HandlerBid extends BaseBid implements PrettyString {
     return DateService.dateToString(endPaymentDate);
   }
 
-  public boolean getBidCurrentlyOpen() {
-    return bidCurrentlyOpen == BidStatus.OPEN;
-  }
-
-  public String getManagementService() {
-    return managementService;
-  }
-
-  public LocalDateTime getExpirationTime() {
-    return expirationTime;
-  }
-
-  public String getExpirationTimeAsString() {
-    return expirationTime.toString();
-  }
-
 
   /* === Setter Functions === */
+
 
   public void setAlmondSize(String newSize) {
     almondSize = newSize;
@@ -175,12 +147,12 @@ public class HandlerBid extends BaseBid implements PrettyString {
 
   /* === Member Functions === */
 
+
   public void closeBid(BidStatus status) {
-    bidCurrentlyOpen = BidStatus.REJECTED;
+    setBidStatus(BidStatus.REJECTED);
     BidManagementService.removeBidManagementService(this);
     save();
   }
-
 
   public List<Grower> getAcceptedGrowers() {
     return getGrowersWithResponse(ResponseStatus.ACCEPTED);
@@ -210,7 +182,6 @@ public class HandlerBid extends BaseBid implements PrettyString {
     return bidResponses;
   }
 
-
   @JsonIgnore
   public List<ResponseStatus> getAllBidResponseStatuses() {
     return getBidResponses().stream()
@@ -229,9 +200,8 @@ public class HandlerBid extends BaseBid implements PrettyString {
     }
   }
 
-
   public BidResponseResult growerAcceptBid(Long growerId, long pounds) {
-    if (bidCurrentlyOpen != BidStatus.OPEN) {
+    if (!bidCurrentlyOpen()) {
       return BidResponseResult.getInvalidResult("Cannot accept HandlerBid because the HandlerBid has already closed.");
     }
       
@@ -267,7 +237,7 @@ public class HandlerBid extends BaseBid implements PrettyString {
   }
 
   public BidResponseResult growerRejectBid(Long growerId) {
-    if (bidCurrentlyOpen != BidStatus.OPEN) {
+    if (!bidCurrentlyOpen()) {
       return BidResponseResult.getInvalidResult("There is no need to reject the HandlerBid because the HandlerBid has closed.");
     } 
     
@@ -303,7 +273,7 @@ public class HandlerBid extends BaseBid implements PrettyString {
   }
 
   public BidResponseResult growerRequestCall(Long growerId) {
-    if (bidCurrentlyOpen != BidStatus.OPEN) {
+    if (!bidCurrentlyOpen()) {
       return BidResponseResult.getInvalidResult("Can not request call because the HandlerBid has already closed.");
     }  
 
@@ -322,11 +292,6 @@ public class HandlerBid extends BaseBid implements PrettyString {
     growerBidResponse.save();
     
     return BidResponseResult.getValidResult(); 
-  }
-
-  @Override
-  public String toString() {
-    return "(" + id + ") " + getAlmondVariety();
   }
 
   @Override
