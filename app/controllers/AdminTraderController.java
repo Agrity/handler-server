@@ -16,7 +16,7 @@ import play.mvc.Security;
 
 import services.TraderService;
 import services.HandlerService;
-import services.parsers.HandlerJsonParser;
+import services.parsers.UserJsonParser;
 
 import utils.JsonMsgUtils;
 

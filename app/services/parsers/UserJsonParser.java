@@ -6,13 +6,13 @@ import models.User;
 import models.Trader;
 import models.Handler;
 
-public class UserParser extends BaseParser {
+public class UserJsonParser extends BaseParser {
   // Parsed variables
   private String companyName;
   private String emailAddress;
   private String password;
 
-  public UserParser(JsonNode data) {
+  public UserJsonParser(JsonNode data) {
     super();
 
     companyName = parseCompanyName(data);
