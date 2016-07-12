@@ -1,5 +1,7 @@
 package models;
 
+import com.avaje.ebean.Ebean;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.text.NumberFormat;
@@ -65,9 +67,6 @@ public class HandlerBid extends BaseBid implements PrettyString {
 
   private LocalDate endPaymentDate;
 
-  @Column(columnDefinition = "TEXT")
-  private String comment = "";
-
   private String managementService;
 
   private BidStatus bidCurrentlyOpen = BidStatus.OPEN;
@@ -104,7 +103,7 @@ public class HandlerBid extends BaseBid implements PrettyString {
     setPricePerPound(pricePerPound);
     this.startPaymentDate = startPaymentDate;
     this.endPaymentDate = endPaymentDate;
-    this.comment = comment;
+    setComment(comment);
     this.managementService = managementService;
     this.expirationTime = expirationTime;
   }
@@ -140,10 +139,6 @@ public class HandlerBid extends BaseBid implements PrettyString {
 
   public String getEndPaymentDateAsString() {
     return DateService.dateToString(endPaymentDate);
-  }
-
-  public String getComment() {
-    return comment;
   }
 
   public boolean getBidCurrentlyOpen() {
@@ -204,24 +199,29 @@ public class HandlerBid extends BaseBid implements PrettyString {
   }
 
   private List<Grower> getGrowersWithResponse(ResponseStatus response) {
-    return bidResponses.stream()
-      .filter(BidResponse -> BidResponse.getResponseStatus().equals(response))
-      .map(BidResponse -> BidResponse.getGrower())
+    return getBidResponses().stream()
+      .filter(bidResponse -> bidResponse.getResponseStatus().equals(response))
+      .map(bidResponse -> bidResponse.getGrower())
       .collect(Collectors.toList());
+  }
+
+  @JsonIgnore
+  public Set<BidResponse> getBidResponses() {
+    return bidResponses;
   }
 
 
   @JsonIgnore
-  public List<ResponseStatus> getAllbidResponsestatuses() {
-    return bidResponses.stream()
-      .map(BidResponse -> BidResponse.getResponseStatus())
+  public List<ResponseStatus> getAllBidResponseStatuses() {
+    return getBidResponses().stream()
+      .map(bidResponse -> bidResponse.getResponseStatus())
       .collect(Collectors.toList());
   }
 
   public BidResponse getGrowerBidResponse(long growerId) {
     try {
-      return bidResponses.stream()
-        .filter(BidResponse -> BidResponse.getGrower().getId().equals(growerId))
+      return getBidResponses().stream()
+        .filter(bidResponse -> bidResponse.getGrower().getId().equals(growerId))
         .findFirst()
         .get();
     } catch(NoSuchElementException e) {
@@ -253,9 +253,9 @@ public class HandlerBid extends BaseBid implements PrettyString {
         = BidManagementService.getBidManagementService(this);
 
     if (managementService != null) {
-      BidResponseResult BidResponseResult = managementService.accept(pounds, growerId);
-      if (!BidResponseResult.isValid()) {
-        return BidResponseResult;
+      BidResponseResult bidResponseResult = managementService.accept(pounds, growerId);
+      if (!bidResponseResult.isValid()) {
+        return bidResponseResult;
       }
     } 
     else {

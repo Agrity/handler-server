@@ -25,6 +25,8 @@ import services.parsers.HandlerBidJsonParser.ManagementTypeInfo;
 
 import utils.JsonMsgUtils;
 
+import play.Logger;
+
 import services.bid_management.WaterfallService;
 
 public class AdminHandlerBidController extends Controller {

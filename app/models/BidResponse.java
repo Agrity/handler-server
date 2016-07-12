@@ -3,6 +3,7 @@ package models;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
+import play.Logger;
 
 @Entity
 public class BidResponse extends BaseModel {
@@ -20,7 +21,7 @@ public class BidResponse extends BaseModel {
   private Grower grower;
 
   @ManyToOne
-  private HandlerBid bid;
+  private HandlerBid handlerBid;
 
   private ResponseStatus responseStatus;
 
@@ -40,7 +41,6 @@ public class BidResponse extends BaseModel {
 
   /* === Attribute Accessors === */
 
-
   public Long getId() {
     return id;
   }
@@ -50,7 +50,7 @@ public class BidResponse extends BaseModel {
   }
 
   public HandlerBid getBid() {
-    return bid;
+    return handlerBid;
   }
 
   public ResponseStatus getResponseStatus() {
@@ -63,6 +63,6 @@ public class BidResponse extends BaseModel {
 
   @Override
   public String toString() {
-    return "(" + grower.getId() + ") -> (" + bid.getId() + ") " + grower.getFullName() + "\n";
+    return "(" + grower.getId() + ") -> (" + handlerBid.getId() + ") " + grower.getFullName() + "\n";
   }
 }
