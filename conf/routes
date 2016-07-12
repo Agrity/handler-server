@@ -30,6 +30,14 @@ GET     /admin/handlers/:id/growers/:growerId           controllers.AdminHandler
 
 GET     /admin/handlers/:id/offers                      controllers.AdminOfferController.getAllHandlerOffers(id: Long)
 
+# ========== Admin Trader ========== #
+
+GET      /admin/traders                                 controllers.AdminTraderController.getAllTraders()
+
+POST     /admin/traders                                 controllers.AdminTraderController.createTrader()
+
+GET      /admin/traders/:id                             controllers.AdminTraderController.getTrader(id: Long)
+
 
 # ========== Admin Grower ========== #
 

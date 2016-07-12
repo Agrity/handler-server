@@ -15,7 +15,7 @@ import play.mvc.Result;
 import play.mvc.Security;
 
 import services.TraderService;
-import services.HandlerService;
+//import services.HandlerService;
 import services.parsers.UserJsonParser;
 
 import utils.JsonMsgUtils;
@@ -24,14 +24,14 @@ import utils.JsonMsgUtils;
 public class AdminTraderController extends Controller {
 
   private final TraderService traderService;
-  private final HandlerService handlerService;
+//  private final HandlerService handlerService;
 
   private final ObjectMapper jsonMapper;
 
   @Inject
-  public AdminTraderController(TraderService traderService, HandlerService handlerService) {
+  public AdminTraderController(TraderService traderService) {    // , HandlerService handlerService) {
     this.traderService = traderService;
-    this.handlerService = handlerService;
+    //this.handlerService = handlerService;
 
     this.jsonMapper = new ObjectMapper();
   }
