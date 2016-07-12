@@ -39,7 +39,7 @@
       } else if(input < 1){
         alert("Please enter a value greater than 0");
       } else {
-        var redirect = "@domain/bids/@handlerBid.getId()/accept/@grower.getId()/" + input;
+        var redirect = "@domain/handlerBids/@handlerBid.getId()/accept/@grower.getId()/" + input;
         window.location.replace(redirect);
       }
     }
