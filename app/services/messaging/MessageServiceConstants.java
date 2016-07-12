@@ -15,6 +15,8 @@ public abstract class MessageServiceConstants {
     // Used for SendGrid
     private static final String FROM_NAME = "Agrity";
     private static final String FROM_EMAIL_ADDRESS = "noreply@agrity.net";
+
+    /* ===== TEMP FOR TESTING ===== */
     private static final String DOMAIN = "http://localhost:9000";
 
     // Used for Raw Email
