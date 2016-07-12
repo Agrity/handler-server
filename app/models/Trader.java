@@ -22,10 +22,9 @@ public class Trader extends User implements PrettyString {
 
   /* ====================================== Constructors ====================================== */
 
-  public Trader(String companyName, String emailAddress, String password) {
-    setCompanyName(companyName);
-    setEmailAddress(emailAddress);
-    setPassword(password);
+  public Trader(String companyName, String firstName, String lastName, 
+                String emailAddress, List<PhoneNumber> phoneNumbers, String password) {
+    super(companyName, firstName, lastName, emailAddress, phoneNumbers, password);
     handlerList = new ArrayList<>();
   }
 

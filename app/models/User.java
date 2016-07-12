@@ -10,6 +10,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.UUID;
 import javax.persistence.MappedSuperclass;
 
+import models.PhoneNumber;
+
+import java.util.ArrayList;
+import java.util.List;
+
 @MappedSuperclass
 public abstract class User extends BaseModel {
 
@@ -33,6 +38,10 @@ public abstract class User extends BaseModel {
   @Column(nullable = false)
   private String emailAddress;
 
+
+  @Column(nullable = false)
+  private List<PhoneNumber> phoneNumbers;
+
   // Cleartext password. Not Saved to database.
   @Transient
   @Constraints.Required
@@ -48,6 +57,16 @@ public abstract class User extends BaseModel {
   // Used to keep track of user signed in on a given device. Will be stored here and in browser
   // when logged in, and will be erased when logged out.
   private String authToken;
+
+  public User(String companyName, String firstName, String lastName, 
+              String emailAddress,  List<PhoneNumber> phoneNumbers, String password) {
+    setCompanyName(companyName);
+    setFirstName(firstName);
+    setLastName(lastName);
+    setEmailAddress(emailAddress);
+    setPhoneNumbers(phoneNumbers);
+    setPassword(password);
+  }
 
   /* ==================================== Member Accessors ==================================== */
 
@@ -97,6 +116,14 @@ public abstract class User extends BaseModel {
   public String getShaPassword() {
     return shaPassword;
   } 
+
+  public void setPhoneNumbers(List<PhoneNumber> phoneNumbers) {
+    this.phoneNumbers = phoneNumbers;
+  }
+
+  public List<PhoneNumber> getPhoneNumbers() {
+    return phoneNumbers;
+  }
 
   public String createToken() {
     authToken = UUID.randomUUID().toString();

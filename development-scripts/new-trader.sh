@@ -15,7 +15,7 @@ if ! [[ -z $COMPANY_NAME ]]; then
       --header "Content-type: application/json" \
       --header "X-ADMIN-TOKEN: development-use-only" \
       --request POST \
-      --data "{ \"company_name\" : \"$COMPANY_NAME\", \"first_name\" : \"F_NAME\", \"last_name\" : \"L_NAME\", \"email_address\" : \"$EMAIL_ADDRESS\", \"password\" : \"$PASSWORD\" }" \
+      --data "{ \"company_name\" : \"$COMPANY_NAME\", \"first_name\" : \"F_NAME\", \"last_name\" : \"L_NAME\", \"email_address\" : \"$EMAIL_ADDRESS\", \"phone_numbers\" : [\"1234567890\"], \"password\" : \"$PASSWORD\" }" \
       localhost:9000/admin/traders
 
   else

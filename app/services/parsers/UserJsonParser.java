@@ -5,6 +5,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import models.User;
 import models.Trader;
 import models.Handler;
+import models.PhoneNumber;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class to parse json data to create new Handler.
@@ -27,6 +31,8 @@ public class UserJsonParser extends BaseParser {
 
   private String firstName;
   private String lastName;
+
+  private List<PhoneNumber> phoneNumbers;
 
   public UserJsonParser(JsonNode data) {
     super();
@@ -61,6 +67,12 @@ public class UserJsonParser extends BaseParser {
       return;
     }
 
+    phoneNumbers = parsePhoneNumbers(data);
+    if (phoneNumbers == null) {
+      // Parser set to invalid with proper error message.
+      return;
+    }
+
     // Valid json data received and processed.
     setValid();
   }
@@ -71,7 +83,10 @@ public class UserJsonParser extends BaseParser {
     }
     return new Handler(
         getCompanyName(),
+        getFirstName(),
+        getLastName(),
         getEmailAddress(),
+        getPhoneNumbers(),
         getPassword());
   }
 
@@ -81,7 +96,10 @@ public class UserJsonParser extends BaseParser {
     }
     return new Trader(
         getCompanyName(),
+        getFirstName(),
+        getLastName(),
         getEmailAddress(),
+        getPhoneNumbers(),
         getPassword());
   }
 
@@ -114,6 +132,11 @@ public class UserJsonParser extends BaseParser {
   public String getLastName() {
     ensureValid();
     return lastName;
+  }
+
+  public List<PhoneNumber> getPhoneNumbers() {
+    ensureValid();
+    return phoneNumbers;
   }
 
   /* 
