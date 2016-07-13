@@ -163,53 +163,6 @@ public abstract class BaseParser {
     return name;
   }
 
-  /* 
-   * Attempt to extract phone numbers from the given json data, via the HANDLER_ID field. If there
-   * is an error, the parser will be set to invalid with appropriate error message, and null will
-   * be returned.
-   * 
-   * Note: Phone numbers are an optional parameter so an error will not be set if the value is not
-   * found in the json data. And empty List will be returned instead.
-   *
-   * WARNING: Parser set to invalid if error is encountered.
-   */
-  protected List<PhoneNumber> parsePhoneNumbers(JsonNode data) {
-    // Phone numbers not present in json node. Returning empty list.
-
-
-    if (!data.has(JsonConstants.PHONE_NUMBERS)) {
-      return new ArrayList<>();
-    }
-
-    JsonNode phoneNums = data.get(JsonConstants.PHONE_NUMBERS);
-
-    // Phone numbers should be formatted as an array of strings.
-    if (!phoneNums.isArray()) {
-      setInvalid("Phone Number Format Invalid: array of strings expected.");
-      return null;
-    }
-
-    List<String> processedPhoneNumbers = new ArrayList<>();
-
-    for (JsonNode node : phoneNums) {
-      String phoneNum = node.asText();
-      
-      phoneNum = "+1" + phoneNum;
-
-      // Ensure phone number is valid.
-      if (!PhoneMessageService.verifyPhoneNumber(phoneNum)) {
-        setInvalid("Invalid Phone Number: [" + node + "] is not a valid Phone Number.");
-        return null;
-      }
-
-     
-
-      processedPhoneNumbers.add(phoneNum);
-    }
-
-    return PhoneMessageService.stringToPhoneNumberList(processedPhoneNumbers);
-  }
-
   /*
    * Wrapper to parse given string to long. If string is null, or not in proper integer format,
    * null will be returned instead.

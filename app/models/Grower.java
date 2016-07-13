@@ -138,14 +138,24 @@ public class Grower extends BaseModel implements PrettyString {
     return getBidsWithResponse(ResponseStatus.NO_RESPONSE);
   }
 
+  @JsonIgnore
+  public List<BidResponse> getBidResponses() {
+    return bidResponses;
+  }
+
   private List<HandlerBid> getBidsWithResponse(ResponseStatus response) {
     List<HandlerBid> matchedBids = new ArrayList<>();
-    for (BidResponse growerBidResponse : bidResponses) {
+    for (BidResponse growerBidResponse : getBidResponses()) {
       if (growerBidResponse.getResponseStatus().equals(response)) {
         matchedBids.add(growerBidResponse.getBid());
       }
     }
     return matchedBids;
+  }
+
+  @JsonIgnore
+  public List<HandlerBid> getHandlerBids() {
+    return handlerBids;
   }
 
   @JsonIgnore
@@ -155,34 +165,34 @@ public class Grower extends BaseModel implements PrettyString {
   }
 
   public List<String> getEmailAddressStrings() {
-    return emailAddresses
+    return getEmailAddresses()
       .stream()
       .map(EmailAddress::getEmailAddress)
       .collect(Collectors.toList());
   }
 
   @JsonIgnore
-  public List<PhoneNumber> getPhoneNums() {
+  public List<PhoneNumber> getPhoneNumbers() {
     return phoneNumbers;
   }
 
   public List<String> getPhoneNumsStrings() {
-    return phoneNumbers
+    return getPhoneNumbers()
       .stream()
       .map(PhoneNumber::getPhoneNumber)
       .collect(Collectors.toList());
   }
 
-  public void setFirstName(String name) {
-    firstName = name;
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
   }
 
-  public void setLastName(String name) {
-    lastName = name;
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
   }
 
-  public void setPhoneNumbers(List<PhoneNumber> numbers) {
-    phoneNumbers = numbers;
+  public void setPhoneNumbers(List<PhoneNumber> phoneNumbers) {
+    this.phoneNumbers = this.phoneNumbers;
   }
 
   public void setEmailAddresses(List<EmailAddress> emails) {
@@ -190,7 +200,7 @@ public class Grower extends BaseModel implements PrettyString {
   }
 
   public HandlerBid bidLookupByID(Long bidID) {
-    for (HandlerBid handlerBid: handlerBids) {
+    for (HandlerBid handlerBid: getHandlerBids()) {
       if (handlerBid.getId().equals(bidID)) {
         return handlerBid;
       }

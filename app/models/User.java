@@ -10,6 +10,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.UUID;
 import javax.persistence.MappedSuperclass;
 
+import javax.persistence.OneToMany;
+import javax.persistence.CascadeType;
+
 import models.PhoneNumber;
 
 import java.util.ArrayList;
@@ -38,8 +41,7 @@ public abstract class User extends BaseModel {
   @Column(nullable = false)
   private String emailAddress;
 
-
-  @Column(nullable = false)
+  @OneToMany(cascade = CascadeType.ALL)
   private List<PhoneNumber> phoneNumbers;
 
   // Cleartext password. Not Saved to database.

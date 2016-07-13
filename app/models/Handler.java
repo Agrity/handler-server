@@ -56,7 +56,7 @@ public class Handler extends User implements PrettyString {
       builder.append(" [] ");
 
     } else {
-      for (Grower grower : growersList) {
+      for (Grower grower : getGrowersList()) {
         builder.append("-- " + grower.toPrettyString());
       }
     }
