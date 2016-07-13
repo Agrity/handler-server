@@ -4,14 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.OneToMany;
-import javax.persistence.MappedSuperClass;
+import javax.persistence.MappedSuperclass;
 import play.data.validation.Constraints;
 
 
-@MappedSuperClass
+@MappedSuperclass
 public abstract class BaseSeller extends BaseModel {
 
   /* ======================================= Attributes ======================================= */

@@ -18,7 +18,7 @@ import models.interfaces.PrettyString;
 import play.data.validation.Constraints;
 
 @Entity
-public class GrowerSeller extends BaseSeller implements PrettyString {
+public class Grower extends BaseSeller implements PrettyString {
 
   @ManyToOne
   @Constraints.Required
@@ -43,7 +43,7 @@ public class GrowerSeller extends BaseSeller implements PrettyString {
   /* ==================================== Static Functions ==================================== */
 
 
-  public static Finder<Long, GrowerSeller> find = new Finder<>(GrowerSeller.class);
+  public static Finder<Long, Grower> find = new Finder<>(Grower.class);
 
   // public static GrowerSeller createGrower(Handler handler, String firstName, String lastName) {
   //   Grower grower = new Grower(handler, firstName, lastName, new ArrayList<>(), new ArrayList<>());
@@ -66,7 +66,7 @@ public class GrowerSeller extends BaseSeller implements PrettyString {
   //   this.phoneNumbers = new ArrayList<>();
   // }
 
-  public GrowerSeller(Handler handler, String firstName, String lastName,
+  public Grower(Handler handler, String firstName, String lastName,
       List<EmailAddress> emailAddresses, List<PhoneNumber> phoneNumbers) {
     super();
 
