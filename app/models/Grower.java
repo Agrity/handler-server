@@ -20,13 +20,13 @@ import play.data.validation.Constraints;
 @Entity
 public class Grower extends BaseSeller implements PrettyString {
 
+  /* ===== TODO ==== 
+   * finish once BidResponses are extended to 2 different types
+   */
+
   @ManyToOne
   @Constraints.Required
   private Handler handler;
-
-  public void setHandler(Handler handler) {
-    this.handler = handler;
-  }
 
   // TODO Remove BidResponses and Bidss from Growers if possible.
   @Constraints.Required
@@ -45,26 +45,6 @@ public class Grower extends BaseSeller implements PrettyString {
 
   public static Finder<Long, Grower> find = new Finder<>(Grower.class);
 
-  // public static GrowerSeller createGrower(Handler handler, String firstName, String lastName) {
-  //   Grower grower = new Grower(handler, firstName, lastName, new ArrayList<>(), new ArrayList<>());
-  //   grower.save();
-  //   return grower;
-  // }
-  
-
-
-  /* ========== Member Functions ========== */
-
-  // public Grower(Handler handler, String firstName, String lastName) {
-  //   super();
-
-  //   this.handler = handler;
-  //   this.firstName = firstName;
-  //   this.lastName = lastName;
-
-  //   this.emailAddresses = new ArrayList<>();
-  //   this.phoneNumbers = new ArrayList<>();
-  // }
 
   public Grower(Handler handler, String firstName, String lastName,
       List<EmailAddress> emailAddresses, List<PhoneNumber> phoneNumbers) {
@@ -79,6 +59,10 @@ public class Grower extends BaseSeller implements PrettyString {
 
   public Handler getHandler() {
     return handler;
+  }
+
+  public void setHandler(Handler handler) {
+    this.handler = handler;
   }
 
   @JsonIgnore
@@ -108,9 +92,9 @@ public class Grower extends BaseSeller implements PrettyString {
 
   private List<HandlerBid> getBidsWithResponse(ResponseStatus response) {
     List<HandlerBid> matchedBids = new ArrayList<>();
-    for (BidResponse growerBidResponse : getBidResponses()) {
-      if (growerBidResponse.getResponseStatus().equals(response)) {
-        matchedBids.add(growerBidResponse.getBid());
+    for (BidResponse bidResponse : getBidResponses()) {
+      if (bidResponse.getResponseStatus().equals(response)) {
+        matchedBids.add(bidResponse.getBid());
       }
     }
     return matchedBids;

@@ -18,39 +18,39 @@ public class Trader extends User implements PrettyString {
   @ManyToMany
   @Constraints.Required
   @JsonIgnore
-  private List<Handler> handlerList;
+  private List<HandlerSeller> handlerSellerList;
 
   /* ====================================== Constructors ====================================== */
 
   public Trader(String companyName, String firstName, String lastName, 
                 String emailAddress, List<PhoneNumber> phoneNumbers, String password) {
     super(companyName, firstName, lastName, emailAddress, phoneNumbers, password);
-    handlerList = new ArrayList<>();
+    handlerSellerList = new ArrayList<>();
   }
 
   /* ==================================== Member Accessors ==================================== */
 
-  public List<Handler> getHandlerList() {
-    return handlerList;
+  public List<HandlerSeller> getHandlerSellerList() {
+    return handlerSellerList;
   }
 
    /* =================================== Memeber Functions ==================================== */
 
   @Override
   public String toString() {
-    return "(" + id + ") " + getCompanyName() + " : " + getHandlerList().size();
+    return "(" + id + ") " + getCompanyName() + " : " + getHandlerSellerList().size();
   }
   
   public String toPrettyString() {
     StringBuilder builder = new StringBuilder();
     builder.append("(" + id + ") " + getCompanyName() + ":\n");
 
-    if (handlerList.isEmpty()) {
+    if (handlerSellerList.isEmpty()) {
       builder.append(" [] ");
 
     } else {
-      for (Handler handler : handlerList) {
-        builder.append("-- " + handler.toPrettyString());
+      for (HandlerSeller handlerSeller : getHandlerSellerList()) {
+        builder.append("-- " + handlerSeller.toPrettyString());
       }
     }
 

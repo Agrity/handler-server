@@ -32,7 +32,7 @@ public class TraderBid extends BaseBid implements PrettyString {
 
   @ManyToMany(cascade = CascadeType.ALL) 
   @Constraints.Required
-  private List<Handler> handlers = new ArrayList<>();
+  private List<HandlerSeller> handlerSellers = new ArrayList<>();
 
 
   /* ==================================== Static Functions ==================================== */
@@ -44,13 +44,13 @@ public class TraderBid extends BaseBid implements PrettyString {
   /* ===================================== Implementation ===================================== */
 
 
-  public TraderBid(Trader trader, List<Handler> allHandlers, AlmondVariety almondVariety, 
+  public TraderBid(Trader trader, List<HandlerSeller> allHandlerSellers, AlmondVariety almondVariety, 
       Integer almondPounds, String pricePerPound, String comment, String managementService,
       LocalDateTime expirationTime) {
     super();
 
     this.trader = trader;
-    this.handlers = allHandlers;
+    this.handlerSellers = allHandlerSellers;
     setAlmondVariety(almondVariety);
     setAlmondPounds(almondPounds);
     setPricePerPound(pricePerPound);
@@ -67,8 +67,8 @@ public class TraderBid extends BaseBid implements PrettyString {
   }
 
   @JsonIgnore
-  public List<Handler> getAllHandlers() {
-    return handlers;
+  public List<HandlerSeller> getAllHandlerSellers() {
+    return handlerSellers;
   }
 
 
