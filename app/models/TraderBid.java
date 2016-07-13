@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import play.data.validation.Constraints;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.CascadeType;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 
 import models.interfaces.PrettyString;
 import models.Almond.AlmondVariety;
+import java.time.LocalDateTime;
 
 /** ============================================ TODO ======================================================
  * Add any other fields & getters/setters that we need for TraderBid (e.g. responses)
@@ -24,11 +26,11 @@ public class TraderBid extends BaseBid implements PrettyString {
 /* ======================================= Attributes ======================================= */
 
 
-  @ManyToMany /* Correct annotation? */
+  @ManyToOne 
   @Constraints.Required
   private Trader trader;
 
-  @ManyToMany(cascade = CascadeType.ALL) /* Correct annotation? */
+  @ManyToMany(cascade = CascadeType.ALL) 
   @Constraints.Required
   private List<Handler> handlers = new ArrayList<>();
 
@@ -43,7 +45,8 @@ public class TraderBid extends BaseBid implements PrettyString {
 
 
   public TraderBid(Trader trader, List<Handler> allHandlers, AlmondVariety almondVariety, 
-      Integer almondPounds, String pricePerPound, String comment) {
+      Integer almondPounds, String pricePerPound, String comment, String managementService,
+      LocalDateTime expirationTime) {
     super();
 
     this.trader = trader;
@@ -52,6 +55,8 @@ public class TraderBid extends BaseBid implements PrettyString {
     setAlmondPounds(almondPounds);
     setPricePerPound(pricePerPound);
     setComment(comment);
+    setManagementService(managementService);
+    setExpirationTime(expirationTime);
   }
 
   /* ======================================= Attribute Accessors ======================================= */
@@ -71,6 +76,7 @@ public class TraderBid extends BaseBid implements PrettyString {
 
 
   @Override
+  /* ==== TODO ==== */
   public String toPrettyString() {
     return "(" + id + ") " + getAlmondVariety() + " [ " + getAlmondPounds() + " ] ( " + getPricePerPound() + " )\n";
   }

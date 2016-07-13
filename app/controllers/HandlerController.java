@@ -179,7 +179,7 @@ public class HandlerController extends Controller {
     }
 
     for(HandlerBid handlerBid: handlerBidService.getByGrower(growerId)) {
-      if(handlerBid.getBidCurrentlyOpen()) {
+      if(handlerBid.bidCurrentlyOpen()) {
         //Conflict response
         return status(409, JsonMsgUtils.growerInBid(growerId, handlerBid.getId()));
       }
@@ -228,7 +228,7 @@ public class HandlerController extends Controller {
     }
 
     for(HandlerBid handlerBid: handlerBidService.getByGrower(growerId)) {
-      if(handlerBid.getBidCurrentlyOpen()) {
+      if(handlerBid.bidCurrentlyOpen()) {
         //Conflict response
         return status(409, JsonMsgUtils.growerInBid(growerId, handlerBid.getId()));
       }
