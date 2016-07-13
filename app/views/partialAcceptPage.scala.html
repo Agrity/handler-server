@@ -1,4 +1,4 @@
-@(handlerBid: HandlerBid, grower: Grower, domain: String)
+@(handlerBid: HandlerBid, growerSeller: GrowerSeller, domain: String)
 
 <!DOCTYPE html>
 <html>
@@ -39,7 +39,7 @@
       } else if(input < 1){
         alert("Please enter a value greater than 0");
       } else {
-        var redirect = "@domain/handlerBids/@handlerBid.getId()/accept/@grower.getId()/" + input;
+        var redirect = "@domain/handlerBids/@handlerBid.getId()/accept/@growerSeller.getId()/" + input;
         window.location.replace(redirect);
       }
     }
