@@ -8,9 +8,18 @@ import java.text.NumberFormat;
 import javax.persistence.Column;
 
 import models.Almond.AlmondVariety;
+import java.time.LocalDateTime;
 
 @MappedSuperclass
 public abstract class BaseBid extends BaseModel {
+
+
+  public static enum BidStatus{
+    OPEN, 
+    REJECTED, 
+    ACCEPTED,
+    PARTIAL,
+  }
 
 
   /* ======================================= Attributes ======================================= */
@@ -27,6 +36,12 @@ public abstract class BaseBid extends BaseModel {
 
   @Column(columnDefinition = "TEXT")
   private String comment = "";
+
+  private String managementService;
+
+  private LocalDateTime expirationTime;
+
+  private BidStatus bidStatus = BidStatus.OPEN;
 
 
   /* ======================================= Attribute Accessors ======================================= */
@@ -53,6 +68,26 @@ public abstract class BaseBid extends BaseModel {
     return comment;
   }
 
+  public String getManagementService() {
+    return managementService;
+  }
+
+  public LocalDateTime getExpirationTime() {
+    return expirationTime;
+  }
+
+  public String getExpirationTimeAsString() {
+    return expirationTime.toString();
+  }
+
+  public BidStatus getBidStatus() {
+    return bidStatus;
+  }
+
+  public boolean bidCurrentlyOpen() {
+    return bidStatus == BidStatus.OPEN;
+  }
+
 
   /* ======================================= Attribute Setters ======================================= */
 
@@ -71,6 +106,18 @@ public abstract class BaseBid extends BaseModel {
 
   public void setComment(String newComment) {
     comment = newComment;
+  }
+
+  public void setManagementService(String newManagementService) {
+    managementService = newManagementService;
+  }
+
+  public void setExpirationTime(LocalDateTime newExpirationTime) {
+    expirationTime = newExpirationTime;
+  }
+
+  public void setBidStatus(BidStatus newStatus) {
+    bidStatus = newStatus;
   }
 
 
