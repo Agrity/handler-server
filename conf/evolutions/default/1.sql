@@ -52,15 +52,15 @@ create table handler_bid (
   almond_pounds                 integer,
   price_per_pound               varchar(255),
   comment                       TEXT,
+  management_service            varchar(255),
+  expiration_time               timestamp,
+  bid_status                    integer,
   handler_id                    bigint,
   almond_size                   varchar(255),
   start_payment_date            date,
   end_payment_date              date,
-  management_service            varchar(255),
-  bid_currently_open            integer,
-  expiration_time               timestamp,
   constraint ck_handler_bid_almond_variety check (almond_variety in ('PD','FR','PR','MI','MT','PL','BT','SN','NP','CR')),
-  constraint ck_handler_bid_bid_currently_open check (bid_currently_open in (0,1,2,3)),
+  constraint ck_handler_bid_bid_status check (bid_status in (0,1,2,3)),
   constraint pk_handler_bid primary key (id)
 );
 
@@ -104,7 +104,12 @@ create table trader_bid (
   almond_pounds                 integer,
   price_per_pound               varchar(255),
   comment                       TEXT,
+  management_service            varchar(255),
+  expiration_time               timestamp,
+  bid_status                    integer,
+  trader_id                     bigint,
   constraint ck_trader_bid_almond_variety check (almond_variety in ('PD','FR','PR','MI','MT','PL','BT','SN','NP','CR')),
+  constraint ck_trader_bid_bid_status check (bid_status in (0,1,2,3)),
   constraint pk_trader_bid primary key (id)
 );
 
@@ -144,6 +149,9 @@ create index ix_trader_handler_trader on trader_handler (trader_id);
 alter table trader_handler add constraint fk_trader_handler_handler foreign key (handler_id) references handler (id) on delete restrict on update restrict;
 create index ix_trader_handler_handler on trader_handler (handler_id);
 
+alter table trader_bid add constraint fk_trader_bid_trader_id foreign key (trader_id) references trader (id) on delete restrict on update restrict;
+create index ix_trader_bid_trader_id on trader_bid (trader_id);
+
 alter table trader_bid_handler add constraint fk_trader_bid_handler_trader_bid foreign key (trader_bid_id) references trader_bid (id) on delete restrict on update restrict;
 create index ix_trader_bid_handler_trader_bid on trader_bid_handler (trader_bid_id);
 
@@ -182,6 +190,9 @@ drop index if exists ix_trader_handler_trader;
 
 alter table trader_handler drop constraint if exists fk_trader_handler_handler;
 drop index if exists ix_trader_handler_handler;
+
+alter table trader_bid drop constraint if exists fk_trader_bid_trader_id;
+drop index if exists ix_trader_bid_trader_id;
 
 alter table trader_bid_handler drop constraint if exists fk_trader_bid_handler_trader_bid;
 drop index if exists ix_trader_bid_handler_trader_bid;
