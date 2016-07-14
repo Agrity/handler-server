@@ -5,10 +5,14 @@ import play.data.validation.Constraints;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.CascadeType;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.stream.Collectors;
 
 import models.interfaces.PrettyString;
 import models.Almond.AlmondVariety;
@@ -30,6 +34,10 @@ public class TraderBid extends BaseBid implements PrettyString {
   @Constraints.Required
   private Trader trader;
 
+  @OneToMany(cascade = CascadeType.ALL)
+  @Constraints.Required
+  private Set<TraderBidResponse> bidResponses = new HashSet<>();
+
   @ManyToMany(cascade = CascadeType.ALL) 
   @Constraints.Required
   private List<HandlerSeller> handlerSellers = new ArrayList<>();
@@ -49,6 +57,11 @@ public class TraderBid extends BaseBid implements PrettyString {
       LocalDateTime expirationTime) {
     super();
 
+    bidResponses =
+      allHandlerSellers.stream()
+      .map(grower -> new TraderBidResponse(grower))
+      .collect(Collectors.toSet());
+
     this.trader = trader;
     this.handlerSellers = allHandlerSellers;
     setAlmondVariety(almondVariety);
@@ -64,6 +77,11 @@ public class TraderBid extends BaseBid implements PrettyString {
 
   public Trader getTrader() {
     return trader;
+  }
+
+  @JsonIgnore
+  public Set<TraderBidResponse> getBidResponses() {
+    return bidResponses;
   }
 
   @JsonIgnore

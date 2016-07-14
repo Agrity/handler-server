@@ -12,17 +12,13 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import models.BidResponse.ResponseStatus;
+import models.BaseBidResponse.ResponseStatus;
 import models.interfaces.PrettyString;
 
 import play.data.validation.Constraints;
 
 @Entity
 public class Grower extends BaseSeller implements PrettyString {
-
-  /* ===== TODO ==== 
-   * finish once BidResponses are extended to 2 different types
-   */
 
   @ManyToOne
   @Constraints.Required
@@ -32,7 +28,7 @@ public class Grower extends BaseSeller implements PrettyString {
   @Constraints.Required
   @OneToMany(cascade = CascadeType.ALL)
   @JsonIgnore // Annotation here because no explicit getter
-  public List<BidResponse> bidResponses = new ArrayList<>();
+  public List<HandlerBidResponse> bidResponses = new ArrayList<>();
 
   @Constraints.Required
   @ManyToMany(cascade = CascadeType.ALL, mappedBy = "growers")
@@ -86,13 +82,13 @@ public class Grower extends BaseSeller implements PrettyString {
   }
 
   @JsonIgnore
-  public List<BidResponse> getBidResponses() {
+  public List<HandlerBidResponse> getBidResponses() {
     return bidResponses;
   }
 
   private List<HandlerBid> getBidsWithResponse(ResponseStatus response) {
     List<HandlerBid> matchedBids = new ArrayList<>();
-    for (BidResponse bidResponse : getBidResponses()) {
+    for (HandlerBidResponse bidResponse : getBidResponses()) {
       if (bidResponse.getResponseStatus().equals(response)) {
         matchedBids.add(bidResponse.getBid());
       }
