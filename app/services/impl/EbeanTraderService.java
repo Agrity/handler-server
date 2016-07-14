@@ -5,7 +5,7 @@ import com.avaje.ebean.Model.Finder;
 import java.util.List;
 
 import models.Trader;
-import models.Handler;
+import models.HandlerSeller;
 import models.TraderBid;
 
 import play.Logger;
@@ -77,15 +77,13 @@ public class EbeanTraderService implements TraderService {
         .findUnique();
   }
   
-  //TODO: Implement when trader-handler model is in place
+  @Override
+  public boolean checkTraderOwnsHandlerSeller(Trader trader, HandlerSeller handlerSeller) {
+    return trader.equals(handlerSeller.getTrader());
+  }
   
-  // @Override
-  // public boolean checkTraderOwnsHandler(Trader trader, Handler handler) {
-  //   return trader.equals(handler.getTrader());
-  // }
-  //
-  // @Override
-  // public boolean checkTraderOwnsOffer(Trader trader, Offer offer) {
-  //   return trader.equals(offer.getHandler());
-  // }
+  @Override
+ public boolean checkTraderOwnsBid(Trader trader, TraderBid traderBid) {
+    return trader.equals(traderBid.getTrader());
+  }
 } 

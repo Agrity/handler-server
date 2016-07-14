@@ -5,7 +5,7 @@ import com.google.inject.ImplementedBy;
 import java.util.List;
 
 import models.Trader;
-import models.Handler;
+import models.HandlerSeller;
 import models.TraderBid;
 
 import services.impl.EbeanTraderService;
@@ -27,5 +27,7 @@ public interface TraderService {
 
   public boolean checkEmailAddressAvailable(String emailAddress);
 
-  //TODO: add in checkTraderOwnsHandler and checkTraderOwnsOffer
+  public boolean checkTraderOwnsHandlerSeller(Trader trader, HandlerSeller handlerSeller);
+
+  public boolean checkTraderOwnsBid(Trader trader, TraderBid traderBid);
 }
