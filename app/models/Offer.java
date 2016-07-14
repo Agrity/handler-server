@@ -313,6 +313,10 @@ public class Offer extends BaseModel implements PrettyString {
       // Logger.error("managementService returned null for offerID: " + getId());
     }
 
+    OfferResponseResult poundsAcceptedResult = setGrowerAcceptedPoundsForOffer(growerId, pounds);
+    if(!poundsAcceptedResult.isValid()) {
+      return poundsAcceptedResult;
+    }
     return setGrowerResponseForOffer(growerId, ResponseStatus.ACCEPTED);
   }
 
@@ -358,6 +362,18 @@ public class Offer extends BaseModel implements PrettyString {
     }  
 
     return setGrowerResponseForOffer(growerId, ResponseStatus.REQUEST_CALL);
+  }
+
+  private OfferResponseResult setGrowerAcceptedPoundsForOffer(Long growerId, long pounds) {
+    OfferResponse growerOfferResponse = getGrowerOfferResponse(growerId);
+    if (growerOfferResponse == null) {
+      Logger.error("growerResponse returned null for growerId: " + growerId + " and offerID: " + getId());
+      return OfferResponseResult.getInvalidResult("Cannot accept offer."); // TODO: What to tell grower when this inexplicable error happens.
+    }
+
+    growerOfferResponse.setPoundsAccepted(pounds);
+    growerOfferResponse.save();
+    return OfferResponseResult.getValidResult();
   }
 
   private OfferResponseResult setGrowerResponseForOffer(Long growerId, ResponseStatus growerResponse) {

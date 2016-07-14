@@ -24,6 +24,7 @@ public class OfferResponse extends BaseModel {
 
   private ResponseStatus responseStatus;
 
+  private long poundsAccepted;
 
   public static Finder<Long, OfferResponse> find = new Finder<>(OfferResponse.class);
 
@@ -55,6 +56,14 @@ public class OfferResponse extends BaseModel {
 
   public ResponseStatus getResponseStatus() {
     return responseStatus;
+  }
+
+  public long getPoundsAccepted() {
+    return poundsAccepted;
+  }
+
+  public void setPoundsAccepted(long poundsAccepted) {
+    this.poundsAccepted = poundsAccepted; 
   }
 
   public void setResponseStatus(ResponseStatus responseStatus) {
