@@ -32,6 +32,7 @@ public class EbeanTraderBidService implements TraderBidService {
 
   public List<TraderBid> getByHandlerSeller(long handlerSellerId) {
     // TODO Assert HandlerSeller Exists, or Return Null
+    // TODO Fix this column name?
     return FINDER.where()
         .eq("handler_sellers.id", handlerSellerId)
         .findList();
