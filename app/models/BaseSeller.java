@@ -8,7 +8,9 @@ import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.persistence.MappedSuperclass;
+
 import play.data.validation.Constraints;
 
 
@@ -28,15 +30,17 @@ public abstract class BaseSeller extends BaseModel {
    *
    * <a href="https://github.com/playframework/play-mailer/blob/master/README.adoc">Plugin Link</a>
    */
-  @OneToMany(cascade = CascadeType.ALL)
-  @Constraints.Required
+  //@OneToMany(cascade = CascadeType.ALL)
+  //@Constraints.Required
+  @Transient
   public List<EmailAddress> emailAddresses;
 
   /**
    * TODO: Change to phone number format, construct own model so that can be consistant.
    */
-  @OneToMany(cascade = CascadeType.ALL)
-  @Constraints.Required
+  //@OneToMany(cascade = CascadeType.ALL)
+  //@Constraints.Required
+  @Transient
   public List<PhoneNumber> phoneNumbers;
 
   /* ======================================= Attribute Accessors ======================================= */
@@ -90,7 +94,7 @@ public abstract class BaseSeller extends BaseModel {
   }
 
   public void setPhoneNumbers(List<PhoneNumber> phoneNumbers) {
-    this.phoneNumbers = this.phoneNumbers;
+    this.phoneNumbers = phoneNumbers;
   }
 
   public void setEmailAddresses(List<EmailAddress> emails) {

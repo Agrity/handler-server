@@ -28,6 +28,8 @@ public class PhoneMessageService {
     List<PhoneNumber> phoneNumbers = new ArrayList<>();
 
     for (String phoneStr : phoneNumberStrings) {
+      // TODO Change to return null and push error back to client. Don't want our server to
+      //      crash on bad phone number.
       if (!verifyPhoneNumber(phoneStr)) {
         throw new RuntimeException("Invalid Phone Number passed to phone number list creation.");
       }
@@ -36,5 +38,13 @@ public class PhoneMessageService {
     }
 
     return phoneNumbers;
+  }
+
+  public static PhoneNumber stringToPhoneNumber(String phoneNumberString) {
+    if (!verifyPhoneNumber(phoneNumberString)) {
+      return null;
+    }
+
+    return new PhoneNumber(phoneNumberString);
   }
 }

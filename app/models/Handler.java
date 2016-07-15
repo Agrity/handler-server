@@ -30,8 +30,8 @@ public class Handler extends User implements PrettyString {
 
 
   public Handler(String companyName, String firstName, String lastName, 
-                 String emailAddress, List<PhoneNumber> phoneNumbers, String password) {
-    super(companyName, firstName, lastName, emailAddress, phoneNumbers, password);
+                 String emailAddress, PhoneNumber phoneNumber, String password) {
+    super(companyName, firstName, lastName, emailAddress, phoneNumber, password);
     growersList = new ArrayList<>();
   }
 
