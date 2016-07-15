@@ -280,6 +280,21 @@ public class HandlerBid extends BaseBid implements PrettyString {
     return setGrowerResponseForBid(growerId, ResponseStatus.REQUEST_CALL);
   }
 
+  private BidResponseResult setGrowerResponseAccept(Long growerId, long poundsAccepted) {
+    HandlerBidResponse response = getBidResponse(growerId);
+    if (response == null) {
+      Logger.error("Response returned null for growerId: " + growerId + " and HandlerBidID: " + getId());
+      return BidResponseResult.getInvalidResult("Cannot accept bid."); // TODO: What to tell grower when this inexplicable error happens.
+
+    }
+  
+    response.setPoundsAccepted(poundsAccepted);  
+    response.setResponseStatus(ResponseStatus.ACCEPTED);
+    response.save();
+    
+    return BidResponseResult.getValidResult(); 
+  }  
+
   private BidResponseResult setGrowerResponseForBid(Long growerId, ResponseStatus growerResponse) {
     HandlerBidResponse response = getBidResponse(growerId);
     if (response == null) {

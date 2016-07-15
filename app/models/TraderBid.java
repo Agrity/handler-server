@@ -180,7 +180,7 @@ public class TraderBid extends BaseBid implements PrettyString {
       // Logger.error("managementService returned null for HandlerBidID: " + getId());
     }
 
-    return setHandlerSellerResponseForBid(handlerSellerId, ResponseStatus.ACCEPTED);
+    return setHandlerSellerReponseAccept(handlerSellerId, pounds);
   }
 
   /* TODO: Fix once BidManagementService is branched out for Traders and Handlers */
@@ -226,6 +226,21 @@ public class TraderBid extends BaseBid implements PrettyString {
     }  
 
     return setHandlerSellerResponseForBid(handlerSellerId, ResponseStatus.REQUEST_CALL);
+  }
+
+  private BidResponseResult setHandlerSellerReponseAccept(Long handlerSellerId, long poundsAccepted) {
+    TraderBidResponse response = getBidResponse(handlerSellerId);
+    if (response == null) {
+      Logger.error("Response returned null for handlerSellerId: " + handlerSellerId + " and TraderBidID: " + getId());
+      return BidResponseResult.getInvalidResult("Cannot accept bid."); // TODO: What to tell grower when this inexplicable error happens.
+
+    }
+    
+    response.setPoundsAccepted(poundsAccepted);
+    response.setResponseStatus(ResponseStatus.ACCEPTED);
+    response.save();
+    
+    return BidResponseResult.getValidResult(); 
   }
 
   private BidResponseResult setHandlerSellerResponseForBid(Long handlerSellerId, ResponseStatus responseStatus) {
