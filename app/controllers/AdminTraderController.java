@@ -7,7 +7,7 @@ import com.google.inject.Inject;
 
 import controllers.security.AdminSecured;
 import models.Trader;
-import models.Handler;
+import models.HandlerSeller;
 
 import play.mvc.BodyParser;
 import play.mvc.Controller;
@@ -15,7 +15,7 @@ import play.mvc.Result;
 import play.mvc.Security;
 
 import services.TraderService;
-//import services.HandlerService;
+import services.HandlerSellerService;
 import services.parsers.UserJsonParser;
 
 import utils.JsonMsgUtils;
@@ -24,14 +24,14 @@ import utils.JsonMsgUtils;
 public class AdminTraderController extends Controller {
 
   private final TraderService traderService;
-//  private final HandlerService handlerService;
+  private final HandlerSellerService handlerSellerService;
 
   private final ObjectMapper jsonMapper;
 
   @Inject
-  public AdminTraderController(TraderService traderService) {    // , HandlerService handlerService) {
+  public AdminTraderController(TraderService traderService, HandlerSellerService handlerSellerService) {
     this.traderService = traderService;
-    //this.handlerService = handlerService;
+    this.handlerSellerService = handlerSellerService;
 
     this.jsonMapper = new ObjectMapper();
   }
@@ -84,5 +84,40 @@ public class AdminTraderController extends Controller {
     }
   }
 
-  //TODO: implement getAllHandlers() and getHandler(id)
+  public Result getAllHandlerSellers(long traderId) {
+    Trader trader = traderService.getById(traderId);
+
+    if (trader == null) {
+      return notFound(JsonMsgUtils.traderNotFoundMessage(traderId));
+    }
+
+    try {
+      return ok(jsonMapper.writeValueAsString(handlerSellerService.getByTrader(traderId)));
+    } catch (JsonProcessingException e) {
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
+    }
+  }
+
+  public Result getHandlerSeller(long traderId, long handlerSellerId) {
+    Trader trader = traderService.getById(traderId);
+    
+    if (trader == null) {
+      return notFound(JsonMsgUtils.traderNotFoundMessage(traderId));
+    }
+
+    HandlerSeller handlerSeller = handlerSellerService.getById(handlerSellerId);
+    if (handlerSeller == null) {
+      return notFound(JsonMsgUtils.handlerSellerNotFoundMessage(handlerSellerId));
+    }
+
+    if (!traderService.checkTraderOwnsHandlerSeller(trader, handlerSeller)) {
+      return badRequest(JsonMsgUtils.traderDoesNotOwnHandlerMessage(trader, handlerSeller));
+    }
+
+    try {
+      return ok(jsonMapper.writeValueAsString(handlerSeller));
+    } catch (JsonProcessingException e) {
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
+    }
+  }
 }

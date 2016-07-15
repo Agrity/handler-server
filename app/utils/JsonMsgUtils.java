@@ -2,7 +2,10 @@ package utils;
 
 import models.Grower;
 import models.Handler;
+import models.Trader;
+import models.HandlerSeller;
 import models.HandlerBid;
+import models.TraderBid;
 
 import play.libs.Json;
 
@@ -11,6 +14,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class JsonMsgUtils {
 
   /* ==================== Json converters for Error Messages =======================*/
+  
   public static ObjectNode handlerNotFoundMessage(Long id) {
     return errorToJson("Handler with id '" + id + "' could not be found\n");
   } 
@@ -23,6 +27,10 @@ public class JsonMsgUtils {
     return errorToJson("Grower with id '" + id + "' could not be found\n");
   }
 
+  public static ObjectNode handlerSellerNotFoundMessage(Long id) {
+    return errorToJson("Handler seller with id '" + id + "' could not be found\n");
+  }
+
   public static ObjectNode bidNotFoundMessage(Long id) {
     return errorToJson("Bid with id '" + id + "' could not be found\n");
   }
@@ -32,8 +40,18 @@ public class JsonMsgUtils {
         + ".\n");
   }
 
+  public static ObjectNode traderDoesNotOwnHandlerMessage(Trader trader, HandlerSeller handlerSeller) {
+    return errorToJson("Trader " + trader.getCompanyName() + " does not own handler seller " 
+      + handlerSeller.getFullName()+ ".\n");
+  }
+
   public static ObjectNode handlerDoesNotOwnBidMessage(Handler handler, HandlerBid handlerBid) {
     return errorToJson("Handler " + handler.getCompanyName() + " does not own bid " + handlerBid.getId()
+        + ".\n");
+  }
+
+  public static ObjectNode traderDoesNotOwnBidMessage(Trader trader, TraderBid traderBid) {
+    return errorToJson("Trader " + trader.getCompanyName() + " does not own bid " + traderBid.getId()
         + ".\n");
   }
 
