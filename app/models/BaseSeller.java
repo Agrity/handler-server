@@ -2,19 +2,23 @@ package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
-import javax.persistence.Transient;
-import javax.persistence.MappedSuperclass;
 
 import play.data.validation.Constraints;
 
 
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING)
 public abstract class BaseSeller extends BaseModel {
 
   /* ======================================= Attributes ======================================= */
@@ -30,17 +34,15 @@ public abstract class BaseSeller extends BaseModel {
    *
    * <a href="https://github.com/playframework/play-mailer/blob/master/README.adoc">Plugin Link</a>
    */
-  //@OneToMany(cascade = CascadeType.ALL)
-  //@Constraints.Required
-  @Transient
+  @OneToMany(cascade = CascadeType.ALL)
+  @Constraints.Required
   public List<EmailAddress> emailAddresses;
 
   /**
    * TODO: Change to phone number format, construct own model so that can be consistant.
    */
-  //@OneToMany(cascade = CascadeType.ALL)
-  //@Constraints.Required
-  @Transient
+  @OneToMany(cascade = CascadeType.ALL)
+  @Constraints.Required
   public List<PhoneNumber> phoneNumbers;
 
   /* ======================================= Attribute Accessors ======================================= */

@@ -4,14 +4,24 @@ import play.data.validation.Constraints;
 import utils.SecurityUtility;
 import play.Logger;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.Transient;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.UUID;
-import javax.persistence.MappedSuperclass;
+
+import javax.persistence.OneToOne;
 
 import models.PhoneNumber;
 
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING)
 public abstract class User extends BaseModel {
 
   //TODO change name to UserColumns?
@@ -35,7 +45,7 @@ public abstract class User extends BaseModel {
   private String emailAddress;
 
   //@Column(nullable = false)
-  @Transient
+  @OneToOne
   private PhoneNumber phoneNumber;
 
   // Cleartext password. Not Saved to database.

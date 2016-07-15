@@ -1,10 +1,7 @@
 package models;
 
-import com.avaje.ebean.Ebean;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,8 +13,14 @@ import java.util.NoSuchElementException;
 
 //import javax.money.MonetaryAmount;
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -25,16 +28,18 @@ import javax.persistence.OneToMany;
 import models.Almond.AlmondVariety;
 import models.BaseBidResponse.ResponseStatus;
 import models.interfaces.PrettyString;
+
 import play.Logger;
-import play.data.format.Formats;
 import play.data.validation.Constraints;
 
 import services.bid_management.BidManagementService;
 
 import services.DateService;
-import java.util.Date;
 
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("HANDLER_BID")
 public class HandlerBid extends BaseBid implements PrettyString {
 
 
@@ -50,6 +55,8 @@ public class HandlerBid extends BaseBid implements PrettyString {
   private Set<HandlerBidResponse> bidResponses = new HashSet<>();
 
   @ManyToMany(cascade = CascadeType.ALL)
+  @JoinTable(name="RYANS_GROWER_BID_JOIN",
+             joinColumns=@JoinColumn(name="named_column"))
   @Constraints.Required
   private List<Grower> growers = new ArrayList<>();
 

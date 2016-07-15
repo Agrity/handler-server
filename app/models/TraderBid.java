@@ -3,26 +3,29 @@ package models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import play.data.validation.Constraints;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.CascadeType;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 
 import java.util.stream.Collectors;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
-import java.util.stream.Collectors;
 import java.util.NoSuchElementException;
 import java.time.LocalDateTime;
 
 import models.BaseBidResponse.ResponseStatus;
 import models.Almond.AlmondVariety;
 import models.interfaces.PrettyString;
-import play.Logger;
 
-import services.bid_management.BidManagementService;
+import play.Logger;
 
 /** ============================================ TODO ======================================================
  * Add any other fields & getters/setters that we need for TraderBid (e.g. responses)
@@ -30,6 +33,9 @@ import services.bid_management.BidManagementService;
  */
 
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("TRADER_BID")
 public class TraderBid extends BaseBid implements PrettyString {
 
 
