@@ -197,6 +197,10 @@ public class Offer extends BaseModel implements PrettyString {
     return expirationTime.toString();
   }
 
+  public Set<OfferResponse> getOfferResponses() {
+    return offerResponses;
+  }
+
 
   /* === Setter Functions === */
 
@@ -260,7 +264,6 @@ public class Offer extends BaseModel implements PrettyString {
       .collect(Collectors.toList());
   }
 
-
   @JsonIgnore
   public List<ResponseStatus> getAllOfferResponseStatuses() {
     return offerResponses.stream()
@@ -313,11 +316,7 @@ public class Offer extends BaseModel implements PrettyString {
       // Logger.error("managementService returned null for offerID: " + getId());
     }
 
-    OfferResponseResult poundsAcceptedResult = setGrowerAcceptedPoundsForOffer(growerId, pounds);
-    if(!poundsAcceptedResult.isValid()) {
-      return poundsAcceptedResult;
-    }
-    return setGrowerResponseForOffer(growerId, ResponseStatus.ACCEPTED);
+    return setGrowerAcceptOffer(growerId, pounds);
   }
 
   public OfferResponseResult growerRejectOffer(Long growerId) {
@@ -364,13 +363,15 @@ public class Offer extends BaseModel implements PrettyString {
     return setGrowerResponseForOffer(growerId, ResponseStatus.REQUEST_CALL);
   }
 
-  private OfferResponseResult setGrowerAcceptedPoundsForOffer(Long growerId, long pounds) {
+  private OfferResponseResult setGrowerAcceptOffer(Long growerId, long pounds) {
     OfferResponse growerOfferResponse = getGrowerOfferResponse(growerId);
     if (growerOfferResponse == null) {
       Logger.error("growerResponse returned null for growerId: " + growerId + " and offerID: " + getId());
       return OfferResponseResult.getInvalidResult("Cannot accept offer."); // TODO: What to tell grower when this inexplicable error happens.
-    }
 
+    }
+    
+    growerOfferResponse.setResponseStatus(ResponseStatus.ACCEPTED);
     growerOfferResponse.setPoundsAccepted(pounds);
     growerOfferResponse.save();
     return OfferResponseResult.getValidResult();
