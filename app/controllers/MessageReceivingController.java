@@ -14,8 +14,12 @@ import models.OfferResponse.ResponseStatus;
 import models.Grower;
 import models.OfferResponseResult;
 
+import models.Offer;
+import services.OfferService;
+
 import com.avaje.ebean.Model.Finder;
 import services.impl.EbeanGrowerService;
+import services.impl.EbeanOfferService;
 
 import services.messaging.MessageServiceConstants.TwilioFields;
 import services.parsers.SMSParser;
@@ -80,12 +84,12 @@ public class MessageReceivingController extends Controller {
     /* if we reach here, the SMS message has a well-formatted offerID and almondAmount response */
 
     OfferService offerService = new EbeanOfferService();
-    Offer offer = offerService.getByID(offerID);
+    Offer offer = offerService.getById(offerID);
     if (offer == null) {
       Logger.error("OfferID " + offerID + " does not exist. From: " + phoneNum);
       return ok("Bid: " + offerID + " does not exist.");
     }
-    if (grower.offerLookupById(offerId) == null) {
+    if (grower.offerLookupByID(offerID) == null) {
       Logger.error("OfferID " + offerID + " not owned by grower " + grower.getId() +". From: " + phoneNum);
       return ok("You are not authorized to accept bid " + offerID + ".");
     }
