@@ -10,12 +10,27 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.UUID;
 import javax.persistence.MappedSuperclass;
 
+import javax.persistence.OneToMany;
+import javax.persistence.CascadeType;
+
+import models.PhoneNumber;
+
+import java.util.ArrayList;
+import java.util.List;
+
 @MappedSuperclass
 public abstract class User extends BaseModel {
 
+  //TODO change name to UserColumns?
 	@Constraints.Required
   @Column(name = DBConstants.HandlerColumns.COMPANY_NAME, nullable = false)
   private String companyName;
+
+  @Constraints.Required
+  private String firstName;
+
+  @Constraints.Required
+  private String lastName;
 
 	/* ===================================== Authentication ===================================== */
 
@@ -25,6 +40,9 @@ public abstract class User extends BaseModel {
   // WARNING: Is expected to always be lowercase.
   @Column(nullable = false)
   private String emailAddress;
+
+  @OneToMany(cascade = CascadeType.ALL)
+  private List<PhoneNumber> phoneNumbers;
 
   // Cleartext password. Not Saved to database.
   @Transient
@@ -42,6 +60,16 @@ public abstract class User extends BaseModel {
   // when logged in, and will be erased when logged out.
   private String authToken;
 
+  public User(String companyName, String firstName, String lastName, 
+              String emailAddress,  List<PhoneNumber> phoneNumbers, String password) {
+    setCompanyName(companyName);
+    setFirstName(firstName);
+    setLastName(lastName);
+    setEmailAddress(emailAddress);
+    setPhoneNumbers(phoneNumbers);
+    setPassword(password);
+  }
+
   /* ==================================== Member Accessors ==================================== */
 
 
@@ -53,6 +81,21 @@ public abstract class User extends BaseModel {
     return companyName;
   }
 
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
+
+  public String getFirstName() {
+    return firstName;
+  }
+
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
+
+  public String getLastName() {
+    return lastName;
+  }
 
   public void setEmailAddress(String emailAddress) {
     this.emailAddress = emailAddress.toLowerCase();
@@ -75,6 +118,14 @@ public abstract class User extends BaseModel {
   public String getShaPassword() {
     return shaPassword;
   } 
+
+  public void setPhoneNumbers(List<PhoneNumber> phoneNumbers) {
+    this.phoneNumbers = phoneNumbers;
+  }
+
+  public List<PhoneNumber> getPhoneNumbers() {
+    return phoneNumbers;
+  }
 
   public String createToken() {
     authToken = UUID.randomUUID().toString();

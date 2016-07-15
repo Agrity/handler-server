@@ -10,7 +10,7 @@ import play.mvc.Result;
 import services.messaging.bid.BidSMSMessageService;
 import models.HandlerBid;
 import play.Logger;
-import models.BidResponse.ResponseStatus;
+import models.BaseBidResponse.ResponseStatus;
 import models.Grower;
 import models.BidResponseResult;
 

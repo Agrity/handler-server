@@ -29,10 +29,9 @@ public class Handler extends User implements PrettyString {
   /* ====================================== Constructors ====================================== */
 
 
-  public Handler(String companyName, String emailAddress, String password) {
-    setCompanyName(companyName);
-    setEmailAddress(emailAddress);
-    setPassword(password);
+  public Handler(String companyName, String firstName, String lastName, 
+                 String emailAddress, List<PhoneNumber> phoneNumbers, String password) {
+    super(companyName, firstName, lastName, emailAddress, phoneNumbers, password);
     growersList = new ArrayList<>();
   }
 
@@ -57,7 +56,7 @@ public class Handler extends User implements PrettyString {
       builder.append(" [] ");
 
     } else {
-      for (Grower grower : growersList) {
+      for (Grower grower : getGrowersList()) {
         builder.append("-- " + grower.toPrettyString());
       }
     }

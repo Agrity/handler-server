@@ -23,7 +23,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import models.Almond.AlmondVariety;
-import models.BidResponse.ResponseStatus;
+import models.BaseBidResponse.ResponseStatus;
 import models.interfaces.PrettyString;
 import play.Logger;
 import play.data.format.Formats;
@@ -47,7 +47,7 @@ public class HandlerBid extends BaseBid implements PrettyString {
 
   @OneToMany(cascade = CascadeType.ALL)
   @Constraints.Required
-  private Set<BidResponse> bidResponses = new HashSet<>();
+  private Set<HandlerBidResponse> bidResponses = new HashSet<>();
 
   @ManyToMany(cascade = CascadeType.ALL)
   @Constraints.Required
@@ -79,7 +79,7 @@ public class HandlerBid extends BaseBid implements PrettyString {
 
     bidResponses =
       allGrowers.stream()
-      .map(grower -> new BidResponse(grower))
+      .map(grower -> new HandlerBidResponse(grower))
       .collect(Collectors.toSet());
 
     this.handler = handler;
@@ -126,6 +126,11 @@ public class HandlerBid extends BaseBid implements PrettyString {
 
   public String getEndPaymentDateAsString() {
     return DateService.dateToString(endPaymentDate);
+  }
+
+  @JsonIgnore
+  public Set<HandlerBidResponse> getBidResponses() {
+    return bidResponses;
   }
 
 
@@ -178,18 +183,13 @@ public class HandlerBid extends BaseBid implements PrettyString {
   }
 
   @JsonIgnore
-  public Set<BidResponse> getBidResponses() {
-    return bidResponses;
-  }
-
-  @JsonIgnore
   public List<ResponseStatus> getAllBidResponseStatuses() {
     return getBidResponses().stream()
       .map(bidResponse -> bidResponse.getResponseStatus())
       .collect(Collectors.toList());
   }
 
-  public BidResponse getGrowerBidResponse(long growerId) {
+  public HandlerBidResponse getBidResponse(long growerId) {
     try {
       return getBidResponses().stream()
         .filter(bidResponse -> bidResponse.getGrower().getId().equals(growerId))
@@ -202,20 +202,20 @@ public class HandlerBid extends BaseBid implements PrettyString {
 
   public BidResponseResult growerAcceptBid(Long growerId, long pounds) {
     if (!bidCurrentlyOpen()) {
-      return BidResponseResult.getInvalidResult("Cannot accept HandlerBid because the HandlerBid has already closed.");
+      return BidResponseResult.getInvalidResult("Cannot accept bid becase it has already closed.");
     }
       
-    BidResponse growerResponse = getGrowerBidResponse(growerId);
+    HandlerBidResponse response = getBidResponse(growerId);
 
-    if (growerResponse == null) {
-      Logger.error("growerResponse returned null for growerId: " + growerId + " and HandlerBidID: " + getId());
-      return BidResponseResult.getInvalidResult("Cannot accept HandlerBid."); // TODO: What to tell grower when this inexplicable error happens.
+    if (response == null) {
+      Logger.error("Response returned null for growerId: " + growerId + " and HandlerBidID: " + getId());
+      return BidResponseResult.getInvalidResult("Cannot accept bid."); // TODO: What to tell grower when this inexplicable error happens.
     }
     
-    growerResponse.refresh();
-    if (growerResponse.getResponseStatus() != ResponseStatus.NO_RESPONSE
-        && growerResponse.getResponseStatus() != ResponseStatus.REQUEST_CALL) {
-      return BidResponseResult.getInvalidResult("Cannot accept HandlerBid because grower has already responded to HandlerBid.");
+    response.refresh();
+    if (response.getResponseStatus() != ResponseStatus.NO_RESPONSE
+        && response.getResponseStatus() != ResponseStatus.REQUEST_CALL) {
+      return BidResponseResult.getInvalidResult("Cannot accept bid because grower has already responded.");
     }  
       
     
@@ -238,20 +238,20 @@ public class HandlerBid extends BaseBid implements PrettyString {
 
   public BidResponseResult growerRejectBid(Long growerId) {
     if (!bidCurrentlyOpen()) {
-      return BidResponseResult.getInvalidResult("There is no need to reject the HandlerBid because the HandlerBid has closed.");
+      return BidResponseResult.getInvalidResult("There is no need to reject the bid because it has closed.");
     } 
     
-    BidResponse growerResponse = getGrowerBidResponse(growerId);
+    HandlerBidResponse response = getBidResponse(growerId);
 
-    if (growerResponse == null) {
-      Logger.error("growerResponse returned null for growerId: " + growerId + " and HandlerBidID: " + getId());
-      return BidResponseResult.getInvalidResult("Cannot reject the HandlerBid."); // TODO: What to tell grower when this inexplicable error happens.
+    if (response == null) {
+      Logger.error("Response returned null for growerId: " + growerId + " and HandlerBidID: " + getId());
+      return BidResponseResult.getInvalidResult("Cannot reject the bid."); // TODO: What to tell grower when this inexplicable error happens.
     }
     
-    growerResponse.refresh();
-    if (growerResponse.getResponseStatus() != ResponseStatus.NO_RESPONSE
-        && growerResponse.getResponseStatus() != ResponseStatus.REQUEST_CALL) {
-      return BidResponseResult.getInvalidResult("Cannot accept HandlerBid because grower has already responded to HandlerBid.");
+    response.refresh();
+    if (response.getResponseStatus() != ResponseStatus.NO_RESPONSE
+        && response.getResponseStatus() != ResponseStatus.REQUEST_CALL) {
+      return BidResponseResult.getInvalidResult("Cannot accept bid because grower has already responded.");
     }
     
 
@@ -274,22 +274,22 @@ public class HandlerBid extends BaseBid implements PrettyString {
 
   public BidResponseResult growerRequestCall(Long growerId) {
     if (!bidCurrentlyOpen()) {
-      return BidResponseResult.getInvalidResult("Can not request call because the HandlerBid has already closed.");
+      return BidResponseResult.getInvalidResult("Can not request call because the bid has already closed.");
     }  
 
     return setGrowerResponseForBid(growerId, ResponseStatus.REQUEST_CALL);
   }
 
   private BidResponseResult setGrowerResponseForBid(Long growerId, ResponseStatus growerResponse) {
-    BidResponse growerBidResponse = getGrowerBidResponse(growerId);
-    if (growerBidResponse == null) {
-      Logger.error("growerResponse returned null for growerId: " + growerId + " and HandlerBidID: " + getId());
-      return BidResponseResult.getInvalidResult("Cannot accept HandlerBid."); // TODO: What to tell grower when this inexplicable error happens.
+    HandlerBidResponse response = getBidResponse(growerId);
+    if (response == null) {
+      Logger.error("Response returned null for growerId: " + growerId + " and HandlerBidID: " + getId());
+      return BidResponseResult.getInvalidResult("Cannot accept bid."); // TODO: What to tell grower when this inexplicable error happens.
 
     }
     
-    growerBidResponse.setResponseStatus(growerResponse);
-    growerBidResponse.save();
+    response.setResponseStatus(growerResponse);
+    response.save();
     
     return BidResponseResult.getValidResult(); 
   }

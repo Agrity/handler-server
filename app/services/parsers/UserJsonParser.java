@@ -2,9 +2,15 @@ package services.parsers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import services.PhoneMessageService;
+
 import models.User;
 import models.Trader;
 import models.Handler;
+import models.PhoneNumber;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class to parse json data to create new Handler.
@@ -24,6 +30,11 @@ public class UserJsonParser extends BaseParser {
   private String companyName;
   private String emailAddress;
   private String password;
+
+  private String firstName;
+  private String lastName;
+
+  private List<PhoneNumber> phoneNumbers;
 
   public UserJsonParser(JsonNode data) {
     super();
@@ -46,6 +57,24 @@ public class UserJsonParser extends BaseParser {
       return;
     }
 
+    firstName = parseName(data, UserJsonConstants.FIRST_NAME);
+    if (firstName == null) {
+      // Parser set to invalid with proper error message.
+      return;
+    }
+
+    lastName = parseName(data, UserJsonConstants.LAST_NAME);
+    if (lastName == null) {
+      // Parser set to invalid with proper error message.
+      return;
+    }
+
+    phoneNumbers = parsePhoneNumbers(data);
+    if (phoneNumbers == null) {
+      // Parser set to invalid with proper error message.
+      return;
+    }
+
     // Valid json data received and processed.
     setValid();
   }
@@ -56,7 +85,10 @@ public class UserJsonParser extends BaseParser {
     }
     return new Handler(
         getCompanyName(),
+        getFirstName(),
+        getLastName(),
         getEmailAddress(),
+        getPhoneNumbers(),
         getPassword());
   }
 
@@ -66,7 +98,10 @@ public class UserJsonParser extends BaseParser {
     }
     return new Trader(
         getCompanyName(),
+        getFirstName(),
+        getLastName(),
         getEmailAddress(),
+        getPhoneNumbers(),
         getPassword());
   }
 
@@ -89,6 +124,21 @@ public class UserJsonParser extends BaseParser {
     ensureValid();
 
     return password;
+  }
+
+  public String getFirstName() {
+    ensureValid();
+    return firstName;
+  }
+
+  public String getLastName() {
+    ensureValid();
+    return lastName;
+  }
+
+  public List<PhoneNumber> getPhoneNumbers() {
+    ensureValid();
+    return phoneNumbers;
   }
 
   /* 
@@ -115,6 +165,53 @@ public class UserJsonParser extends BaseParser {
     }
 
     return companyName;
+  }
+
+  /* 
+   * Attempt to extract phone numbers from the given json data, via the HANDLER_ID field. If there
+   * is an error, the parser will be set to invalid with appropriate error message, and null will
+   * be returned.
+   * 
+   * Note: Phone numbers are an optional parameter so an error will not be set if the value is not
+   * found in the json data. And empty List will be returned instead.
+   *
+   * WARNING: Parser set to invalid if error is encountered.
+   */
+  private List<PhoneNumber> parsePhoneNumbers(JsonNode data) {
+    // Phone numbers not present in json node. Returning empty list.
+
+
+    if (!data.has(UserJsonConstants.PHONE_NUMBERS)) {
+      return new ArrayList<>();
+    }
+
+    JsonNode phoneNums = data.get(UserJsonConstants.PHONE_NUMBERS);
+
+    // Phone numbers should be formatted as an array of strings.
+    if (!phoneNums.isArray()) {
+      setInvalid("Phone Number Format Invalid: array of strings expected.");
+      return null;
+    }
+
+    List<String> processedPhoneNumbers = new ArrayList<>();
+
+    for (JsonNode node : phoneNums) {
+      String phoneNum = node.asText();
+      
+      phoneNum = "+1" + phoneNum;
+
+      // Ensure phone number is valid.
+      if (!PhoneMessageService.verifyPhoneNumber(phoneNum)) {
+        setInvalid("Invalid Phone Number: [" + node + "] is not a valid Phone Number.");
+        return null;
+      }
+
+     
+
+      processedPhoneNumbers.add(phoneNum);
+    }
+
+    return PhoneMessageService.stringToPhoneNumberList(processedPhoneNumbers);
   }
 
   /* WARNING: Parser set to invalid if error is encountered.  */
@@ -155,6 +252,11 @@ public class UserJsonParser extends BaseParser {
     private static final String COMPANY_NAME = "company_name";
     private static final String EMAIL_ADDRESS = "email_address";
     private static final String PASSWORD = "password";
+
+    private static final String FIRST_NAME = "first_name";
+    private static final String LAST_NAME = "last_name";
+    private static final String PHONE_NUMBERS = "phone_numbers";
+
   }
 
 }

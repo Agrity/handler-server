@@ -18,93 +18,92 @@ import models.interfaces.PrettyString;
 import play.data.validation.Constraints;
 
 @Entity
-public class Grower extends BaseSeller implements PrettyString {
+public class HandlerSeller extends BaseSeller implements PrettyString {
 
   @ManyToOne
   @Constraints.Required
-  private Handler handler;
+  private Trader trader;
 
-  // TODO Remove BidResponses and Bidss from Growers if possible.
   @Constraints.Required
   @OneToMany(cascade = CascadeType.ALL)
   @JsonIgnore // Annotation here because no explicit getter
-  public List<HandlerBidResponse> bidResponses = new ArrayList<>();
+  public List<TraderBidResponse> bidResponses = new ArrayList<>();
 
   @Constraints.Required
   @ManyToMany(cascade = CascadeType.ALL, mappedBy = "growers")
   @JsonIgnore // Annotation here because no explicit getter
-  public List<HandlerBid> handlerBids = new ArrayList<>();
+  public List<TraderBid> traderBids = new ArrayList<>();
 
 
   /* ==================================== Static Functions ==================================== */
 
 
-  public static Finder<Long, Grower> find = new Finder<>(Grower.class);
+  public static Finder<Long, HandlerSeller> find = new Finder<>(HandlerSeller.class);
 
 
-  public Grower(Handler handler, String firstName, String lastName,
+  public HandlerSeller(Trader trader, String firstName, String lastName,
       List<EmailAddress> emailAddresses, List<PhoneNumber> phoneNumbers) {
     super();
 
     setFirstName(firstName);
     setLastName(lastName);
-    this.handler = handler;
+    this.trader = trader;
     setEmailAddresses(emailAddresses);
     setPhoneNumbers(phoneNumbers);
   }
 
-  public Handler getHandler() {
-    return handler;
+  public Trader getTrader() {
+    return trader;
   }
 
-  public void setHandler(Handler handler) {
-    this.handler = handler;
+  public void setTrader(Trader trader) {
+    this.trader = trader;
   }
 
   @JsonIgnore
-  public List<HandlerBid> getAcceptedBids() {
+  public List<TraderBid> getAcceptedBids() {
     return getBidsWithResponse(ResponseStatus.ACCEPTED);
   }
   
   @JsonIgnore
-  public List<HandlerBid> getRejectedBids() {
+  public List<TraderBid> getRejectedBids() {
     return getBidsWithResponse(ResponseStatus.REJECTED);
   }
 
   @JsonIgnore
-  public List<HandlerBid> getCallRequestedBids() {
+  public List<TraderBid> getCallRequestedBids() {
     return getBidsWithResponse(ResponseStatus.REQUEST_CALL);
   }
 
   @JsonIgnore
-  public List<HandlerBid> getNoResponseBids() {
+  public List<TraderBid> getNoResponseBids() {
     return getBidsWithResponse(ResponseStatus.NO_RESPONSE);
   }
 
   @JsonIgnore
-  public List<HandlerBidResponse> getBidResponses() {
+  public List<TraderBidResponse> getBidResponses() {
     return bidResponses;
   }
 
-  private List<HandlerBid> getBidsWithResponse(ResponseStatus response) {
-    List<HandlerBid> matchedBids = new ArrayList<>();
-    for (HandlerBidResponse bidResponse : getBidResponses()) {
+  private List<TraderBid> getBidsWithResponse(ResponseStatus response) {
+    List<TraderBid> matchedBids = new ArrayList<>();
+    for (TraderBidResponse bidResponse : getBidResponses()) {
       if (bidResponse.getResponseStatus().equals(response)) {
         matchedBids.add(bidResponse.getBid());
       }
     }
-    return matchedBids;
+     return matchedBids;
   }
 
   @JsonIgnore
-  public List<HandlerBid> getHandlerBids() {
-    return handlerBids;
+  public List<TraderBid> getTraderBids() {
+    return traderBids;
   }
 
-  public HandlerBid bidLookupByID(Long bidID) {
-    for (HandlerBid handlerBid: getHandlerBids()) {
-      if (handlerBid.getId().equals(bidID)) {
-        return handlerBid;
+  public TraderBid bidLookupByID(Long bidID) {
+    for (TraderBid traderBid: getTraderBids()) {
+      if (traderBid.getId().equals(bidID)) {
+        return traderBid;
       }
     }
     return null;

@@ -18,5 +18,4 @@ public interface HandlerBidService {
   public List<HandlerBid> getByHandler(long handlerId);
 
   public List<HandlerBid> getByGrower(long growerId);
-
 }
