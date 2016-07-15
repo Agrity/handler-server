@@ -119,6 +119,11 @@ public class Grower extends BaseModel implements PrettyString {
   }
 
   @JsonIgnore
+  public List<Offer> getOffers() {
+    return offers;
+  }
+
+  @JsonIgnore
   public List<Offer> getAcceptedOffers() {
     return getOffersWithResponse(ResponseStatus.ACCEPTED);
   }
@@ -190,7 +195,7 @@ public class Grower extends BaseModel implements PrettyString {
   }
 
   public Offer offerLookupByID(Long offerID) {
-    for (Offer offer: offers) {
+    for (Offer offer: getOffers) {
       if (offer.getId().equals(offerID)) {
         return offer;
       }

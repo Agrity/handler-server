@@ -79,10 +79,15 @@ public class MessageReceivingController extends Controller {
     
     /* if we reach here, the SMS message has a well-formatted offerID and almondAmount response */
 
-    Offer offer = grower.offerLookupByID(offerID);
+    OfferService offerService = new EbeanOfferService();
+    Offer offer = offerService.getByID(offerID);
     if (offer == null) {
       Logger.error("OfferID " + offerID + " does not exist. From: " + phoneNum);
       return ok("Bid: " + offerID + " does not exist.");
+    }
+    if (grower.offerLookupById(offerId) == null) {
+      Logger.error("OfferID " + offerID + " not owned by grower " + grower.getId() +". From: " + phoneNum);
+      return ok("You are not authorized to accept bid " + offerID + ".");
     }
 
     Logger.info("The valid offerID is: " + offerID);
