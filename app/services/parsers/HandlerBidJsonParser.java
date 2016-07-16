@@ -19,9 +19,6 @@ import play.Logger;
 import services.DateService;
 import services.GrowerService;
 import services.impl.EbeanGrowerService;
-import services.bid_management.WaterfallService;
-import services.bid_management.FCFSService;
-import services.bid_management.BidManagementService;
 
 import java.util.Date;
 
@@ -237,6 +234,10 @@ public class HandlerBidJsonParser extends BidJsonParser {
     return expirationTime;
   }
 
+  public void setExpirationTime(LocalDateTime expirationTime) {
+    this.expirationTime = expirationTime;
+  }
+
   private List<Grower> parseGrowers(JsonNode data) {
     // Check grower ids are present.
     Logger.info("parsing growers...\n\n");
@@ -326,71 +327,10 @@ public class HandlerBidJsonParser extends BidJsonParser {
     return DateService.stringToDate(dateString);
   }
 
-  private ManagementTypeInfo parseManagementType(JsonNode data) {
-    Logger.info("parsing management type...\n\n");
-    if (!data.has(HandlerBidJsonConstants.MANAGEMENT_TYPE)) {
-      setInvalid(missingParameterError(HandlerBidJsonConstants.MANAGEMENT_TYPE));
-      return null;
-    }
-
-    JsonNode typeMap = data.get(HandlerBidJsonConstants.MANAGEMENT_TYPE);
-
-    int delayInt;
-    if(typeMap.has(HandlerBidJsonConstants.DELAY_KEY)) {
-      delayInt = typeMap.get(HandlerBidJsonConstants.DELAY_KEY).asInt();
-    } else {
-      setInvalid(missingParameterError(HandlerBidJsonConstants.DELAY_KEY));
-      return null;
-    }
-
-    LocalDateTime currentTime = LocalDateTime.now();
-    expirationTime = currentTime.plusMinutes(delayInt);
-  
-    if(typeMap.has(HandlerBidJsonConstants.TYPE_KEY)) {
-      String className = typeMap.get(HandlerBidJsonConstants.TYPE_KEY).asText();
-      Duration delayTime = Duration.ofMinutes(delayInt);
-      switch(className) {
-        case HandlerBidJsonConstants.ManagementTypes.WATERFALL:
-          return new ManagementTypeInfo(WaterfallService.class, delayTime);
-        case HandlerBidJsonConstants.ManagementTypes.FCFS: 
-          return new ManagementTypeInfo(FCFSService.class, delayTime);
-        default:
-          setInvalid("Management Type invalid: specified type " + className +" not found\n");
-          return null;          
-      }
-    } 
-
-    setInvalid(missingParameterError(HandlerBidJsonConstants.TYPE_KEY));
-    return null;
-  }
-
   private static class HandlerBidJsonConstants {
     private static final String GROWER_IDS = "grower_ids";
     private static final String START_PAYMENT_DATE = "start_payment_date";
     private static final String END_PAYMENT_DATE = "end_payment_date";
-    private static final String MANAGEMENT_TYPE = "management_type";
-    
-    private static final String TYPE_KEY = "type";
-    private static final String DELAY_KEY = "delay";
-
-    public static class ManagementTypes {
-      private static final String WATERFALL = "WaterfallService";
-      private static final String FCFS = "FCFSService";
-    }
-  }
-
-  public static class ManagementTypeInfo {
-    private Class<? extends BidManagementService> typeClass;
-    private Duration delay;
-
-      ManagementTypeInfo(Class<? extends BidManagementService> c, Duration d) {
-        this.typeClass = c;
-        this.delay = d;
-      }
-
-      public Class<? extends BidManagementService> getClassType() { return typeClass; }
-      public String className() { return typeClass.getName(); }
-      public Duration getDelay() { return delay; }
 
   }
 }
