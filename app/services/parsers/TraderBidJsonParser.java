@@ -37,12 +37,14 @@ import java.util.Date;
  *
  *    ALMOND_VARIETY: ... ,
  *
- *    (TODO Change from String to Actual Almond Size)
- *    ALMOND_SIZE: ... ,
- *
  *    ALMOND_POUNDS: ... ,
  *
  *    ALMOND_PRICE_PER_POUND: ... ,
+ *
+ *    MANAGEMENT_TYPE: {
+ *      TYPE: ...
+ *      DELAY: ...
+ *    },
  *
  *    ==== OPTIONAL ====
  *
@@ -54,7 +56,6 @@ public class TraderBidJsonParser extends BidJsonParser {
   private Trader trader;
   private List<HandlerSeller> handlerSellers;
   private AlmondVariety almondVariety;
-  private String almondSize;
   private Integer almondPounds;
   private String pricePerPound;
   private ManagementTypeInfo managementType;
@@ -88,12 +89,6 @@ public class TraderBidJsonParser extends BidJsonParser {
       return;
     }
 
-    almondSize = parseAlmondSize(data);
-    if (almondSize == null) {
-      // Parser set to invalid with proper error message.
-      return;
-    }
-
     almondPounds = parseAlmondPounds(data);
     if (almondPounds == null) {
       // Parser set to invalid with proper error message.
@@ -123,7 +118,72 @@ public class TraderBidJsonParser extends BidJsonParser {
       // Parser set to invalid with proper error message.
       return;
     }
+  }
 
+  public TraderBid formBid() {
+    if (!isValid()) {
+      throw new RuntimeException("Attempted to create bid from invalid parser.\n");
+    }
+
+    TraderBid newBid = new TraderBid(
+        getTrader(),
+        getHandlerSellers(),
+        getAlmondVariety(),
+        getAlmondPounds(),
+        getPricePerPound(),
+        getComment(),
+        getManagementType().className(),
+        getExpirationTime());
+
+    return newBid;
+  }
+
+  public void updateBid(TraderBid traderBid) {
+    if (!isValid()) {
+      throw new RuntimeException("Attempted to create bid from invalid parser.\n");
+    }
+
+    traderBid.setAlmondVariety(getAlmondVariety());
+    traderBid.setAlmondPounds(getAlmondPounds());
+    traderBid.setPricePerPound(getPricePerPound());
+    traderBid.setComment(getComment());
+  }
+
+  public Trader getTrader() {
+    return trader;
+  }
+
+  public List<HandlerSeller> getHandlerSellers() {
+    return handlerSellers;
+  }
+
+  public AlmondVariety getAlmondVariety() {
+    ensureValid();
+    return almondVariety;
+  }
+
+  public Integer getAlmondPounds() {
+    ensureValid();
+    return almondPounds;
+  }
+
+  public String getPricePerPound() {
+    ensureValid();
+    return pricePerPound;
+  }
+
+  public ManagementTypeInfo getManagementType() {
+    ensureValid();
+    return managementType;
+  }
+
+  public String getComment() {
+    ensureValid();
+    return comment;
+  }
+
+  public LocalDateTime getExpirationTime() {
+    return expirationTime;
   }
 
   private List<HandlerSeller> parseHandlerSellers(JsonNode data) {
@@ -172,21 +232,6 @@ public class TraderBidJsonParser extends BidJsonParser {
 
     return processedHandlerSellers;
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   private static class TraderBidJsonConstants {
     private static final String HANDLERSELLER_IDS = "handlerSeller_ids";
