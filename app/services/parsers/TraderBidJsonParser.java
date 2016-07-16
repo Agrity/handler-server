@@ -17,8 +17,8 @@ import models.TraderBid;
 import play.Logger;
 
 import services.DateService;
-import services.GrowerService;
-import services.impl.EbeanGrowerService;
+import services.HandlerSellerService;
+import services.impl.EbeanHandlerSellerService;
 
 import java.util.Date;
 
@@ -51,13 +51,145 @@ import java.util.Date;
  */
 public class TraderBidJsonParser extends BidJsonParser {
 
+  private Trader trader;
+  private List<HandlerSeller> handlerSellers;
   private AlmondVariety almondVariety;
   private String almondSize;
   private Integer almondPounds;
   private String pricePerPound;
+  private ManagementTypeInfo managementType;
+  private LocalDateTime expirationTime;
   private String comment;
+
+  private final HandlerSellerService handlerSellerService;
 
   public TraderBidJsonParser(JsonNode data) {
     super();
+
+    // TODO -- Extremely Hacky -- Change to Dependency Injection.
+    //      See Guice AssistedInjection
+    handlerSellerService = new EbeanHandlerSellerService();
+
+    trader = parseTrader(data);
+    if (trader == null) {
+      // Parser set to invalid with proper error message.
+      return;
+    }
+
+    handlerSellers = parseHandlerSellers(data);
+    if (handlerSellers == null) {
+      // Parser set to invalid with proper error message.
+      return;
+    }
+
+    almondVariety = parseAlmondVariety(data);
+    if (almondVariety == null) {
+      // Parser set to invalid with proper error message.
+      return;
+    }
+
+    almondSize = parseAlmondSize(data);
+    if (almondSize == null) {
+      // Parser set to invalid with proper error message.
+      return;
+    }
+
+    almondPounds = parseAlmondPounds(data);
+    if (almondPounds == null) {
+      // Parser set to invalid with proper error message.
+      return;
+    }
+
+    pricePerPound = parsePricePerPound(data);
+    if (pricePerPound == null) {
+      // Parser set to invalid with proper error message.
+      return;
+    }
+
+    managementType = parseManagementType(data);
+    if(managementType == null) {
+      //Parser set to invalid with proper error message.
+      return;
+    }
+
+    comment = parseComment(data);
+    if (comment == null) {
+      // Parser set to invalid with proper error message.
+      return;
+    }
+
+    expirationTime = parseExpirationTime(data);
+    if(expirationTime == null) {
+      // Parser set to invalid with proper error message.
+      return;
+    }
+
   }
+
+  private List<HandlerSeller> parseHandlerSellers(JsonNode data) {
+    // Check handlerSeller ids are present.
+    Logger.info("parsing handler sellers...\n\n");
+    if (!data.has(TraderBidJsonConstants.HANDLERSELLER_IDS)) {
+      setInvalid(missingParameterError(TraderBidJsonConstants.HANDLERSELLER_IDS));
+      return null;
+    } 
+    
+    JsonNode handlerSellerIds = data.get(TraderBidJsonConstants.HANDLERSELLER_IDS);
+
+    // HandlerSeller IDs should be formatted as an array of strings.
+    if (!handlerSellerIds.isArray()) {
+      setInvalid("HandlerSeller ID Format Invalid: array of strings expected.");
+      return null;
+    }
+
+    List<HandlerSeller> processedHandlerSellers = new ArrayList<>();
+
+    for (JsonNode node : handlerSellerIds) {
+      Long handlerSellerId = parseLong(node.asText());
+
+      // Ensure handlerSeller id is valid integer format.
+      if (handlerSellerId == null) {
+        setInvalid("HandlerSeller id value [" + node.asText() + "] is not a valid long integer.\n");
+        return null;
+      }
+
+      // Check handlerSeller exists with given id.
+      HandlerSeller handlerSeller = handlerSellerService.getById(handlerSellerId);
+      if (handlerSeller == null) {
+        setInvalid("HandlerSeller does not exist with handlerSeller id [" + handlerSellerId + "].\n");
+        return null;
+      }
+
+      // Ensure given trader owns handlerSeller
+      if (!traderService.checkTraderOwnsHandlerSeller(trader, handlerSeller)) {
+        setInvalid("Trader with id [ " + trader.getId() + " ] does not own handlerSeller with id [ "
+            + handlerSellerId + " ].\n");
+        return null;
+
+      }
+      processedHandlerSellers.add(handlerSeller);
+    }
+
+    return processedHandlerSellers;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  private static class TraderBidJsonConstants {
+    private static final String HANDLERSELLER_IDS = "handlerSeller_ids";
+  }
+
 }
