@@ -140,6 +140,12 @@ public class HandlerBidJsonParser extends BidJsonParser {
       return;
     }
 
+    expirationTime = parseExpirationTime(data);
+    if(expirationTime == null) {
+      // Parser set to invalid with proper error message.
+      return;
+    }
+
     // Valid json data recieved
     setValid();
   }
@@ -232,10 +238,6 @@ public class HandlerBidJsonParser extends BidJsonParser {
 
   public LocalDateTime getExpirationTime() {
     return expirationTime;
-  }
-
-  public void setExpirationTime(LocalDateTime expirationTime) {
-    this.expirationTime = expirationTime;
   }
 
   private List<Grower> parseGrowers(JsonNode data) {

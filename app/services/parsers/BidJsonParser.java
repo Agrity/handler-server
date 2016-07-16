@@ -115,6 +115,20 @@ public class BidJsonParser extends BaseParser {
     return commentString;
   }
 
+  protected LocalDateTime parseExpirationTime(JsonNode data) {
+    Logger.info("parsing expiration time...\n\n");
+
+    //TODO fix Error checking for existance of MANAGEMENT_TYPE? seems repetitive/ask ryan
+
+    JsonNode typeMap = data.get(BidJsonConstants.MANAGEMENT_TYPE);
+    if(typeMap.has(BidJsonConstants.DELAY_KEY)) {
+      int delayInt = typeMap.get(BidJsonConstants.DELAY_KEY).asInt();
+      return LocalDateTime.now().plusMinutes(delayInt);
+    }
+    setInvalid(missingParameterError(BidJsonConstants.DELAY_KEY));
+    return null;
+  }
+
   protected ManagementTypeInfo parseManagementType(JsonNode data) {
     Logger.info("parsing management type...\n\n");
     if (!data.has(BidJsonConstants.MANAGEMENT_TYPE)) {
@@ -124,20 +138,12 @@ public class BidJsonParser extends BaseParser {
 
     JsonNode typeMap = data.get(BidJsonConstants.MANAGEMENT_TYPE);
 
-    int delayInt;
-    if(typeMap.has(BidJsonConstants.DELAY_KEY)) {
-      delayInt = typeMap.get(BidJsonConstants.DELAY_KEY).asInt();
-    } else {
+    if(!typeMap.has(BidJsonConstants.DELAY_KEY)) {
       setInvalid(missingParameterError(BidJsonConstants.DELAY_KEY));
       return null;
     }
-
-    LocalDateTime currentTime = LocalDateTime.now();
-
-    //TODO: ASK RYAN ABOUT THIS - not working and kinda awkward...
-    LocalDateTime expirationTime = currentTime.plusMinutes(delayInt);
-    HandlerBidJsonParser.setExpirationTime(expirationTime);
-  
+    int delayInt = typeMap.get(BidJsonConstants.DELAY_KEY).asInt();
+    
     if(typeMap.has(BidJsonConstants.TYPE_KEY)) {
       String className = typeMap.get(BidJsonConstants.TYPE_KEY).asText();
       Duration delayTime = Duration.ofMinutes(delayInt);
@@ -178,9 +184,9 @@ public class BidJsonParser extends BaseParser {
     private Class<? extends BidManagementService> typeClass;
     private Duration delay;
 
-      ManagementTypeInfo(Class<? extends BidManagementService> c, Duration d) {
-        this.typeClass = c;
-        this.delay = d;
+      ManagementTypeInfo(Class<? extends BidManagementService> typeClass, Duration delay) {
+        this.typeClass = typeClass;
+        this.delay = delay;
       }
 
       public Class<? extends BidManagementService> getClassType() { return typeClass; }
