@@ -84,6 +84,11 @@ public class JsonMsgUtils {
       + Long.toString(bidId));
   }
 
+  public static ObjectNode handlerSellerInBid(long handlerSellerId, long bidId) {
+    return errorToJson("HandlerSeller " + Long.toString(handlerSellerId) + " still in bid " 
+      + Long.toString(bidId));
+  }
+
   private static ObjectNode errorToJson(String msg) {
     ObjectNode result = Json.newObject();
     result.put("error", msg);  
@@ -114,6 +119,10 @@ public class JsonMsgUtils {
 
   public static ObjectNode growerDeleted(long growerId) {
     return validToJson("Grower " + Long.toString(growerId) +" successfully deleted");
+  }
+
+  public static ObjectNode handlerSellerDeleted(long handlerSellerId) {
+    return validToJson("HandlerSeller " + Long.toString(handlerSellerId) + " successfully deleted.");
   }
 
   private static ObjectNode validToJson(String msg) {
