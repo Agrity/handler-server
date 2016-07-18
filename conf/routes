@@ -30,13 +30,19 @@ GET     /admin/handlers/:id/growers/:growerId              controllers.AdminHand
 
 GET     /admin/handlers/:id/handlerBids                    controllers.AdminHandlerBidController.getAllHandlerBids(id: Long)
 
+
 # ========== Admin Trader ========== #
+
 
 GET      /admin/traders                                    controllers.AdminTraderController.getAllTraders()
 
 POST     /admin/traders                                    controllers.AdminTraderController.createTrader()
 
 GET      /admin/traders/:id                                controllers.AdminTraderController.getTrader(id: Long)
+
+GET     /admin/traders/:id/handlerSellers                        controllers.AdminTraderController.getAllHandlerSellers(id: Long)
+
+GET     /admin/traders/:id/handlerSellers/:handlerSellerId              controllers.AdminTraderController.getHandlerSeller(id: Long, handlerSellerId: Long)
 
 
 # ========== Admin Grower ========== #
@@ -125,6 +131,14 @@ GET     /handlerBids/:bidId/reject/:growerId               controllers.HandlerBi
 GET     /handlerBids/:bidId/partial/:growerId              controllers.HandlerBidController.displayPartialPage(bidId: Long, growerId: Long)
 
 GET     /handlerBids/:bidId/accept/:growerId/:pounds       controllers.HandlerBidController.acceptPartial(bidId: Long, growerId: Long, pounds: Long)
+
+GET     /traderBids/:bidId/accept/:handlerSellerId               controllers.TraderBidController.acceptBid(bidId: Long, handlerSellerId: Long)
+
+GET     /traderBids/:bidId/reject/:handlerSellerId               controllers.TraderBidController.rejectBid(bidId: Long, handlerSellerId: Long)
+
+GET     /traderBids/:bidId/partial/:handlerSellerId              controllers.TraderBidController.displayPartialPage(bidId: Long, handlerSellerId: Long)
+
+GET     /trader/:bidId/accept/:handlerSellerId/:pounds       controllers.TraderBidController.acceptPartial(bidId: Long, handlerSellerId: Long, pounds: Long)
 
 
 # ========== Message Recieving ========== #
