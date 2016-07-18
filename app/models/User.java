@@ -44,7 +44,7 @@ public abstract class User extends BaseModel {
   //
   // WARNING: Is expected to always be lowercase.
   @Column(nullable = false)
-  private String emailAddress;
+  private EmailAddress emailAddress;
 
   //@Column(nullable = false)
   @OneToOne
@@ -67,7 +67,7 @@ public abstract class User extends BaseModel {
   private String authToken;
 
   public User(String companyName, String firstName, String lastName, 
-              String emailAddress,  PhoneNumber phoneNumber, String password) {
+              EmailAddress emailAddress,  PhoneNumber phoneNumber, String password) {
     setCompanyName(companyName);
     setFirstName(firstName);
     setLastName(lastName);
@@ -103,11 +103,11 @@ public abstract class User extends BaseModel {
     return lastName;
   }
 
-  public void setEmailAddress(String emailAddress) {
-    this.emailAddress = emailAddress.toLowerCase();
+  public void setEmailAddress(EmailAddress emailAddress) {
+    this.emailAddress = emailAddress;
   }
 
-  public String getEmailAddress() {
+  public EmailAddress getEmailAddress() {
     return emailAddress;
   }
 
