@@ -6,6 +6,7 @@ import services.PhoneMessageService;
 
 import models.User;
 import models.Trader;
+import models.EmailAddress;
 import models.Handler;
 import models.PhoneNumber;
 
@@ -28,13 +29,13 @@ import java.util.List;
 public class UserJsonParser extends BaseParser {
   // Parsed variables
   private String companyName;
-  private String emailAddress;
+  private EmailAddress emailAddress;
   private String password;
 
   private String firstName;
   private String lastName;
 
-  private List<PhoneNumber> phoneNumbers;
+  private PhoneNumber phoneNumber;
 
   public UserJsonParser(JsonNode data) {
     super();
@@ -45,7 +46,7 @@ public class UserJsonParser extends BaseParser {
       return;
     }
 
-    emailAddress = parseEmailAddress(data);
+    emailAddress = parserUserEmailAddress(data);
     if (emailAddress == null) {
       // Parser set to invalid with proper error message.
       return;
@@ -69,8 +70,8 @@ public class UserJsonParser extends BaseParser {
       return;
     }
 
-    phoneNumbers = parsePhoneNumbers(data);
-    if (phoneNumbers == null) {
+    phoneNumber = parsePhoneNumber(data);
+    if (phoneNumber == null) {
       // Parser set to invalid with proper error message.
       return;
     }
@@ -113,7 +114,7 @@ public class UserJsonParser extends BaseParser {
   }
 
   // WARNING: Should only be called after isValid() has been checked to be true
-  public String getEmailAddress() {
+  public EmailAddress getEmailAddress() {
     ensureValid();
 
     return emailAddress;
@@ -136,9 +137,9 @@ public class UserJsonParser extends BaseParser {
     return lastName;
   }
 
-  public List<PhoneNumber> getPhoneNumbers() {
+  public PhoneNumber getPhoneNumbers() {
     ensureValid();
-    return phoneNumbers;
+    return phoneNumber;
   }
 
   /* 
@@ -167,73 +168,6 @@ public class UserJsonParser extends BaseParser {
     return companyName;
   }
 
-  /* 
-   * Attempt to extract phone numbers from the given json data, via the HANDLER_ID field. If there
-   * is an error, the parser will be set to invalid with appropriate error message, and null will
-   * be returned.
-   * 
-   * Note: Phone numbers are an optional parameter so an error will not be set if the value is not
-   * found in the json data. And empty List will be returned instead.
-   *
-   * WARNING: Parser set to invalid if error is encountered.
-   */
-  private List<PhoneNumber> parsePhoneNumbers(JsonNode data) {
-    // Phone numbers not present in json node. Returning empty list.
-
-
-    if (!data.has(UserJsonConstants.PHONE_NUMBERS)) {
-      return new ArrayList<>();
-    }
-
-    JsonNode phoneNums = data.get(UserJsonConstants.PHONE_NUMBERS);
-
-    // Phone numbers should be formatted as an array of strings.
-    if (!phoneNums.isArray()) {
-      setInvalid("Phone Number Format Invalid: array of strings expected.");
-      return null;
-    }
-
-    List<String> processedPhoneNumbers = new ArrayList<>();
-
-    for (JsonNode node : phoneNums) {
-      String phoneNum = node.asText();
-      
-      phoneNum = "+1" + phoneNum;
-
-      // Ensure phone number is valid.
-      if (!PhoneMessageService.verifyPhoneNumber(phoneNum)) {
-        setInvalid("Invalid Phone Number: [" + node + "] is not a valid Phone Number.");
-        return null;
-      }
-
-     
-
-      processedPhoneNumbers.add(phoneNum);
-    }
-
-    return PhoneMessageService.stringToPhoneNumberList(processedPhoneNumbers);
-  }
-
-  /* WARNING: Parser set to invalid if error is encountered.  */
-  private String parseEmailAddress(JsonNode data) {
-
-    // Check email address is present.
-    if (!data.has(UserJsonConstants.EMAIL_ADDRESS)) {
-      setInvalid(missingParameterError(UserJsonConstants.EMAIL_ADDRESS));
-      return null;
-
-    } 
-    
-    String emailAddress = data.findValue(UserJsonConstants.EMAIL_ADDRESS).asText();
-
-    // Check if email is already in use.
-    if (!handlerService.checkEmailAddressAvailable(emailAddress)) {
-      setInvalid("Email address [" + emailAddress + "] is already in use.\n");
-      return null;
-    }
-
-    return emailAddress;
-  }
 
   /* WARNING: Parser set to invalid if error is encountered.  */
   private String parsePassword(JsonNode data) {
@@ -250,13 +184,10 @@ public class UserJsonParser extends BaseParser {
 
   private static class UserJsonConstants {
     private static final String COMPANY_NAME = "company_name";
-    private static final String EMAIL_ADDRESS = "email_address";
     private static final String PASSWORD = "password";
 
     private static final String FIRST_NAME = "first_name";
     private static final String LAST_NAME = "last_name";
-    private static final String PHONE_NUMBERS = "phone_numbers";
-
   }
 
 }

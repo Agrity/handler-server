@@ -32,7 +32,7 @@ public class TraderSecured extends Security.Authenticator {
       Trader trader = traderService.getByAuthToken(authTokenHeaderValue);
       if (trader != null) {
         ctx.args.put(TraderSecurityController.TRADER_KEY, trader);
-        return trader.getEmailAddress();
+        return trader.getEmailAddress().toString();
       } else {
         Logger.error("No Trader With Auth Token: " + authTokenHeaderValue);
       }

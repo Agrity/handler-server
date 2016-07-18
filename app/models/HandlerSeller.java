@@ -7,7 +7,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -18,6 +23,9 @@ import models.interfaces.PrettyString;
 import play.data.validation.Constraints;
 
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("HANDLER_SELLER")
 public class HandlerSeller extends BaseSeller implements PrettyString {
 
   @ManyToOne
@@ -30,7 +38,7 @@ public class HandlerSeller extends BaseSeller implements PrettyString {
   public List<TraderBidResponse> bidResponses = new ArrayList<>();
 
   @Constraints.Required
-  @ManyToMany(cascade = CascadeType.ALL, mappedBy = "growers")
+  @ManyToMany(cascade = CascadeType.ALL, mappedBy = "handlerSellers")
   @JsonIgnore // Annotation here because no explicit getter
   public List<TraderBid> traderBids = new ArrayList<>();
 

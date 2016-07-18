@@ -2,17 +2,25 @@ package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.Table;
+
 import play.data.validation.Constraints;
 
 
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING)
+@Table(name = "SELLERS")
 public abstract class BaseSeller extends BaseModel {
 
   /* ======================================= Attributes ======================================= */
@@ -63,7 +71,7 @@ public abstract class BaseSeller extends BaseModel {
   public List<String> getEmailAddressStrings() {
     return getEmailAddresses()
       .stream()
-      .map(EmailAddress::getEmailAddress)
+      .map(EmailAddress::toString)
       .collect(Collectors.toList());
   }
 
@@ -90,7 +98,7 @@ public abstract class BaseSeller extends BaseModel {
   }
 
   public void setPhoneNumbers(List<PhoneNumber> phoneNumbers) {
-    this.phoneNumbers = this.phoneNumbers;
+    this.phoneNumbers = phoneNumbers;
   }
 
   public void setEmailAddresses(List<EmailAddress> emails) {

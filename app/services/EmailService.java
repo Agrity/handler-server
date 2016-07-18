@@ -32,4 +32,12 @@ public class EmailService {
 
     return emailAddresses;
   }
+
+  public static EmailAddress stringToEmailAddress(String emailAddressString) {
+    if (!verifyEmailAddress(emailAddressString)) {
+      return null;
+    }
+
+    return new EmailAddress(emailAddressString);
+  }
 }
