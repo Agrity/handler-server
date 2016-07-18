@@ -40,7 +40,6 @@ public class EbeanTraderService implements TraderService {
   public Trader getByEmailAddressAndPassword(String emailAddress, String password) {
     Trader trader
         = FINDER
-          .fetch("emailAddress")
           .where()
           .eq("emailAddress.emailAddress", emailAddress.toLowerCase())
           .findUnique();
@@ -74,7 +73,6 @@ public class EbeanTraderService implements TraderService {
   @Override
   public boolean checkEmailAddressAvailable(String emailAddress) {
     return null == FINDER
-        .fetch("emailAddress")
         .where()
         .eq("emailAddress.emailAddress", emailAddress.toLowerCase())
         .findUnique();

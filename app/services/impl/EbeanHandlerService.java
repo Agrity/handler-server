@@ -41,7 +41,6 @@ public class EbeanHandlerService implements HandlerService {
   public Handler getByEmailAddressAndPassword(String emailAddress, String password) {
     Handler handler
         = FINDER
-          .fetch("emailAddress")
           .where()
           .eq("emailAddress.emailAddress", emailAddress.toLowerCase())
           .findUnique();
@@ -75,7 +74,6 @@ public class EbeanHandlerService implements HandlerService {
   @Override
   public boolean checkEmailAddressAvailable(String emailAddress) {
     return null == FINDER
-        .fetch("emailAddress")
         .where()
         .eq("emailAddress.emailAddress", emailAddress.toLowerCase())
         .findUnique();
