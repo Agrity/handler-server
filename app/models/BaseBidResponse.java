@@ -22,6 +22,8 @@ public abstract class BaseBidResponse extends BaseModel {
 
   private ResponseStatus responseStatus;
 
+  private long poundsAccepted;
+
 
   /* ===================================== Implementation ===================================== */
 
@@ -34,6 +36,14 @@ public abstract class BaseBidResponse extends BaseModel {
 
   public ResponseStatus getResponseStatus() {
     return responseStatus;
+  }
+
+  public long getPoundsAccepted() {
+    return poundsAccepted;
+  }
+
+  public void setPoundsAccepted(long poundsAccepted) {
+    this.poundsAccepted = poundsAccepted;
   }
 
   public void setResponseStatus(ResponseStatus responseStatus) {

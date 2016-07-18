@@ -15,7 +15,7 @@ public interface HandlerSellerService {
 
   public HandlerSeller getById(long id);
 
-  public List<HandlerSeller> getByHandlerSeller(long handlerSellerId);
+  public List<HandlerSeller> getByTrader(long handlerSellerId);
 
   public List<HandlerSeller> getByBid(long bidId);
 
