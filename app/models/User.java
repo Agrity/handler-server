@@ -4,26 +4,31 @@ import play.data.validation.Constraints;
 import utils.SecurityUtility;
 import play.Logger;
 import javax.persistence.Column;
-import javax.persistence.Transient;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.UUID;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Transient;
 
-import javax.persistence.OneToMany;
-import javax.persistence.CascadeType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.UUID;
+
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 import models.PhoneNumber;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING)
+@Table(name = "USERS")
 public abstract class User extends BaseModel {
 
   //TODO change name to UserColumns?
 	@Constraints.Required
-  @Column(name = DBConstants.HandlerColumns.COMPANY_NAME, nullable = false)
+  @Column(nullable = false)
   private String companyName;
 
   @Constraints.Required
@@ -41,8 +46,9 @@ public abstract class User extends BaseModel {
   @Column(nullable = false)
   private String emailAddress;
 
-  @OneToMany(cascade = CascadeType.ALL)
-  private List<PhoneNumber> phoneNumbers;
+  //@Column(nullable = false)
+  @OneToOne
+  private PhoneNumber phoneNumber;
 
   // Cleartext password. Not Saved to database.
   @Transient
@@ -61,12 +67,12 @@ public abstract class User extends BaseModel {
   private String authToken;
 
   public User(String companyName, String firstName, String lastName, 
-              String emailAddress,  List<PhoneNumber> phoneNumbers, String password) {
+              String emailAddress,  PhoneNumber phoneNumber, String password) {
     setCompanyName(companyName);
     setFirstName(firstName);
     setLastName(lastName);
     setEmailAddress(emailAddress);
-    setPhoneNumbers(phoneNumbers);
+    setPhoneNumber(phoneNumber);
     setPassword(password);
   }
 
@@ -119,12 +125,12 @@ public abstract class User extends BaseModel {
     return shaPassword;
   } 
 
-  public void setPhoneNumbers(List<PhoneNumber> phoneNumbers) {
-    this.phoneNumbers = phoneNumbers;
+  public void setPhoneNumber(PhoneNumber phoneNumber) {
+    this.phoneNumber = phoneNumber;
   }
 
-  public List<PhoneNumber> getPhoneNumbers() {
-    return phoneNumbers;
+  public PhoneNumber getPhoneNumber() {
+    return phoneNumber;
   }
 
   public String createToken() {
