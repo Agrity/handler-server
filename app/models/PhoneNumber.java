@@ -30,6 +30,6 @@ public class PhoneNumber extends BaseModel {
   @Override
   public String toString() {
     // TODO
-    return phoneNumber;
+    return getPhoneNumber();
   }
 }

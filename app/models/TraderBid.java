@@ -3,26 +3,30 @@ package models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import play.data.validation.Constraints;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.CascadeType;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 
 import java.util.stream.Collectors;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
-import java.util.stream.Collectors;
 import java.util.NoSuchElementException;
 import java.time.LocalDateTime;
 
 import models.BaseBidResponse.ResponseStatus;
 import models.Almond.AlmondVariety;
 import models.interfaces.PrettyString;
-import play.Logger;
 
-import services.bid_management.BidManagementService;
+import play.Logger;
 
 /** ============================================ TODO ======================================================
  * Add any other fields & getters/setters that we need for TraderBid (e.g. responses)
@@ -30,6 +34,9 @@ import services.bid_management.BidManagementService;
  */
 
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("TRADER_BID")
 public class TraderBid extends BaseBid implements PrettyString {
 
 
@@ -45,6 +52,7 @@ public class TraderBid extends BaseBid implements PrettyString {
   private Set<TraderBidResponse> bidResponses = new HashSet<>();
 
   @ManyToMany(cascade = CascadeType.ALL) 
+  @JoinTable(name="TRADER_BIDS_HANDLER_SELLERS")
   @Constraints.Required
   private List<HandlerSeller> handlerSellers = new ArrayList<>();
 
@@ -180,7 +188,7 @@ public class TraderBid extends BaseBid implements PrettyString {
       // Logger.error("managementService returned null for HandlerBidID: " + getId());
     }
 
-    return setHandlerSellerResponseForBid(handlerSellerId, ResponseStatus.ACCEPTED);
+    return setHandlerSellerReponseAccept(handlerSellerId, pounds);
   }
 
   /* TODO: Fix once BidManagementService is branched out for Traders and Handlers */
@@ -226,6 +234,21 @@ public class TraderBid extends BaseBid implements PrettyString {
     }  
 
     return setHandlerSellerResponseForBid(handlerSellerId, ResponseStatus.REQUEST_CALL);
+  }
+
+  private BidResponseResult setHandlerSellerReponseAccept(Long handlerSellerId, long poundsAccepted) {
+    TraderBidResponse response = getBidResponse(handlerSellerId);
+    if (response == null) {
+      Logger.error("Response returned null for handlerSellerId: " + handlerSellerId + " and TraderBidID: " + getId());
+      return BidResponseResult.getInvalidResult("Cannot accept bid."); // TODO: What to tell grower when this inexplicable error happens.
+
+    }
+    
+    response.setPoundsAccepted(poundsAccepted);
+    response.setResponseStatus(ResponseStatus.ACCEPTED);
+    response.save();
+    
+    return BidResponseResult.getValidResult(); 
   }
 
   private BidResponseResult setHandlerSellerResponseForBid(Long handlerSellerId, ResponseStatus responseStatus) {

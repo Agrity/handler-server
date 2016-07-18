@@ -4,21 +4,23 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
-import javax.persistence.Transient;
 
 import models.interfaces.PrettyString;
 
-import play.Logger;
 import play.data.validation.Constraints;
 
-import utils.SecurityUtility;
-
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("HANDLER")
 public class Handler extends User implements PrettyString {
 
   @OneToMany
@@ -30,8 +32,8 @@ public class Handler extends User implements PrettyString {
 
 
   public Handler(String companyName, String firstName, String lastName, 
-                 String emailAddress, List<PhoneNumber> phoneNumbers, String password) {
-    super(companyName, firstName, lastName, emailAddress, phoneNumbers, password);
+                 String emailAddress, PhoneNumber phoneNumber, String password) {
+    super(companyName, firstName, lastName, emailAddress, phoneNumber, password);
     growersList = new ArrayList<>();
   }
 

@@ -19,9 +19,6 @@ import play.Logger;
 import services.DateService;
 import services.GrowerService;
 import services.impl.EbeanGrowerService;
-import services.bid_management.WaterfallService;
-import services.bid_management.FCFSService;
-import services.bid_management.BidManagementService;
 
 import java.util.Date;
 
@@ -60,7 +57,7 @@ import java.util.Date;
  *    COMMENT: ... ,
  *  }
  */
-public class HandlerBidJsonParser extends BaseParser {
+public class HandlerBidJsonParser extends BidJsonParser {
 
   private Handler handler;
   private List<Grower> growers;
@@ -139,6 +136,12 @@ public class HandlerBidJsonParser extends BaseParser {
 
     comment = parseComment(data);
     if (comment == null) {
+      // Parser set to invalid with proper error message.
+      return;
+    }
+
+    expirationTime = parseExpirationTime(data);
+    if(expirationTime == null) {
       // Parser set to invalid with proper error message.
       return;
     }
@@ -286,77 +289,6 @@ public class HandlerBidJsonParser extends BaseParser {
     return processedGrowers;
   }
 
-  private AlmondVariety parseAlmondVariety(JsonNode data) {
-    // Check almound variety is preseent.
-    Logger.info("parsing almond variety...\n\n");
-    if (!data.has(HandlerBidJsonConstants.ALMOND_VARIETY)) {
-      setInvalid(missingParameterError(HandlerBidJsonConstants.ALMOND_VARIETY));
-      return null;
-    } 
-    
-    AlmondVariety almondVariety =
-        Almond.stringToAlmondVariety(data.get(HandlerBidJsonConstants.ALMOND_VARIETY).asText());
-
-    if (almondVariety == null) {
-      setInvalid("Almond Variety Format Invalid: string of valid almond variety expected.\n");
-      return null;
-    }
-
-    return almondVariety;
-  }
-
-  private String parseAlmondSize(JsonNode data) {
-    // Check almound size is present.
-    Logger.info("parsing almond size...\n\n");
-    if (!data.has(HandlerBidJsonConstants.ALMOND_SIZE)) {
-      setInvalid(missingParameterError(HandlerBidJsonConstants.ALMOND_SIZE));
-      return null;
-    } 
-
-    // TODO Add checks to verify correctly formatted almond size.
-    
-    return data.get(HandlerBidJsonConstants.ALMOND_SIZE).asText();
-  }
-
-  private Integer parseAlmondPounds(JsonNode data) {
-    // Check almound pounds is present.
-    Logger.info("parsing almond pounds...\n\n");
-    if (!data.has(HandlerBidJsonConstants.ALMOND_POUNDS)) {
-      setInvalid(missingParameterError(HandlerBidJsonConstants.ALMOND_POUNDS));
-      return null;
-
-    } 
-    
-    Long almondPounds = parseLong(data.get(HandlerBidJsonConstants.ALMOND_POUNDS).asText());
-
-    if (almondPounds == null) {
-      setInvalid("Almond Pound Format Invalid: integer expected.\n");
-      return null;
-    }
-
-    return almondPounds.intValue();
-  }
-
-  private String parsePricePerPound(JsonNode data) {
-    // Check price per pound is present.
-    Logger.info("parsing price per pound...\n\n");
-    if (!data.has(HandlerBidJsonConstants.PRICE_PER_POUND)) {
-      setInvalid(missingParameterError(HandlerBidJsonConstants.PRICE_PER_POUND));
-      return null;
-
-    } 
-    
-    // TODO Change To Monetary Value
-    String pricePerPound = data.get(HandlerBidJsonConstants.PRICE_PER_POUND).asText();
-
-    if (pricePerPound == null) {
-      setInvalid("Almond Price Per Pound Format Invalid: monetary value string expected.\n");
-      return null;
-    }
-
-    return "$" + pricePerPound;
-  }
-
   private LocalDate parseStartPaymentDate(JsonNode data) {
     // Check payment date is preseent.
     Logger.info("parsing start payment date...\n\n");
@@ -397,100 +329,10 @@ public class HandlerBidJsonParser extends BaseParser {
     return DateService.stringToDate(dateString);
   }
 
-  private ManagementTypeInfo parseManagementType(JsonNode data) {
-    Logger.info("parsing management type...\n\n");
-    if (!data.has(HandlerBidJsonConstants.MANAGEMENT_TYPE)) {
-      setInvalid(missingParameterError(HandlerBidJsonConstants.MANAGEMENT_TYPE));
-      return null;
-    }
-
-    JsonNode typeMap = data.get(HandlerBidJsonConstants.MANAGEMENT_TYPE);
-
-    int delayInt;
-    if(typeMap.has(HandlerBidJsonConstants.DELAY_KEY)) {
-      delayInt = typeMap.get(HandlerBidJsonConstants.DELAY_KEY).asInt();
-    } else {
-      setInvalid(missingParameterError(HandlerBidJsonConstants.DELAY_KEY));
-      return null;
-    }
-
-    LocalDateTime currentTime = LocalDateTime.now();
-    expirationTime = currentTime.plusMinutes(delayInt);
-  
-    if(typeMap.has(HandlerBidJsonConstants.TYPE_KEY)) {
-      String className = typeMap.get(HandlerBidJsonConstants.TYPE_KEY).asText();
-      Duration delayTime = Duration.ofMinutes(delayInt);
-      switch(className) {
-        case HandlerBidJsonConstants.ManagementTypes.WATERFALL:
-          return new ManagementTypeInfo(WaterfallService.class, delayTime);
-        case HandlerBidJsonConstants.ManagementTypes.FCFS: 
-          return new ManagementTypeInfo(FCFSService.class, delayTime);
-        default:
-          setInvalid("Management Type invalid: specified type " + className +" not found\n");
-          return null;          
-      }
-    } 
-
-    setInvalid(missingParameterError(HandlerBidJsonConstants.TYPE_KEY));
-    return null;
-  }
-
-
-  private String parseComment(JsonNode data) {
-    Logger.info("parsing comment...\n\n");
-    // Check comment is present.
-    if (!data.has(HandlerBidJsonConstants.COMMENT)) {
-      return "";
-    } 
-    
-    String commentString = data.get(HandlerBidJsonConstants.COMMENT).asText();
-
-    if (commentString == null) {
-      setInvalid("Comment Format Invalid: string format expected.\n");
-      return null;
-    }
-
-    return commentString;
-  }
-
   private static class HandlerBidJsonConstants {
     private static final String GROWER_IDS = "grower_ids";
-
-    private static final String ALMOND_VARIETY = "almond_variety";
-    private static final String ALMOND_SIZE = "almond_size";
-    private static final String ALMOND_POUNDS = "almond_pounds";
-
-    private static final String PRICE_PER_POUND = "price_per_pound";
-
     private static final String START_PAYMENT_DATE = "start_payment_date";
-
     private static final String END_PAYMENT_DATE = "end_payment_date";
-
-    private static final String MANAGEMENT_TYPE = "management_type";
-
-    private static final String COMMENT = "comment";
-
-    private static final String TYPE_KEY = "type";
-    private static final String DELAY_KEY = "delay";
-
-    public static class ManagementTypes {
-      private static final String WATERFALL = "WaterfallService";
-      private static final String FCFS = "FCFSService";
-    }
-  }
-
-  public static class ManagementTypeInfo {
-    private Class<? extends BidManagementService> typeClass;
-    private Duration delay;
-
-      ManagementTypeInfo(Class<? extends BidManagementService> c, Duration d) {
-        this.typeClass = c;
-        this.delay = d;
-      }
-
-      public Class<? extends BidManagementService> getClassType() { return typeClass; }
-      public String className() { return typeClass.getName(); }
-      public Duration getDelay() { return delay; }
 
   }
 }

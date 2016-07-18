@@ -24,11 +24,11 @@ public class EbeanHandlerSellerService implements HandlerSellerService {
   }
 
   @Override
-  public List<HandlerSeller> getByHandlerSeller(long handlerSellerId) {
+  public List<HandlerSeller> getByTrader(long traderId) {
     // TODO Assert Handler Exists, or Return Null
     return FINDER.where()
         // TODO Fix this Column Name.
-        .eq("handler_seller_id", handlerSellerId)
+        .eq("trader_id", traderId)
         .findList();
   }
 

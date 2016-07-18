@@ -77,7 +77,6 @@ public abstract class BaseParser {
     }
   }
 
-
   /* 
    * For use in Grower/HandlerBidJsonParser's.
    *

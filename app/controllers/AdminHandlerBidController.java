@@ -21,7 +21,7 @@ import services.HandlerBidService;
 import services.messaging.bid.BidMessageService;
 import services.bid_management.FCFSService;
 import services.parsers.HandlerBidJsonParser;
-import services.parsers.HandlerBidJsonParser.ManagementTypeInfo;
+import services.parsers.BidJsonParser.ManagementTypeInfo;
 
 import utils.JsonMsgUtils;
 
