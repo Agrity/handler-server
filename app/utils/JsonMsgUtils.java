@@ -122,11 +122,7 @@ public class JsonMsgUtils {
   }
 
   public static ObjectNode handlerSellerDeleted(long handlerSellerId) {
-<<<<<<< HEAD
-    return validToJson("HandlerSeller " + Long.toString(handlerSellerId) + " successfully deleted.");
-=======
     return validToJson("HandlerSeller " + Long.toString(handlerSellerId) +" successfully deleted");
->>>>>>> master
   }
 
   private static ObjectNode validToJson(String msg) {
