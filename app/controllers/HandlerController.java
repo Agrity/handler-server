@@ -31,7 +31,7 @@ import services.bid_management.FCFSService;
 import services.bid_management.WaterfallService;
 import services.parsers.GrowerJsonParser;
 import services.parsers.HandlerBidJsonParser;
-import services.parsers.HandlerBidJsonParser.ManagementTypeInfo;
+import services.parsers.BidJsonParser.ManagementTypeInfo;
 
 import utils.JsonMsgUtils;
 import utils.ResponseHeaders;

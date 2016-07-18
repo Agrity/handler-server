@@ -16,7 +16,9 @@ import models.BidResponseResult;
 
 import com.avaje.ebean.Model.Finder;
 import services.impl.EbeanGrowerService;
+import services.impl.EbeanHandlerBidService;
 
+import services.HandlerBidService;
 import services.messaging.MessageServiceConstants.TwilioFields;
 import services.parsers.SMSParser;
 
@@ -79,10 +81,15 @@ public class MessageReceivingController extends Controller {
     
     /* if we reach here, the SMS message has a well-formatted bidID and almondAmount response */
 
-    HandlerBid handlerBid = grower.bidLookupByID(bidID);
+    HandlerBidService handlerBidService = new EbeanHandlerBidService();
+    HandlerBid handlerBid = handlerBidService.getById(bidID);
     if (handlerBid == null) {
       Logger.error("BidID " + bidID + " does not exist. From: " + phoneNum);
       return ok("Bid: " + bidID + " does not exist.");
+    }
+    if(grower.bidLookupByID(bidID) == null) {
+      Logger.error("BidID " + bidID + " not owned by grower " + grower.getId() +". From: " + phoneNum);
+      return ok("You are not authorized to accept bid " + bidID + ".");
     }
 
     Logger.info("The valid bidID is: " + bidID);

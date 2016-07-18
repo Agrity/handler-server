@@ -83,7 +83,7 @@ public class EbeanTraderService implements TraderService {
   }
   
   @Override
- public boolean checkTraderOwnsBid(Trader trader, TraderBid traderBid) {
+  public boolean checkTraderOwnsBid(Trader trader, TraderBid traderBid) {
     return trader.equals(traderBid.getTrader());
   }
 } 
