@@ -29,15 +29,12 @@ import play.data.validation.Constraints;
 public class HandlerSeller extends BaseSeller implements PrettyString {
 
   @ManyToOne
-  @Constraints.Required
   private Trader trader;
 
-  @Constraints.Required
   @OneToMany(cascade = CascadeType.ALL)
   @JsonIgnore // Annotation here because no explicit getter
   public List<TraderBidResponse> bidResponses = new ArrayList<>();
 
-  @Constraints.Required
   @ManyToMany(cascade = CascadeType.ALL, mappedBy = "handlerSellers")
   @JsonIgnore // Annotation here because no explicit getter
   public List<TraderBid> traderBids = new ArrayList<>();
@@ -50,14 +47,14 @@ public class HandlerSeller extends BaseSeller implements PrettyString {
 
 
   public HandlerSeller(Trader trader, String firstName, String lastName,
-      List<EmailAddress> emailAddresses, List<PhoneNumber> phoneNumbers) {
+      EmailAddress emailAddress, PhoneNumber phoneNumber) {
     super();
 
     setFirstName(firstName);
     setLastName(lastName);
     this.trader = trader;
-    setEmailAddresses(emailAddresses);
-    setPhoneNumbers(phoneNumbers);
+    setEmailAddress(emailAddress);
+    setPhoneNumber(phoneNumber);
   }
 
   public Trader getTrader() {
@@ -122,9 +119,8 @@ public class HandlerSeller extends BaseSeller implements PrettyString {
         .append("(" + id + ") " + getFullName());
 
     builder.append(" [ ");
-    for (EmailAddress addr : getEmailAddresses()) {
-      builder.append(addr + ", ");
-    }
+
+    builder.append(getEmailAddress() + ", ");
 
     builder.append("] [ ");
 

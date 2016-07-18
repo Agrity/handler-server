@@ -12,7 +12,9 @@ import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Column;
 
 import play.data.validation.Constraints;
 
@@ -25,10 +27,8 @@ public abstract class BaseSeller extends BaseModel {
 
   /* ======================================= Attributes ======================================= */
 
-  @Constraints.Required
   private String firstName;
 
-  @Constraints.Required
   private String lastName;
 
   /**
@@ -36,16 +36,16 @@ public abstract class BaseSeller extends BaseModel {
    *
    * <a href="https://github.com/playframework/play-mailer/blob/master/README.adoc">Plugin Link</a>
    */
-  @OneToMany(cascade = CascadeType.ALL)
-  @Constraints.Required
-  public List<EmailAddress> emailAddresses;
+  @OneToOne
+  @Column(nullable = false)
+  private EmailAddress emailAddress;
 
   /**
    * TODO: Change to phone number format, construct own model so that can be consistant.
    */
-  @OneToMany(cascade = CascadeType.ALL)
-  @Constraints.Required
-  public List<PhoneNumber> phoneNumbers;
+  @OneToOne
+  @Column(nullable = false)
+  private PhoneNumber phoneNumber;
 
   /* ======================================= Attribute Accessors ======================================= */
 
@@ -64,27 +64,21 @@ public abstract class BaseSeller extends BaseModel {
   }
 
   @JsonIgnore
-  public List<EmailAddress> getEmailAddresses() {
-    return emailAddresses;
+  public EmailAddress getEmailAddress() {
+    return emailAddress;
   }
 
-  public List<String> getEmailAddressStrings() {
-    return getEmailAddresses()
-      .stream()
-      .map(EmailAddress::toString)
-      .collect(Collectors.toList());
+  public String getEmailAddressString() {
+    return getEmailAddress().toString();
   }
 
   @JsonIgnore
-  public List<PhoneNumber> getPhoneNumbers() {
-    return phoneNumbers;
+  public PhoneNumber getPhoneNumber() {
+    return phoneNumber;
   }
 
-  public List<String> getPhoneNumsStrings() {
-    return getPhoneNumbers()
-      .stream()
-      .map(PhoneNumber::getPhoneNumber)
-      .collect(Collectors.toList());
+  public String getPhoneNumberString() {
+    return getPhoneNumber().toString();
   }
 
   /* ======================================= Attribute Setters ======================================= */
@@ -97,12 +91,12 @@ public abstract class BaseSeller extends BaseModel {
     this.lastName = lastName;
   }
 
-  public void setPhoneNumbers(List<PhoneNumber> phoneNumbers) {
-    this.phoneNumbers = phoneNumbers;
+  public void setPhoneNumber(PhoneNumber phoneNumber) {
+    this.phoneNumber = phoneNumber;
   }
 
-  public void setEmailAddresses(List<EmailAddress> emails) {
-    emailAddresses = emails;
+  public void setEmailAddress(EmailAddress email) {
+    emailAddress = email;
   }
 
   /* ======================================= Member Functions ======================================= */
@@ -110,6 +104,6 @@ public abstract class BaseSeller extends BaseModel {
   @Override
   public String toString() {
     // TODO
-    return "(" + id + ") " + getFullName() + " [" + getEmailAddresses().toString() + "]";
+    return "(" + id + ") " + getFullName() + " [" + getEmailAddress().toString() + "]";
   }
 }

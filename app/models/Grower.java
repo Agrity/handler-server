@@ -28,16 +28,13 @@ import play.data.validation.Constraints;
 public class Grower extends BaseSeller implements PrettyString {
 
   @ManyToOne
-  @Constraints.Required
   private Handler handler;
 
   // TODO Remove BidResponses and Bidss from Growers if possible.
-  @Constraints.Required
   @OneToMany(cascade = CascadeType.ALL)
   @JsonIgnore // Annotation here because no explicit getter
   public List<HandlerBidResponse> bidResponses = new ArrayList<>();
 
-  @Constraints.Required
   @ManyToMany(cascade = CascadeType.ALL, mappedBy = "growers")
   @JsonIgnore // Annotation here because no explicit getter
   public List<HandlerBid> handlerBids = new ArrayList<>();
@@ -50,14 +47,14 @@ public class Grower extends BaseSeller implements PrettyString {
 
 
   public Grower(Handler handler, String firstName, String lastName,
-      List<EmailAddress> emailAddresses, List<PhoneNumber> phoneNumbers) {
+      EmailAddress emailAddress, PhoneNumber phoneNumber) {
     super();
 
     setFirstName(firstName);
     setLastName(lastName);
     this.handler = handler;
-    setEmailAddresses(emailAddresses);
-    setPhoneNumbers(phoneNumbers);
+    setEmailAddress(emailAddress);
+    setPhoneNumber(phoneNumber);
   }
 
   public Handler getHandler() {
@@ -122,9 +119,8 @@ public class Grower extends BaseSeller implements PrettyString {
         .append("(" + id + ") " + getFullName());
 
     builder.append(" [ ");
-    for (EmailAddress addr : getEmailAddresses()) {
-      builder.append(addr + ", ");
-    }
+
+    builder.append(getEmailAddress() + ", ");
 
     builder.append("] [ ");
 

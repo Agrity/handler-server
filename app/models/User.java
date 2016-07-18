@@ -27,14 +27,11 @@ import models.PhoneNumber;
 public abstract class User extends BaseModel {
 
   //TODO change name to UserColumns?
-	@Constraints.Required
   @Column(nullable = false)
   private String companyName;
 
-  @Constraints.Required
   private String firstName;
 
-  @Constraints.Required
   private String lastName;
 
 	/* ===================================== Authentication ===================================== */
@@ -43,16 +40,16 @@ public abstract class User extends BaseModel {
   // Email Address, also used as username for login.
   //
   // WARNING: Is expected to always be lowercase.
+  @OneToOne
   @Column(nullable = false)
   private EmailAddress emailAddress;
 
-  //@Column(nullable = false)
   @OneToOne
+  @Column(nullable = false)
   private PhoneNumber phoneNumber;
 
   // Cleartext password. Not Saved to database.
   @Transient
-  @Constraints.Required
   @Constraints.MinLength(6)
   @Constraints.MaxLength(256)
   @JsonIgnore

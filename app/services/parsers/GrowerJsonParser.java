@@ -26,17 +26,9 @@ import play.Logger;
  *
  *
  *
- *    EMAIL_ADDRESSES: [
- *      ... ,
- *      ... ,
- *      ...
- *    ]
+ *    EMAIL_ADDRESS: ...
  *
- *    PHONE_NUMBERS: [
- *      ... ,
- *      ... ,
- *      ...
- *    ]
+ *    PHONE_NUMBERS: ...
  *  }
  */
 public class GrowerJsonParser extends BaseSellerJsonParser {
@@ -64,14 +56,14 @@ public class GrowerJsonParser extends BaseSellerJsonParser {
       return;
     }
     
-    setEmailAddresses(parseEmailAddresses(data));
-    if (getEmailAddresses() == null) {
+    setEmailAddress(parserSellerEmailAddress(data));
+    if (getEmailAddress() == null) {
       // Parser set to invalid with proper error message.
       return;
     }
 
-    setPhoneNumbers(parsePhoneNumbers(data));
-    if (getPhoneNumbers() == null) {
+    setPhoneNumber(parsePhoneNumber(data));
+    if (getPhoneNumber() == null) {
       // Parser set to invalid with proper error message.
       return;
     }
@@ -89,8 +81,8 @@ public class GrowerJsonParser extends BaseSellerJsonParser {
         getHandler(),
         getFirstName(),
         getLastName(),
-        getEmailAddresses(),
-        getPhoneNumbers());
+        getEmailAddress(),
+        getPhoneNumber());
 
     return newGrower;
   }
@@ -102,8 +94,8 @@ public class GrowerJsonParser extends BaseSellerJsonParser {
 
     grower.setFirstName(getFirstName());
     grower.setLastName(getLastName());
-    grower.setPhoneNumbers(getPhoneNumbers());
-    grower.setEmailAddresses(getEmailAddresses()); 
+    grower.setPhoneNumber(getPhoneNumber());
+    grower.setEmailAddress(getEmailAddress()); 
 
   }
 
