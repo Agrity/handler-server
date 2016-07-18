@@ -43,12 +43,8 @@ public class EbeanHandlerSellerService implements HandlerSellerService {
   public HandlerSeller handlerSellerLookupByPhoneNum(String phoneNum) {
     List<HandlerSeller> handlerSellers = getAll(); 
     for (HandlerSeller handlerSeller: handlerSellers) {
-      for (String curPhoneNum: handlerSeller.getPhoneNumsStrings()) {
-        Logger.info("These are the curPhoneNums being looked up: " + curPhoneNum
-                 + "   " + phoneNum + "\n\n");
-        if (curPhoneNum.equals(phoneNum)) {
-          return handlerSeller;
-        }
+      if (handlerSeller.getPhoneNumberString().equals(phoneNum)) {
+        return handlerSeller;
       }
     }
     return null;

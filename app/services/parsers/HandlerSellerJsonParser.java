@@ -26,17 +26,9 @@ import play.Logger;
  *
  *
  *
- *    EMAIL_ADDRESSES: [
- *      ... ,
- *      ... ,
- *      ...
- *    ]
+ *    EMAIL_ADDRESSES: ...
  *
- *    PHONE_NUMBERS: [
- *      ... ,
- *      ... ,
- *      ...
- *    ]
+ *    PHONE_NUMBERS: ...
  *  }
  */
 public class HandlerSellerJsonParser extends BaseSellerJsonParser {
@@ -64,14 +56,14 @@ public class HandlerSellerJsonParser extends BaseSellerJsonParser {
       return;
     }
     
-    setEmailAddresses(parseEmailAddresses(data));
-    if (getEmailAddresses() == null) {
+    setEmailAddress(parserSellerEmailAddress(data));
+    if (getEmailAddress() == null) {
       // Parser set to invalid with proper error message.
       return;
     }
 
-    setPhoneNumbers(parsePhoneNumbers(data));
-    if (getPhoneNumbers() == null) {
+    setPhoneNumber(parsePhoneNumber(data));
+    if (getPhoneNumber() == null) {
       // Parser set to invalid with proper error message.
       return;
     }
@@ -89,8 +81,8 @@ public class HandlerSellerJsonParser extends BaseSellerJsonParser {
         getTrader(),
         getFirstName(),
         getLastName(),
-        getEmailAddresses(),
-        getPhoneNumbers());
+        getEmailAddress(),
+        getPhoneNumber());
 
     return newHandlerSeller;
   }
@@ -102,8 +94,8 @@ public class HandlerSellerJsonParser extends BaseSellerJsonParser {
 
     handlerSeller.setFirstName(getFirstName());
     handlerSeller.setLastName(getLastName());
-    handlerSeller.setPhoneNumbers(getPhoneNumbers());
-    handlerSeller.setEmailAddresses(getEmailAddresses()); 
+    handlerSeller.setPhoneNumber(getPhoneNumber());
+    handlerSeller.setEmailAddress(getEmailAddress()); 
 
   }
 

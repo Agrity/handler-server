@@ -65,19 +65,21 @@ public class BidSMSMessageService implements BidMessageService {
 
   public boolean sendUpdated(HandlerBid handlerBid, Grower grower, String msg) {
     boolean success = true;
-    for (String phoneNumber: grower.getPhoneNumsStrings()) {
-      List<NameValuePair> params = new ArrayList<NameValuePair>(); 
-      params.add(new BasicNameValuePair("To", phoneNumber));    
-      params.add(new BasicNameValuePair("From", TwilioFields.getTwilioNumber())); 
-      params.add(new BasicNameValuePair("Body", msg));
-      try {
-        Message message = TwilioFields.getMessageFactory().create(params);
-      } catch (TwilioRestException e) {
-        success = false;
-        Logger.error("=== Error Sending SMS Message === to " + phoneNumber
-                   + " " + e.getErrorMessage() + "\n\n");
-      }
+    String phoneNumber = grower.getPhoneNumberString();
+
+    List<NameValuePair> params = new ArrayList<NameValuePair>(); 
+    params.add(new BasicNameValuePair("To", phoneNumber));    
+    params.add(new BasicNameValuePair("From", TwilioFields.getTwilioNumber())); 
+    params.add(new BasicNameValuePair("Body", msg));
+
+    try {
+      Message message = TwilioFields.getMessageFactory().create(params);
+    } catch (TwilioRestException e) {
+      success = false;
+      Logger.error("=== Error Sending SMS Message === to " + phoneNumber
+                 + " " + e.getErrorMessage() + "\n\n");
     }
+    
     return success;
   }
 

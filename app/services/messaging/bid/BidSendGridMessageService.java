@@ -46,24 +46,23 @@ public class BidSendGridMessageService implements BidMessageService {
 
   public boolean send(HandlerBid handlerBid, Grower grower) {
     boolean success = true;
-    List<String> growerEmailAddresses = grower.getEmailAddressStrings();
-    for (String emailAddr : growerEmailAddresses) {
-      Email toEmail = new Email(emailAddr);
+    String emailAddr = grower.getEmailAddressString();
+    Email toEmail = new Email(emailAddr);
 
-      Content content
-      = new Content(
-        "text/html",
-        MessageServiceConstants.EmailFields.getEmailHTMLContent(handlerBid, grower));
+    Content content
+    = new Content(
+      "text/html",
+      MessageServiceConstants.EmailFields.getEmailHTMLContent(handlerBid, grower));
 
-      Mail mail
-      = new Mail(
-        FROM_EMAIL,
-        MessageServiceConstants.EmailFields.getSubjectLineNewBid(),
-        toEmail,
-        content);
+    Mail mail
+    = new Mail(
+      FROM_EMAIL,
+      MessageServiceConstants.EmailFields.getSubjectLineNewBid(),
+      toEmail,
+      content);
 
-      if (!sendEmail(mail, toEmail)) success = false;
-    }
+    if (!sendEmail(mail, toEmail)) success = false;
+
     return success;    
   }
 
@@ -79,25 +78,25 @@ public class BidSendGridMessageService implements BidMessageService {
 
   public boolean sendClosed(HandlerBid handlerBid, Grower grower) {
     boolean success = true;
-    List<String> growerEmailAddresses = grower.getEmailAddressStrings();
-    for (String emailAddr : growerEmailAddresses) {
-      Email toEmail = new Email(emailAddr);
+    String emailAddr = grower.getEmailAddressString();
 
-      Content content
-      = new Content(
-        "text/plain",
-        "Your bid <" + handlerBid.getAlmondVariety() + " for " 
-        + handlerBid.getPricePerPound() + "/lb.> has expired.");
+    Email toEmail = new Email(emailAddr);
 
-      Mail mail
-      = new Mail(
-        FROM_EMAIL,
-        MessageServiceConstants.EmailFields.getSubjectLineExpired(handlerBid.getId()),
-        toEmail,
-        content);
+    Content content
+    = new Content(
+      "text/plain",
+      "Your bid <" + handlerBid.getAlmondVariety() + " for " 
+      + handlerBid.getPricePerPound() + "/lb.> has expired.");
 
-      if (!sendEmail(mail, toEmail)) success = false;
-    }
+    Mail mail
+    = new Mail(
+      FROM_EMAIL,
+      MessageServiceConstants.EmailFields.getSubjectLineExpired(handlerBid.getId()),
+      toEmail,
+      content);
+
+    if (!sendEmail(mail, toEmail)) success = false;
+
     return success; 
   }
 
@@ -113,21 +112,21 @@ public class BidSendGridMessageService implements BidMessageService {
 
   public boolean sendUpdated(HandlerBid handlerBid, Grower grower, String msg) {
     boolean success = true;
-    List<String> growerEmailAddresses = grower.getEmailAddressStrings();
-    for (String emailAddr : growerEmailAddresses) {
-      Email toEmail = new Email(emailAddr);
+    String emailAddr = grower.getEmailAddressString();
 
-      Content content = new Content("text/plain", msg);
+    Email toEmail = new Email(emailAddr);
 
-      Mail mail
-      = new Mail(
-        FROM_EMAIL,
-        MessageServiceConstants.EmailFields.getSubjectLineUpdated(handlerBid.getId()),
-        toEmail,
-        content);
+    Content content = new Content("text/plain", msg);
 
-      if (!sendEmail(mail, toEmail)) success = false;
-    }
+    Mail mail
+    = new Mail(
+      FROM_EMAIL,
+      MessageServiceConstants.EmailFields.getSubjectLineUpdated(handlerBid.getId()),
+      toEmail,
+      content);
+
+    if (!sendEmail(mail, toEmail)) success = false;
+    
     return success; 
   }
 
