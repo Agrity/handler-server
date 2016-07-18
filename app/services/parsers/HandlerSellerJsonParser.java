@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import models.EmailAddress;
-import models.Grower;
-import models.Handler;
+import models.HandlerSeller;
+import models.Trader;
 import models.PhoneNumber;
 
 import services.EmailService;
@@ -19,7 +19,7 @@ import play.Logger;
  *
  * Expected Json Structure:
  *  {
- *    HANDLER_ID: ... (Constant in JsonParser super class)
+ *    TRADER_ID: ... (Constant in JsonParser super class)
  *
  *    FIRST_NAME: ...
  *    LAST_NAME: ...
@@ -39,15 +39,15 @@ import play.Logger;
  *    ]
  *  }
  */
-public class GrowerJsonParser extends BaseSellerJsonParser {
+public class HandlerSellerJsonParser extends BaseSellerJsonParser {
 
-  private Handler handler;
+  private Trader trader;
 
-  public GrowerJsonParser(JsonNode data) {
+  public HandlerSellerJsonParser(JsonNode data) {
     super();
 
-    handler = parseHandler(data);
-    if (handler == null) {
+    trader = parseTrader(data);
+    if (trader == null) {
       // Parser set to invalid with proper error message.
       return;
     }
@@ -80,35 +80,35 @@ public class GrowerJsonParser extends BaseSellerJsonParser {
     setValid();
   }
 
-  public Grower formGrower() {
+  public HandlerSeller formHandlerSeller() {
     if (!isValid()) {
-      throw new RuntimeException("Attempted to create Grower from invalid parser.\n");
+      throw new RuntimeException("Attempted to create HandlerSeller from invalid parser.\n");
     }
 
-    Grower newGrower = new Grower(
-        getHandler(),
+    HandlerSeller newHandlerSeller = new HandlerSeller(
+        getTrader(),
         getFirstName(),
         getLastName(),
         getEmailAddresses(),
         getPhoneNumbers());
 
-    return newGrower;
+    return newHandlerSeller;
   }
 
-  public void updateGrower(Grower grower) {
+  public void updateHandlerSeller(HandlerSeller handlerSeller) {
     if (!isValid()) {
-      throw new RuntimeException("Attempted to update Grower from invalid parser.\n");
+      throw new RuntimeException("Attempted to update handlerSeller from invalid parser.\n");
     }
 
-    grower.setFirstName(getFirstName());
-    grower.setLastName(getLastName());
-    grower.setPhoneNumbers(getPhoneNumbers());
-    grower.setEmailAddresses(getEmailAddresses()); 
+    handlerSeller.setFirstName(getFirstName());
+    handlerSeller.setLastName(getLastName());
+    handlerSeller.setPhoneNumbers(getPhoneNumbers());
+    handlerSeller.setEmailAddresses(getEmailAddresses()); 
 
   }
 
-  public Handler getHandler() {
+  public Trader getTrader() {
     ensureValid();
-    return handler;
+    return trader;
   }
 }
