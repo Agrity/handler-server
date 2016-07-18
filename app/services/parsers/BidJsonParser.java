@@ -116,10 +116,6 @@ public class BidJsonParser extends BaseParser {
   }
 
   protected LocalDateTime parseExpirationTime(JsonNode data) {
-    Logger.info("parsing expiration time...\n\n");
-
-    //TODO fix Error checking for existance of MANAGEMENT_TYPE? seems repetitive/ask ryan
-
     JsonNode typeMap = data.get(BidJsonConstants.MANAGEMENT_TYPE);
     if(typeMap.has(BidJsonConstants.DELAY_KEY)) {
       int delayInt = typeMap.get(BidJsonConstants.DELAY_KEY).asInt();
@@ -130,7 +126,6 @@ public class BidJsonParser extends BaseParser {
   }
 
   protected ManagementTypeInfo parseManagementType(JsonNode data) {
-    Logger.info("parsing management type...\n\n");
     if (!data.has(BidJsonConstants.MANAGEMENT_TYPE)) {
       setInvalid(missingParameterError(BidJsonConstants.MANAGEMENT_TYPE));
       return null;

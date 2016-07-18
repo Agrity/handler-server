@@ -32,7 +32,7 @@ public class Handler extends User implements PrettyString {
 
 
   public Handler(String companyName, String firstName, String lastName, 
-                 String emailAddress, PhoneNumber phoneNumber, String password) {
+                 EmailAddress emailAddress, PhoneNumber phoneNumber, String password) {
     super(companyName, firstName, lastName, emailAddress, phoneNumber, password);
     growersList = new ArrayList<>();
   }

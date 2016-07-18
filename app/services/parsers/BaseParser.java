@@ -2,6 +2,7 @@ package services.parsers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import models.EmailAddress;
 import models.Handler;
 import models.Trader;
 import models.PhoneNumber;
@@ -9,6 +10,7 @@ import models.PhoneNumber;
 import java.util.ArrayList;
 import java.util.List;
 
+import services.EmailService;
 import services.HandlerService;
 import services.impl.EbeanHandlerService;
 import services.TraderService;
@@ -162,6 +164,78 @@ public abstract class BaseParser {
     return name;
   }
 
+  
+  /* 
+   * Attempt to extract phone numbers from the given json data, via the HANDLER_ID field. If there
+   * is an error, the parser will be set to invalid with appropriate error message, and null will
+   * be returned.
+   * 
+   * Note: Phone numbers are an optional parameter so an error will not be set if the value is not
+   * found in the json data. And empty List will be returned instead.
+   *
+   * WARNING: Parser set to invalid if error is encountered.
+   */
+  protected PhoneNumber parsePhoneNumber(JsonNode data) {
+    // Check if phone number is present.
+    if (!data.has(JsonConstants.PHONE_NUMBER)) {
+      setInvalid(missingParameterError(JsonConstants.PHONE_NUMBER));
+      return null;
+    } 
+    
+    String phoneNumberString = data.findValue(JsonConstants.PHONE_NUMBER).asText();
+
+    PhoneNumber phoneNumber = PhoneMessageService.stringToPhoneNumber(phoneNumberString);
+
+    if (phoneNumber == null) {
+      setInvalid("Phone number [" + phoneNumberString + "] is not in a valid format.\n");
+      return null;
+    }
+
+    return phoneNumber;
+  }
+
+  /* NOTE: No check for previously used email. */
+  protected EmailAddress parserSellerEmailAddress(JsonNode data) {
+    return parseEmailAddress(data, /* Unique User Email Check */ false);
+  }
+
+  /* NOTE: Checks for previously used email. */
+  protected EmailAddress parserUserEmailAddress(JsonNode data) {
+    return parseEmailAddress(data, /* Unique User Email Check */ true);
+  }
+
+  /* WARNING: Parser set to invalid if error is encountered.
+   * NOTE: uniqueUserEmail is flag to check whether emailAdress is already in use
+   *       by another USER. */
+  private EmailAddress parseEmailAddress(JsonNode data, boolean uniqueUserEmail) {
+
+    // Check email address is present.
+    if (!data.has(JsonConstants.EMAIL_ADDRESS)) {
+      setInvalid(missingParameterError(JsonConstants.EMAIL_ADDRESS));
+      return null;
+
+    } 
+    
+    String emailAddressString = data.findValue(JsonConstants.EMAIL_ADDRESS).asText();
+
+    // Check if email is already in use.
+    if (!handlerService.checkEmailAddressAvailable(emailAddressString)
+        || !traderService.checkEmailAddressAvailable(emailAddressString)) {
+      setInvalid("Email address [" + emailAddressString + "] is already in use.\n");
+      return null;
+    }
+
+    EmailAddress emailAddress = EmailService.stringToEmailAddress(emailAddressString);
+
+    if (emailAddress == null) {
+      setInvalid("Email address [" + emailAddressString + "] is not in a valid format.\n");
+      return null;
+    }
+
+    return emailAddress;
+  }
+
+
   /*
    * Wrapper to parse given string to long. If string is null, or not in proper integer format,
    * null will be returned instead.
@@ -215,6 +289,7 @@ public abstract class BaseParser {
     private static final String HANDLER_ID = "handler_id";
     private static final String TRADER_ID = "trader_id";
 
-    private static final String PHONE_NUMBERS = "phone_numbers";
+    private static final String EMAIL_ADDRESS = "email_address";
+    private static final String PHONE_NUMBER = "phone_number";
   }
 }

@@ -30,7 +30,7 @@ public class Trader extends User implements PrettyString {
   /* ====================================== Constructors ====================================== */
 
   public Trader(String companyName, String firstName, String lastName, 
-                String emailAddress, PhoneNumber phoneNumber, String password) {
+                EmailAddress emailAddress, PhoneNumber phoneNumber, String password) {
     super(companyName, firstName, lastName, emailAddress, phoneNumber, password);
     handlerSellers = new ArrayList<>();
   }
