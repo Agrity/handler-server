@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import play.data.validation.Constraints;
 
@@ -19,6 +20,7 @@ import play.data.validation.Constraints;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING)
+@Table(name = "SELLERS")
 public abstract class BaseSeller extends BaseModel {
 
   /* ======================================= Attributes ======================================= */

@@ -16,12 +16,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.UUID;
 
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 import models.PhoneNumber;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING)
+@Table(name = "USERS")
 public abstract class User extends BaseModel {
 
   //TODO change name to UserColumns?

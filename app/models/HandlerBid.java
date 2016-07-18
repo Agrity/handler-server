@@ -55,8 +55,7 @@ public class HandlerBid extends BaseBid implements PrettyString {
   private Set<HandlerBidResponse> bidResponses = new HashSet<>();
 
   @ManyToMany(cascade = CascadeType.ALL)
-  @JoinTable(name="RYANS_GROWER_BID_JOIN",
-             joinColumns=@JoinColumn(name="named_column"))
+  @JoinTable(name="HANDLER_BIDS_GROWERS")
   @Constraints.Required
   private List<Grower> growers = new ArrayList<>();
 

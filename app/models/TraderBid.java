@@ -5,6 +5,7 @@ import play.data.validation.Constraints;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -51,6 +52,7 @@ public class TraderBid extends BaseBid implements PrettyString {
   private Set<TraderBidResponse> bidResponses = new HashSet<>();
 
   @ManyToMany(cascade = CascadeType.ALL) 
+  @JoinTable(name="TRADER_BIDS_HANDLER_SELLERS")
   @Constraints.Required
   private List<HandlerSeller> handlerSellers = new ArrayList<>();
 
