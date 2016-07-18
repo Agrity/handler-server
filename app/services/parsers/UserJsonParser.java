@@ -58,13 +58,13 @@ public class UserJsonParser extends BaseParser {
       return;
     }
 
-    firstName = parseName(data, UserJsonConstants.FIRST_NAME);
+    firstName = parseName(data, JsonConstants.FIRST_NAME);
     if (firstName == null) {
       // Parser set to invalid with proper error message.
       return;
     }
 
-    lastName = parseName(data, UserJsonConstants.LAST_NAME);
+    lastName = parseName(data, JsonConstants.LAST_NAME);
     if (lastName == null) {
       // Parser set to invalid with proper error message.
       return;
@@ -185,9 +185,6 @@ public class UserJsonParser extends BaseParser {
   private static class UserJsonConstants {
     private static final String COMPANY_NAME = "company_name";
     private static final String PASSWORD = "password";
-
-    private static final String FIRST_NAME = "first_name";
-    private static final String LAST_NAME = "last_name";
   }
 
 }
