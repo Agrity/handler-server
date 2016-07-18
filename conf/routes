@@ -30,13 +30,19 @@ GET     /admin/handlers/:id/growers/:growerId              controllers.AdminHand
 
 GET     /admin/handlers/:id/handlerBids                    controllers.AdminHandlerBidController.getAllHandlerBids(id: Long)
 
+
 # ========== Admin Trader ========== #
+
 
 GET      /admin/traders                                    controllers.AdminTraderController.getAllTraders()
 
 POST     /admin/traders                                    controllers.AdminTraderController.createTrader()
 
 GET      /admin/traders/:id                                controllers.AdminTraderController.getTrader(id: Long)
+
+GET     /admin/traders/:id/handlerSellers                        controllers.AdminTraderController.getAllHandlerSellers(id: Long)
+
+GET     /admin/traders/:id/handlerSellers/:handlerSellerId              controllers.AdminTraderController.getHandlerSeller(id: Long, handlerSellerId: Long)
 
 
 # ========== Admin Grower ========== #
@@ -91,6 +97,28 @@ GET     /admin/handlerBids/:bidId/reject/:growerId         controllers.AdminHand
 GET     /admin/handlerBids/:bidId/requestcall/:growerId    controllers.AdminHandlerBidController.requestCall(bidId: Long, growerId: Long)
 
 
+# ========== Admin TraderBid ========== #
+
+
+GET     /admin/traderBids                                 controllers.AdminTraderBidController.getAllBids()
+
+POST    /admin/traderBids                                 controllers.AdminTraderBidController.createBid()
+
+DELETE  /admin/traderBids/:id                             controllers.AdminTraderBidController.deleteBid(id: Long)
+
+PUT     /admin/traderBids/:id                             controllers.AdminTraderBidController.updateBid(id: Long)
+
+GET     /admin/traderBids/:id                             controllers.AdminTraderBidController.getBid(id: Long)
+
+GET     /admin/traderBids/:id/send                        controllers.AdminTraderBidController.sendBid(id: Long)
+
+GET     /admin/traderBids/:bidId/accept/:handlerSellerId         controllers.AdminTraderBidController.acceptBid(bidId: Long, handlerSellerId: Long)
+
+GET     /admin/traderBids/:bidId/reject/:handlerSellerId         controllers.AdminTraderBidController.rejectBid(bidId: Long, handlerSellerId: Long)
+
+GET     /admin/traderBids/:bidId/requestcall/:handlerSellerId    controllers.AdminTraderBidController.requestCall(bidId: Long, handlerSellerId: Long)
+
+
 # ========== Authentication ========== #
 
 
@@ -133,6 +161,36 @@ PUT     /handler/handlerBids/:bidId                        controllers.HandlerCo
 GET     /handler/handlerBids/:bidId                        controllers.HandlerController.getBid(bidId: Long)
 
 
+# ========== Trader User ========== #
+
+
+GET     /trader                                           controllers.TraderController.getTrader()
+
+GET     /trader/handlerSellers                                   controllers.TraderController.getAllHandlerSellers()
+
+POST    /trader/handlerSellers                                   controllers.TraderController.createHandlerSeller()
+
+GET     /trader/handlerSellers/:handlerSellerId                         controllers.TraderController.getHandlerSeller(handlerSellerId: Long)
+
+DELETE  /trader/handlerSellers/:handlerSellerId                         controllers.TraderController.deleteHandlerSeller(handlerSellerId: Long)
+
+PUT     /trader/handlerSellers/:handlerSellerId                         controllers.TraderController.updateHandlerSeller(handlerSellerId: Long)
+
+GET     /trader/traderBids/:id/send                      controllers.TraderController.sendBid(id: Long)
+
+GET     /trader/handlerSellerss/:handlerSellerId/traderBids             controllers.TraderController.getHandlerSellersBids(handlerSellerId: Long)
+
+GET     /trader/traderBids                               controllers.TraderController.getAllBids()
+
+POST    /trader/traderBids                               controllers.TraderController.createBid()
+
+DELETE  /trader/traderBids/:bidId                        controllers.TraderController.deleteBid(bidId: Long)
+
+PUT     /trader/traderBids/:bidId                        controllers.TraderController.updateBid(bidId: Long) 
+
+GET     /trader/traderBids/:bidId                        controllers.TraderController.getBid(bidId: Long)
+
+
 # ========== **TEMP** Response to Bid ========== #
 
 
@@ -143,6 +201,14 @@ GET     /handlerBids/:bidId/reject/:growerId               controllers.HandlerBi
 GET     /handlerBids/:bidId/partial/:growerId              controllers.HandlerBidController.displayPartialPage(bidId: Long, growerId: Long)
 
 GET     /handlerBids/:bidId/accept/:growerId/:pounds       controllers.HandlerBidController.acceptPartial(bidId: Long, growerId: Long, pounds: Long)
+
+GET     /traderBids/:bidId/accept/:handlerSellerId               controllers.TraderBidController.acceptBid(bidId: Long, handlerSellerId: Long)
+
+GET     /traderBids/:bidId/reject/:handlerSellerId               controllers.TraderBidController.rejectBid(bidId: Long, handlerSellerId: Long)
+
+GET     /traderBids/:bidId/partial/:handlerSellerId              controllers.TraderBidController.displayPartialPage(bidId: Long, handlerSellerId: Long)
+
+GET     /trader/:bidId/accept/:handlerSellerId/:pounds       controllers.TraderBidController.acceptPartial(bidId: Long, handlerSellerId: Long, pounds: Long)
 
 
 # ========== Message Recieving ========== #

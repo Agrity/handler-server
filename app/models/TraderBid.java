@@ -192,7 +192,7 @@ public class TraderBid extends BaseBid implements PrettyString {
   }
 
   /* TODO: Fix once BidManagementService is branched out for Traders and Handlers */
-  public BidResponseResult growerRejectBid(Long handlerSellerId) {
+  public BidResponseResult handlerSellerRejectBid(Long handlerSellerId) {
     if (!bidCurrentlyOpen()) {
       return BidResponseResult.getInvalidResult("There is no need to reject the bid because it has closed.");
     } 
@@ -228,7 +228,7 @@ public class TraderBid extends BaseBid implements PrettyString {
     return setHandlerSellerResponseForBid(handlerSellerId, ResponseStatus.REJECTED);
   }
 
-  public BidResponseResult growerRequestCall(Long handlerSellerId) {
+  public BidResponseResult handlerSellerRequestCall(Long handlerSellerId) {
     if (!bidCurrentlyOpen()) {
       return BidResponseResult.getInvalidResult("Can not request call because the bid has already closed.");
     }  
