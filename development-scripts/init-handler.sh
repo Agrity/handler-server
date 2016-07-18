@@ -4,4 +4,4 @@
 
 ./new-grower.sh
 
-./new-bid.sh
+./new-handlerBid.sh
