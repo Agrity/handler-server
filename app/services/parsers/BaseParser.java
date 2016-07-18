@@ -156,9 +156,7 @@ public abstract class BaseParser {
       setInvalid(missingParameterError(paramaterName));
       return null;
     } 
-    String name = data.findValue(paramaterName).asText();
-    
-    
+    String name = data.findValue(paramaterName).asText();    
     // TODO Check valid human name. (i.e. length, no numbers, etc.)
     
     return name;
@@ -187,7 +185,7 @@ public abstract class BaseParser {
     PhoneNumber phoneNumber = PhoneMessageService.stringToPhoneNumber(phoneNumberString);
 
     if (phoneNumber == null) {
-      setInvalid("Phone number [" + phoneNumberString + "] is not in a valid format.\n");
+      setInvalid("Phone number " + phoneNumberString + " is not in a valid format.\n");
       return null;
     }
 
@@ -291,5 +289,7 @@ public abstract class BaseParser {
 
     private static final String EMAIL_ADDRESS = "email_address";
     private static final String PHONE_NUMBER = "phone_number";
+    protected static final String FIRST_NAME = "first_name";
+    protected static final String LAST_NAME = "last_name";
   }
 }

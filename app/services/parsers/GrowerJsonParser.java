@@ -31,9 +31,13 @@ import play.Logger;
  *    PHONE_NUMBERS: ...
  *  }
  */
-public class GrowerJsonParser extends BaseSellerJsonParser {
+public class GrowerJsonParser extends BaseParser {
 
   private Handler handler;
+  private String firstName;
+  private String lastName;
+  private EmailAddress emailAddress;
+  private PhoneNumber phoneNumber;
 
   public GrowerJsonParser(JsonNode data) {
     super();
@@ -44,26 +48,26 @@ public class GrowerJsonParser extends BaseSellerJsonParser {
       return;
     }
     
-    setFirstName(parseName(data, SellerJsonConstants.FIRST_NAME));
-    if (getFirstName() == null) {
+    firstName = parseName(data, JsonConstants.FIRST_NAME);
+    if (firstName == null) {
       // Parser set to invalid with proper error message.
       return;
     }
 
-    setLastName(parseName(data, SellerJsonConstants.LAST_NAME));
-    if (getLastName() == null) {
+    lastName = parseName(data, JsonConstants.LAST_NAME);
+    if (lastName == null) {
       // Parser set to invalid with proper error message.
       return;
     }
     
-    setEmailAddress(parserSellerEmailAddress(data));
-    if (getEmailAddress() == null) {
+    emailAddress = parserSellerEmailAddress(data);
+    if (emailAddress == null) {
       // Parser set to invalid with proper error message.
       return;
     }
 
-    setPhoneNumber(parsePhoneNumber(data));
-    if (getPhoneNumber() == null) {
+    phoneNumber = parsePhoneNumber(data);
+    if (phoneNumber == null) {
       // Parser set to invalid with proper error message.
       return;
     }
@@ -102,5 +106,25 @@ public class GrowerJsonParser extends BaseSellerJsonParser {
   public Handler getHandler() {
     ensureValid();
     return handler;
+  }
+
+  public String getFirstName() {
+    ensureValid();
+    return firstName;
+  }
+
+  public String getLastName() {
+    ensureValid();
+    return lastName;
+  }
+
+  public EmailAddress getEmailAddress() {
+    ensureValid();
+    return emailAddress;
+  }
+
+  public PhoneNumber getPhoneNumber() {
+    ensureValid();
+    return phoneNumber;
   }
 }
