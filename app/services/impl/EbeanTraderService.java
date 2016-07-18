@@ -7,6 +7,7 @@ import java.util.List;
 import models.Trader;
 import models.HandlerSeller;
 import models.TraderBid;
+import models.EmailAddress;
 
 import play.Logger;
 
@@ -39,9 +40,10 @@ public class EbeanTraderService implements TraderService {
   public Trader getByEmailAddressAndPassword(String emailAddress, String password) {
     Trader trader
         = FINDER
-            .where()
-            .eq("email_address", emailAddress.toLowerCase())
-            .findUnique();
+          .fetch("emailAddress")
+          .where()
+          .eq("emailAddress.emailAddress", emailAddress.toLowerCase())
+          .findUnique();
 
     if (trader == null) {
       Logger.error("Trader not able to be found");
@@ -72,8 +74,9 @@ public class EbeanTraderService implements TraderService {
   @Override
   public boolean checkEmailAddressAvailable(String emailAddress) {
     return null == FINDER
+        .fetch("emailAddress")
         .where()
-        .eq("email_address", emailAddress.toLowerCase())
+        .eq("emailAddress.emailAddress", emailAddress.toLowerCase())
         .findUnique();
   }
   

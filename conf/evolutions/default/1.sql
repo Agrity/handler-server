@@ -68,18 +68,6 @@ create table sellers (
   constraint pk_sellers primary key (id)
 );
 
-create table bid_response (
-  id                            bigint auto_increment not null,
-  created_at                    timestamp,
-  updated_at                    timestamp,
-  grower_id                     bigint,
-  handler_bid_id                bigint,
-  response_status               integer,
-  pounds_accepted               bigint,
-  constraint ck_bid_response_response_status check (response_status in (0,1,2,3)),
-  constraint pk_bid_response primary key (id)
-);
-
 create table email_address (
   id                            bigint auto_increment not null,
   created_at                    timestamp,
@@ -159,12 +147,6 @@ create index ix_sellers_handler_id on sellers (handler_id);
 alter table sellers add constraint fk_sellers_trader_id foreign key (trader_id) references users (id) on delete restrict on update restrict;
 create index ix_sellers_trader_id on sellers (trader_id);
 
-alter table bid_response add constraint fk_bid_response_grower_id foreign key (grower_id) references sellers (id) on delete restrict on update restrict;
-create index ix_bid_response_grower_id on bid_response (grower_id);
-
-alter table bid_response add constraint fk_bid_response_handler_bid_id foreign key (handler_bid_id) references bids (id) on delete restrict on update restrict;
-create index ix_bid_response_handler_bid_id on bid_response (handler_bid_id);
-
 alter table users add constraint fk_users_email_address_id foreign key (email_address_id) references email_address (id) on delete restrict on update restrict;
 
 alter table users add constraint fk_users_phone_number_id foreign key (phone_number_id) references phone_number (id) on delete restrict on update restrict;
@@ -218,12 +200,6 @@ drop index if exists ix_sellers_handler_id;
 alter table sellers drop constraint if exists fk_sellers_trader_id;
 drop index if exists ix_sellers_trader_id;
 
-alter table bid_response drop constraint if exists fk_bid_response_grower_id;
-drop index if exists ix_bid_response_grower_id;
-
-alter table bid_response drop constraint if exists fk_bid_response_handler_bid_id;
-drop index if exists ix_bid_response_handler_bid_id;
-
 alter table users drop constraint if exists fk_users_email_address_id;
 
 alter table users drop constraint if exists fk_users_phone_number_id;
@@ -243,8 +219,6 @@ drop table if exists handler_bids_growers;
 drop table if exists bid_responses;
 
 drop table if exists sellers;
-
-drop table if exists bid_response;
 
 drop table if exists email_address;
 

@@ -36,14 +36,14 @@ public abstract class BaseSeller extends BaseModel {
    *
    * <a href="https://github.com/playframework/play-mailer/blob/master/README.adoc">Plugin Link</a>
    */
-  @OneToOne
+  @OneToOne(cascade = CascadeType.ALL)
   @Column(nullable = false)
   private EmailAddress emailAddress;
 
   /**
    * TODO: Change to phone number format, construct own model so that can be consistant.
    */
-  @OneToOne
+  @OneToOne(cascade = CascadeType.ALL)
   @Column(nullable = false)
   private PhoneNumber phoneNumber;
 

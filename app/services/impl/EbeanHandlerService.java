@@ -7,6 +7,7 @@ import java.util.List;
 import models.Grower;
 import models.Handler;
 import models.HandlerBid;
+import models.EmailAddress;
 
 import play.Logger;
 
@@ -40,9 +41,10 @@ public class EbeanHandlerService implements HandlerService {
   public Handler getByEmailAddressAndPassword(String emailAddress, String password) {
     Handler handler
         = FINDER
-            .where()
-            .eq("email_address", emailAddress.toLowerCase())
-            .findUnique();
+          .fetch("emailAddress")
+          .where()
+          .eq("emailAddress.emailAddress", emailAddress.toLowerCase())
+          .findUnique();
 
     if (handler == null) {
       Logger.error("Handler not able to be found");
@@ -73,8 +75,9 @@ public class EbeanHandlerService implements HandlerService {
   @Override
   public boolean checkEmailAddressAvailable(String emailAddress) {
     return null == FINDER
+        .fetch("emailAddress")
         .where()
-        .eq("email_address", emailAddress.toLowerCase())
+        .eq("emailAddress.emailAddress", emailAddress.toLowerCase())
         .findUnique();
   }
 
