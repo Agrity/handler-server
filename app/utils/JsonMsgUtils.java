@@ -27,13 +27,8 @@ public class JsonMsgUtils {
     return errorToJson("Grower with id '" + id + "' could not be found\n");
   }
 
-<<<<<<< HEAD
-  public static ObjectNode handlerSellerNotFoundMessage(Long handlerSellerId) {
-    return errorToJson("HandlerSeller with id '" + handlerSellerId + "' could not be found\n");
-=======
   public static ObjectNode handlerSellerNotFoundMessage(Long id) {
     return errorToJson("Handler seller with id '" + id + "' could not be found\n");
->>>>>>> master
   }
 
   public static ObjectNode bidNotFoundMessage(Long id) {
