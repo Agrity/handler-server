@@ -10,5 +10,5 @@ if ! [[ -z $HANDLER_BID_ID ]]; then
     localhost:9000/admin/handlerBids/$HANDLER_BID_ID
   echo # Insert Blank Line
 else 
-  echo "ERROR: Please provide an bid id to delete."
+  echo "ERROR: Please provide a bid id to delete."
 fi
