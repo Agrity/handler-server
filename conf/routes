@@ -55,6 +55,20 @@ GET     /admin/growers/:id                                 controllers.AdminGrow
 GET     /admin/growers/:id/handlerBids                     controllers.AdminHandlerBidController.getAllGrowerBids(id: Long)
 
 
+# ========== Admin HandlerSeller ========== #
+
+
+GET     /admin/handlerSellers                                     controllers.AdminHandlerSellerController.getAllHandlerSellers()
+
+POST    /admin/handlerSellers                                    controllers.AdminHandlerSellerController.createHandlerSeller()
+
+DELETE  /admin/handlerSellers/:id                                 controllers.AdminHandlerSellerController.deleteHandlerSeller(id: Long)
+
+PUT     /admin/handlerSellers/:id                                 controllers.AdminHandlerSellerController.updateHandlerSeller(id: Long)
+
+GET     /admin/handlerSellers/:id                                 controllers.AdminHandlerSellerController.getHandlerSeller(id: Long)
+
+
 # ========== Admin HandlerBid ========== #
 
 
