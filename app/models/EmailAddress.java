@@ -15,10 +15,6 @@ public class EmailAddress extends BaseModel {
   @Constraints.Required
   private String emailAddress;
 
-  public String getEmailAddress() {
-    return emailAddress;
-  }
-
   public static Finder<Long, EmailAddress> find = new Finder<>(EmailAddress.class);
 
 

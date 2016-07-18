@@ -71,7 +71,7 @@ public abstract class BaseSeller extends BaseModel {
   public List<String> getEmailAddressStrings() {
     return getEmailAddresses()
       .stream()
-      .map(EmailAddress::getEmailAddress)
+      .map(EmailAddress::toString)
       .collect(Collectors.toList());
   }
 

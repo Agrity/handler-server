@@ -32,7 +32,7 @@ public class HandlerSecured extends Security.Authenticator {
       Handler handler = handlerService.getByAuthToken(authTokenHeaderValue);
       if (handler != null) {
         ctx.args.put(HandlerSecurityController.HANDLER_KEY, handler);
-        return handler.getEmailAddress();
+        return handler.getEmailAddress().toString();
       } else {
         Logger.error("No Handler With Auth Token: " + authTokenHeaderValue);
       }
