@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 
 import play.data.validation.Constraints;
 
+import play.Logger;
+
 /* Wrapper class to extend model so that a list of email addresses can be saved
  * in the database. 
  *
@@ -26,6 +28,7 @@ public class EmailAddress extends BaseModel {
   @Override
   public String toString() {
     // TODO
+    Logger.debug("In EmailAddress model - " + emailAddress);
     return emailAddress;
   }
 }

@@ -11,6 +11,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Transient;
 import javax.persistence.CascadeType;
+import javax.persistence.FetchType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -41,11 +42,11 @@ public abstract class User extends BaseModel {
   // Email Address, also used as username for login.
   //
   // WARNING: Is expected to always be lowercase.
-  @OneToOne(cascade = CascadeType.ALL)
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @Column(nullable = false)
   private EmailAddress emailAddress;
 
-  @OneToOne(cascade = CascadeType.ALL)
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @Column(nullable = false)
   private PhoneNumber phoneNumber;
 
