@@ -110,6 +110,10 @@ public abstract class User extends BaseModel {
     return emailAddress;
   }
 
+  public String getEmailAddressString() {
+    return getEmailAddress().getEmailAddress();
+  }
+
   public void setPassword(String password) {
     Logger.error("Password: " + password);
     this.password = password;
@@ -130,6 +134,10 @@ public abstract class User extends BaseModel {
 
   public PhoneNumber getPhoneNumber() {
     return phoneNumber;
+  }
+
+  public String getPhoneNumberString() {
+    return getPhoneNumber().getPhoneNumber();
   }
 
   public String createToken() {
