@@ -26,7 +26,7 @@ import controllers.security.HandlerSecurityController;
 import services.GrowerService;
 import services.HandlerService;
 import services.HandlerBidService;
-import services.messaging.bid.BidMessageService;
+import services.messaging.bid.HandlerBidMessageService;
 import services.bid_management.FCFSService;
 import services.bid_management.WaterfallService;
 import services.parsers.GrowerJsonParser;
@@ -42,7 +42,7 @@ public class HandlerController extends Controller {
   private final HandlerService handlerService;
   private final GrowerService growerService;
   private final HandlerBidService handlerBidService;
-  private final BidMessageService bidMessageService;
+  private final HandlerBidMessageService bidMessageService;
 
   private final ObjectMapper jsonMapper;
 
@@ -51,7 +51,7 @@ public class HandlerController extends Controller {
       HandlerService handlerService,
       GrowerService growerService,
       HandlerBidService handlerBidService,
-      BidMessageService bidMessageService) {
+      HandlerBidMessageService bidMessageService) {
     this.handlerService = handlerService;
     this.growerService = growerService;
     this.handlerBidService = handlerBidService;
