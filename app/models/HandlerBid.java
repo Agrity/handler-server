@@ -160,7 +160,7 @@ public class HandlerBid extends BaseBid implements PrettyString {
 
 
   public void closeBid(BidStatus status) {
-    setBidStatus(BidStatus.REJECTED);
+    setBidStatus(status);
     BidManagementService.removeBidManagementService(this);
     save();
   }
