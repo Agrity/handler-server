@@ -118,6 +118,8 @@ public class TraderBidJsonParser extends BidJsonParser {
       // Parser set to invalid with proper error message.
       return;
     }
+
+    setValid();
   }
 
   public TraderBid formBid() {
