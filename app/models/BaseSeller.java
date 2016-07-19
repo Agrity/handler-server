@@ -80,7 +80,7 @@ public abstract class BaseSeller extends BaseModel {
   }
 
   public String getPhoneNumberString() {
-    return getPhoneNumber().toString();
+    return getPhoneNumber().getPhoneNumber();
   }
 
   /* ======================================= Attribute Setters ======================================= */
