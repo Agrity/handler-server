@@ -6,7 +6,7 @@ import models.HandlerBid;
 import models.Grower;
 
 //@ImplementedBy(HandlerBidSMSMessageService.class)
-public interface HandlerBidMessageService {//extends BaseBidMessageService {
+public interface HandlerBidMessageService {
 
   public boolean send(HandlerBid handlerBid);
 
