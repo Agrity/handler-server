@@ -19,8 +19,6 @@ import javax.persistence.FetchType;
 
 import play.data.validation.Constraints;
 
-import play.Logger;
-
 //import play.Logger;
 
 @Entity
@@ -73,8 +71,7 @@ public abstract class BaseSeller extends BaseModel {
   }
 
   public String getEmailAddressString() {
-    Logger.debug(emailAddress.toString());
-    return getEmailAddress().toString();
+    return getEmailAddress().getEmailAddress();
   }
 
   @JsonIgnore

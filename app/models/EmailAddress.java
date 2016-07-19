@@ -19,16 +19,12 @@ public class EmailAddress extends BaseModel {
 
   public static Finder<Long, EmailAddress> find = new Finder<>(EmailAddress.class);
 
-
   public EmailAddress(String emailAddress) {
     super();
     this.emailAddress = emailAddress;
   }
 
-  @Override
-  public String toString() {
-    // TODO
-    Logger.debug("In EmailAddress model - " + emailAddress);
+  public String getEmailAddress() {
     return emailAddress;
   }
 }

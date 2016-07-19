@@ -47,11 +47,8 @@ public class BidSendGridMessageService implements BidMessageService {
 
   public boolean send(HandlerBid handlerBid, Grower grower) {
     boolean success = true;
-    EmailAddress emailAddrModel = grower.getEmailAddress();
-    emailAddrModel.refresh();
-    String emailAddr = emailAddrModel.toString();
-    Logger.debug("ID: " + emailAddrModel.getId());
-    Logger.debug("EmailAddress: " + emailAddr);
+    String emailAddr = grower.getEmailAddress().getEmailAddress();
+
     Email toEmail = new Email(emailAddr);
 
     Content content
