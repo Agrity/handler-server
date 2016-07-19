@@ -15,9 +15,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Column;
+import javax.persistence.FetchType;
 
 import play.data.validation.Constraints;
 
+//import play.Logger;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -36,14 +38,14 @@ public abstract class BaseSeller extends BaseModel {
    *
    * <a href="https://github.com/playframework/play-mailer/blob/master/README.adoc">Plugin Link</a>
    */
-  @OneToOne(cascade = CascadeType.ALL)
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @Column(nullable = false)
   private EmailAddress emailAddress;
 
   /**
    * TODO: Change to phone number format, construct own model so that can be consistant.
    */
-  @OneToOne(cascade = CascadeType.ALL)
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @Column(nullable = false)
   private PhoneNumber phoneNumber;
 
@@ -69,7 +71,7 @@ public abstract class BaseSeller extends BaseModel {
   }
 
   public String getEmailAddressString() {
-    return getEmailAddress().toString();
+    return getEmailAddress().getEmailAddress();
   }
 
   @JsonIgnore
@@ -78,7 +80,7 @@ public abstract class BaseSeller extends BaseModel {
   }
 
   public String getPhoneNumberString() {
-    return getPhoneNumber().toString();
+    return getPhoneNumber().getPhoneNumber();
   }
 
   /* ======================================= Attribute Setters ======================================= */

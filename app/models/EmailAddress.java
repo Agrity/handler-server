@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 
 import play.data.validation.Constraints;
 
+import play.Logger;
+
 /* Wrapper class to extend model so that a list of email addresses can be saved
  * in the database. 
  *
@@ -17,15 +19,12 @@ public class EmailAddress extends BaseModel {
 
   public static Finder<Long, EmailAddress> find = new Finder<>(EmailAddress.class);
 
-
   public EmailAddress(String emailAddress) {
     super();
     this.emailAddress = emailAddress;
   }
 
-  @Override
-  public String toString() {
-    // TODO
+  public String getEmailAddress() {
     return emailAddress;
   }
 }

@@ -26,10 +26,4 @@ public class PhoneNumber extends BaseModel {
     super();
     this.phoneNumber = phoneNumber;
   }
-
-  @Override
-  public String toString() {
-    // TODO
-    return getPhoneNumber();
-  }
 }

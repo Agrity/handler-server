@@ -16,6 +16,7 @@ import java.util.List;
 
 import models.Grower;
 import models.HandlerBid;
+import models.EmailAddress;
 
 import play.Logger;
 
@@ -46,7 +47,8 @@ public class BidSendGridMessageService implements BidMessageService {
 
   public boolean send(HandlerBid handlerBid, Grower grower) {
     boolean success = true;
-    String emailAddr = grower.getEmailAddressString();
+    String emailAddr = grower.getEmailAddress().getEmailAddress();
+
     Email toEmail = new Email(emailAddr);
 
     Content content

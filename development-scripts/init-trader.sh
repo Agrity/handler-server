@@ -1,6 +1,6 @@
 #!/bin/bash
 
-./new-trader.sh "Admin Company" "admin@admin.com" "admin"
+./new-trader.sh "Admin Company" "adminTrader@admin.com" "admin"
 
 ./new-handlerSeller.sh
 
