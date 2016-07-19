@@ -84,6 +84,7 @@ public class TraderBid extends BaseBid implements PrettyString {
     setComment(comment);
     setManagementService(managementService);
     setExpirationTime(expirationTime);
+    setPoundsRemaining(almondPounds);
   }
 
   /* ======================================= Attribute Accessors ======================================= */
@@ -187,6 +188,9 @@ public class TraderBid extends BaseBid implements PrettyString {
       // TODO: Determine whether to log error. 
       // Logger.error("managementService returned null for HandlerBidID: " + getId());
     }
+
+    setPoundsRemaining(getPoundsRemaining() - (int)pounds);
+    save();
 
     return setHandlerSellerReponseAccept(handlerSellerId, pounds);
   }
