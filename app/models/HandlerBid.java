@@ -239,7 +239,7 @@ public class HandlerBid extends BaseBid implements PrettyString {
       // Logger.error("managementService returned null for HandlerBidID: " + getId());
     }
 
-    return setGrowerResponseForBid(growerId, ResponseStatus.ACCEPTED);
+    return setGrowerResponseAccept(growerId, pounds);
   }
 
   public BidResponseResult growerRejectBid(Long growerId) {
