@@ -13,6 +13,8 @@ import akka.actor.Cancellable;
 import scala.concurrent.duration.FiniteDuration;
 import java.util.concurrent.TimeUnit;
 
+import services.impl.EbeanGrowerService;
+import services.GrowerService;
 import services.messaging.bid.BidSendGridMessageService;
 import services.messaging.bid.BidSMSMessageService;
 
@@ -25,15 +27,16 @@ public class FCFSService implements BidManagementService {
   
   private Cancellable cancellable;
   private long poundsRemaining;
-  private List<Long> growerIDs;
+  private List<Long> growerIdsRemaining;
   BidSendGridMessageService emailService = new BidSendGridMessageService();
   BidSMSMessageService smsService = new BidSMSMessageService();
+  GrowerService growerService = new EbeanGrowerService();
 
   public FCFSService(HandlerBid handlerBid, Duration timeAllowed) {
     this.handlerBid = handlerBid;
     this.poundsRemaining = handlerBid.getAlmondPounds();
 
-    growerIDs = getGrowerIDList();
+    growerIdsRemaining = getGrowerIDList();
 
     emailService.send(handlerBid);
     smsService.send(handlerBid);
@@ -70,13 +73,13 @@ public class FCFSService implements BidManagementService {
       return BidResponseResult.getInvalidResult("Only " + poundsRemaining + " pounds remain. Can not accept bid for " + pounds + " pounds.");
     }
 
-    growerIDs.remove((Long) growerId);
+    growerIdsRemaining.remove((Long) growerId);
 
     if (poundsRemaining == 0) {
       cancellable.cancel();
       handlerBid.closeBid(BidStatus.ACCEPTED);
       sendClosedToRemaining();
-    } else if(growerIDs.isEmpty()) {
+    } else if(growerIdsRemaining.isEmpty()) {
         handlerBid.closeBid(BidStatus.PARTIAL); 
         cancellable.cancel(); 
     } else {
@@ -88,8 +91,8 @@ public class FCFSService implements BidManagementService {
 
   @Override
   public BidResponseResult reject(long growerId) {
-    growerIDs.remove((Long) growerId);
-    if(growerIDs.isEmpty()) {
+    growerIdsRemaining.remove((Long) growerId);
+    if(growerIdsRemaining.isEmpty()) {
       cancellable.cancel();
       if(poundsRemaining == handlerBid.getAlmondPounds()) {
         handlerBid.closeBid(BidStatus.REJECTED);
@@ -111,24 +114,18 @@ public class FCFSService implements BidManagementService {
   }
 
   private void sendClosedToRemaining() {
-    for (Grower g : handlerBid.getNoResponseGrowers()) {
+    for(Long growerId: growerIdsRemaining) {
+      Grower g = growerService.getById(growerId);
       emailService.sendClosed(handlerBid, g);
-      smsService.sendClosed(handlerBid, g);
-    }
-    for (Grower g : handlerBid.getCallRequestedGrowers()) {
-      emailService.sendClosed(handlerBid, g);
-      smsService.sendClosed(handlerBid, g);
+      smsService.sendClosed(handlerBid, g);  
     }
   }
 
   private void sendUpdatedToRemaining() {
-    for (Grower g : handlerBid.getNoResponseGrowers()) {
+    for(Long growerId: growerIdsRemaining) {
+      Grower g = growerService.getById(growerId);
       emailService.sendUpdated(handlerBid, g, formatUpdateMessage());
-      smsService.sendUpdated(handlerBid, g, formatUpdateMessage());
-    }
-    for (Grower g : handlerBid.getCallRequestedGrowers()) {
-      emailService.sendUpdated(handlerBid, g, formatUpdateMessage());
-      smsService.sendUpdated(handlerBid, g, formatUpdateMessage());
+      smsService.sendUpdated(handlerBid, g, formatUpdateMessage());  
     }
   }
 
