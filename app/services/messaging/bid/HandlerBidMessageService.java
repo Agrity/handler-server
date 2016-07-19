@@ -5,7 +5,7 @@ import com.google.inject.ImplementedBy;
 import models.HandlerBid;
 import models.Grower;
 
-//@ImplementedBy(HandlerBidSMSMessageService.class)
+@ImplementedBy(HandlerBidSendGridMessageService.class)
 public interface HandlerBidMessageService {
 
   public boolean send(HandlerBid handlerBid);
