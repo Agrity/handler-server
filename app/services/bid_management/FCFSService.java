@@ -14,7 +14,7 @@ import scala.concurrent.duration.FiniteDuration;
 import java.util.concurrent.TimeUnit;
 
 import services.messaging.bid.BidSendGridMessageService;
-import services.messaging.bid.BidSMSMessageService;
+import services.messaging.bid.HandlerBidSMSMessageService;
 
 import play.libs.Akka;
 
@@ -27,7 +27,7 @@ public class FCFSService implements BidManagementService {
   private long poundsRemaining;
   private List<Long> growerIDs;
   BidSendGridMessageService emailService = new BidSendGridMessageService();
-  BidSMSMessageService smsService = new BidSMSMessageService();
+  HandlerBidSMSMessageService smsService = new HandlerBidSMSMessageService();
 
   public FCFSService(HandlerBid handlerBid, Duration timeAllowed) {
     this.handlerBid = handlerBid;

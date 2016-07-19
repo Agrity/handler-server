@@ -18,9 +18,11 @@ import play.Logger;
 import services.messaging.MessageServiceConstants.TwilioFields;
 import services.bid_management.BidManagementService;
 
-/* === TODO: Add logging on message sending === */
+import models.BaseBid;
+import models.BaseSeller;
 
-public class BidSMSMessageService implements BidMessageService {
+
+public class HandlerBidSMSMessageService implements HandlerBidMessageService {
   
   /* Takes an offer object and sends out SMS message containing bid to all growers using Twilio account */
   public boolean send(HandlerBid handlerBid) {

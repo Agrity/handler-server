@@ -7,7 +7,7 @@ import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
 
-import services.messaging.bid.BidSMSMessageService;
+import services.messaging.bid.HandlerBidSMSMessageService;
 import models.HandlerBid;
 import play.Logger;
 import models.BaseBidResponse.ResponseStatus;
@@ -26,10 +26,10 @@ public class MessageReceivingController extends Controller {
 
   private static Integer numResponses = 0;
 
-  private final BidSMSMessageService messageService;
+  private final HandlerBidSMSMessageService messageService;
 
   @Inject
-  public MessageReceivingController(BidSMSMessageService messageService) {
+  public MessageReceivingController(HandlerBidSMSMessageService messageService) {
     this.messageService = messageService;
   }
 
