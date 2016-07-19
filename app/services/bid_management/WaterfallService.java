@@ -12,7 +12,7 @@ import akka.actor.Cancellable;
 import scala.concurrent.duration.FiniteDuration;
 import java.util.concurrent.TimeUnit;
 
-import services.messaging.bid.BidSendGridMessageService;
+import services.messaging.bid.HandlerBidSendGridMessageService;
 import services.messaging.bid.HandlerBidSMSMessageService;
 
 import play.Logger;
@@ -26,7 +26,7 @@ public class WaterfallService implements BidManagementService {
   private long poundsRemaining;
   private List<Grower> growersInLine;
 
-  BidSendGridMessageService emailService = new BidSendGridMessageService();
+  HandlerBidSendGridMessageService emailService = new HandlerBidSendGridMessageService();
   HandlerBidSMSMessageService smsService = new HandlerBidSMSMessageService();
 
   public WaterfallService(HandlerBid handlerBid, Duration delay) {

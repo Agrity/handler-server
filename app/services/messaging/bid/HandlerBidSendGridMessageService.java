@@ -23,7 +23,7 @@ import play.Logger;
 import services.messaging.MessageServiceConstants;
 import services.bid_management.BidManagementService;
 
-public class BidSendGridMessageService implements BidMessageService {
+public class HandlerBidSendGridMessageService implements HandlerBidMessageService {
 
   private static final String SENDGRID_API_KEY = "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";
 
@@ -32,7 +32,7 @@ public class BidSendGridMessageService implements BidMessageService {
   private static final Email FROM_EMAIL
       = new Email(MessageServiceConstants.EmailFields.getFromEmailAddress());
 
-  public BidSendGridMessageService() {}
+  public HandlerBidSendGridMessageService() {}
 
   @Override
   public boolean send(HandlerBid handlerBid) {
