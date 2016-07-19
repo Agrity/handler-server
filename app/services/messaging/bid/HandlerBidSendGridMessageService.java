@@ -8,8 +8,6 @@ import com.sendgrid.Request;
 import com.sendgrid.Response;
 import com.sendgrid.SendGrid;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
-import org.apache.http.client.HttpResponseException;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,9 +23,7 @@ import services.bid_management.BidManagementService;
 
 public class HandlerBidSendGridMessageService implements HandlerBidMessageService {
 
-  private static final String SENDGRID_API_KEY = "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";
-
-  private static final SendGrid SENDGRID = new SendGrid(SENDGRID_API_KEY);
+  private static final SendGridMessageService sendGridService = new SendGridMessageService();
 
   private static final Email FROM_EMAIL
       = new Email(MessageServiceConstants.EmailFields.getFromEmailAddress());
@@ -46,7 +42,6 @@ public class HandlerBidSendGridMessageService implements HandlerBidMessageServic
   }
 
   public boolean send(HandlerBid handlerBid, Grower grower) {
-    boolean success = true;
     String emailAddr = grower.getEmailAddress().getEmailAddress();
 
     Email toEmail = new Email(emailAddr);
@@ -63,9 +58,7 @@ public class HandlerBidSendGridMessageService implements HandlerBidMessageServic
       toEmail,
       content);
 
-    if (!sendEmail(mail, toEmail)) success = false;
-
-    return success;    
+    return sendGridService.sendEmail(mail, toEmail);
   }
 
   public boolean sendClosed(HandlerBid handlerBid) {
@@ -79,7 +72,6 @@ public class HandlerBidSendGridMessageService implements HandlerBidMessageServic
   }
 
   public boolean sendClosed(HandlerBid handlerBid, Grower grower) {
-    boolean success = true;
     String emailAddr = grower.getEmailAddressString();
 
     Email toEmail = new Email(emailAddr);
@@ -97,9 +89,7 @@ public class HandlerBidSendGridMessageService implements HandlerBidMessageServic
       toEmail,
       content);
 
-    if (!sendEmail(mail, toEmail)) success = false;
-
-    return success; 
+    return sendGridService.sendEmail(mail, toEmail);
   }
 
   public boolean sendUpdated(HandlerBid handlerBid, String msg) {
@@ -127,46 +117,7 @@ public class HandlerBidSendGridMessageService implements HandlerBidMessageServic
       toEmail,
       content);
 
-    if (!sendEmail(mail, toEmail)) success = false;
-    
-    return success; 
+    return sendGridService.sendEmail(mail, toEmail);
   }
 
-
-  private boolean sendEmail(Mail mail, Email email) {
-    Request request = new Request();
-
-    try {
-      request.method = Method.POST;
-      request.endpoint = "mail/send";
-      request.body = mail.build();
-
-      Response response = SENDGRID.api(request);
-
-      if (response.statusCode != 250 && response.statusCode != 202) {
-        Logger.error("==== Error Sending Email ====");
-        Logger.error("" + response.statusCode);
-        Logger.error(response.body);
-        Logger.error(response.headers.toString() + "\n");
-
-        Logger.error("Email Sent:\n" + mail.buildPretty() + "\n\n");
-
-        return false;
-      }
-    } catch (HttpResponseException e) {
-        Logger.error("==== Error Sending Email ====");
-        Logger.error("HttpResponseException: " + e.getMessage());
-        Logger.error(ExceptionUtils.getStackTrace(e));
-
-        return false;
-    } catch (IOException e) {
-        Logger.error("==== Error Sending Email ====");
-        Logger.error("IOException: " + e.getMessage());
-        Logger.error(ExceptionUtils.getStackTrace(e));
-
-        return false;
-    }
-
-    return true;
-  }
 }

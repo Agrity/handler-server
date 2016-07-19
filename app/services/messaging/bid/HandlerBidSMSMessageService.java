@@ -12,6 +12,8 @@ import services.bid_management.BidManagementService;
 
 
 public class HandlerBidSMSMessageService implements HandlerBidMessageService {
+
+  private static final TwilioMessageService twilioMessageService = new TwilioMessageService();
   
   /* Takes an offer object and sends out SMS message containing bid to all growers using Twilio account */
   public boolean send(HandlerBid handlerBid) {
@@ -55,8 +57,7 @@ public class HandlerBidSMSMessageService implements HandlerBidMessageService {
   }
 
   public boolean sendUpdated(HandlerBid handlerBid, Grower grower, String msg) {
-    TwilioMessageService service = new TwilioMessageService();
-    return service.sendMessage(grower.getPhoneNumberString(), msg);
+    return twilioMessageService.sendMessage(grower.getPhoneNumberString(), msg);
   }
 
   private String createBodyText(Grower curGrower, HandlerBid handlerBid) {
