@@ -214,7 +214,9 @@ public abstract class BaseParser {
 
     } 
     
-    String emailAddressString = data.findValue(JsonConstants.EMAIL_ADDRESS).asText();
+    String emailAddressString 
+      = (data.findValue(JsonConstants.EMAIL_ADDRESS).asText()).toLowerCase();
+
 
     // Check if email is already in use.
     if (!handlerService.checkEmailAddressAvailable(emailAddressString)
