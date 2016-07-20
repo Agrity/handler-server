@@ -60,24 +60,21 @@ public class TraderBidSMSMessageService implements TraderBidMessageService {
     return twilioMessageService.sendMessage(handlerSeller.getPhoneNumberString(), msg);
   }
 
-  /* ====== TODO ====== */
   private String createBodyText(HandlerSeller handlerSeller, TraderBid traderBid) {
-    // Long id = handlerBid.getId();
-    // String body = "Hi " + curGrower.getFullName() + ",\n"
-    //             + "You have received a new bid: \n"
-    //             + handlerBid.getAlmondVariety() + "\n"
-    //             + handlerBid.getAlmondSize() + "\n"
-    //             + handlerBid.getAlmondPoundsString() + "lbs\n"
-    //             + handlerBid.getPricePerPound() + "/lb\n" 
-    //             + handlerBid.getComment() + "\n"
-    //             + "-" + handlerBid.getHandler().getCompanyName() + " " 
-    //             + handlerBid.getHandler().getPhoneNumberString() + "\n\n"
-    //             + "Respond with the bid ID(" + id + ") "
-    //             + "followed by the amount of pounds you would like to accept (0 for rejection).\n"
-    //             + "Bid ID: " + id + "\n"
-    //             + "Example: " + id + " 10,000";
-    // return body;
-    return "";
+    Long id = traderBid.getId();
+    String body = "Hi " + handlerSeller.getFullName() + ",\n"
+                + "You have received a new bid: \n"
+                + traderBid.getAlmondVariety() + "\n"
+                + traderBid.getAlmondPoundsString() + "lbs\n"
+                + traderBid.getPricePerPound() + "/lb\n" 
+                + traderBid.getComment() + "\n"
+                + "-" + traderBid.getTrader().getCompanyName() + " " 
+                + traderBid.getTrader().getPhoneNumberString() + "\n\n"
+                + "Respond with the bid ID(" + id + ") "
+                + "followed by the amount of pounds you would like to accept (0 for rejection).\n"
+                + "Bid ID: " + id + "\n"
+                + "Example: " + id + " 10,000";
+    return body;
   } 
 
 }
