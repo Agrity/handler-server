@@ -18,7 +18,7 @@ import play.mvc.Result;
 import play.mvc.Security;
 
 import services.TraderBidService;
-import services.messaging.bid.BidMessageService;
+import services.messaging.bid.HandlerBidMessageService;
 import services.bid_management.FCFSService;
 import services.parsers.TraderBidJsonParser;
 import services.parsers.BidJsonParser.ManagementTypeInfo;
@@ -32,13 +32,13 @@ import services.bid_management.WaterfallService;
 public class AdminTraderBidController extends Controller {
 
   private final TraderBidService traderBidService;
-  private final BidMessageService bidMessageService;
+  private final HandlerBidMessageService bidMessageService;
 
   private final ObjectMapper jsonMapper;
 
   @Inject
   public AdminTraderBidController(TraderBidService traderBidService,
-      BidMessageService bidMessageService) {
+      HandlerBidMessageService bidMessageService) {
     this.traderBidService = traderBidService;
     this.bidMessageService = bidMessageService;
 

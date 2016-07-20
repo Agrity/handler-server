@@ -26,7 +26,7 @@ import controllers.security.TraderSecurityController;
 import services.HandlerSellerService;
 import services.TraderService;
 import services.TraderBidService;
-import services.messaging.bid.BidMessageService;
+import services.messaging.bid.HandlerBidMessageService;
 import services.bid_management.FCFSService;
 import services.bid_management.WaterfallService;
 //import services.parsers.HandlerSellerJsonParser;
@@ -42,7 +42,7 @@ public class TraderController extends Controller {
   private final TraderService traderService;
   private final HandlerSellerService handlerSellerService;
   private final TraderBidService traderBidService;
-  private final BidMessageService bidMessageService;
+  private final HandlerBidMessageService bidMessageService;
 
   private final ObjectMapper jsonMapper;
 
@@ -51,7 +51,7 @@ public class TraderController extends Controller {
       TraderService traderService,
       HandlerSellerService handlerSellerService,
       TraderBidService traderBidService,
-      BidMessageService bidMessageService) {
+      HandlerBidMessageService bidMessageService) {
     this.traderService = traderService;
     this.handlerSellerService = handlerSellerService;
     this.traderBidService = traderBidService;

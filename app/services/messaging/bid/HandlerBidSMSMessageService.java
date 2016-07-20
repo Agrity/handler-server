@@ -1,15 +1,7 @@
 package services.messaging.bid;
 
-import java.util.*;
-import com.twilio.sdk.*;
-import com.twilio.sdk.resource.factory.*;
-import com.twilio.sdk.resource.instance.*;
-import com.twilio.sdk.resource.list.*;
-import com.twilio.sdk.TwilioRestResponse;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 
 import models.PhoneNumber;
 import models.Grower;
@@ -18,9 +10,10 @@ import play.Logger;
 import services.messaging.MessageServiceConstants.TwilioFields;
 import services.bid_management.BidManagementService;
 
-/* === TODO: Add logging on message sending === */
 
-public class BidSMSMessageService implements BidMessageService {
+public class HandlerBidSMSMessageService implements HandlerBidMessageService {
+
+  private static final TwilioMessageService twilioMessageService = new TwilioMessageService();
   
   /* Takes an offer object and sends out SMS message containing bid to all growers using Twilio account */
   public boolean send(HandlerBid handlerBid) {
@@ -64,23 +57,7 @@ public class BidSMSMessageService implements BidMessageService {
   }
 
   public boolean sendUpdated(HandlerBid handlerBid, Grower grower, String msg) {
-    boolean success = true;
-    String phoneNumber = grower.getPhoneNumberString();
-
-    List<NameValuePair> params = new ArrayList<NameValuePair>(); 
-    params.add(new BasicNameValuePair("To", phoneNumber));    
-    params.add(new BasicNameValuePair("From", TwilioFields.getTwilioNumber())); 
-    params.add(new BasicNameValuePair("Body", msg));
-
-    try {
-      Message message = TwilioFields.getMessageFactory().create(params);
-    } catch (TwilioRestException e) {
-      success = false;
-      Logger.error("=== Error Sending SMS Message === to " + phoneNumber
-                 + " " + e.getErrorMessage() + "\n\n");
-    }
-    
-    return success;
+    return twilioMessageService.sendMessage(grower.getPhoneNumberString(), msg);
   }
 
   private String createBodyText(Grower curGrower, HandlerBid handlerBid) {
@@ -93,7 +70,7 @@ public class BidSMSMessageService implements BidMessageService {
                 + handlerBid.getPricePerPound() + "/lb\n" 
                 + handlerBid.getComment() + "\n"
                 + "-" + handlerBid.getHandler().getCompanyName() + " " 
-                + handlerBid.getHandler().getEmailAddress() + "\n\n"
+                + handlerBid.getHandler().getPhoneNumberString() + "\n\n"
                 + "Respond with the bid ID(" + id + ") "
                 + "followed by the amount of pounds you would like to accept (0 for rejection).\n"
                 + "Bid ID: " + id + "\n"

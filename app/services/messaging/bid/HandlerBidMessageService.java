@@ -5,8 +5,8 @@ import com.google.inject.ImplementedBy;
 import models.HandlerBid;
 import models.Grower;
 
-@ImplementedBy(BidSendGridMessageService.class)
-public interface BidMessageService {
+@ImplementedBy(HandlerBidSendGridMessageService.class)
+public interface HandlerBidMessageService {
 
   public boolean send(HandlerBid handlerBid);
 

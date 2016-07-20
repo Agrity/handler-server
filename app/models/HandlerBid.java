@@ -99,6 +99,7 @@ public class HandlerBid extends BaseBid implements PrettyString {
     setComment(comment);
     setManagementService(managementService);
     setExpirationTime(expirationTime);
+    setPoundsRemaining(almondPounds);
   }
 
 
@@ -160,7 +161,7 @@ public class HandlerBid extends BaseBid implements PrettyString {
 
 
   public void closeBid(BidStatus status) {
-    setBidStatus(BidStatus.REJECTED);
+    setBidStatus(status);
     BidManagementService.removeBidManagementService(this);
     save();
   }
@@ -239,7 +240,10 @@ public class HandlerBid extends BaseBid implements PrettyString {
       // Logger.error("managementService returned null for HandlerBidID: " + getId());
     }
 
-    return setGrowerResponseForBid(growerId, ResponseStatus.ACCEPTED);
+    setPoundsRemaining(getPoundsRemaining() - (int)pounds);
+    save();
+
+    return setGrowerResponseAccept(growerId, pounds);
   }
 
   public BidResponseResult growerRejectBid(Long growerId) {
