@@ -6,10 +6,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import controllers.security.AdminSecured;
 
 import models.TraderBid;
+import models.Batch;
 
 import models.BidResponseResult;
 import play.mvc.BodyParser;
@@ -18,6 +20,8 @@ import play.mvc.Result;
 import play.mvc.Security;
 
 import services.TraderBidService;
+import services.TraderService;
+import services.impl.EbeanTraderService;
 import services.messaging.bid.TraderBidMessageService;
 import services.bid_management.TraderFCFSService;
 import services.parsers.TraderBidJsonParser;
@@ -96,41 +100,49 @@ public class AdminTraderBidController extends Controller {
         : internalServerError(JsonMsgUtils.emailsNotSent());
   }
 
-  // Annotation ensures that POST request is of type application/json. If not HTTP 400 response
-  // returned.
   @Security.Authenticated(AdminSecured.class)
   @BodyParser.Of(BodyParser.Json.class)
-  public Result createBid() {
+  public Result createBatch(long traderId) {
     JsonNode data = request().body().asJson();
 
     if (data == null) {
       return badRequest(JsonMsgUtils.expectingData());
     }
-
-    TraderBidJsonParser parser = new TraderBidJsonParser(data);
-
-    if (!parser.isValid()) {
-      return badRequest(JsonMsgUtils.caughtException(parser.getErrorMessage()));
+    if(!data.isArray()) {
+      return badRequest(JsonMsgUtils.expectingArray());
     }
 
-    TraderBid traderBid = parser.formBid();
-    traderBid.save();
+    List<TraderBid> processedTraderBids = new ArrayList<>();
+    for(JsonNode singleBidNode: data) {
+      TraderBidJsonParser parser = new TraderBidJsonParser(data);
+      
+      if (!parser.isValid()) {
+        return badRequest(JsonMsgUtils.caughtException(parser.getErrorMessage()));
+      }
 
-    TraderManagementTypeInfo managementType = parser.getManagementType();
-    Class<?> classType = managementType.getClassType();
+      TraderBid traderBid = parser.formBid();
+      traderBid.save();
 
-    //TODO: add/completely remove WaterfallService for Trader vvv
-    if (classType == WaterfallService.class) {
-      //new WaterfallService(traderBid, managementType.getDelay());
-    } else if (classType == TraderFCFSService.class) {
-      new TraderFCFSService(traderBid, managementType.getDelay());
-    } else {
-      return internalServerError(JsonMsgUtils.caughtException(classType.getName() 
-        + " management type not found\n"));
+      TraderManagementTypeInfo managementType = parser.getManagementType();
+      Class<?> classType = managementType.getClassType();
+
+      if (classType == TraderFCFSService.class) {
+        new TraderFCFSService(traderBid, managementType.getDelay());
+      } else {
+        return internalServerError(JsonMsgUtils.caughtException(classType.getName() 
+          + " management type not found for Bid " + Long.toString(traderBid.getId()) 
+          + "\n"));
+      }
+
+      processedTraderBids.add(traderBid);
     }
+
+    TraderService traderService = new EbeanTraderService();
+    Batch batch = new Batch(traderService.getById(traderId), processedTraderBids);
+    batch.save();
 
     try {
-      return created(jsonMapper.writeValueAsString(traderBid));
+      return created(jsonMapper.writeValueAsString(batch));
     } catch (JsonProcessingException e) {
       return internalServerError(JsonMsgUtils.caughtException(e.toString()));
     }

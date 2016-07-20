@@ -79,6 +79,10 @@ public class JsonMsgUtils {
     return errorToJson("Expecting Some Data.\n");
   }
 
+  public static ObjectNode expectingArray() {
+    return errorToJson("Expecting JsonNode as Array. \n");
+  }
+
   public static ObjectNode growerInBid(long growerId, long bidId) {
     return errorToJson("Grower " + Long.toString(growerId) + " still in bid " 
       + Long.toString(bidId));
