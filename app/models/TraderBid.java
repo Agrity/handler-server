@@ -143,6 +143,7 @@ public class TraderBid extends BaseBid implements PrettyString {
       .collect(Collectors.toList());
   }
 
+  @JsonIgnore
   public TraderBidResponse getBidResponse(long handlerSellerId) {
     try {
       return getBidResponses().stream()
