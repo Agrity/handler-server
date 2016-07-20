@@ -4,4 +4,6 @@
 
 ./new-handlerSeller.sh
 
+./new-handlerSeller.sh
+
 ./new-batch.sh

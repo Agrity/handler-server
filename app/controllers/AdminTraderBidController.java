@@ -22,6 +22,7 @@ import play.mvc.Security;
 import services.TraderBidService;
 import services.TraderService;
 import services.impl.EbeanTraderService;
+import services.BatchService;
 import services.messaging.bid.TraderBidMessageService;
 import services.bid_management.TraderFCFSService;
 import services.parsers.TraderBidJsonParser;
@@ -37,14 +38,16 @@ public class AdminTraderBidController extends Controller {
 
   private final TraderBidService traderBidService;
   private final TraderBidMessageService bidMessageService;
+  private final BatchService batchService;
 
   private final ObjectMapper jsonMapper;
 
   @Inject
   public AdminTraderBidController(TraderBidService traderBidService,
-      TraderBidMessageService bidMessageService) {
+      TraderBidMessageService bidMessageService, BatchService batchService) {
     this.traderBidService = traderBidService;
     this.bidMessageService = bidMessageService;
+    this.batchService = batchService;
 
     this.jsonMapper = new ObjectMapper();
   }
@@ -196,6 +199,21 @@ public class AdminTraderBidController extends Controller {
     } catch (JsonProcessingException e) {
       return internalServerError(JsonMsgUtils.caughtException(e.toString()));
     }
+  }
+
+  @Security.Authenticated(AdminSecured.class) 
+  public Result getBatch(long id) {
+    Batch batch = batchService.getById(id);
+
+    if(batch == null) {
+      return notFound(JsonMsgUtils.batchNotFoundMessage(id)); 
+    }
+
+    try {
+      return ok(jsonMapper.writeValueAsString(batch));
+    } catch (JsonProcessingException e) {
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
+    }  
   }
 
   @Security.Authenticated(AdminSecured.class)

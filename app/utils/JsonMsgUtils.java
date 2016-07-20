@@ -35,6 +35,10 @@ public class JsonMsgUtils {
     return errorToJson("Bid with id '" + id + "' could not be found\n");
   }
 
+  public static ObjectNode batchNotFoundMessage(Long id) {
+    return errorToJson("Batch with id '" + id + "' could not be found\n");
+  }
+
   public static ObjectNode handlerDoesNotOwnGrowerMessage(Handler handler, Grower grower) {
     return errorToJson("Handler " + handler.getCompanyName() + " does not own Grower " + grower.getFullName()
         + ".\n");
