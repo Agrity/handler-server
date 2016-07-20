@@ -41,6 +41,8 @@ import java.util.Date;
  *
  *    ALMOND_VARIETY: ... ,
  *
+ *    ALMOND_SIZE: ... ,
+ *
  *    ALMOND_POUNDS: ... ,
  *
  *    ALMOND_PRICE_PER_POUND: ... ,
@@ -60,6 +62,7 @@ public class TraderBidJsonParser extends BidJsonParser {
   private Trader trader;
   private List<HandlerSeller> handlerSellers;
   private AlmondVariety almondVariety;
+  private String almondSize;
   private Integer almondPounds;
   private String pricePerPound;
   private TraderManagementTypeInfo managementType;
@@ -89,6 +92,12 @@ public class TraderBidJsonParser extends BidJsonParser {
 
     almondVariety = parseAlmondVariety(data);
     if (almondVariety == null) {
+      // Parser set to invalid with proper error message.
+      return;
+    }
+
+    almondSize = parseAlmondSize(data);
+    if (almondSize == null) {
       // Parser set to invalid with proper error message.
       return;
     }
@@ -135,6 +144,7 @@ public class TraderBidJsonParser extends BidJsonParser {
         getTrader(),
         getHandlerSellers(),
         getAlmondVariety(),
+        getAlmondSize(),
         getAlmondPounds(),
         getPricePerPound(),
         getComment(),
@@ -166,6 +176,11 @@ public class TraderBidJsonParser extends BidJsonParser {
   public AlmondVariety getAlmondVariety() {
     ensureValid();
     return almondVariety;
+  }
+
+  public String getAlmondSize() {
+    ensureValid();
+    return almondSize;
   }
 
   public Integer getAlmondPounds() {

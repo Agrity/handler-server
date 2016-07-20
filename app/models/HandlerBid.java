@@ -59,10 +59,6 @@ public class HandlerBid extends BaseBid implements PrettyString {
   @Constraints.Required
   private List<Grower> growers = new ArrayList<>();
 
-  // TODO Change to AlmondSize Size within Almond model.
-  @Constraints.Required
-  private String almondSize;
-
   private LocalDate startPaymentDate;
 
   private LocalDate endPaymentDate;
@@ -91,7 +87,7 @@ public class HandlerBid extends BaseBid implements PrettyString {
     this.handler = handler;
     this.growers = allGrowers;
     setAlmondVariety(almondVariety);
-    this.almondSize = almondSize;
+    setAlmondSize(almondSize);
     setAlmondPounds(almondPounds);
     setPricePerPound(pricePerPound);
     this.startPaymentDate = startPaymentDate;
@@ -115,10 +111,6 @@ public class HandlerBid extends BaseBid implements PrettyString {
     return growers;
   }
 
-  public String getAlmondSize() {
-    return almondSize;
-  }
-
   public LocalDate getStartPaymentDate() {
     return startPaymentDate;
   }
@@ -135,7 +127,6 @@ public class HandlerBid extends BaseBid implements PrettyString {
     return DateService.dateToString(endPaymentDate);
   }
 
-  @JsonIgnore
   public Set<HandlerBidResponse> getBidResponses() {
     return bidResponses;
   }
@@ -143,10 +134,6 @@ public class HandlerBid extends BaseBid implements PrettyString {
 
   /* === Setter Functions === */
 
-
-  public void setAlmondSize(String newSize) {
-    almondSize = newSize;
-  }
 
   public void setStartPaymentDate(LocalDate newStart) {
     startPaymentDate = newStart;

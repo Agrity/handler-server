@@ -67,7 +67,7 @@ public class TraderBid extends BaseBid implements PrettyString {
 
 
   public TraderBid(Trader trader, List<HandlerSeller> allHandlerSellers, AlmondVariety almondVariety, 
-      Integer almondPounds, String pricePerPound, String comment, String managementService,
+      String almondSize, Integer almondPounds, String pricePerPound, String comment, String managementService,
       LocalDateTime expirationTime) {
     super();
 
@@ -79,6 +79,7 @@ public class TraderBid extends BaseBid implements PrettyString {
     this.trader = trader;
     this.handlerSellers = allHandlerSellers;
     setAlmondVariety(almondVariety);
+    setAlmondSize(almondSize);
     setAlmondPounds(almondPounds);
     setPricePerPound(pricePerPound);
     setComment(comment);
@@ -94,7 +95,6 @@ public class TraderBid extends BaseBid implements PrettyString {
     return trader;
   }
 
-  @JsonIgnore
   public Set<TraderBidResponse> getBidResponses() {
     return bidResponses;
   }
