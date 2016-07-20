@@ -21,7 +21,7 @@ import services.messaging.bid.HandlerBidSMSMessageService;
 
 import play.libs.Akka;
 
-public class FCFSService implements BidManagementService {
+public class FCFSService implements HandlerBidManagementService {
 
   private final HandlerBid handlerBid;  
   private Cancellable cancellable;

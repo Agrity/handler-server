@@ -11,7 +11,7 @@ public interface TraderBidManagementService {
   public static final Map<TraderBid, TraderBidManagementService>
       bidToManageService = new HashMap<>();
 
-  public static BidManagementService getBidManagementService(TraderBid traderBid) {
+  public static TraderBidManagementService getBidManagementService(TraderBid traderBid) {
     return bidToManageService.get(traderBid);
   }
 

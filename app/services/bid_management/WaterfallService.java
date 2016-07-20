@@ -18,7 +18,7 @@ import services.messaging.bid.HandlerBidSMSMessageService;
 import play.Logger;
 import play.libs.Akka;
 
-public class WaterfallService implements BidManagementService {
+public class WaterfallService implements HandlerBidManagementService {
 
   private final HandlerBid handlerBid;
   private final Duration delay;

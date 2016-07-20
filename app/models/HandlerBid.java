@@ -32,7 +32,7 @@ import models.interfaces.PrettyString;
 import play.Logger;
 import play.data.validation.Constraints;
 
-import services.bid_management.BidManagementService;
+import services.bid_management.HandlerBidManagementService;
 
 import services.DateService;
 
@@ -162,7 +162,7 @@ public class HandlerBid extends BaseBid implements PrettyString {
 
   public void closeBid(BidStatus status) {
     setBidStatus(status);
-    BidManagementService.removeBidManagementService(this);
+    HandlerBidManagementService.removeBidManagementService(this);
     save();
   }
 
@@ -226,8 +226,8 @@ public class HandlerBid extends BaseBid implements PrettyString {
     }  
       
     
-    BidManagementService managementService
-        = BidManagementService.getBidManagementService(this);
+    HandlerBidManagementService managementService
+        = HandlerBidManagementService.getBidManagementService(this);
 
     if (managementService != null) {
       BidResponseResult bidResponseResult = managementService.accept(pounds, growerId);
@@ -265,8 +265,8 @@ public class HandlerBid extends BaseBid implements PrettyString {
     }
     
 
-    BidManagementService managementService
-        = BidManagementService.getBidManagementService(this);
+    HandlerBidManagementService managementService
+        = HandlerBidManagementService.getBidManagementService(this);
 
     if (managementService != null) {
       BidResponseResult bidResponseResult = managementService.reject(growerId);

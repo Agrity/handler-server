@@ -20,7 +20,7 @@ import services.messaging.bid.BidSMSMessageService;
 
 import play.libs.Akka;
 
-public class TraderFCFSService implements BidManagementService {
+public class TraderFCFSService implements TraderBidManagementService {
 
 
   private final TraderBid traderBid;
@@ -32,7 +32,7 @@ public class TraderFCFSService implements BidManagementService {
   BidSMSMessageService smsService = new BidSMSMessageService();
   HandlerSellerService handlerSellerService = new EbeanHandlerSellerService();
 
-  public FCFSService(TraderBid traderBid, Duration timeAllowed) {
+  public TraderFCFSService(TraderBid traderBid, Duration timeAllowed) {
     this.traderBid = traderBid;
     this.poundsRemaining = traderBid.getAlmondPounds();
 
@@ -60,8 +60,8 @@ public class TraderFCFSService implements BidManagementService {
 
   private List<Long> getHandlerSellerIDList() {
     List<Long> handlerSellers = new ArrayList<>();
-    for(HandlerSeller g : traderBid.getAllHandlerSellers()) {
-      handlerSellers.add(g.getId());
+    for(HandlerSeller hs : traderBid.getAllHandlerSellers()) {
+      handlerSellers.add(hs.getId());
     }
     return handlerSellers;
   }
@@ -115,17 +115,17 @@ public class TraderFCFSService implements BidManagementService {
 
   private void sendClosedToRemaining() {
     for(Long handlerSellerId: handlerSellerIdsRemaining) {
-      HandlerSeller g = handlerSellerService.getById(handlerSellerId);
-      emailService.sendClosed(traderBid, g);
-      smsService.sendClosed(traderBid, g);  
+      HandlerSeller hs = handlerSellerService.getById(handlerSellerId);
+      emailService.sendClosed(traderBid, hs);
+      smsService.sendClosed(traderBid, hs);  
     }
   }
 
   private void sendUpdatedToRemaining() {
     for(Long handlerSellerId: handlerSellerIdsRemaining) {
-      HandlerSeller g = handlerSellerService.getById(handlerSellerId);
-      emailService.sendUpdated(traderBid, g, formatUpdateMessage());
-      smsService.sendUpdated(traderBid, g, formatUpdateMessage());  
+      HandlerSeller hs = handlerSellerService.getById(handlerSellerId);
+      emailService.sendUpdated(traderBid, hs, formatUpdateMessage());
+      smsService.sendUpdated(traderBid, hs, formatUpdateMessage());  
     }
   }
 
