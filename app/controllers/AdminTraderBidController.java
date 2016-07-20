@@ -18,10 +18,10 @@ import play.mvc.Result;
 import play.mvc.Security;
 
 import services.TraderBidService;
-import services.messaging.bid.BidMessageService;
-import services.bid_management.FCFSService;
+import services.messaging.bid.TraderBidMessageService;
+import services.bid_management.TraderFCFSService;
 import services.parsers.TraderBidJsonParser;
-import services.parsers.BidJsonParser.ManagementTypeInfo;
+import services.parsers.TraderBidJsonParser.TraderManagementTypeInfo;
 
 import utils.JsonMsgUtils;
 
@@ -32,13 +32,13 @@ import services.bid_management.WaterfallService;
 public class AdminTraderBidController extends Controller {
 
   private final TraderBidService traderBidService;
-  private final BidMessageService bidMessageService;
+  private final TraderBidMessageService bidMessageService;
 
   private final ObjectMapper jsonMapper;
 
   @Inject
   public AdminTraderBidController(TraderBidService traderBidService,
-      BidMessageService bidMessageService) {
+      TraderBidMessageService bidMessageService) {
     this.traderBidService = traderBidService;
     this.bidMessageService = bidMessageService;
 
@@ -89,12 +89,11 @@ public class AdminTraderBidController extends Controller {
   @Security.Authenticated(AdminSecured.class)
   public Result sendBid(long id) {
     TraderBid traderBid = traderBidService.getById(id);
-    // boolean emailSuccess = bidMessageService.send(traderBid);
+    boolean emailSuccess = bidMessageService.send(traderBid);
 
-    // return emailSuccess
-    //     ? ok(JsonMsgUtils.successfullEmail())
-    //     : internalServerError(JsonMsgUtils.emailsNotSent());
-    return ok("In Progress.");
+    return emailSuccess
+        ? ok(JsonMsgUtils.successfullEmail())
+        : internalServerError(JsonMsgUtils.emailsNotSent());
   }
 
   // Annotation ensures that POST request is of type application/json. If not HTTP 400 response
@@ -117,17 +116,18 @@ public class AdminTraderBidController extends Controller {
     TraderBid traderBid = parser.formBid();
     traderBid.save();
 
-    // ManagementTypeInfo managementType = parser.getManagementType();
-    // Class<?> classType = managementType.getClassType();
+    TraderManagementTypeInfo managementType = parser.getManagementType();
+    Class<?> classType = managementType.getClassType();
 
-    // if (classType == WaterfallService.class) {
-    //   new WaterfallService(handlerBid, managementType.getDelay());
-    // } else if (classType == FCFSService.class) {
-    //   new FCFSService(handlerBid, managementType.getDelay());
-    // } else {
-    //   return internalServerError(JsonMsgUtils.caughtException(classType.getName() 
-    //     + " management type not found\n"));
-    // }
+    //TODO: add/completely remove WaterfallService for Trader vvv
+    if (classType == WaterfallService.class) {
+      //new WaterfallService(traderBid, managementType.getDelay());
+    } else if (classType == TraderFCFSService.class) {
+      new TraderFCFSService(traderBid, managementType.getDelay());
+    } else {
+      return internalServerError(JsonMsgUtils.caughtException(classType.getName() 
+        + " management type not found\n"));
+    }
 
     try {
       return created(jsonMapper.writeValueAsString(traderBid));

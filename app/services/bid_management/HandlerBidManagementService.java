@@ -6,12 +6,12 @@ import java.util.Map;
 import models.HandlerBid;
 import models.BidResponseResult;
 
-public interface BidManagementService {
+public interface HandlerBidManagementService {
 
-  public static final Map<HandlerBid, BidManagementService>
+  public static final Map<HandlerBid, HandlerBidManagementService>
       bidToManageService = new HashMap<>();
 
-  public static BidManagementService getBidManagementService(HandlerBid handlerBid) {
+  public static HandlerBidManagementService getBidManagementService(HandlerBid handlerBid) {
     return bidToManageService.get(handlerBid);
   }
 

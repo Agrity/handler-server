@@ -32,7 +32,7 @@ import models.interfaces.PrettyString;
 import play.Logger;
 import play.data.validation.Constraints;
 
-import services.bid_management.BidManagementService;
+import services.bid_management.HandlerBidManagementService;
 
 import services.DateService;
 
@@ -99,6 +99,7 @@ public class HandlerBid extends BaseBid implements PrettyString {
     setComment(comment);
     setManagementService(managementService);
     setExpirationTime(expirationTime);
+    setPoundsRemaining(almondPounds);
   }
 
 
@@ -160,8 +161,8 @@ public class HandlerBid extends BaseBid implements PrettyString {
 
 
   public void closeBid(BidStatus status) {
-    setBidStatus(BidStatus.REJECTED);
-    BidManagementService.removeBidManagementService(this);
+    setBidStatus(status);
+    HandlerBidManagementService.removeBidManagementService(this);
     save();
   }
 
@@ -225,8 +226,8 @@ public class HandlerBid extends BaseBid implements PrettyString {
     }  
       
     
-    BidManagementService managementService
-        = BidManagementService.getBidManagementService(this);
+    HandlerBidManagementService managementService
+        = HandlerBidManagementService.getBidManagementService(this);
 
     if (managementService != null) {
       BidResponseResult bidResponseResult = managementService.accept(pounds, growerId);
@@ -239,7 +240,10 @@ public class HandlerBid extends BaseBid implements PrettyString {
       // Logger.error("managementService returned null for HandlerBidID: " + getId());
     }
 
-    return setGrowerResponseForBid(growerId, ResponseStatus.ACCEPTED);
+    setPoundsRemaining(getPoundsRemaining() - (int)pounds);
+    save();
+
+    return setGrowerResponseAccept(growerId, pounds);
   }
 
   public BidResponseResult growerRejectBid(Long growerId) {
@@ -261,8 +265,8 @@ public class HandlerBid extends BaseBid implements PrettyString {
     }
     
 
-    BidManagementService managementService
-        = BidManagementService.getBidManagementService(this);
+    HandlerBidManagementService managementService
+        = HandlerBidManagementService.getBidManagementService(this);
 
     if (managementService != null) {
       BidResponseResult bidResponseResult = managementService.reject(growerId);

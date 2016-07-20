@@ -12,13 +12,13 @@ import akka.actor.Cancellable;
 import scala.concurrent.duration.FiniteDuration;
 import java.util.concurrent.TimeUnit;
 
-import services.messaging.bid.BidSendGridMessageService;
-import services.messaging.bid.BidSMSMessageService;
+import services.messaging.bid.HandlerBidSendGridMessageService;
+import services.messaging.bid.HandlerBidSMSMessageService;
 
 import play.Logger;
 import play.libs.Akka;
 
-public class WaterfallService implements BidManagementService {
+public class WaterfallService implements HandlerBidManagementService {
 
   private final HandlerBid handlerBid;
   private final Duration delay;
@@ -26,8 +26,8 @@ public class WaterfallService implements BidManagementService {
   private long poundsRemaining;
   private List<Grower> growersInLine;
 
-  BidSendGridMessageService emailService = new BidSendGridMessageService();
-  BidSMSMessageService smsService = new BidSMSMessageService();
+  HandlerBidSendGridMessageService emailService = new HandlerBidSendGridMessageService();
+  HandlerBidSMSMessageService smsService = new HandlerBidSMSMessageService();
 
   public WaterfallService(HandlerBid handlerBid, Duration delay) {
     this.handlerBid = handlerBid;
@@ -35,7 +35,7 @@ public class WaterfallService implements BidManagementService {
     this.growersInLine = new ArrayList<Grower>(handlerBid.getAllGrowers());
     this.poundsRemaining = handlerBid.getAlmondPounds();
 
-    BidManagementService.bidToManageService.put(handlerBid, this);
+    HandlerBidManagementService.bidToManageService.put(handlerBid, this);
 
     cancellable = scheduleTimer();
   }

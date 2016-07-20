@@ -11,5 +11,3 @@ if [[ -z $1 ]]; then
 else
   echo "ERROR: do not use any arguements."
 fi
-
-

@@ -15,6 +15,7 @@ create table bids (
   management_service            varchar(255),
   expiration_time               timestamp,
   bid_status                    integer,
+  pounds_remaining              integer,
   trader_id                     bigint,
   handler_id                    bigint,
   almond_size                   varchar(255),

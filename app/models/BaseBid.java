@@ -52,6 +52,8 @@ public abstract class BaseBid extends BaseModel {
 
   private BidStatus bidStatus = BidStatus.OPEN;
 
+  private Integer poundsRemaining;
+
 
   /* ======================================= Attribute Accessors ======================================= */
 
@@ -97,6 +99,10 @@ public abstract class BaseBid extends BaseModel {
     return bidStatus == BidStatus.OPEN;
   }
 
+  public Integer getPoundsRemaining() {
+    return poundsRemaining;
+  }
+
 
   /* ======================================= Attribute Setters ======================================= */
 
@@ -127,6 +133,10 @@ public abstract class BaseBid extends BaseModel {
 
   public void setBidStatus(BidStatus newStatus) {
     bidStatus = newStatus;
+  }
+
+  public void setPoundsRemaining(Integer newAmount) {
+    poundsRemaining = newAmount;
   }
 
 

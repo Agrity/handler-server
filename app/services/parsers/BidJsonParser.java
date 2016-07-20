@@ -17,10 +17,6 @@ import services.DateService;
 import services.GrowerService;
 import services.impl.EbeanGrowerService;
 
-import services.bid_management.WaterfallService;
-import services.bid_management.FCFSService;
-import services.bid_management.BidManagementService;
-
 public class BidJsonParser extends BaseParser {
   
   public BidJsonParser() {
@@ -125,69 +121,21 @@ public class BidJsonParser extends BaseParser {
     return null;
   }
 
-  protected ManagementTypeInfo parseManagementType(JsonNode data) {
-    if (!data.has(BidJsonConstants.MANAGEMENT_TYPE)) {
-      setInvalid(missingParameterError(BidJsonConstants.MANAGEMENT_TYPE));
-      return null;
-    }
-
-    JsonNode typeMap = data.get(BidJsonConstants.MANAGEMENT_TYPE);
-
-    if(!typeMap.has(BidJsonConstants.DELAY_KEY)) {
-      setInvalid(missingParameterError(BidJsonConstants.DELAY_KEY));
-      return null;
-    }
-    int delayInt = typeMap.get(BidJsonConstants.DELAY_KEY).asInt();
-    
-    if(typeMap.has(BidJsonConstants.TYPE_KEY)) {
-      String className = typeMap.get(BidJsonConstants.TYPE_KEY).asText();
-      Duration delayTime = Duration.ofMinutes(delayInt);
-      switch(className) {
-        case BidJsonConstants.ManagementTypes.WATERFALL:
-          return new ManagementTypeInfo(WaterfallService.class, delayTime);
-        case BidJsonConstants.ManagementTypes.FCFS: 
-          return new ManagementTypeInfo(FCFSService.class, delayTime);
-        default:
-          setInvalid("Management Type invalid: specified type " + className +" not found\n");
-          return null;          
-      }
-    } 
-
-    setInvalid(missingParameterError(BidJsonConstants.TYPE_KEY));
-    return null;
-  }
-
-
-  private static class BidJsonConstants {
+  protected static class BidJsonConstants {
     private static final String ALMOND_VARIETY = "almond_variety";
     private static final String ALMOND_SIZE = "almond_size";
     private static final String ALMOND_POUNDS = "almond_pounds";
     private static final String PRICE_PER_POUND = "price_per_pound";
     private static final String COMMENT = "comment";
 
-    private static final String MANAGEMENT_TYPE = "management_type";
+    protected static final String MANAGEMENT_TYPE = "management_type";
     
-    private static final String TYPE_KEY = "type";
-    private static final String DELAY_KEY = "delay";
+    protected static final String TYPE_KEY = "type";
+    protected static final String DELAY_KEY = "delay";
 
     public static class ManagementTypes {
-      private static final String WATERFALL = "WaterfallService";
-      private static final String FCFS = "FCFSService";
+      protected static final String WATERFALL = "WaterfallService";
+      protected static final String FCFS = "FCFSService";
     }
   }
-  public static class ManagementTypeInfo {
-    private Class<? extends BidManagementService> typeClass;
-    private Duration delay;
-
-      ManagementTypeInfo(Class<? extends BidManagementService> typeClass, Duration delay) {
-        this.typeClass = typeClass;
-        this.delay = delay;
-      }
-
-      public Class<? extends BidManagementService> getClassType() { return typeClass; }
-      public String className() { return typeClass.getName(); }
-      public Duration getDelay() { return delay; }
-
-  }
-  
 }

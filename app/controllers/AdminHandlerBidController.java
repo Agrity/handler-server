@@ -18,10 +18,10 @@ import play.mvc.Result;
 import play.mvc.Security;
 
 import services.HandlerBidService;
-import services.messaging.bid.BidMessageService;
-import services.bid_management.FCFSService;
+import services.messaging.bid.HandlerBidMessageService;
+import services.bid_management.HandlerFCFSService;
 import services.parsers.HandlerBidJsonParser;
-import services.parsers.BidJsonParser.ManagementTypeInfo;
+import services.parsers.HandlerBidJsonParser.HandlerManagementTypeInfo;
 
 import utils.JsonMsgUtils;
 
@@ -32,12 +32,12 @@ import services.bid_management.WaterfallService;
 public class AdminHandlerBidController extends Controller {
 
   private final HandlerBidService handlerBidService;
-  private final BidMessageService bidMessageService;
+  private final HandlerBidMessageService bidMessageService;
 
   private final ObjectMapper jsonMapper;
 
   @Inject
-  public AdminHandlerBidController(HandlerBidService handlerBidService, BidMessageService bidMessageService) {
+  public AdminHandlerBidController(HandlerBidService handlerBidService, HandlerBidMessageService bidMessageService) {
     this.handlerBidService = handlerBidService;
     this.bidMessageService = bidMessageService;
 
@@ -115,13 +115,13 @@ public class AdminHandlerBidController extends Controller {
     HandlerBid handlerBid = parser.formBid();
     handlerBid.save();
 
-    ManagementTypeInfo managementType = parser.getManagementType();
+    HandlerManagementTypeInfo managementType = parser.getManagementType();
     Class<?> classType = managementType.getClassType();
 
     if (classType == WaterfallService.class) {
       new WaterfallService(handlerBid, managementType.getDelay());
-    } else if (classType == FCFSService.class) {
-      new FCFSService(handlerBid, managementType.getDelay());
+    } else if (classType == HandlerFCFSService.class) {
+      new HandlerFCFSService(handlerBid, managementType.getDelay());
     } else {
       return internalServerError(JsonMsgUtils.caughtException(classType.getName() 
         + " management type not found\n"));
