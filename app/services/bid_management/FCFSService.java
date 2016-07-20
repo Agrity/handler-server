@@ -13,35 +13,24 @@ import akka.actor.Cancellable;
 import scala.concurrent.duration.FiniteDuration;
 import java.util.concurrent.TimeUnit;
 
-<<<<<<< HEAD
 import services.impl.EbeanGrowerService;
 import services.GrowerService;
-import services.messaging.bid.BidSendGridMessageService;
-import services.messaging.bid.BidSMSMessageService;
-=======
+
 import services.messaging.bid.HandlerBidSendGridMessageService;
 import services.messaging.bid.HandlerBidSMSMessageService;
->>>>>>> origin/BaseBidMessageService
 
 import play.libs.Akka;
 
 public class FCFSService implements BidManagementService {
 
-
-  private final HandlerBid handlerBid;
-  
+  private final HandlerBid handlerBid;  
   private Cancellable cancellable;
   private long poundsRemaining;
-<<<<<<< HEAD
   private List<Long> growerIdsRemaining;
-  BidSendGridMessageService emailService = new BidSendGridMessageService();
-  BidSMSMessageService smsService = new BidSMSMessageService();
+
   GrowerService growerService = new EbeanGrowerService();
-=======
-  private List<Long> growerIDs;
   HandlerBidSendGridMessageService emailService = new HandlerBidSendGridMessageService();
   HandlerBidSMSMessageService smsService = new HandlerBidSMSMessageService();
->>>>>>> origin/BaseBidMessageService
 
   public FCFSService(HandlerBid handlerBid, Duration timeAllowed) {
     this.handlerBid = handlerBid;
