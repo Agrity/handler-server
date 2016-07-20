@@ -6,6 +6,9 @@ import models.TraderBid;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Entity;
+
+@Entity
 public class Batch extends BaseModel{
 
   private final Trader trader;

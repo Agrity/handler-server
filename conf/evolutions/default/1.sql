@@ -69,6 +69,13 @@ create table sellers (
   constraint pk_sellers primary key (id)
 );
 
+create table batch (
+  id                            bigint auto_increment not null,
+  created_at                    timestamp,
+  updated_at                    timestamp,
+  constraint pk_batch primary key (id)
+);
+
 create table email_address (
   id                            bigint auto_increment not null,
   created_at                    timestamp,
@@ -220,6 +227,8 @@ drop table if exists handler_bids_growers;
 drop table if exists bid_responses;
 
 drop table if exists sellers;
+
+drop table if exists batch;
 
 drop table if exists email_address;
 
