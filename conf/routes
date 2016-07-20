@@ -178,7 +178,7 @@ PUT     /trader/handlerSellers/:handlerSellerId                         controll
 
 GET     /trader/traderBids/:id/send                      controllers.TraderController.sendBid(id: Long)
 
-GET     /trader/handlerSellerss/:handlerSellerId/traderBids             controllers.TraderController.getHandlerSellersBids(handlerSellerId: Long)
+GET     /trader/handlerSellers/:handlerSellerId/traderBids             controllers.TraderController.getHandlerSellersBids(handlerSellerId: Long)
 
 GET     /trader/traderBids                               controllers.TraderController.getAllBids()
 
