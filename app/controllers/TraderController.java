@@ -29,7 +29,7 @@ import services.TraderBidService;
 import services.messaging.bid.TraderBidMessageService;
 import services.bid_management.TraderFCFSService;
 import services.bid_management.WaterfallService;
-//import services.parsers.HandlerSellerJsonParser;
+import services.parsers.HandlerSellerJsonParser;
 import services.parsers.TraderBidJsonParser;
 import services.parsers.TraderBidJsonParser.TraderManagementTypeInfo;
 
@@ -96,27 +96,26 @@ public class TraderController extends Controller {
 
     addCurrentTraderId(trader, data);
 
-    // HandlerSellerJsonParser parser = new HandlerSellerJsonParser(data);
+    HandlerSellerJsonParser parser = new HandlerSellerJsonParser(data);
 
-    // if (!parser.isValid()) {
-    //   return badRequest(JsonMsgUtils.caughtException(parser.getErrorMessage()));
-    // }
+    if (!parser.isValid()) {
+      return badRequest(JsonMsgUtils.caughtException(parser.getErrorMessage()));
+    }
 
-    // if (!parser.getTrader().equals(trader)) {
-    //   JsonMsgUtils.caughtException(
-    //       "Can only create HandlerSellers that belong to "
-    //       + trader.getCompanyName() + ".");
-    // }
+    if (!parser.getTrader().equals(trader)) {
+      JsonMsgUtils.caughtException(
+          "Can only create HandlerSellers that belong to "
+          + trader.getCompanyName() + ".");
+    }
 
-    // HandlerSeller handlerSeller = parser.formHandlerSeller();
-    // handlerSeller.save();
+    HandlerSeller handlerSeller = parser.formHandlerSeller();
+    handlerSeller.save();
 
-    // try {
-    //   return created(jsonMapper.writeValueAsString(handlerSeller));
-    // } catch (JsonProcessingException e) {
-    //   return internalServerError(JsonMsgUtils.caughtException(e.toString()));
-    // }
-    return ok("In Progress.");
+    try {
+      return created(jsonMapper.writeValueAsString(handlerSeller));
+    } catch (JsonProcessingException e) {
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
+    }
 
   }
 
@@ -212,39 +211,37 @@ public class TraderController extends Controller {
       return notFound(JsonMsgUtils.handlerSellerNotFoundMessage(handlerSellerId));
     }
 
-    return ok("In Progress.");
+    HandlerSellerJsonParser parser = new HandlerSellerJsonParser(data);
 
-    // HandlerSellerJsonParser parser = new HandlerSellerJsonParser(data);
+    if (!parser.isValid()) {
+      return badRequest(JsonMsgUtils.caughtException(parser.getErrorMessage()));
+    }
 
-    // if (!parser.isValid()) {
-    //   return badRequest(JsonMsgUtils.caughtException(parser.getErrorMessage()));
-    // }
+    if (!parser.getTrader().equals(trader)) {
+      JsonMsgUtils.caughtException(
+          "Can only update handlerSellers that belong to "
+          + trader.getCompanyName() + ".");
+    }
 
-    // if (!parser.getTrader().equals(trader)) {
-    //   JsonMsgUtils.caughtException(
-    //       "Can only update handlerSellers that belong to "
-    //       + trader.getCompanyName() + ".");
-    // }
+    if (!traderService.checkTraderOwnsHandlerSeller(trader, handlerSeller)) {
+      return badRequest(JsonMsgUtils.traderDoesNotOwnHandlerMessage(trader, handlerSeller));
+    }
 
-    // if (!traderService.checkTraderOwnsHandlerSeller(trader, handlerSeller)) {
-    //   return badRequest(JsonMsgUtils.traderDoesNotOwnHandlerMessage(trader, handlerSeller));
-    // }
+    for(TraderBid traderBid: traderBidService.getByHandlerSeller(handlerSellerId)) {
+      if(traderBid.bidCurrentlyOpen()) {
+        //Conflict response
+        return status(409, JsonMsgUtils.handlerSellerInBid(handlerSellerId, traderBid.getId()));
+      }
+    }
 
-    // for(TraderBid traderBid: traderBidService.getByHandlerSeller(handlerSellerId)) {
-    //   if(traderBid.bidCurrentlyOpen()) {
-    //     //Conflict response
-    //     return status(409, JsonMsgUtils.handlerSellerInBid(handlerSellerId, traderBid.getId()));
-    //   }
-    // }
+    parser.updateHandlerSeller(handlerSeller);
+    handlerSeller.save();
 
-    // parser.updateHandlerSeller(handlerSeller);
-    // handlerSeller.save();
-
-    // try {
-    //   return created(jsonMapper.writeValueAsString(handlerSeller));
-    // } catch (JsonProcessingException e) {
-    //   return internalServerError(JsonMsgUtils.caughtException(e.toString()));
-    // }
+    try {
+      return created(jsonMapper.writeValueAsString(handlerSeller));
+    } catch (JsonProcessingException e) {
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
+    }
   }
 
   // Annotation ensures that POST request is of type application/json. If not HTTP 400 response
@@ -282,17 +279,15 @@ public class TraderController extends Controller {
     TraderBid traderBid = parser.formBid();
     traderBid.save();
 
-    // TraderManagementTypeInfo managementType = parser.getManagementType();
-    // Class<?> classType = managementType.getClassType();
+    TraderManagementTypeInfo managementType = parser.getManagementType();
+    Class<?> classType = managementType.getClassType();
 
-    // if (classType == WaterfallService.class) {
-    //   new WaterfallService(traderBid, managementType.getDelay());
-    // } else if (classType == TraderFCFSService.class) {
-    //   new TraderFCFSService(traderBid, managementType.getDelay());
-    // } else {
-    //   return internalServerError(JsonMsgUtils.caughtException(classType.getName() 
-    //     + " management type not found\n"));
-    // }
+    if (classType == TraderFCFSService.class) {
+      new TraderFCFSService(traderBid, managementType.getDelay());
+    } else {
+      return internalServerError(JsonMsgUtils.caughtException(classType.getName() 
+        + " management type not found\n"));
+    }
 
     try {
       return created(jsonMapper.writeValueAsString(traderBid));
@@ -461,13 +456,12 @@ public class TraderController extends Controller {
       return badRequest(JsonMsgUtils.traderDoesNotOwnBidMessage(trader, traderBid));
     }
     
-    //boolean emailSuccess = bidMessageService.send(handlerBid);
+    boolean emailSuccess = bidMessageService.send(traderBid);
 
 
-    //return emailSuccess
-    //    ? ok(JsonMsgUtils.successfullEmail())
-    //    : internalServerError(JsonMsgUtils.emailsNotSent());
-    return ok("In Progress.");
+    return emailSuccess
+       ? ok(JsonMsgUtils.successfullEmail())
+       : internalServerError(JsonMsgUtils.emailsNotSent());
   }
 
   private Result traderNotFound() {
