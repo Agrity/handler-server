@@ -19,7 +19,7 @@ import models.EmailAddress;
 import play.Logger;
 
 import services.messaging.MessageServiceConstants;
-import services.bid_management.BidManagementService;
+import services.bid_management.TraderBidManagementService;
 
 public class TraderBidSendGridMessageService implements TraderBidMessageService {
 

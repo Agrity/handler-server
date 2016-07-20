@@ -8,7 +8,7 @@ import models.BidResponseResult;
 
 public interface HandlerBidManagementService {
 
-  public static final Map<HandlerBid, BidManagementService>
+  public static final Map<HandlerBid, HandlerBidManagementService>
       bidToManageService = new HashMap<>();
 
   public static HandlerBidManagementService getBidManagementService(HandlerBid handlerBid) {

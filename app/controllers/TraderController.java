@@ -26,12 +26,12 @@ import controllers.security.TraderSecurityController;
 import services.HandlerSellerService;
 import services.TraderService;
 import services.TraderBidService;
-import services.messaging.bid.HandlerBidMessageService;
-import services.bid_management.FCFSService;
+import services.messaging.bid.TraderBidMessageService;
+import services.bid_management.TraderFCFSService;
 import services.bid_management.WaterfallService;
 //import services.parsers.HandlerSellerJsonParser;
 import services.parsers.TraderBidJsonParser;
-import services.parsers.BidJsonParser.ManagementTypeInfo;
+import services.parsers.TraderBidJsonParser.TraderManagementTypeInfo;
 
 import utils.JsonMsgUtils;
 import utils.ResponseHeaders;
@@ -42,7 +42,7 @@ public class TraderController extends Controller {
   private final TraderService traderService;
   private final HandlerSellerService handlerSellerService;
   private final TraderBidService traderBidService;
-  private final HandlerBidMessageService bidMessageService;
+  private final TraderBidMessageService bidMessageService;
 
   private final ObjectMapper jsonMapper;
 
@@ -51,7 +51,7 @@ public class TraderController extends Controller {
       TraderService traderService,
       HandlerSellerService handlerSellerService,
       TraderBidService traderBidService,
-      HandlerBidMessageService bidMessageService) {
+      TraderBidMessageService bidMessageService) {
     this.traderService = traderService;
     this.handlerSellerService = handlerSellerService;
     this.traderBidService = traderBidService;
@@ -282,13 +282,13 @@ public class TraderController extends Controller {
     TraderBid traderBid = parser.formBid();
     traderBid.save();
 
-    // ManagementTypeInfo managementType = parser.getManagementType();
+    // TraderManagementTypeInfo managementType = parser.getManagementType();
     // Class<?> classType = managementType.getClassType();
 
     // if (classType == WaterfallService.class) {
     //   new WaterfallService(traderBid, managementType.getDelay());
-    // } else if (classType == FCFSService.class) {
-    //   new FCFSService(traderBid, managementType.getDelay());
+    // } else if (classType == TraderFCFSService.class) {
+    //   new TraderFCFSService(traderBid, managementType.getDelay());
     // } else {
     //   return internalServerError(JsonMsgUtils.caughtException(classType.getName() 
     //     + " management type not found\n"));

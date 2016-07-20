@@ -35,7 +35,7 @@ public class WaterfallService implements HandlerBidManagementService {
     this.growersInLine = new ArrayList<Grower>(handlerBid.getAllGrowers());
     this.poundsRemaining = handlerBid.getAlmondPounds();
 
-    BidManagementService.bidToManageService.put(handlerBid, this);
+    HandlerBidManagementService.bidToManageService.put(handlerBid, this);
 
     cancellable = scheduleTimer();
   }

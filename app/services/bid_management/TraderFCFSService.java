@@ -15,8 +15,8 @@ import java.util.concurrent.TimeUnit;
 
 import services.impl.EbeanHandlerSellerService;
 import services.HandlerSellerService;
-import services.messaging.bid.BidSendGridMessageService;
-import services.messaging.bid.BidSMSMessageService;
+import services.messaging.bid.TraderBidSendGridMessageService;
+import services.messaging.bid.TraderBidSMSMessageService;
 
 import play.libs.Akka;
 
@@ -28,8 +28,8 @@ public class TraderFCFSService implements TraderBidManagementService {
   private Cancellable cancellable;
   private long poundsRemaining;
   private List<Long> handlerSellerIdsRemaining;
-  BidSendGridMessageService emailService = new BidSendGridMessageService();
-  BidSMSMessageService smsService = new BidSMSMessageService();
+  TraderBidSendGridMessageService emailService = new TraderBidSendGridMessageService();
+  TraderBidSMSMessageService smsService = new TraderBidSMSMessageService();
   HandlerSellerService handlerSellerService = new EbeanHandlerSellerService();
 
   public TraderFCFSService(TraderBid traderBid, Duration timeAllowed) {
@@ -41,7 +41,7 @@ public class TraderFCFSService implements TraderBidManagementService {
     emailService.send(traderBid);
     smsService.send(traderBid);
 
-    BidManagementService.bidToManageService.put(traderBid, this);
+    TraderBidManagementService.bidToManageService.put(traderBid, this);
 
     cancellable = Akka.system().scheduler()
         .scheduleOnce(FiniteDuration.create(timeAllowed.toMillis(), TimeUnit.MILLISECONDS), new Runnable() {

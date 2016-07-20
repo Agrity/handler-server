@@ -19,6 +19,10 @@ import play.Logger;
 import services.DateService;
 import services.HandlerSellerService;
 import services.impl.EbeanHandlerSellerService;
+import services.bid_management.TraderBidManagementService;
+
+import services.bid_management.WaterfallService;
+import services.bid_management.TraderFCFSService;
 
 import java.util.Date;
 
@@ -58,7 +62,7 @@ public class TraderBidJsonParser extends BidJsonParser {
   private AlmondVariety almondVariety;
   private Integer almondPounds;
   private String pricePerPound;
-  private ManagementTypeInfo managementType;
+  private TraderManagementTypeInfo managementType;
   private LocalDateTime expirationTime;
   private String comment;
 
@@ -174,7 +178,7 @@ public class TraderBidJsonParser extends BidJsonParser {
     return pricePerPound;
   }
 
-  public ManagementTypeInfo getManagementType() {
+  public TraderManagementTypeInfo getManagementType() {
     ensureValid();
     return managementType;
   }
@@ -233,6 +237,51 @@ public class TraderBidJsonParser extends BidJsonParser {
     }
 
     return processedHandlerSellers;
+  }
+
+  private TraderManagementTypeInfo parseManagementType(JsonNode data) {
+    if (!data.has(BidJsonConstants.MANAGEMENT_TYPE)) {
+      setInvalid(missingParameterError(BidJsonConstants.MANAGEMENT_TYPE));
+      return null;
+    }
+
+    JsonNode typeMap = data.get(BidJsonConstants.MANAGEMENT_TYPE);
+
+    if(!typeMap.has(BidJsonConstants.DELAY_KEY)) {
+      setInvalid(missingParameterError(BidJsonConstants.DELAY_KEY));
+      return null;
+    }
+    int delayInt = typeMap.get(BidJsonConstants.DELAY_KEY).asInt();
+    
+    if(typeMap.has(BidJsonConstants.TYPE_KEY)) {
+      String className = typeMap.get(BidJsonConstants.TYPE_KEY).asText();
+      Duration delayTime = Duration.ofMinutes(delayInt);
+      switch(className) {
+        // case BidJsonConstants.ManagementTypes.WATERFALL:
+        //   return new TraderManagementTypeInfo(WaterfallService.class, delayTime);
+        case BidJsonConstants.ManagementTypes.FCFS: 
+          return new TraderManagementTypeInfo(TraderFCFSService.class, delayTime);
+        default:
+          setInvalid("Management Type invalid: specified type " + className +" not found\n");
+          return null;          
+      }
+    }
+    setInvalid(missingParameterError(BidJsonConstants.TYPE_KEY));
+    return null;
+  } 
+
+  public static class TraderManagementTypeInfo {
+    private Class<? extends TraderBidManagementService> typeClass;
+    private Duration delay;
+
+    TraderManagementTypeInfo(Class<? extends TraderBidManagementService> typeClass, Duration delay) {
+      this.typeClass = typeClass;
+      this.delay = delay;
+    }
+
+    public Class<? extends TraderBidManagementService> getClassType() { return typeClass; }
+    public String className() { return typeClass.getName(); }
+    public Duration getDelay() { return delay; }
   }
 
   private static class TraderBidJsonConstants {

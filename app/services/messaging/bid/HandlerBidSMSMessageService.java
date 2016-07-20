@@ -8,7 +8,7 @@ import models.Grower;
 import models.HandlerBid;
 import play.Logger;
 import services.messaging.MessageServiceConstants.TwilioFields;
-import services.bid_management.BidManagementService;
+import services.bid_management.HandlerBidManagementService;
 
 
 public class HandlerBidSMSMessageService implements HandlerBidMessageService {

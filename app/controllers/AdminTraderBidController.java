@@ -18,10 +18,10 @@ import play.mvc.Result;
 import play.mvc.Security;
 
 import services.TraderBidService;
-import services.messaging.bid.HandlerBidMessageService;
-import services.bid_management.FCFSService;
+import services.messaging.bid.TraderBidMessageService;
+import services.bid_management.TraderFCFSService;
 import services.parsers.TraderBidJsonParser;
-import services.parsers.BidJsonParser.ManagementTypeInfo;
+import services.parsers.TraderBidJsonParser.TraderManagementTypeInfo;
 
 import utils.JsonMsgUtils;
 
@@ -32,13 +32,13 @@ import services.bid_management.WaterfallService;
 public class AdminTraderBidController extends Controller {
 
   private final TraderBidService traderBidService;
-  private final HandlerBidMessageService bidMessageService;
+  private final TraderBidMessageService bidMessageService;
 
   private final ObjectMapper jsonMapper;
 
   @Inject
   public AdminTraderBidController(TraderBidService traderBidService,
-      HandlerBidMessageService bidMessageService) {
+      TraderBidMessageService bidMessageService) {
     this.traderBidService = traderBidService;
     this.bidMessageService = bidMessageService;
 
@@ -117,13 +117,13 @@ public class AdminTraderBidController extends Controller {
     TraderBid traderBid = parser.formBid();
     traderBid.save();
 
-    // ManagementTypeInfo managementType = parser.getManagementType();
+    // TraderManagementTypeInfo managementType = parser.getManagementType();
     // Class<?> classType = managementType.getClassType();
 
     // if (classType == WaterfallService.class) {
     //   new WaterfallService(handlerBid, managementType.getDelay());
-    // } else if (classType == FCFSService.class) {
-    //   new FCFSService(handlerBid, managementType.getDelay());
+    // } else if (classType == TraderFCFSService.class) {
+    //   new TraderFCFSService(handlerBid, managementType.getDelay());
     // } else {
     //   return internalServerError(JsonMsgUtils.caughtException(classType.getName() 
     //     + " management type not found\n"));

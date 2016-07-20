@@ -21,7 +21,7 @@ import services.messaging.bid.HandlerBidSMSMessageService;
 
 import play.libs.Akka;
 
-public class FCFSService implements HandlerBidManagementService {
+public class HandlerFCFSService implements HandlerBidManagementService {
 
   private final HandlerBid handlerBid;  
   private Cancellable cancellable;
@@ -32,7 +32,7 @@ public class FCFSService implements HandlerBidManagementService {
   HandlerBidSendGridMessageService emailService = new HandlerBidSendGridMessageService();
   HandlerBidSMSMessageService smsService = new HandlerBidSMSMessageService();
 
-  public FCFSService(HandlerBid handlerBid, Duration timeAllowed) {
+  public HandlerFCFSService(HandlerBid handlerBid, Duration timeAllowed) {
     this.handlerBid = handlerBid;
     this.poundsRemaining = handlerBid.getAlmondPounds();
 
@@ -41,7 +41,7 @@ public class FCFSService implements HandlerBidManagementService {
     emailService.send(handlerBid);
     smsService.send(handlerBid);
 
-    BidManagementService.bidToManageService.put(handlerBid, this);
+    HandlerBidManagementService.bidToManageService.put(handlerBid, this);
 
     cancellable = Akka.system().scheduler()
         .scheduleOnce(FiniteDuration.create(timeAllowed.toMillis(), TimeUnit.MILLISECONDS), new Runnable() {
