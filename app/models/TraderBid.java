@@ -1,6 +1,7 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import play.data.validation.Constraints;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
@@ -94,7 +95,6 @@ public class TraderBid extends BaseBid implements PrettyString {
     return trader;
   }
 
-  @JsonIgnore
   public Set<TraderBidResponse> getBidResponses() {
     return bidResponses;
   }

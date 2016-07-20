@@ -1,5 +1,7 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.DiscriminatorValue;
@@ -17,7 +19,7 @@ public class HandlerBidResponse extends BaseBidResponse {
   @ManyToOne
   private Grower grower;
 
-  /* NOTE: Bid is never explicitly set, but by being placed in a list of 
+  /* NOTE: Bid is never explicitly set, but by being placed in a list of
    * BidResponses in the Bid class, it is linked by Ebean. */
   @ManyToOne
   private HandlerBid handlerBid;
@@ -35,6 +37,7 @@ public class HandlerBidResponse extends BaseBidResponse {
     return grower;
   }
 
+  @JsonIgnore
   public HandlerBid getBid() {
     return handlerBid;
   }

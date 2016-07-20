@@ -135,7 +135,6 @@ public class HandlerBid extends BaseBid implements PrettyString {
     return DateService.dateToString(endPaymentDate);
   }
 
-  @JsonIgnore
   public Set<HandlerBidResponse> getBidResponses() {
     return bidResponses;
   }
