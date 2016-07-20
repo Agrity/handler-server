@@ -102,7 +102,7 @@ GET     /admin/handlerBids/:bidId/requestcall/:growerId    controllers.AdminHand
 
 GET     /admin/traderBids                                 controllers.AdminTraderBidController.getAllBids()
 
-POST    /admin/traderBids                                 controllers.AdminTraderBidController.createBid()
+POST    /admin/traderBids/:traderId                       controllers.AdminTraderBidController.createBatch(traderId: Long)
 
 DELETE  /admin/traderBids/:id                             controllers.AdminTraderBidController.deleteBid(id: Long)
 
@@ -166,23 +166,23 @@ GET     /handler/handlerBids/:bidId                        controllers.HandlerCo
 
 GET     /trader                                           controllers.TraderController.getTrader()
 
-GET     /trader/handlerSellers                                   controllers.TraderController.getAllHandlerSellers()
+GET     /trader/handlerSellers                            controllers.TraderController.getAllHandlerSellers()
 
-POST    /trader/handlerSellers                                   controllers.TraderController.createHandlerSeller()
+POST    /trader/handlerSellers                            controllers.TraderController.createHandlerSeller()
 
-GET     /trader/handlerSellers/:handlerSellerId                         controllers.TraderController.getHandlerSeller(handlerSellerId: Long)
+GET     /trader/handlerSellers/:handlerSellerId           controllers.TraderController.getHandlerSeller(handlerSellerId: Long)
 
-DELETE  /trader/handlerSellers/:handlerSellerId                         controllers.TraderController.deleteHandlerSeller(handlerSellerId: Long)
+DELETE  /trader/handlerSellers/:handlerSellerId           controllers.TraderController.deleteHandlerSeller(handlerSellerId: Long)
 
-PUT     /trader/handlerSellers/:handlerSellerId                         controllers.TraderController.updateHandlerSeller(handlerSellerId: Long)
+PUT     /trader/handlerSellers/:handlerSellerId           controllers.TraderController.updateHandlerSeller(handlerSellerId: Long)
 
-GET     /trader/traderBids/:id/send                      controllers.TraderController.sendBid(id: Long)
+GET     /trader/traderBids/:id/send                       controllers.TraderController.sendBid(id: Long)
 
 GET     /trader/handlerSellerss/:handlerSellerId/traderBids             controllers.TraderController.getHandlerSellersBids(handlerSellerId: Long)
 
 GET     /trader/traderBids                               controllers.TraderController.getAllBids()
 
-POST    /trader/traderBids                               controllers.TraderController.createBid()
+POST    /trader/traderBids/:traderId                     controllers.TraderController.createBatch(traderId: Long)
 
 DELETE  /trader/traderBids/:bidId                        controllers.TraderController.deleteBid(bidId: Long)
 
