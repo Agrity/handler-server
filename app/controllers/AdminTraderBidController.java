@@ -114,7 +114,7 @@ public class AdminTraderBidController extends Controller {
 
     List<TraderBid> processedTraderBids = new ArrayList<>();
     for(JsonNode singleBidNode: data) {
-      TraderBidJsonParser parser = new TraderBidJsonParser(data);
+      TraderBidJsonParser parser = new TraderBidJsonParser(singleBidNode);
       
       if (!parser.isValid()) {
         return badRequest(JsonMsgUtils.caughtException(parser.getErrorMessage()));

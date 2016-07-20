@@ -4,4 +4,4 @@
 
 ./new-handlerSeller.sh
 
-./new-traderBid.sh
+./new-batch.sh
