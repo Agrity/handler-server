@@ -17,6 +17,7 @@ create table bids (
   bid_status                    integer,
   pounds_remaining              integer,
   trader_id                     bigint,
+  batch_id                      bigint,
   handler_id                    bigint,
   almond_size                   varchar(255),
   start_payment_date            date,
@@ -118,6 +119,9 @@ create table users_sellers (
 alter table bids add constraint fk_bids_trader_id foreign key (trader_id) references users (id) on delete restrict on update restrict;
 create index ix_bids_trader_id on bids (trader_id);
 
+alter table bids add constraint fk_bids_batch_id foreign key (batch_id) references batch (id) on delete restrict on update restrict;
+create index ix_bids_batch_id on bids (batch_id);
+
 alter table bids add constraint fk_bids_handler_id foreign key (handler_id) references users (id) on delete restrict on update restrict;
 create index ix_bids_handler_id on bids (handler_id);
 
@@ -170,6 +174,9 @@ create index ix_users_sellers_sellers on users_sellers (sellers_id);
 
 alter table bids drop constraint if exists fk_bids_trader_id;
 drop index if exists ix_bids_trader_id;
+
+alter table bids drop constraint if exists fk_bids_batch_id;
+drop index if exists ix_bids_batch_id;
 
 alter table bids drop constraint if exists fk_bids_handler_id;
 drop index if exists ix_bids_handler_id;

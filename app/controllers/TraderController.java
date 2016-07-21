@@ -249,7 +249,7 @@ public class TraderController extends Controller {
   // Annotation ensures that POST request is of type application/json. If not HTTP 400 response
   // returned.
   @BodyParser.Of(BodyParser.Json.class)
-  public Result createBatch(long traderId) {
+  public Result createBatch() {
     ResponseHeaders.addResponseHeaders(response());
 
     Trader trader = TraderSecurityController.getTrader();

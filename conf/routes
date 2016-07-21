@@ -119,6 +119,14 @@ GET     /admin/traderBids/:bidId/reject/:handlerSellerId         controllers.Adm
 GET     /admin/traderBids/:bidId/requestcall/:handlerSellerId    controllers.AdminTraderBidController.requestCall(bidId: Long, handlerSellerId: Long)
 
 
+# ========== Admin Batch ========== #
+
+
+GET /admin/batch                                           controllers.AdminTraderBidController.getAllBatches()
+
+GET /admin/batch/:id                                       controllers.AdminTraderBidController.getBatch(id: Long)
+
+
 # ========== Authentication ========== #
 
 
@@ -126,9 +134,9 @@ POST    /handler/login                                     controllers.security.
 
 POST    /handler/logout                                    controllers.security.HandlerSecurityController.logout()
 
-POST    /trader/login                                     controllers.security.TraderSecurityController.login()
+POST    /trader/login                                      controllers.security.TraderSecurityController.login()
 
-POST    /trader/logout                                    controllers.security.TraderSecurityController.logout()
+POST    /trader/logout                                     controllers.security.TraderSecurityController.logout()
 
 
 # ========== Handler User ========== #
@@ -182,7 +190,7 @@ GET     /trader/handlerSellerss/:handlerSellerId/traderBids             controll
 
 GET     /trader/traderBids                               controllers.TraderController.getAllBids()
 
-POST    /trader/traderBids/:traderId                     controllers.TraderController.createBatch(traderId: Long)
+POST    /trader/batch                                    controllers.TraderController.createBatch()
 
 DELETE  /trader/traderBids/:bidId                        controllers.TraderController.deleteBid(bidId: Long)
 

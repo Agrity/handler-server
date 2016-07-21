@@ -5,7 +5,7 @@ if [[ -z $1 ]]; then
     --header "Content-type: application/json" \
     --header "X-ADMIN-TOKEN: development-use-only" \
     --request POST \
-    --data '[{ "trader_id" : 1, "handlerSeller_ids" : [1], "almond_variety" : "NP", "almond_pounds" :  100000,  "price_per_pound" : "2.23", "management_type" : { "type" : "FCFSService", "delay" : 10}, "comment" : "This is an awesome test comment", "email_address" : "ryscot@gmail.com" }, { "trader_id" : 1, "handlerSeller_ids" : [2], "almond_variety" : "CR", "almond_pounds" :  50000,  "price_per_pound" : "2.45", "management_type" : { "type" : "FCFSService", "delay" : 10}, "comment" : "This is a second awesome test comment", "email_address" : "ryscot@gmail.com" }]' \
+    --data '[{ "trader_id" : 1, "handlerSeller_ids" : [1], "almond_variety" : "NP", "almond_pounds" :  100000,  "price_per_pound" : "2.23", "management_type" : { "type" : "FCFSService", "delay" : 10}, "comment" : "This is an awesome test comment", "email_address" : "ryscot@gmail.com" }, { "trader_id" : 1, "handlerSeller_ids" : [1], "almond_variety" : "CR", "almond_pounds" :  50000,  "price_per_pound" : "2.45", "management_type" : { "type" : "FCFSService", "delay" : 10}, "comment" : "This is a second awesome test comment", "email_address" : "ryscot@gmail.com" }]' \
     localhost:9000/admin/traderBids/1
   echo # Insert Blank Line
 else

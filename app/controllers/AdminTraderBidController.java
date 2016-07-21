@@ -138,6 +138,7 @@ public class AdminTraderBidController extends Controller {
       }
 
       processedTraderBids.add(traderBid);
+      traderBid.save();
     }
 
     TraderService traderService = new EbeanTraderService();
@@ -200,6 +201,15 @@ public class AdminTraderBidController extends Controller {
       return internalServerError(JsonMsgUtils.caughtException(e.toString()));
     }
   }
+
+  @Security.Authenticated(AdminSecured.class)
+  public Result getAllBatches() {
+    try {
+      return ok(jsonMapper.writeValueAsString(batchService.getAll()));
+    } catch (JsonProcessingException e) {
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
+    } 
+  }  
 
   @Security.Authenticated(AdminSecured.class) 
   public Result getBatch(long id) {
