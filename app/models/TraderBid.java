@@ -28,6 +28,8 @@ import models.Almond.AlmondVariety;
 import models.Batch;
 import models.interfaces.PrettyString;
 
+import services.bid_management.TraderBidManagementService;
+
 import play.Logger;
 
 /** ============================================ TODO ======================================================
@@ -92,6 +94,10 @@ public class TraderBid extends BaseBid implements PrettyString {
     setPoundsRemaining(almondPounds);
   }
 
+  public void setBatch(Batch batch) {
+    this.batch = batch;
+  }
+
   /* ======================================= Attribute Accessors ======================================= */
 
 
@@ -111,10 +117,9 @@ public class TraderBid extends BaseBid implements PrettyString {
 
   /* ======================================= Member Functions ======================================= */
 
-  /* TODO: Fix once BidManagementService is branched out for Traders and Handlers */
   public void closeBid(BidStatus status) {
-    setBidStatus(BidStatus.REJECTED);
-    //BidManagementService.removeBidManagementService(this);
+    setBidStatus(status);
+    TraderBidManagementService.removeBidManagementService(this);
     save();
   }
 
@@ -179,15 +184,15 @@ public class TraderBid extends BaseBid implements PrettyString {
     }
 
 
-    // BidManagementService managementService
-    //     = BidManagementService.getBidManagementService(this);
+    TraderBidManagementService managementService
+        = TraderBidManagementService.getBidManagementService(this);
 
-    // if (managementService != null) {
-    //   BidResponseResult bidResponseResult = managementService.accept(pounds, growerId);
-    //   if (!bidResponseResult.isValid()) {
-    //     return bidResponseResult;
-    //   }
-    // }
+    if (managementService != null) {
+      BidResponseResult bidResponseResult = managementService.accept(pounds, handlerSellerId);
+      if (!bidResponseResult.isValid()) {
+        return bidResponseResult;
+      }
+    }
     else {
       // TODO: Determine whether to log error.
       // Logger.error("managementService returned null for HandlerBidID: " + getId());
