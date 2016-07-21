@@ -135,7 +135,6 @@ public class HandlerBid extends BaseBid implements PrettyString {
     return DateService.dateToString(endPaymentDate);
   }
 
-  @JsonIgnore
   public Set<HandlerBidResponse> getBidResponses() {
     return bidResponses;
   }
@@ -211,21 +210,21 @@ public class HandlerBid extends BaseBid implements PrettyString {
     if (!bidCurrentlyOpen()) {
       return BidResponseResult.getInvalidResult("Cannot accept bid becase it has already closed.");
     }
-      
+
     HandlerBidResponse response = getBidResponse(growerId);
 
     if (response == null) {
       Logger.error("Response returned null for growerId: " + growerId + " and HandlerBidID: " + getId());
       return BidResponseResult.getInvalidResult("Cannot accept bid."); // TODO: What to tell grower when this inexplicable error happens.
     }
-    
+
     response.refresh();
     if (response.getResponseStatus() != ResponseStatus.NO_RESPONSE
         && response.getResponseStatus() != ResponseStatus.REQUEST_CALL) {
       return BidResponseResult.getInvalidResult("Cannot accept bid because grower has already responded.");
-    }  
-      
-    
+    }
+
+
     HandlerBidManagementService managementService
         = HandlerBidManagementService.getBidManagementService(this);
 
@@ -234,9 +233,9 @@ public class HandlerBid extends BaseBid implements PrettyString {
       if (!bidResponseResult.isValid()) {
         return bidResponseResult;
       }
-    } 
+    }
     else {
-      // TODO: Determine whether to log error. 
+      // TODO: Determine whether to log error.
       // Logger.error("managementService returned null for HandlerBidID: " + getId());
     }
 
@@ -249,21 +248,21 @@ public class HandlerBid extends BaseBid implements PrettyString {
   public BidResponseResult growerRejectBid(Long growerId) {
     if (!bidCurrentlyOpen()) {
       return BidResponseResult.getInvalidResult("There is no need to reject the bid because it has closed.");
-    } 
-    
+    }
+
     HandlerBidResponse response = getBidResponse(growerId);
 
     if (response == null) {
       Logger.error("Response returned null for growerId: " + growerId + " and HandlerBidID: " + getId());
       return BidResponseResult.getInvalidResult("Cannot reject the bid."); // TODO: What to tell grower when this inexplicable error happens.
     }
-    
+
     response.refresh();
     if (response.getResponseStatus() != ResponseStatus.NO_RESPONSE
         && response.getResponseStatus() != ResponseStatus.REQUEST_CALL) {
       return BidResponseResult.getInvalidResult("Cannot accept bid because grower has already responded.");
     }
-    
+
 
     HandlerBidManagementService managementService
         = HandlerBidManagementService.getBidManagementService(this);
@@ -273,9 +272,9 @@ public class HandlerBid extends BaseBid implements PrettyString {
       if (!bidResponseResult.isValid()) {
         return bidResponseResult;
       }
-    } 
+    }
     else {
-      // TODO: Determine whether to log error. 
+      // TODO: Determine whether to log error.
       // Logger.error("managementService returned null for HandlerBidID: " + getId());
     }
 
@@ -285,7 +284,7 @@ public class HandlerBid extends BaseBid implements PrettyString {
   public BidResponseResult growerRequestCall(Long growerId) {
     if (!bidCurrentlyOpen()) {
       return BidResponseResult.getInvalidResult("Can not request call because the bid has already closed.");
-    }  
+    }
 
     return setGrowerResponseForBid(growerId, ResponseStatus.REQUEST_CALL);
   }
@@ -297,13 +296,13 @@ public class HandlerBid extends BaseBid implements PrettyString {
       return BidResponseResult.getInvalidResult("Cannot accept bid."); // TODO: What to tell grower when this inexplicable error happens.
 
     }
-  
-    response.setPoundsAccepted(poundsAccepted);  
+
+    response.setPoundsAccepted(poundsAccepted);
     response.setResponseStatus(ResponseStatus.ACCEPTED);
     response.save();
-    
-    return BidResponseResult.getValidResult(); 
-  }  
+
+    return BidResponseResult.getValidResult();
+  }
 
   private BidResponseResult setGrowerResponseForBid(Long growerId, ResponseStatus growerResponse) {
     HandlerBidResponse response = getBidResponse(growerId);
@@ -312,11 +311,11 @@ public class HandlerBid extends BaseBid implements PrettyString {
       return BidResponseResult.getInvalidResult("Cannot accept bid."); // TODO: What to tell grower when this inexplicable error happens.
 
     }
-    
+
     response.setResponseStatus(growerResponse);
     response.save();
-    
-    return BidResponseResult.getValidResult(); 
+
+    return BidResponseResult.getValidResult();
   }
 
   @Override
