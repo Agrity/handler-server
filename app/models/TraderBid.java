@@ -67,13 +67,8 @@ public class TraderBid extends BaseBid implements PrettyString {
   /* ===================================== Implementation ===================================== */
 
 
-<<<<<<< HEAD
   public TraderBid(Trader trader, List<HandlerSeller> allHandlerSellers, AlmondVariety almondVariety, 
       String almondSize, Integer almondPounds, String pricePerPound, String comment, String managementService,
-=======
-  public TraderBid(Trader trader, List<HandlerSeller> allHandlerSellers, AlmondVariety almondVariety,
-      Integer almondPounds, String pricePerPound, String comment, String managementService,
->>>>>>> master
       LocalDateTime expirationTime) {
     super();
 
