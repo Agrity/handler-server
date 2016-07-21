@@ -31,6 +31,7 @@ public class Trader extends User implements PrettyString {
   @JsonIgnore
   private List<HandlerSeller> handlerSellers;
 
+  //TODO fix mapping error so that this doesn't need to be in here
   @OneToMany(mappedBy="trader")
   private List<Batch> batches;
 
@@ -40,6 +41,8 @@ public class Trader extends User implements PrettyString {
                 EmailAddress emailAddress, PhoneNumber phoneNumber, String password) {
     super(companyName, firstName, lastName, emailAddress, phoneNumber, password);
     handlerSellers = new ArrayList<>();
+
+    batches = new ArrayList<>();
   }
 
   public void setBatch(Batch batch) {
