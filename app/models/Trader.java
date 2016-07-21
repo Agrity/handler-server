@@ -3,9 +3,13 @@ package models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import models.interfaces.PrettyString;
+import models.Batch;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import play.data.validation.Constraints;
 
@@ -27,12 +31,19 @@ public class Trader extends User implements PrettyString {
   @JsonIgnore
   private List<HandlerSeller> handlerSellers;
 
+  @OneToMany(mappedBy="trader")
+  private List<Batch> batches;
+
   /* ====================================== Constructors ====================================== */
 
   public Trader(String companyName, String firstName, String lastName, 
                 EmailAddress emailAddress, PhoneNumber phoneNumber, String password) {
     super(companyName, firstName, lastName, emailAddress, phoneNumber, password);
     handlerSellers = new ArrayList<>();
+  }
+
+  public void setBatch(Batch batch) {
+    batches.add(batch);
   }
 
   /* ==================================== Member Accessors ==================================== */

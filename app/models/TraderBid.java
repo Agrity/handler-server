@@ -224,15 +224,15 @@ public class TraderBid extends BaseBid implements PrettyString {
     }
 
 
-    // BidManagementService managementService
-    //     = BidManagementService.getBidManagementService(this);
+    TraderBidManagementService managementService
+        = TraderBidManagementService.getBidManagementService(this);
 
-    // if (managementService != null) {
-    //   BidResponseResult bidResponseResult = managementService.reject(handlerSellerId);
-    //   if (!bidResponseResult.isValid()) {
-    //     return bidResponseResult;
-    //   }
-    // }
+    if (managementService != null) {
+      BidResponseResult bidResponseResult = managementService.reject(handlerSellerId);
+      if (!bidResponseResult.isValid()) {
+        return bidResponseResult;
+      }
+    }
     else {
       // TODO: Determine whether to log error.
       // Logger.error("managementService returned null for HandlerBidID: " + getId());

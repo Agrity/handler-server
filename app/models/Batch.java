@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Column;
@@ -15,7 +15,7 @@ import javax.persistence.Column;
 @Entity
 public class Batch extends BaseModel {
 
-  @OneToOne
+  @ManyToOne(cascade = CascadeType.ALL)
   private final Trader trader;
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "batch")
@@ -23,8 +23,9 @@ public class Batch extends BaseModel {
 
   public Batch(Trader trader, List<TraderBid> traderBids) {
     this.trader = trader;
+    trader.setBatch(this);
+    
     this.traderBids = traderBids;
-
     for(TraderBid bid: traderBids) {
       bid.setBatch(this);
     }
