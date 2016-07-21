@@ -30,10 +30,6 @@ import services.bid_management.TraderBidManagementService;
 
 import play.Logger;
 
-/** ============================================ TODO ======================================================
- * Add any other fields & getters/setters that we need for TraderBid (e.g. responses)
- * Add functionality (e.g. accepting/rejecting a bid)
- */
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
