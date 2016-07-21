@@ -14,6 +14,7 @@ import java.util.List;
 
 import models.HandlerSeller;
 import models.TraderBid;
+import models.Batch;
 import models.EmailAddress;
 
 import play.Logger;
@@ -21,28 +22,28 @@ import play.Logger;
 import services.messaging.MessageServiceConstants;
 import services.bid_management.TraderBidManagementService;
 
-public class TraderBidSendGridMessageService implements TraderBidMessageService {
+public class BatchSendGridMessageService implements BatchMessageService {
 
   private static final SendGridMessageService sendGridService = new SendGridMessageService();
 
   private static final Email FROM_EMAIL
       = new Email(MessageServiceConstants.EmailFields.getFromEmailAddress());
 
-  public TraderBidSendGridMessageService() {}
+  public BatchSendGridMessageService() {}
 
   @Override
-  public boolean send(TraderBid traderBid) {
+  public boolean send(Batch batch) {
     boolean success = true;
 
-    for (HandlerSeller handlerSeller : traderBid.getAllHandlerSellers()) { 
-      if(!send(traderBid, handlerSeller)) success = false;
+    for (HandlerSeller handlerSeller : batch.getAllHandlerSellers()) { 
+      if(!send(batch, handlerSeller)) success = false;
     }
 
     return success;
   }
 
   /* ===== TODO: HTML for accept ===== */
-  public boolean send(TraderBid traderBid, HandlerSeller handlerSeller) {
+  public boolean send(Batch batch, HandlerSeller handlerSeller) {
     String emailAddr = handlerSeller.getEmailAddress().getEmailAddress();
 
     Email toEmail = new Email(emailAddr);
@@ -50,7 +51,7 @@ public class TraderBidSendGridMessageService implements TraderBidMessageService 
     Content content
     = new Content(
       "text/html", "In progress.");
-      //MessageServiceConstants.EmailFields.getEmailHTMLContent(traderBid, handlerSeller));
+      //MessageServiceConstants.EmailFields.getEmailHTMLContent(batch, handlerSeller));
 
     Mail mail
     = new Mail(
@@ -62,17 +63,17 @@ public class TraderBidSendGridMessageService implements TraderBidMessageService 
     return sendGridService.sendEmail(mail, toEmail);
   }
 
-  public boolean sendClosed(TraderBid traderBid) {
+  public boolean sendClosed(Batch batch) {
     boolean success = true;
 
-    for (HandlerSeller handlerSeller : traderBid.getAllHandlerSellers()) { 
-      if(!send(traderBid, handlerSeller)) success = false;
+    for (HandlerSeller handlerSeller : batch.getAllHandlerSellers()) { 
+      if(!send(batch, handlerSeller)) success = false;
     }
 
     return success; 
   }
 
-  public boolean sendClosed(TraderBid traderBid, HandlerSeller handlerSeller) {
+  public boolean sendClosed(Batch batch, HandlerSeller handlerSeller) {
     String emailAddr = handlerSeller.getEmailAddressString();
 
     Email toEmail = new Email(emailAddr);
@@ -80,13 +81,12 @@ public class TraderBidSendGridMessageService implements TraderBidMessageService 
     Content content
     = new Content(
       "text/plain",
-      "Your bid <" + traderBid.getAlmondVariety() + " for " 
-      + traderBid.getPricePerPound() + "/lb.> has expired.");
+      "Your batch " + batch.getId() + " has expired.");
 
     Mail mail
     = new Mail(
       FROM_EMAIL,
-      MessageServiceConstants.EmailFields.getSubjectLineExpired(traderBid.getId()),
+      MessageServiceConstants.EmailFields.getSubjectLineExpired(batch.getId()),
       toEmail,
       content);
 

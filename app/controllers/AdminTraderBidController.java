@@ -23,7 +23,7 @@ import services.TraderBidService;
 import services.TraderService;
 import services.impl.EbeanTraderService;
 import services.BatchService;
-import services.messaging.bid.TraderBidMessageService;
+import services.messaging.bid.BatchMessageService;
 import services.bid_management.TraderFCFSService;
 import services.parsers.TraderBidJsonParser;
 import services.parsers.TraderBidJsonParser.TraderManagementTypeInfo;
@@ -37,16 +37,16 @@ import services.bid_management.WaterfallService;
 public class AdminTraderBidController extends Controller {
 
   private final TraderBidService traderBidService;
-  private final TraderBidMessageService bidMessageService;
+  private final BatchMessageService batchMessageService;
   private final BatchService batchService;
 
   private final ObjectMapper jsonMapper;
 
   @Inject
   public AdminTraderBidController(TraderBidService traderBidService,
-      TraderBidMessageService bidMessageService, BatchService batchService) {
+      BatchMessageService batchMessageService, BatchService batchService) {
     this.traderBidService = traderBidService;
-    this.bidMessageService = bidMessageService;
+    this.batchMessageService = batchMessageService;
     this.batchService = batchService;
 
     this.jsonMapper = new ObjectMapper();
@@ -94,9 +94,9 @@ public class AdminTraderBidController extends Controller {
 
 
   @Security.Authenticated(AdminSecured.class)
-  public Result sendBid(long id) {
-    TraderBid traderBid = traderBidService.getById(id);
-    boolean emailSuccess = bidMessageService.send(traderBid);
+  public Result sendBatch(long id) {
+    Batch batch = batchService.getById(id);
+    boolean emailSuccess = batchMessageService.send(batch);
 
     return emailSuccess
         ? ok(JsonMsgUtils.successfullEmail())
@@ -144,6 +144,11 @@ public class AdminTraderBidController extends Controller {
     TraderService traderService = new EbeanTraderService();
     Batch batch = new Batch(traderService.getById(traderId), processedTraderBids);
     batch.save();
+
+    Result emailResult = sendBatch(batch.getId());
+    if(emailResult != ok(JsonMsgUtils.successfullEmail())) {
+      return emailResult;
+    }
 
     try {
       return created(jsonMapper.writeValueAsString(batch));

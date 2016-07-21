@@ -1,7 +1,10 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import models.Trader;
 import models.TraderBid;
+import models.HandlerSeller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,5 +40,10 @@ public class Batch extends BaseModel {
 
   public List<TraderBid> getTraderBids() {
     return traderBids;
+  }
+
+  @JsonIgnore
+  public List<HandlerSeller> getAllHandlerSellers() {
+    return traderBids.get(0).getAllHandlerSellers();
   }
 }
