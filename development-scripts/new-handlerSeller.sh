@@ -5,7 +5,7 @@ if [[ -z $1 ]]; then
     --header "Content-type: application/json" \
     --header "X-ADMIN-TOKEN: development-use-only" \
     --request POST \
-    --data '{ "trader_id" : 1, "first_name" : "F_NAME", "last_name" : "L_NAME", "email_address" : "twfabdel@gmail.com", "phone_number" : "+19492900149"}' \
+    --data '{ "trader_id" : 1, "first_name" : "F_NAME", "last_name" : "L_NAME", "email_address" : "test@test.com", "phone_number" : "+15551231234"}' \
     localhost:9000/admin/handlerSellers
 else
   echo "ERROR: do not use any arguements."
