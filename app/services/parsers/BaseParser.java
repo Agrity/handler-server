@@ -185,15 +185,14 @@ public abstract class BaseParser {
     String companyName = data.findValue(JsonConstants.COMPANY_NAME).asText();
 
     // Check if company name is already in use.
-    if (!handlerService.checkCompanyNameAvailable(companyName)) {
-      setInvalid("Handler name [" + companyName + "] is already in use.\n");
+    if (!handlerService.checkCompanyNameAvailable(companyName)
+      || !traderService.checkCompanyNameAvailable(companyName)
+      || !handlerSellerService.checkCompanyNameAvailable(companyName)) {
+      setInvalid("Company name [" + companyName + "] is already in use.\n");
       return null;
     }
 
-    if (!handlerSellerService.checkCompanyNameAvailable(companyName)) {
-      setInvalid("HandlerSeller name [" + companyName + "] is already in use.\n");
-      return null;
-    }
+  /* TODO: Check Trader and HandlerSeller company Names */ 
 
     return companyName;
   }
