@@ -27,7 +27,7 @@ public class TraderBidSMSMessageService implements TraderBidMessageService {
   }
     
   public boolean send(TraderBid traderBid, HandlerSeller handlerSeller) {
-    return sendUpdated(traderBid, handlerSeller, createBodyText(handlerSeller, traderBid));
+    return sendMessage(traderBid, handlerSeller, createBodyText(handlerSeller, traderBid));
   }
 
   public boolean sendClosed(TraderBid traderBid) {
@@ -43,20 +43,10 @@ public class TraderBidSMSMessageService implements TraderBidMessageService {
   public boolean sendClosed(TraderBid traderBid, HandlerSeller handlerSeller) {
     String msg = "Your bid (ID " + traderBid.getId() + ") <" + traderBid.getAlmondVariety() + " for " 
         + traderBid.getPricePerPound() + "/lb.> has expired.";
-    return sendUpdated(traderBid, handlerSeller, msg);
+    return sendMessage(traderBid, handlerSeller, msg);
   }
 
-  public boolean sendUpdated(TraderBid traderBid, String msg) {
-    boolean success = true;
-
-    for (HandlerSeller handlerSeller : traderBid.getAllHandlerSellers()) {
-      if(!sendClosed(traderBid, handlerSeller)) success = false;
-    }
-
-    return success; 
-  }
-
-  public boolean sendUpdated(TraderBid traderBid, HandlerSeller handlerSeller, String msg) {
+  public boolean sendMessage(TraderBid traderBid, HandlerSeller handlerSeller, String msg) {
     return twilioMessageService.sendMessage(handlerSeller.getPhoneNumberString(), msg);
   }
 

@@ -16,9 +16,4 @@ public interface TraderBidMessageService {
 
   public boolean sendClosed(TraderBid traderBid, HandlerSeller handlerSeller);
 
-  public boolean sendUpdated(TraderBid traderBid, String msg);
-
-  public boolean sendUpdated(TraderBid traderBid, HandlerSeller handlerSeller, String msg);
-
-
 }

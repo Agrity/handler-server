@@ -92,33 +92,4 @@ public class TraderBidSendGridMessageService implements TraderBidMessageService 
 
     return sendGridService.sendEmail(mail, toEmail);
   }
-
-  public boolean sendUpdated(TraderBid traderBid, String msg) {
-    boolean success = true;
-
-    for (HandlerSeller handlerSeller : traderBid.getAllHandlerSellers()) { 
-      if(!send(traderBid, handlerSeller)) success = false;
-    }
-
-    return success; 
-  }
-
-  public boolean sendUpdated(TraderBid traderBid, HandlerSeller handlerSeller, String msg) {
-    boolean success = true;
-    String emailAddr = handlerSeller.getEmailAddressString();
-
-    Email toEmail = new Email(emailAddr);
-
-    Content content = new Content("text/plain", msg);
-
-    Mail mail
-    = new Mail(
-      FROM_EMAIL,
-      MessageServiceConstants.EmailFields.getSubjectLineUpdated(traderBid.getId()),
-      toEmail,
-      content);
-
-    return sendGridService.sendEmail(mail, toEmail);
-  }
-
 }

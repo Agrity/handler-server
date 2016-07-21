@@ -164,7 +164,6 @@ public class TraderBid extends BaseBid implements PrettyString {
     }
   }
 
-  /* TODO: Fix once BidManagementService is branched out for Traders and Handlers */
   public BidResponseResult handlerSellerAcceptBid(Long handlerSellerId, long pounds) {
     if (!bidCurrentlyOpen()) {
       return BidResponseResult.getInvalidResult("Cannot accept bid because it has already closed.");
