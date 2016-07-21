@@ -142,32 +142,6 @@ public class UserJsonParser extends BaseParser {
     return phoneNumber;
   }
 
-  /* 
-   * Attempt to extract the company name from the given json data. If there is an error, the parser
-   * will be set to invalid with appropriate error message, and null will be returned.
-   *
-   * WARNING: Parser set to invalid if error is encountered.
-   */
-  private String parseCompanyName(JsonNode data) {
-
-    // Check company name is present.
-    if (!data.has(UserJsonConstants.COMPANY_NAME)) {
-      setInvalid(missingParameterError(UserJsonConstants.COMPANY_NAME));
-      return null;
-
-    } 
-    
-    String companyName = data.findValue(UserJsonConstants.COMPANY_NAME).asText();
-
-    // Check if company name is already in use.
-    if (!handlerService.checkCompanyNameAvailable(companyName)) {
-      setInvalid("Handler name [" + companyName + "] is already in use.\n");
-      return null;
-    }
-
-    return companyName;
-  }
-
 
   /* WARNING: Parser set to invalid if error is encountered.  */
   private String parsePassword(JsonNode data) {
@@ -183,7 +157,6 @@ public class UserJsonParser extends BaseParser {
   }
 
   private static class UserJsonConstants {
-    private static final String COMPANY_NAME = "company_name";
     private static final String PASSWORD = "password";
   }
 

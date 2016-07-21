@@ -40,6 +40,14 @@ public class EbeanHandlerSellerService implements HandlerSellerService {
         .findList();
   }
 
+  @Override
+  public boolean checkCompanyNameAvailable(String companyName) {
+    return null == FINDER
+        .where()
+        .eq("company_name", companyName.toLowerCase())
+        .findUnique();
+  }
+
   public HandlerSeller handlerSellerLookupByPhoneNum(String phoneNum) {
     List<HandlerSeller> handlerSellers = getAll(); 
     for (HandlerSeller handlerSeller: handlerSellers) {

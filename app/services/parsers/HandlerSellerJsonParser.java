@@ -36,6 +36,7 @@ public class HandlerSellerJsonParser extends BaseParser {
   private Trader trader;
   private String firstName;
   private String lastName;
+  private String companyName;
   private EmailAddress emailAddress;
   private PhoneNumber phoneNumber;
 
@@ -59,6 +60,13 @@ public class HandlerSellerJsonParser extends BaseParser {
       // Parser set to invalid with proper error message.
       return;
     }
+
+    companyName = parseCompanyName(data);
+    if (companyName == null) {
+      // Parser set to invalid with proper error message.
+      return;
+    }
+
     
     emailAddress = parserSellerEmailAddress(data);
     if (emailAddress == null) {
@@ -85,6 +93,7 @@ public class HandlerSellerJsonParser extends BaseParser {
         getTrader(),
         getFirstName(),
         getLastName(),
+        getCompanyName(),
         getEmailAddress(),
         getPhoneNumber());
 
@@ -98,6 +107,7 @@ public class HandlerSellerJsonParser extends BaseParser {
 
     handlerSeller.setFirstName(getFirstName());
     handlerSeller.setLastName(getLastName());
+    handlerSeller.setCompanyName(getCompanyName());
     handlerSeller.setPhoneNumber(getPhoneNumber());
     handlerSeller.setEmailAddress(getEmailAddress()); 
 
@@ -116,6 +126,11 @@ public class HandlerSellerJsonParser extends BaseParser {
   public String getLastName() {
     ensureValid();
     return lastName;
+  }
+
+  public String getCompanyName() {
+    ensureValid();
+    return companyName;
   }
 
   public EmailAddress getEmailAddress() {
