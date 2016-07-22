@@ -7,10 +7,12 @@ import com.google.inject.Inject;
 
 import services.TraderBidService;
 import services.HandlerSellerService;
+import services.BatchService;
 
 import models.TraderBid;
 import models.BidResponseResult;
 import models.HandlerSeller;
+import models.Batch;
 
 import play.mvc.BodyParser;
 import play.mvc.Controller;
@@ -25,13 +27,16 @@ public class TraderBidController extends Controller {
   
   private final TraderBidService traderBidService;
   private final HandlerSellerService handlerSellerService;
+  private final BatchService batchService;
 
 
   @Inject
   public TraderBidController(TraderBidService traderBidService, 
-      HandlerSellerService handlerSellerService) {
+      HandlerSellerService handlerSellerService,
+      BatchService batchService) {
     this.traderBidService = traderBidService;
     this.handlerSellerService = handlerSellerService;
+    this.batchService = batchService;
   }
 
   /* Accept whole bid */
@@ -75,10 +80,10 @@ public class TraderBidController extends Controller {
         : internalServerError(JsonMsgUtils.bidNotRejected(success.getInvalidResponseMessage()));
   }
 
-  public Result displayPartialPage(long bidId, long handlerSellerId) {
-    TraderBid traderBid = traderBidService.getById(bidId);
-    if (traderBid == null) {
-      return notFound(JsonMsgUtils.bidNotFoundMessage(bidId));
+  public Result displayBatchPage(long batchId, long handlerSellerId) {
+    Batch batch = batchService.getById(batchId);
+    if (batch == null) {
+      return notFound(JsonMsgUtils.batchNotFoundMessage(batchId));
     }
     HandlerSeller handlerSeller = handlerSellerService.getById(handlerSellerId);
     if (handlerSeller == null) {

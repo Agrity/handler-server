@@ -214,7 +214,7 @@ GET     /traderBids/:bidId/accept/:handlerSellerId               controllers.Tra
 
 GET     /traderBids/:bidId/reject/:handlerSellerId               controllers.TraderBidController.rejectBid(bidId: Long, handlerSellerId: Long)
 
-GET     /traderBids/:bidId/partial/:handlerSellerId              controllers.TraderBidController.displayPartialPage(bidId: Long, handlerSellerId: Long)
+GET    /traderBids/batch/:batchId/display/:handlerSellerId                         controllers.TraderBidController.displayBatchPage(batchId: Long, handlerSellerId: Long)
 
 GET     /trader/:bidId/accept/:handlerSellerId/:pounds       controllers.TraderBidController.acceptPartial(bidId: Long, handlerSellerId: Long, pounds: Long)
 
