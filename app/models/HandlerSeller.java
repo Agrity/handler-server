@@ -16,6 +16,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Column;
 
 import models.BaseBidResponse.ResponseStatus;
 import models.interfaces.PrettyString;
@@ -39,6 +40,9 @@ public class HandlerSeller extends BaseSeller implements PrettyString {
   @JsonIgnore // Annotation here because no explicit getter
   public List<TraderBid> traderBids = new ArrayList<>();
 
+  @Column(nullable = false, name = "seller_company_name")
+  private String companyName;
+
 
   /* ==================================== Static Functions ==================================== */
 
@@ -47,11 +51,12 @@ public class HandlerSeller extends BaseSeller implements PrettyString {
 
 
   public HandlerSeller(Trader trader, String firstName, String lastName,
-      EmailAddress emailAddress, PhoneNumber phoneNumber) {
+      String companyName, EmailAddress emailAddress, PhoneNumber phoneNumber) {
     super();
 
     setFirstName(firstName);
     setLastName(lastName);
+    this.companyName = companyName;
     this.trader = trader;
     setEmailAddress(emailAddress);
     setPhoneNumber(phoneNumber);
@@ -61,8 +66,16 @@ public class HandlerSeller extends BaseSeller implements PrettyString {
     return trader;
   }
 
+  public String getCompanyName() {
+    return companyName;
+  }
+
   public void setTrader(Trader trader) {
     this.trader = trader;
+  }
+
+  public void setCompanyName(String companyName) {
+    this.companyName = companyName;
   }
 
   @JsonIgnore

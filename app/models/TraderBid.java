@@ -1,6 +1,7 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import play.data.validation.Constraints;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
@@ -26,13 +27,10 @@ import models.BaseBidResponse.ResponseStatus;
 import models.Almond.AlmondVariety;
 import models.Batch;
 import models.interfaces.PrettyString;
+import services.bid_management.TraderBidManagementService;
 
 import play.Logger;
 
-/** ============================================ TODO ======================================================
- * Add any other fields & getters/setters that we need for TraderBid (e.g. responses)
- * Add functionality (e.g. accepting/rejecting a bid)
- */
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -44,7 +42,7 @@ public class TraderBid extends BaseBid implements PrettyString {
 /* ======================================= Attributes ======================================= */
 
 
-  @ManyToOne 
+  @ManyToOne
   @Constraints.Required
   private Trader trader;
 
@@ -52,7 +50,7 @@ public class TraderBid extends BaseBid implements PrettyString {
   @Constraints.Required
   private Set<TraderBidResponse> bidResponses = new HashSet<>();
 
-  @ManyToMany(cascade = CascadeType.ALL) 
+  @ManyToMany(cascade = CascadeType.ALL)
   @JoinTable(name="TRADER_BIDS_HANDLER_SELLERS")
   @Constraints.Required
   private List<HandlerSeller> handlerSellers = new ArrayList<>();
@@ -71,7 +69,7 @@ public class TraderBid extends BaseBid implements PrettyString {
 
 
   public TraderBid(Trader trader, List<HandlerSeller> allHandlerSellers, AlmondVariety almondVariety, 
-      Integer almondPounds, String pricePerPound, String comment, String managementService,
+      String almondSize, Integer almondPounds, String pricePerPound, String comment, String managementService,
       LocalDateTime expirationTime) {
     super();
 
@@ -83,6 +81,7 @@ public class TraderBid extends BaseBid implements PrettyString {
     this.trader = trader;
     this.handlerSellers = allHandlerSellers;
     setAlmondVariety(almondVariety);
+    setAlmondSize(almondSize);
     setAlmondPounds(almondPounds);
     setPricePerPound(pricePerPound);
     setComment(comment);
@@ -98,7 +97,6 @@ public class TraderBid extends BaseBid implements PrettyString {
     return trader;
   }
 
-  @JsonIgnore
   public Set<TraderBidResponse> getBidResponses() {
     return bidResponses;
   }
@@ -111,10 +109,10 @@ public class TraderBid extends BaseBid implements PrettyString {
 
   /* ======================================= Member Functions ======================================= */
 
-  /* TODO: Fix once BidManagementService is branched out for Traders and Handlers */
+
   public void closeBid(BidStatus status) {
     setBidStatus(BidStatus.REJECTED);
-    //BidManagementService.removeBidManagementService(this);
+    TraderBidManagementService.removeBidManagementService(this);
     save();
   }
 
@@ -159,37 +157,36 @@ public class TraderBid extends BaseBid implements PrettyString {
     }
   }
 
-  /* TODO: Fix once BidManagementService is branched out for Traders and Handlers */
   public BidResponseResult handlerSellerAcceptBid(Long handlerSellerId, long pounds) {
     if (!bidCurrentlyOpen()) {
       return BidResponseResult.getInvalidResult("Cannot accept bid because it has already closed.");
     }
-      
+
     TraderBidResponse response = getBidResponse(handlerSellerId);
 
     if (response == null) {
       Logger.error("Response returned null for handlerSellerId: " + handlerSellerId + " and TraderBidID: " + getId());
       return BidResponseResult.getInvalidResult("Cannot accept bid."); // TODO: What to tell grower when this inexplicable error happens.
     }
-    
+
     response.refresh();
     if (response.getResponseStatus() != ResponseStatus.NO_RESPONSE
         && response.getResponseStatus() != ResponseStatus.REQUEST_CALL) {
       return BidResponseResult.getInvalidResult("Cannot accept bid because handler has already responded.");
-    }  
-      
-    
-    // BidManagementService managementService
-    //     = BidManagementService.getBidManagementService(this);
+    }
 
-    // if (managementService != null) {
-    //   BidResponseResult bidResponseResult = managementService.accept(pounds, growerId);
-    //   if (!bidResponseResult.isValid()) {
-    //     return bidResponseResult;
-    //   }
-    // } 
+
+    TraderBidManagementService managementService
+        = TraderBidManagementService.getBidManagementService(this);
+
+    if (managementService != null) {
+      BidResponseResult bidResponseResult = managementService.accept(pounds, handlerSellerId);
+      if (!bidResponseResult.isValid()) {
+        return bidResponseResult;
+      }
+    }
     else {
-      // TODO: Determine whether to log error. 
+      // TODO: Determine whether to log error.
       // Logger.error("managementService returned null for HandlerBidID: " + getId());
     }
 
@@ -199,37 +196,36 @@ public class TraderBid extends BaseBid implements PrettyString {
     return setHandlerSellerReponseAccept(handlerSellerId, pounds);
   }
 
-  /* TODO: Fix once BidManagementService is branched out for Traders and Handlers */
   public BidResponseResult handlerSellerRejectBid(Long handlerSellerId) {
     if (!bidCurrentlyOpen()) {
       return BidResponseResult.getInvalidResult("There is no need to reject the bid because it has closed.");
-    } 
-    
+    }
+
     TraderBidResponse response = getBidResponse(handlerSellerId);
 
     if (response == null) {
       Logger.error("Response returned null for handlerSellerId: " + handlerSellerId + " and TraderBidID: " + getId());
       return BidResponseResult.getInvalidResult("Cannot reject the bid."); // TODO: What to tell grower when this inexplicable error happens.
     }
-    
+
     response.refresh();
     if (response.getResponseStatus() != ResponseStatus.NO_RESPONSE
         && response.getResponseStatus() != ResponseStatus.REQUEST_CALL) {
       return BidResponseResult.getInvalidResult("Cannot accept bid because handler has already responded.");
     }
-    
 
-    // BidManagementService managementService
-    //     = BidManagementService.getBidManagementService(this);
 
-    // if (managementService != null) {
-    //   BidResponseResult bidResponseResult = managementService.reject(handlerSellerId);
-    //   if (!bidResponseResult.isValid()) {
-    //     return bidResponseResult;
-    //   }
-    // } 
+    TraderBidManagementService managementService
+        = TraderBidManagementService.getBidManagementService(this);
+
+    if (managementService != null) {
+      BidResponseResult bidResponseResult = managementService.reject(handlerSellerId);
+      if (!bidResponseResult.isValid()) {
+        return bidResponseResult;
+      }
+    }
     else {
-      // TODO: Determine whether to log error. 
+      // TODO: Determine whether to log error.
       // Logger.error("managementService returned null for HandlerBidID: " + getId());
     }
 
@@ -239,7 +235,7 @@ public class TraderBid extends BaseBid implements PrettyString {
   public BidResponseResult handlerSellerRequestCall(Long handlerSellerId) {
     if (!bidCurrentlyOpen()) {
       return BidResponseResult.getInvalidResult("Can not request call because the bid has already closed.");
-    }  
+    }
 
     return setHandlerSellerResponseForBid(handlerSellerId, ResponseStatus.REQUEST_CALL);
   }
@@ -251,12 +247,12 @@ public class TraderBid extends BaseBid implements PrettyString {
       return BidResponseResult.getInvalidResult("Cannot accept bid."); // TODO: What to tell grower when this inexplicable error happens.
 
     }
-    
+
     response.setPoundsAccepted(poundsAccepted);
     response.setResponseStatus(ResponseStatus.ACCEPTED);
     response.save();
-    
-    return BidResponseResult.getValidResult(); 
+
+    return BidResponseResult.getValidResult();
   }
 
   private BidResponseResult setHandlerSellerResponseForBid(Long handlerSellerId, ResponseStatus responseStatus) {
@@ -266,11 +262,11 @@ public class TraderBid extends BaseBid implements PrettyString {
       return BidResponseResult.getInvalidResult("Cannot accept bid."); // TODO: What to tell grower when this inexplicable error happens.
 
     }
-    
+
     response.setResponseStatus(responseStatus);
     response.save();
-    
-    return BidResponseResult.getValidResult(); 
+
+    return BidResponseResult.getValidResult();
   }
 
   @Override
