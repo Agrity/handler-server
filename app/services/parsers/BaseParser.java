@@ -180,7 +180,8 @@ public abstract class BaseParser {
       return null;
     } 
     
-    String phoneNumberString = data.findValue(JsonConstants.PHONE_NUMBER).asText();
+    String phoneNumberString = "+1" + data.findValue(JsonConstants.PHONE_NUMBER).asText();
+
 
     PhoneNumber phoneNumber = PhoneMessageService.stringToPhoneNumber(phoneNumberString);
 
