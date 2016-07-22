@@ -309,8 +309,8 @@ public class TraderController extends Controller {
     Batch batch = new Batch(trader, processedTraderBids);
     batch.save();
 
-    Result emailResult = sendBatch(batch.getId());
-    if(emailResult.status() != 200) {
+    Result sendResult = sendBatch(batch.getId());
+    if(sendResult.status() != 200) {
       return emailResult;
     }
 
@@ -481,10 +481,10 @@ public class TraderController extends Controller {
   //     return badRequest(JsonMsgUtils.traderDoesNotOwnBidMessage(trader, traderBid));
   //   }
     
-    boolean emailSuccess = batchMessageService.send(batch);
+    boolean sendSuccess 
+      = batchMessageService.send(batch);
 
-
-    return emailSuccess
+    return sendSuccess
        ? ok(JsonMsgUtils.successfullEmail())
        : internalServerError(JsonMsgUtils.emailsNotSent());
   }
