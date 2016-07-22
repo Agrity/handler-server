@@ -30,10 +30,6 @@ import services.bid_management.TraderBidManagementService;
 
 import play.Logger;
 
-/** ============================================ TODO ======================================================
- * Add any other fields & getters/setters that we need for TraderBid (e.g. responses)
- * Add functionality (e.g. accepting/rejecting a bid)
- */
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -109,10 +105,10 @@ public class TraderBid extends BaseBid implements PrettyString {
 
   /* ======================================= Member Functions ======================================= */
 
-  /* TODO: Fix once BidManagementService is branched out for Traders and Handlers */
+
   public void closeBid(BidStatus status) {
     setBidStatus(BidStatus.REJECTED);
-    //BidManagementService.removeBidManagementService(this);
+    TraderBidManagementService.removeBidManagementService(this);
     save();
   }
 
@@ -157,7 +153,6 @@ public class TraderBid extends BaseBid implements PrettyString {
     }
   }
 
-  /* TODO: Fix once BidManagementService is branched out for Traders and Handlers */
   public BidResponseResult handlerSellerAcceptBid(Long handlerSellerId, long pounds) {
     if (!bidCurrentlyOpen()) {
       return BidResponseResult.getInvalidResult("Cannot accept bid because it has already closed.");
@@ -197,7 +192,6 @@ public class TraderBid extends BaseBid implements PrettyString {
     return setHandlerSellerReponseAccept(handlerSellerId, pounds);
   }
 
-  /* TODO: Fix once BidManagementService is branched out for Traders and Handlers */
   public BidResponseResult handlerSellerRejectBid(Long handlerSellerId) {
     if (!bidCurrentlyOpen()) {
       return BidResponseResult.getInvalidResult("There is no need to reject the bid because it has closed.");

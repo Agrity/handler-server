@@ -16,6 +16,8 @@ import services.impl.EbeanHandlerService;
 import services.TraderService;
 import services.impl.EbeanTraderService;
 import services.PhoneMessageService;
+import services.HandlerSellerService;
+import services.impl.EbeanHandlerSellerService;
 
 /**
  * Base class to parse json data. Intended to be extended for specific json data types.
@@ -29,12 +31,14 @@ public abstract class BaseParser {
 
   protected final HandlerService handlerService;
   protected final TraderService traderService;
+  protected final HandlerSellerService handlerSellerService;
 
   public BaseParser() {
     // TODO -- Extremely Hacky -- Change to Dependency Injection.
     //      See Guice AssistedInjection
     handlerService = new EbeanHandlerService();
     traderService = new EbeanTraderService();
+    handlerSellerService = new EbeanHandlerSellerService();
   }
 
   public boolean isValid() {
@@ -160,6 +164,37 @@ public abstract class BaseParser {
     // TODO Check valid human name. (i.e. length, no numbers, etc.)
     
     return name;
+  }
+
+
+  /* 
+   * Attempt to extract the company name from the given json data. If there is an error, the parser
+   * will be set to invalid with appropriate error message, and null will be returned.
+   *
+   * WARNING: Parser set to invalid if error is encountered.
+   */
+  protected String parseCompanyName(JsonNode data) {
+
+    // Check company name is present.
+    if (!data.has(JsonConstants.COMPANY_NAME)) {
+      setInvalid(missingParameterError(JsonConstants.COMPANY_NAME));
+      return null;
+
+    } 
+    
+    String companyName = data.findValue(JsonConstants.COMPANY_NAME).asText();
+
+    // Check if company name is already in use.
+    if (!handlerService.checkCompanyNameAvailable(companyName)
+      || !traderService.checkCompanyNameAvailable(companyName)
+      || !handlerSellerService.checkCompanyNameAvailable(companyName)) {
+      setInvalid("Company name [" + companyName + "] is already in use.\n");
+      return null;
+    }
+
+  /* TODO: Check Trader and HandlerSeller company Names */ 
+
+    return companyName;
   }
 
   
@@ -293,5 +328,6 @@ public abstract class BaseParser {
     private static final String PHONE_NUMBER = "phone_number";
     protected static final String FIRST_NAME = "first_name";
     protected static final String LAST_NAME = "last_name";
+    protected static final String COMPANY_NAME = "company_name";
   }
 }

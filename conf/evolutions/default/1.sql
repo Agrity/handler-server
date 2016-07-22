@@ -16,9 +16,9 @@ create table bids (
   expiration_time               timestamp,
   bid_status                    integer,
   pounds_remaining              integer,
+  almond_size                   varchar(255),
   trader_id                     bigint,
   handler_id                    bigint,
-  almond_size                   varchar(255),
   start_payment_date            date,
   end_payment_date              date,
   constraint ck_bids_almond_variety check (almond_variety in ('PD','FR','PR','MI','MT','PL','BT','SN','NP','CR')),
@@ -64,6 +64,7 @@ create table sellers (
   phone_number_id               bigint,
   handler_id                    bigint,
   trader_id                     bigint,
+  seller_company_name           varchar(255) not null,
   constraint uq_sellers_email_address_id unique (email_address_id),
   constraint uq_sellers_phone_number_id unique (phone_number_id),
   constraint pk_sellers primary key (id)
