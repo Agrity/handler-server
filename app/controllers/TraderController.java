@@ -311,7 +311,7 @@ public class TraderController extends Controller {
 
     Result sendResult = sendBatch(batch.getId());
     if(sendResult.status() != 200) {
-      return emailResult;
+      return sendResult;
     }
 
     try {
