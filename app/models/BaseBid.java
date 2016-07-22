@@ -54,12 +54,20 @@ public abstract class BaseBid extends BaseModel {
 
   private Integer poundsRemaining;
 
+  // TODO Change to AlmondSize Size within Almond model.
+  @Constraints.Required
+  private String almondSize;
+
 
   /* ======================================= Attribute Accessors ======================================= */
 
 
   public AlmondVariety getAlmondVariety() {
     return almondVariety;
+  }
+
+  public String getAlmondSize() {
+    return almondSize;
   }
 
   public Integer getAlmondPounds() {
@@ -109,6 +117,10 @@ public abstract class BaseBid extends BaseModel {
 
   public void setAlmondVariety(AlmondVariety newVariety) {
     almondVariety = newVariety;
+  }
+
+  public void setAlmondSize(String newSize) {
+    almondSize = newSize;
   }
 
   public void setAlmondPounds(Integer newLbs) {

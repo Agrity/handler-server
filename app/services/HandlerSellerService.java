@@ -19,5 +19,7 @@ public interface HandlerSellerService {
 
   public List<HandlerSeller> getByBid(long bidId);
 
+  public boolean checkCompanyNameAvailable(String companyName);
+
   public HandlerSeller handlerSellerLookupByPhoneNum(String phoneNum);
 }
