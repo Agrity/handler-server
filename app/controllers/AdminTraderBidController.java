@@ -146,7 +146,7 @@ public class AdminTraderBidController extends Controller {
     batch.save();
 
     Result emailResult = sendBatch(batch.getId());
-    if(emailResult != ok(JsonMsgUtils.successfullEmail())) {
+    if(emailResult.status() != 200) {
       return emailResult;
     }
 
