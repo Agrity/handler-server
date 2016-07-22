@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 import models.BaseBidResponse.ResponseStatus;
 import models.Almond.AlmondVariety;
 import models.interfaces.PrettyString;
+import services.bid_management.TraderBidManagementService;
 
 import play.Logger;
 
@@ -67,8 +68,8 @@ public class TraderBid extends BaseBid implements PrettyString {
   /* ===================================== Implementation ===================================== */
 
 
-  public TraderBid(Trader trader, List<HandlerSeller> allHandlerSellers, AlmondVariety almondVariety,
-      Integer almondPounds, String pricePerPound, String comment, String managementService,
+  public TraderBid(Trader trader, List<HandlerSeller> allHandlerSellers, AlmondVariety almondVariety, 
+      String almondSize, Integer almondPounds, String pricePerPound, String comment, String managementService,
       LocalDateTime expirationTime) {
     super();
 
@@ -80,6 +81,7 @@ public class TraderBid extends BaseBid implements PrettyString {
     this.trader = trader;
     this.handlerSellers = allHandlerSellers;
     setAlmondVariety(almondVariety);
+    setAlmondSize(almondSize);
     setAlmondPounds(almondPounds);
     setPricePerPound(pricePerPound);
     setComment(comment);
@@ -175,15 +177,15 @@ public class TraderBid extends BaseBid implements PrettyString {
     }
 
 
-    // BidManagementService managementService
-    //     = BidManagementService.getBidManagementService(this);
+    TraderBidManagementService managementService
+        = TraderBidManagementService.getBidManagementService(this);
 
-    // if (managementService != null) {
-    //   BidResponseResult bidResponseResult = managementService.accept(pounds, growerId);
-    //   if (!bidResponseResult.isValid()) {
-    //     return bidResponseResult;
-    //   }
-    // }
+    if (managementService != null) {
+      BidResponseResult bidResponseResult = managementService.accept(pounds, handlerSellerId);
+      if (!bidResponseResult.isValid()) {
+        return bidResponseResult;
+      }
+    }
     else {
       // TODO: Determine whether to log error.
       // Logger.error("managementService returned null for HandlerBidID: " + getId());
@@ -215,15 +217,15 @@ public class TraderBid extends BaseBid implements PrettyString {
     }
 
 
-    // BidManagementService managementService
-    //     = BidManagementService.getBidManagementService(this);
+    TraderBidManagementService managementService
+        = TraderBidManagementService.getBidManagementService(this);
 
-    // if (managementService != null) {
-    //   BidResponseResult bidResponseResult = managementService.reject(handlerSellerId);
-    //   if (!bidResponseResult.isValid()) {
-    //     return bidResponseResult;
-    //   }
-    // }
+    if (managementService != null) {
+      BidResponseResult bidResponseResult = managementService.reject(handlerSellerId);
+      if (!bidResponseResult.isValid()) {
+        return bidResponseResult;
+      }
+    }
     else {
       // TODO: Determine whether to log error.
       // Logger.error("managementService returned null for HandlerBidID: " + getId());
