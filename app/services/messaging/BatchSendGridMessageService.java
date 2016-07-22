@@ -50,8 +50,8 @@ public class BatchSendGridMessageService implements BatchMessageService {
 
     Content content
     = new Content(
-      "text/html", "In progress.");
-      //MessageServiceConstants.EmailFields.getEmailHTMLContent(batch, handlerSeller));
+      "text/html", 
+      MessageServiceConstants.EmailFields.getBatchHTMLContent(batch, handlerSeller));
 
     Mail mail
     = new Mail(
