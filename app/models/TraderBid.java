@@ -29,8 +29,6 @@ import models.Batch;
 import models.interfaces.PrettyString;
 import services.bid_management.TraderBidManagementService;
 
-import services.bid_management.TraderBidManagementService;
-
 import play.Logger;
 
 
@@ -115,8 +113,14 @@ public class TraderBid extends BaseBid implements PrettyString {
 
   /* ======================================= Member Functions ======================================= */
 
+<<<<<<< HEAD
   public void closeBid(BidStatus status) {
     setBidStatus(status);
+=======
+
+  public void closeBid(BidStatus status) {
+    setBidStatus(BidStatus.REJECTED);
+>>>>>>> master
     TraderBidManagementService.removeBidManagementService(this);
     save();
   }
