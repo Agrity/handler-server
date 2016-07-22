@@ -3,6 +3,8 @@ package services.messaging;
 import models.EmailAddress;
 import models.Grower;
 import models.HandlerBid;
+import models.Batch;
+import models.HandlerSeller;
 
 import com.twilio.sdk.*;
 import com.twilio.sdk.resource.factory.*;
@@ -32,6 +34,10 @@ public abstract class MessageServiceConstants {
 
     public static String getEmailHTMLContent(HandlerBid handlerBid, Grower grower) {
       return views.html.emailBidBody.render(handlerBid, grower, DOMAIN).toString();
+    }
+
+    public static String getBatchHTMLContent(Batch batch, HandlerSeller handlerSeller) {
+      return views.html.emailBatchBody.render(batch, handlerSeller, DOMAIN).toString();
     }
 
     public static String getDomain() {

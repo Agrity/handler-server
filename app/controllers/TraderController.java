@@ -28,7 +28,8 @@ import controllers.security.TraderSecurityController;
 import services.HandlerSellerService;
 import services.TraderService;
 import services.TraderBidService;
-import services.messaging.bid.TraderBidMessageService;
+import services.BatchService;
+import services.messaging.bid.BatchMessageService;
 import services.bid_management.TraderFCFSService;
 import services.bid_management.WaterfallService;
 import services.parsers.HandlerSellerJsonParser;
@@ -44,7 +45,8 @@ public class TraderController extends Controller {
   private final TraderService traderService;
   private final HandlerSellerService handlerSellerService;
   private final TraderBidService traderBidService;
-  private final TraderBidMessageService bidMessageService;
+  private final BatchService batchService;
+  private final BatchMessageService batchMessageService;
 
   private final ObjectMapper jsonMapper;
 
@@ -53,11 +55,13 @@ public class TraderController extends Controller {
       TraderService traderService,
       HandlerSellerService handlerSellerService,
       TraderBidService traderBidService,
-      TraderBidMessageService bidMessageService) {
+      BatchService batchService,
+      BatchMessageService batchMessageService) {
     this.traderService = traderService;
     this.handlerSellerService = handlerSellerService;
     this.traderBidService = traderBidService;
-    this.bidMessageService = bidMessageService;
+    this.batchService = batchService;
+    this.batchMessageService = batchMessageService;
 
     this.jsonMapper = new ObjectMapper();
   }
@@ -305,6 +309,11 @@ public class TraderController extends Controller {
     Batch batch = new Batch(trader, processedTraderBids);
     batch.save();
 
+    Result emailResult = sendBatch(batch.getId());
+    if(emailResult.status() != 200) {
+      return emailResult;
+    }
+
     try {
       return created(jsonMapper.writeValueAsString(batch));
     } catch (JsonProcessingException e) {
@@ -454,7 +463,7 @@ public class TraderController extends Controller {
     }
   }
   
-  public Result sendBid(long id) {
+  public Result sendBatch(long id) {
     ResponseHeaders.addResponseHeaders(response());
 
     Trader trader = TraderSecurityController.getTrader();
@@ -463,16 +472,16 @@ public class TraderController extends Controller {
       return traderNotFound();
     }
     
-    TraderBid traderBid = traderBidService.getById(id);
-    if (traderBid == null) {
+    Batch batch = batchService.getById(id);
+    if (batch == null) {
       return notFound(JsonMsgUtils.bidNotFoundMessage(id));
     }
 
-    if (!traderService.checkTraderOwnsBid(trader, traderBid)) {
-      return badRequest(JsonMsgUtils.traderDoesNotOwnBidMessage(trader, traderBid));
-    }
+  //   if (!traderService.checkTraderOwnsBid(trader, traderBid)) {
+  //     return badRequest(JsonMsgUtils.traderDoesNotOwnBidMessage(trader, traderBid));
+  //   }
     
-    boolean emailSuccess = bidMessageService.send(traderBid);
+    boolean emailSuccess = batchMessageService.send(batch);
 
 
     return emailSuccess

@@ -1,0 +1,11 @@
+@(batch: Batch, handlerSeller: HandlerSeller, domain: String)
+
+<!DOCTYPE html>
+<html>
+  <h1> Batch @batch.getId() </h1>
+  <button>
+    <a href="@domain/traderBids/batch/@batch.getId()/display/@handlerSeller.getId()"> 
+      Go To Batch Page
+    </a>
+  </button>
+</html>
