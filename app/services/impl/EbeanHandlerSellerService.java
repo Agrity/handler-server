@@ -44,7 +44,7 @@ public class EbeanHandlerSellerService implements HandlerSellerService {
   public boolean checkCompanyNameAvailable(String companyName) {
     return null == FINDER
         .where()
-        .eq("company_name", companyName.toLowerCase())
+        .eq("seller_company_name", companyName.toLowerCase())
         .findUnique();
   }
 

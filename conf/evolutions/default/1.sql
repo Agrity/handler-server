@@ -64,7 +64,7 @@ create table sellers (
   phone_number_id               bigint,
   handler_id                    bigint,
   trader_id                     bigint,
-  company_name                  varchar(255) not null,
+  seller_company_name           varchar(255) not null,
   constraint uq_sellers_email_address_id unique (email_address_id),
   constraint uq_sellers_phone_number_id unique (phone_number_id),
   constraint pk_sellers primary key (id)
