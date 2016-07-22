@@ -4,4 +4,6 @@
 
 ./new-handlerSeller.sh "HandlerSeller Company"
 
-./new-traderBid.sh
+./new-handlerSeller.sh
+
+./new-batch.sh

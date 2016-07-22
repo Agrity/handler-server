@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 
 import models.BaseBidResponse.ResponseStatus;
 import models.Almond.AlmondVariety;
+import models.Batch;
 import models.interfaces.PrettyString;
 import services.bid_management.TraderBidManagementService;
 
@@ -53,6 +54,9 @@ public class TraderBid extends BaseBid implements PrettyString {
   @JoinTable(name="TRADER_BIDS_HANDLER_SELLERS")
   @Constraints.Required
   private List<HandlerSeller> handlerSellers = new ArrayList<>();
+
+  @ManyToOne()
+  private Batch batch;
 
 
   /* ==================================== Static Functions ==================================== */

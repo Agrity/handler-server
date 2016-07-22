@@ -35,6 +35,10 @@ public class JsonMsgUtils {
     return errorToJson("Bid with id '" + id + "' could not be found\n");
   }
 
+  public static ObjectNode batchNotFoundMessage(Long id) {
+    return errorToJson("Batch with id '" + id + "' could not be found\n");
+  }
+
   public static ObjectNode handlerDoesNotOwnGrowerMessage(Handler handler, Grower grower) {
     return errorToJson("Handler " + handler.getCompanyName() + " does not own Grower " + grower.getFullName()
         + ".\n");
@@ -77,6 +81,10 @@ public class JsonMsgUtils {
 
   public static ObjectNode expectingData() {
     return errorToJson("Expecting Some Data.\n");
+  }
+
+  public static ObjectNode expectingArray() {
+    return errorToJson("Expecting JsonNode as Array. \n");
   }
 
   public static ObjectNode growerInBid(long growerId, long bidId) {
