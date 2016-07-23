@@ -3,6 +3,7 @@ package controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 
@@ -264,16 +265,16 @@ public class TraderController extends Controller {
       return badRequest(JsonMsgUtils.expectingData());
     }
 
-    addCurrentTraderId(trader, data);
-
     if(!data.isArray()) {
       return badRequest(JsonMsgUtils.expectingArray());
     }
 
     List<TraderBid> processedTraderBids = new ArrayList<>();
-    for(JsonNode singleBidNode: data) {
+    for(JsonNode singleBidNode: (ArrayNode)data) {
 
-      TraderBidJsonParser parser = new TraderBidJsonParser(data);
+      addCurrentTraderId(trader, singleBidNode);
+
+      TraderBidJsonParser parser = new TraderBidJsonParser(singleBidNode);
 
       if (!parser.isValid()) {
         return badRequest(JsonMsgUtils.caughtException(parser.getErrorMessage()));
@@ -488,6 +489,8 @@ public class TraderController extends Controller {
     if (data.isObject()) {
       // TODO Change String to Literal to Constant.
       ((ObjectNode) data).put("trader_id", trader.getId());
+    } else {
+      Logger.error("Adding trader_id to non-object JSON type.");
     }
   }
 }
