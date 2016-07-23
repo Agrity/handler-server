@@ -29,7 +29,9 @@ import services.HandlerSellerService;
 import services.TraderService;
 import services.TraderBidService;
 import services.BatchService;
-import services.messaging.bid.BatchMessageService;
+import services.messaging.bid.BatchSendGridMessageService;
+import services.messaging.bid.BatchSMSMessageService;
+
 import services.bid_management.TraderFCFSService;
 import services.bid_management.WaterfallService;
 import services.parsers.HandlerSellerJsonParser;
@@ -46,7 +48,8 @@ public class TraderController extends Controller {
   private final HandlerSellerService handlerSellerService;
   private final TraderBidService traderBidService;
   private final BatchService batchService;
-  private final BatchMessageService batchMessageService;
+  private final BatchSendGridMessageService batchSendGridMessageService;
+  private final BatchSMSMessageService batchSMSMessageService;
 
   private final ObjectMapper jsonMapper;
 
@@ -56,12 +59,14 @@ public class TraderController extends Controller {
       HandlerSellerService handlerSellerService,
       TraderBidService traderBidService,
       BatchService batchService,
-      BatchMessageService batchMessageService) {
+      BatchSendGridMessageService batchSendGridMessageService,
+      BatchSMSMessageService batchSMSMessageService) {
     this.traderService = traderService;
     this.handlerSellerService = handlerSellerService;
     this.traderBidService = traderBidService;
     this.batchService = batchService;
-    this.batchMessageService = batchMessageService;
+    this.batchSMSMessageService = batchSMSMessageService;
+    this.batchSendGridMessageService = batchSendGridMessageService;
 
     this.jsonMapper = new ObjectMapper();
   }
@@ -482,7 +487,7 @@ public class TraderController extends Controller {
   //   }
     
     boolean sendSuccess 
-      = batchMessageService.send(batch);
+      = batchSMSMessageService.send(batch) && batchSendGridMessageService.send(batch);
 
     return sendSuccess
        ? ok(JsonMsgUtils.successfullEmail())

@@ -17,6 +17,7 @@ public class BatchSMSMessageService implements BatchMessageService {
   
   /* Takes a batch and sends out SMS message containing bid to all growers using Twilio account */
   public boolean send(Batch batch) {
+    Logger.info("entered send method\n\n");
     boolean success = true;
 
     for (HandlerSeller handlerSeller : batch.getAllHandlerSellers()) { 
@@ -31,6 +32,7 @@ public class BatchSMSMessageService implements BatchMessageService {
     String msg = "Follow this link to access batch " + batchId 
       + TwilioFields.getDomain() +" /traderBids/batch/" 
       + batchId + "/display/" + handlerSeller.getId();
+    Logger.info(msg);
     return sendMessage(batch, handlerSeller, msg);
   }
 
