@@ -30,7 +30,9 @@ import services.HandlerSellerService;
 import services.TraderService;
 import services.TraderBidService;
 import services.BatchService;
-import services.messaging.bid.BatchMessageService;
+import services.messaging.bid.BatchSendGridMessageService;
+import services.messaging.bid.BatchSMSMessageService;
+
 import services.bid_management.TraderFCFSService;
 import services.bid_management.WaterfallService;
 import services.parsers.HandlerSellerJsonParser;
@@ -47,7 +49,8 @@ public class TraderController extends Controller {
   private final HandlerSellerService handlerSellerService;
   private final TraderBidService traderBidService;
   private final BatchService batchService;
-  private final BatchMessageService batchMessageService;
+  private final BatchSendGridMessageService batchSendGridMessageService;
+  private final BatchSMSMessageService batchSMSMessageService;
 
   private final ObjectMapper jsonMapper;
 
@@ -57,12 +60,14 @@ public class TraderController extends Controller {
       HandlerSellerService handlerSellerService,
       TraderBidService traderBidService,
       BatchService batchService,
-      BatchMessageService batchMessageService) {
+      BatchSendGridMessageService batchSendGridMessageService,
+      BatchSMSMessageService batchSMSMessageService) {
     this.traderService = traderService;
     this.handlerSellerService = handlerSellerService;
     this.traderBidService = traderBidService;
     this.batchService = batchService;
-    this.batchMessageService = batchMessageService;
+    this.batchSMSMessageService = batchSMSMessageService;
+    this.batchSendGridMessageService = batchSendGridMessageService;
 
     this.jsonMapper = new ObjectMapper();
   }
@@ -310,9 +315,9 @@ public class TraderController extends Controller {
     Batch batch = new Batch(trader, processedTraderBids);
     batch.save();
 
-    Result emailResult = sendBatch(batch.getId());
-    if(emailResult.status() != 200) {
-      return emailResult;
+    Result sendResult = sendBatch(batch.getId());
+    if(sendResult.status() != 200) {
+      return sendResult;
     }
 
     try {
@@ -482,10 +487,10 @@ public class TraderController extends Controller {
   //     return badRequest(JsonMsgUtils.traderDoesNotOwnBidMessage(trader, traderBid));
   //   }
     
-    boolean emailSuccess = batchMessageService.send(batch);
+    boolean sendSuccess 
+      = batchSMSMessageService.send(batch) && batchSendGridMessageService.send(batch);
 
-
-    return emailSuccess
+    return sendSuccess
        ? ok(JsonMsgUtils.successfullEmail())
        : internalServerError(JsonMsgUtils.emailsNotSent());
   }

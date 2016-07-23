@@ -23,7 +23,8 @@ import services.TraderBidService;
 import services.TraderService;
 import services.impl.EbeanTraderService;
 import services.BatchService;
-import services.messaging.bid.BatchMessageService;
+import services.messaging.bid.BatchSMSMessageService;
+import services.messaging.bid.BatchSendGridMessageService;
 import services.bid_management.TraderFCFSService;
 import services.parsers.TraderBidJsonParser;
 import services.parsers.TraderBidJsonParser.TraderManagementTypeInfo;
@@ -37,16 +38,20 @@ import services.bid_management.WaterfallService;
 public class AdminTraderBidController extends Controller {
 
   private final TraderBidService traderBidService;
-  private final BatchMessageService batchMessageService;
+  private final BatchSMSMessageService batchSMSMessageService;
+  private final BatchSendGridMessageService batchSendGridMessageService;
   private final BatchService batchService;
 
   private final ObjectMapper jsonMapper;
 
   @Inject
   public AdminTraderBidController(TraderBidService traderBidService,
-      BatchMessageService batchMessageService, BatchService batchService) {
+          BatchSMSMessageService batchSMSMessageService,
+          BatchSendGridMessageService batchSendGridMessageService,
+          BatchService batchService) {
     this.traderBidService = traderBidService;
-    this.batchMessageService = batchMessageService;
+    this.batchSMSMessageService = batchSMSMessageService;
+    this.batchSendGridMessageService = batchSendGridMessageService;
     this.batchService = batchService;
 
     this.jsonMapper = new ObjectMapper();
@@ -96,7 +101,8 @@ public class AdminTraderBidController extends Controller {
   @Security.Authenticated(AdminSecured.class)
   public Result sendBatch(long id) {
     Batch batch = batchService.getById(id);
-    boolean emailSuccess = batchMessageService.send(batch);
+    boolean emailSuccess 
+      = batchSendGridMessageService.send(batch) && batchSMSMessageService.send(batch);
 
     return emailSuccess
         ? ok(JsonMsgUtils.successfullEmail())

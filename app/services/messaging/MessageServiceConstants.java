@@ -82,5 +82,9 @@ public abstract class MessageServiceConstants {
     public static String getTwilioNumber() {
       return TWILIO_NUMBER;
     }
+
+    public static String getDomain() {
+      return EmailFields.getDomain();
+    }
   }
 }

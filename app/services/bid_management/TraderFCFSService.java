@@ -99,12 +99,4 @@ public class TraderFCFSService implements TraderBidManagementService {
       return true;
     }
   }
-
-  private String formatUpdateMessage(){
-    return "Your bid number " + Long.toString(traderBid.getId()) + " has been updated. \n"
-        + "\tBid number " + Long.toString(traderBid.getId()) + " now contains the following specs: \n"
-        + "\t\tAlmond type: " + traderBid.getAlmondVariety() +"\n\t\tPrice per pound: " 
-        + traderBid.getPricePerPound() + "\n\t\tPOUNDS REMAINING: " 
-        + Long.toString(poundsRemaining);
-  }
 }
