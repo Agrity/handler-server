@@ -90,6 +90,10 @@ public class TraderBid extends BaseBid implements PrettyString {
     setPoundsRemaining(almondPounds);
   }
 
+  public void setBatch(Batch batch) {
+    this.batch = batch;
+  }
+
   /* ======================================= Attribute Accessors ======================================= */
 
 
@@ -109,9 +113,8 @@ public class TraderBid extends BaseBid implements PrettyString {
 
   /* ======================================= Member Functions ======================================= */
 
-
   public void closeBid(BidStatus status) {
-    setBidStatus(BidStatus.REJECTED);
+    setBidStatus(status);
     TraderBidManagementService.removeBidManagementService(this);
     save();
   }

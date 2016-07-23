@@ -75,6 +75,7 @@ create table batch (
   id                            bigint auto_increment not null,
   created_at                    timestamp,
   updated_at                    timestamp,
+  trader_id                     bigint,
   constraint pk_batch primary key (id)
 );
 
@@ -160,6 +161,9 @@ create index ix_sellers_handler_id on sellers (handler_id);
 alter table sellers add constraint fk_sellers_trader_id foreign key (trader_id) references users (id) on delete restrict on update restrict;
 create index ix_sellers_trader_id on sellers (trader_id);
 
+alter table batch add constraint fk_batch_trader_id foreign key (trader_id) references users (id) on delete restrict on update restrict;
+create index ix_batch_trader_id on batch (trader_id);
+
 alter table users add constraint fk_users_email_address_id foreign key (email_address_id) references email_address (id) on delete restrict on update restrict;
 
 alter table users add constraint fk_users_phone_number_id foreign key (phone_number_id) references phone_number (id) on delete restrict on update restrict;
@@ -215,6 +219,9 @@ drop index if exists ix_sellers_handler_id;
 
 alter table sellers drop constraint if exists fk_sellers_trader_id;
 drop index if exists ix_sellers_trader_id;
+
+alter table batch drop constraint if exists fk_batch_trader_id;
+drop index if exists ix_batch_trader_id;
 
 alter table users drop constraint if exists fk_users_email_address_id;
 

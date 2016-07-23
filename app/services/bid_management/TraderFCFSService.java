@@ -15,8 +15,6 @@ import java.util.concurrent.TimeUnit;
 
 import services.impl.EbeanHandlerSellerService;
 import services.HandlerSellerService;
-import services.messaging.bid.TraderBidSendGridMessageService;
-import services.messaging.bid.TraderBidSMSMessageService;
 
 import play.libs.Akka;
 
@@ -28,8 +26,6 @@ public class TraderFCFSService implements TraderBidManagementService {
   private Cancellable cancellable;
   private long poundsRemaining;
   private List<Long> handlerSellerIdsRemaining;
-  TraderBidSendGridMessageService emailService = new TraderBidSendGridMessageService();
-  TraderBidSMSMessageService smsService = new TraderBidSMSMessageService();
   HandlerSellerService handlerSellerService = new EbeanHandlerSellerService();
 
   public TraderFCFSService(TraderBid traderBid, Duration timeAllowed) {
@@ -37,10 +33,6 @@ public class TraderFCFSService implements TraderBidManagementService {
     this.poundsRemaining = traderBid.getAlmondPounds();
 
     handlerSellerIdsRemaining = getHandlerSellerIDList();
-
-    emailService.send(traderBid);
-    smsService.send(traderBid);
-
     TraderBidManagementService.bidToManageService.put(traderBid, this);
 
     cancellable = Akka.system().scheduler()
@@ -52,8 +44,6 @@ public class TraderFCFSService implements TraderBidManagementService {
             } else {
               traderBid.closeBid(BidStatus.PARTIAL);
             }
-            emailService.sendClosed(traderBid);
-            smsService.sendClosed(traderBid);
           }
         }, Akka.system().dispatcher());
   }
@@ -78,12 +68,9 @@ public class TraderFCFSService implements TraderBidManagementService {
     if (poundsRemaining == 0) {
       cancellable.cancel();
       traderBid.closeBid(BidStatus.ACCEPTED);
-      sendClosedToRemaining();
     } else if(handlerSellerIdsRemaining.isEmpty()) {
-        traderBid.closeBid(BidStatus.PARTIAL); 
-        cancellable.cancel(); 
-    } else {
-      sendUpdatedToRemaining();
+      traderBid.closeBid(BidStatus.PARTIAL); 
+      cancellable.cancel(); 
     }
 
     return BidResponseResult.getValidResult();
@@ -110,22 +97,6 @@ public class TraderFCFSService implements TraderBidManagementService {
     else {
       poundsRemaining -= pounds;
       return true;
-    }
-  }
-
-  private void sendClosedToRemaining() {
-    for(Long handlerSellerId: handlerSellerIdsRemaining) {
-      HandlerSeller hs = handlerSellerService.getById(handlerSellerId);
-      emailService.sendClosed(traderBid, hs);
-      smsService.sendClosed(traderBid, hs);  
-    }
-  }
-
-  private void sendUpdatedToRemaining() {
-    for(Long handlerSellerId: handlerSellerIdsRemaining) {
-      HandlerSeller hs = handlerSellerService.getById(handlerSellerId);
-      emailService.sendUpdated(traderBid, hs, formatUpdateMessage());
-      smsService.sendUpdated(traderBid, hs, formatUpdateMessage());  
     }
   }
 
