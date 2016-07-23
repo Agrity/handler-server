@@ -60,7 +60,6 @@ public class TraderBidController extends Controller {
       return notFound(JsonMsgUtils.bidNotFoundMessage(bidId));
     }
 
-    // TODO Change to actual pounds accepted once implemented.
     BidResponseResult success = 
       traderBid.handlerSellerAcceptBid(handlerSellerId, pounds);
     

@@ -37,8 +37,6 @@ public class MessageReceivingController extends Controller {
     return ok("Number Responses Recieved: " + numResponses);
   }
 
-  /* === TODO: How is bid updated if grower doesn't go through Twilio to accept from handler? === */
-
   public Result receiveTwilioResponse() {
     numResponses++;
     Map<String, String[]> bodyMap = request().body().asFormUrlEncoded();
@@ -96,7 +94,6 @@ public class MessageReceivingController extends Controller {
     return updateBid(grower, handlerBid, accepted, almondPounds);
   } 
 
-  /* === TODO: Grower request call? === */
   private Result updateBid(Grower grower, HandlerBid handlerBid, boolean accepted, Integer almondPounds) {
     if (accepted) {
       BidResponseResult result = handlerBid.growerAcceptBid(grower.getId(), almondPounds);
