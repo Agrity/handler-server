@@ -29,8 +29,11 @@ public class BatchSMSMessageService implements BatchMessageService {
     
   public boolean send(Batch batch, HandlerSeller handlerSeller) {
     Long batchId = batch.getId();
-    String msg = "Follow this link to access batch " + batchId 
-      + TwilioFields.getDomain() +" /traderBids/batch/" 
+    String msg 
+      = "Hi " + handlerSeller.getFullName() + ",\n"
+      + "you have new bids from " + batch.getTrader().getCompanyName()
+      + ". Follow the link to view and respond:\n" 
+      + TwilioFields.getDomain() + "/traderBids/batch/" 
       + batchId + "/display/" + handlerSeller.getId();
     Logger.info(msg);
     return sendMessage(batch, handlerSeller, msg);
