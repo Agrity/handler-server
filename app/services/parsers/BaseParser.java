@@ -192,7 +192,6 @@ public abstract class BaseParser {
       return null;
     }
 
-  /* TODO: Check Trader and HandlerSeller company Names */ 
 
     return companyName;
   }
