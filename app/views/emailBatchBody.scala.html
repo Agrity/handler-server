@@ -3,25 +3,36 @@
 
 <!DOCTYPE html>
 <html>
+  <head>
+    <style> 
+     button {
+        background-color: #47d147;
+      }
+      footer {
+        padding: 30px;
+      }
+    </style>
+  </head>
+
   <body>
     <p>
       Hi @handlerSeller.getFullName(), <br><br>
       We at @trader.getCompanyName() have new bids for you!
       Click on the button below to check them out and accept them. Have
-      a nice day! <br><br>
-      
-      @trader.getFullName() <br>
-      @trader.getCompanyName<br>
-      @trader.getPhoneNumberString() <br><br>
+      a nice day! <br>
     </p>
-
-    <h2><a href="@domain/traderBids/batch/@batch.getId()/display/@handlerSeller.getId()"> 
-      <button> Go To Bids</button>
-    </a></h2>
+    <div id="bidsButton">
+      <a href="@domain/traderBids/batch/@batch.getId()/display/@handlerSeller.getId()"> 
+        <button> Go To Bids</button>
+      </a>
+    </div>
   <body>
   
 
   <footer>
+    @trader.getFullName() <br>
+    @trader.getCompanyName<br>
+    @trader.getPhoneNumberString() <br><br>
   </footer>
 
 </html>
