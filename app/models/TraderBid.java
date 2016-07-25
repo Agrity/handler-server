@@ -24,6 +24,7 @@ import java.util.NoSuchElementException;
 import java.time.LocalDateTime;
 
 import models.BaseBidResponse.ResponseStatus;
+import models.BaseBid.BidStatus;
 import models.Almond.AlmondVariety;
 import models.Batch;
 import models.interfaces.PrettyString;

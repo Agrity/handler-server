@@ -19,7 +19,6 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -27,6 +26,7 @@ import javax.persistence.OneToMany;
 
 import models.Almond.AlmondVariety;
 import models.BaseBidResponse.ResponseStatus;
+import models.BaseBid.BidStatus;
 import models.interfaces.PrettyString;
 
 import play.Logger;
