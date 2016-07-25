@@ -89,7 +89,7 @@ tr {
 
 tons {
   font: 20px Gotham Book, sans-serif;
-
+  padding-right: 10px;
 }
 
 .spaceleft {
@@ -122,7 +122,6 @@ button {
 .reject {
   background-color: rgba(184,79,55,0.9);
 }
-
 
 .comment {
   padding-top:10px;
@@ -170,6 +169,19 @@ button {
 }
 
 </style>
+<script>
+  function getTons(tonsRemaining, bidId) {
+    var input = document.getElementById("numTons"+bidId).value;
+    if(input > tonsRemaining) {
+      alert("Please enter a value less than " + tonsRemaining);
+    } else if(input < 1){
+      alert("Please enter a value greater than 0");
+    } else {
+      var redirect = "@domain/traderBids/" + bidId + "/accept/@handlerSeller.getId()/" + input;
+      window.location.replace(redirect);
+    }
+  }
+</script>
 <body>
 
   <section class="background">
@@ -186,8 +198,6 @@ button {
     <div style="padding-bottom: 40px">
       <div class="movecircle">
         <div class="circle">1</div>
-      </div>
-
       </div>
 
       <div class="col-md-12 bid-box center makespace">
@@ -212,23 +222,25 @@ button {
         <p class="comment">@traderBid.getComment()</p>
         </div>
 
-      <div class="right-side col-md-2">
+        <div class="right-side col-md-2">
 
-        <a href="@domain/traderBids/@traderBid.getId()/accept/@handlerSeller.getId()">
-          <div class="spacebottom">
-            <button class="accept">ACCEPT FULL</button>
-          </div>
-        </a>
+          <a href="@domain/traderBids/@traderBid.getId()/accept/@handlerSeller.getId()">
+            <div class="spacebottom">
+              <button class="accept">ACCEPT FULL</button>
+            </div>
+          </a>
 
-        <a href="@domain/traderBids/@traderBid.getId()/reject/@handlerSeller.getId()">
-          <button class="reject">REJECT</button>
-        </a>
+          <a href="@domain/traderBids/@traderBid.getId()/reject/@handlerSeller.getId()">
+            <button class="reject">REJECT</button>
+          </a>
 
-      </div>
+        </div>
 
         <div class="col-md-10 col-sm-10 movebutton">
-        <button class="partial">ACCEPT PARTIAL</button>
-        <input type="number" class="number"><tons> MT</tons>
+          <input type="number" class="number" id="numTons@traderBid.getId()"><tons> MT</tons>
+          <button class="partial" onclick="getTons(@traderBid.getPoundsRemaining(), @traderBid.getId())">
+            ACCEPT PARTIAL
+          </button>
         </div>
 
       </div>

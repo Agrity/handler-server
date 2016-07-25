@@ -64,7 +64,7 @@ public class JsonMsgUtils {
   }
 
   public static ObjectNode bidNotRejected(String invalidResponseMessage) {
-    return errorToJson("Bod Could not be Rejected: " + invalidResponseMessage + " \n");
+    return errorToJson("Bid Could not be Rejected: " + invalidResponseMessage + " \n");
   }
 
   public static ObjectNode callNotRequested(String invalidResponseMessage) {
