@@ -174,9 +174,11 @@ button {
     var input = document.getElementById("numTons"+bidId).value;
     if(input > tonsRemaining) {
       alert("Please enter a value less than " + tonsRemaining);
+      location.reload(true);
       return;
     } else if(input < 1){
       alert("Please enter a value greater than 0");
+      location.reload(true);
       return;
     } else {
       var redirect = "@domain/traderBids/" + bidId + "/accept/@handlerSeller.getId()/" + input;
