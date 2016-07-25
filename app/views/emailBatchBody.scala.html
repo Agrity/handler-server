@@ -1,12 +1,35 @@
 @(batch: Batch, handlerSeller: HandlerSeller, domain: String)
+@import models.Trader; var trader = batch.getTrader()
 
 <!DOCTYPE html>
 <html>
-  <h1> Batch @batch.getId() </h1>
-  <h2><a href="@domain/traderBids/batch/@batch.getId()/display/@handlerSeller.getId()"> 
-    <button> Go To Bids Page </button>
-  </a></h2>
+  <head>
+    <style> 
+     button {
+        background-color: #47d147;
+      }
+      footer {
+        margin: 30px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <p>
+      Hi @handlerSeller.getFullName(), <br><br>
+      We at @trader.getCompanyName() have new bids for you!
+      Click on the button below to check them out and accept them. Have
+      a nice day! <br>
+    </p>
+    <div id="bidsButton">
+      <a href="@domain/traderBids/batch/@batch.getId()/display/@handlerSeller.getId()"> 
+        <button> Go To Bids</button>
+      </a>
+    </div>
+  <body>
   <footer>
-  hello
+    @trader.getFullName() <br>
+    @trader.getCompanyName<br>
+    @trader.getPhoneNumberString() <br><br>
   </footer>
 </html>

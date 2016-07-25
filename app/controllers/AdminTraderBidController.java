@@ -106,7 +106,7 @@ public class AdminTraderBidController extends Controller {
 
     return emailSuccess
         ? ok(JsonMsgUtils.successfullEmail())
-        : internalServerError(JsonMsgUtils.emailsNotSent());
+        : internalServerError(JsonMsgUtils.messagesNotSent());
   }
 
   @Security.Authenticated(AdminSecured.class)

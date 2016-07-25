@@ -36,8 +36,10 @@
       var input = document.getElementById("numPounds").value;
       if(input > @handlerBid.getAlmondPounds()) {
         alert("Please enter a value less than @handlerBid.getAlmondPoundsString()");
+        return;
       } else if(input < 1){
         alert("Please enter a value greater than 0");
+        return;
       } else {
         var redirect = "@domain/handlerBids/@handlerBid.getId()/accept/@grower.getId()/" + input;
         window.location.replace(redirect);

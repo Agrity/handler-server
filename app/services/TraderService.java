@@ -7,6 +7,7 @@ import java.util.List;
 import models.Trader;
 import models.HandlerSeller;
 import models.TraderBid;
+import models.Batch;
 
 import services.impl.EbeanTraderService;
 
@@ -30,4 +31,6 @@ public interface TraderService {
   public boolean checkTraderOwnsHandlerSeller(Trader trader, HandlerSeller handlerSeller);
 
   public boolean checkTraderOwnsBid(Trader trader, TraderBid traderBid);
+
+  public boolean checkTraderOwnsBatch(Trader trader, Batch batch);
 }
