@@ -486,16 +486,13 @@ public class TraderController extends Controller {
     if (!traderService.checkTraderOwnsBatch(trader, batch)) {
       return badRequest(JsonMsgUtils.traderDoesNotOwnBatchMessage(trader, batch));
     }
-    
-    if(!batchSMSMessageService.send(batch)) {
-      return internalServerError(JsonMsgUtils.smsNotSent());
-    }
 
-    boolean sendSuccess = batchSendGridMessageService.send(batch);
+    boolean sendSuccess 
+      = batchSendGridMessageService.send(batch) && batchSMSMessageService.send(batch);
 
     return sendSuccess
        ? ok(JsonMsgUtils.successfullEmail())
-       : internalServerError(JsonMsgUtils.emailsNotSent());
+       : internalServerError(JsonMsgUtils.messagesNotSent());
   }
 
   private Result traderNotFound() {

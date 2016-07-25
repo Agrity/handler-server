@@ -81,8 +81,8 @@ public class JsonMsgUtils {
     return errorToJson("Some or all of the emails were unable to be sent.\n");
   }
 
-  public static ObjectNode smsNotSent() {
-    return errorToJson("Some or all of the text messages were unable to be sent.\n");
+  public static ObjectNode messagesNotSent() {
+    return errorToJson("Some or all of the emails or text messages were unable to be sent.\n");
   }
 
   public static ObjectNode caughtException(String err) {

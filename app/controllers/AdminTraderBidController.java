@@ -101,16 +101,12 @@ public class AdminTraderBidController extends Controller {
   @Security.Authenticated(AdminSecured.class)
   public Result sendBatch(long id) {
     Batch batch = batchService.getById(id);
-    
-    if(!batchSMSMessageService.send(batch)) {
-      return internalServerError(JsonMsgUtils.smsNotSent());
-    }
-
-    boolean emailSuccess = batchSendGridMessageService.send(batch);
+    boolean emailSuccess 
+      = batchSendGridMessageService.send(batch) && batchSMSMessageService.send(batch);
 
     return emailSuccess
         ? ok(JsonMsgUtils.successfullEmail())
-        : internalServerError(JsonMsgUtils.emailsNotSent());
+        : internalServerError(JsonMsgUtils.messagesNotSent());
   }
 
   @Security.Authenticated(AdminSecured.class)
