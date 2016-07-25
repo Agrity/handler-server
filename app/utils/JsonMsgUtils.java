@@ -6,6 +6,7 @@ import models.Trader;
 import models.HandlerSeller;
 import models.HandlerBid;
 import models.TraderBid;
+import models.Batch;
 
 import play.libs.Json;
 
@@ -59,6 +60,11 @@ public class JsonMsgUtils {
         + ".\n");
   }
 
+  public static ObjectNode traderDoesNotOwnBatchMessage(Trader trader, Batch batch) {
+    return errorToJson("Trader " + trader.getCompanyName() + " does not own batch " + batch.getId()
+        + ".\n");
+  }
+
   public static ObjectNode bidNotAccepted(String invalidResponseMessage) {
     return errorToJson("Bid Could not be Accepted: " + invalidResponseMessage + " \n");
   }
@@ -73,6 +79,10 @@ public class JsonMsgUtils {
 
   public static ObjectNode emailsNotSent() {
     return errorToJson("Some or all of the emails were unable to be sent.\n");
+  }
+
+  public static ObjectNode smsNotSent() {
+    return errorToJson("Some or all of the text messages were unable to be sent.\n");
   }
 
   public static ObjectNode caughtException(String err) {

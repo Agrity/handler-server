@@ -8,6 +8,7 @@ import models.Trader;
 import models.HandlerSeller;
 import models.TraderBid;
 import models.EmailAddress;
+import models.Batch;
 
 import play.Logger;
 
@@ -86,5 +87,10 @@ public class EbeanTraderService implements TraderService {
   @Override
   public boolean checkTraderOwnsBid(Trader trader, TraderBid traderBid) {
     return trader.equals(traderBid.getTrader());
+  }
+
+  @Override
+  public boolean checkTraderOwnsBatch(Trader trader, Batch batch) {
+    return trader.equals(batch.getTrader());
   }
 } 
