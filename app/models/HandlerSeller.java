@@ -40,7 +40,7 @@ public class HandlerSeller extends BaseSeller implements PrettyString {
   @JsonIgnore // Annotation here because no explicit getter
   public List<TraderBid> traderBids = new ArrayList<>();
 
-  @Column(nullable = false, name = "seller_company_name")
+  @Column(name = "seller_company_name")
   private String companyName;
 
 
