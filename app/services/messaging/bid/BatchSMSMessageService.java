@@ -31,10 +31,12 @@ public class BatchSMSMessageService implements BatchMessageService {
     Long batchId = batch.getId();
     String msg 
       = "Hi " + handlerSeller.getFullName() + ",\n"
-      + "you have new bids from " + batch.getTrader().getCompanyName()
-      + ". Follow the link to view and respond:\n" 
+      + "You have received new bids from " + batch.getTrader().getCompanyName()
+      + "! Clock on the link below to view and/or accept them.\n" 
       + TwilioFields.getDomain() + "/traderBids/batch/" 
-      + batchId + "/display/" + handlerSeller.getId();
+      + batchId + "/display/" + handlerSeller.getId() + "\n"
+      + "- " + batch.getTrader().getFullName() + "\n"
+      + batch.getTrader().getPhoneNumberString();
     Logger.info(msg);
     return sendMessage(batch, handlerSeller, msg);
   }
