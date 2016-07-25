@@ -102,6 +102,10 @@ public abstract class User extends BaseModel {
     return lastName;
   }
 
+  public String getFullName() {
+    return getFirstName() + " " + getLastName();
+  }
+
   public void setEmailAddress(EmailAddress emailAddress) {
     this.emailAddress = emailAddress;
   }
