@@ -464,6 +464,8 @@ public class TraderController extends Controller {
           JsonMsgUtils.caughtException("Could not get bids for handlerSeller with id " + handlerSellerId));
     }
 
+    traderBids.sort((bid1, bid2) -> bid2.getCreatedAt().compareTo(bid1.getCreatedAt()));
+
     try {
       return ok(jsonMapper.writeValueAsString(traderBids));
     } catch (JsonProcessingException e) {
