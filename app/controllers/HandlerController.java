@@ -376,6 +376,8 @@ public class HandlerController extends Controller {
       return notFound(JsonMsgUtils.handlerNotFoundMessage(handler.getId()));
     }
 
+    handlerBids.sort((bid1, bid2) -> bid1.getCreatedAt().compareTo(bid2.getCreatedAt()));
+
     try {
       return ok(jsonMapper.writeValueAsString(handlerBids));
     } catch (JsonProcessingException e) {
