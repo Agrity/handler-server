@@ -405,7 +405,7 @@ public class TraderController extends Controller {
       return notFound(JsonMsgUtils.traderNotFoundMessage(trader.getId()));
     }
 
-    traderBids.sort((bid1, bid2) -> bid1.getCreatedAt().compareTo(bid2.getCreatedAt()));
+    traderBids.sort((bid1, bid2) -> bid2.getCreatedAt().compareTo(bid1.getCreatedAt()));
 
     try {
       return ok(jsonMapper.writeValueAsString(traderBids));

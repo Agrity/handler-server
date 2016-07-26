@@ -163,7 +163,7 @@ public class AdminHandlerBidController extends Controller {
   @Security.Authenticated(AdminSecured.class)
   public Result getAllBids() {
     List<HandlerBid> handlerBids = handlerBidService.getAll();
-    handlerBids.sort((bid1, bid2) -> bid1.getCreatedAt().compareTo(bid2.getCreatedAt()));
+    handlerBids.sort((bid1, bid2) -> bid2.getCreatedAt().compareTo(bid1.getCreatedAt()));
     try {
       return ok(jsonMapper.writeValueAsString(handlerBids));
     } catch (JsonProcessingException e) {
