@@ -191,8 +191,10 @@ public class AdminTraderBidController extends Controller {
 
   @Security.Authenticated(AdminSecured.class)
   public Result getAllBids() {
+    List<TraderBid> traderBids = traderBidService.getAll();
+    traderBids.sort((bid1, bid2) -> bid1.getCreatedAt().compareTo(bid2.getCreatedAt()));
     try {
-      return ok(jsonMapper.writeValueAsString(traderBidService.getAll()));
+      return ok(jsonMapper.writeValueAsString(traderBids));
     } catch (JsonProcessingException e) {
       return internalServerError(JsonMsgUtils.caughtException(e.toString()));
     } 

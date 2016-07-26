@@ -162,8 +162,10 @@ public class AdminHandlerBidController extends Controller {
 
   @Security.Authenticated(AdminSecured.class)
   public Result getAllBids() {
+    List<HandlerBid> handlerBids = handlerBidService.getAll();
+    handlerBids.sort((bid1, bid2) -> bid1.getCreatedAt().compareTo(bid2.getCreatedAt()));
     try {
-      return ok(jsonMapper.writeValueAsString(handlerBidService.getAll()));
+      return ok(jsonMapper.writeValueAsString(handlerBids));
     } catch (JsonProcessingException e) {
       return internalServerError(JsonMsgUtils.caughtException(e.toString()));
     } 
