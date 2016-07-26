@@ -16,7 +16,7 @@ if ! [[ -z $COMPANY_NAME ]]; then
       --header "X-ADMIN-TOKEN: development-use-only" \
       --request POST \
       --data "{ \"company_name\" : \"$COMPANY_NAME\", \"first_name\" : \"F_NAME\", \"last_name\" : \"L_NAME\", \"email_address\" : \"$EMAIL_ADDRESS\", \"phone_number\" : \"1234567890\", \"password\" : \"$PASSWORD\" }" \
-      server.test.agrity.net/admin/handlers
+      server.test.agrity.net/admin/traders
 
   else
     echo "ERROR: Please provide a email address to create."
@@ -25,5 +25,3 @@ if ! [[ -z $COMPANY_NAME ]]; then
 else
   echo "ERROR: Please provide a company name to create."
 fi
-
-

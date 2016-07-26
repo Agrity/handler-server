@@ -5,7 +5,7 @@
 
 create table bids (
   dtype                         varchar(31) not null,
-  id                            bigint auto_increment not null,
+  id                            bigserial not null,
   created_at                    timestamp,
   updated_at                    timestamp,
   almond_variety                varchar(2),
@@ -41,7 +41,7 @@ create table handler_bids_growers (
 
 create table bid_responses (
   dtype                         varchar(31) not null,
-  id                            bigint auto_increment not null,
+  id                            bigserial not null,
   created_at                    timestamp,
   updated_at                    timestamp,
   response_status               integer,
@@ -56,7 +56,7 @@ create table bid_responses (
 
 create table sellers (
   dtype                         varchar(31) not null,
-  id                            bigint auto_increment not null,
+  id                            bigserial not null,
   created_at                    timestamp,
   updated_at                    timestamp,
   first_name                    varchar(255),
@@ -72,7 +72,7 @@ create table sellers (
 );
 
 create table batch (
-  id                            bigint auto_increment not null,
+  id                            bigserial not null,
   created_at                    timestamp,
   updated_at                    timestamp,
   trader_id                     bigint,
@@ -80,7 +80,7 @@ create table batch (
 );
 
 create table email_address (
-  id                            bigint auto_increment not null,
+  id                            bigserial not null,
   created_at                    timestamp,
   updated_at                    timestamp,
   email_address                 varchar(255),
@@ -88,7 +88,7 @@ create table email_address (
 );
 
 create table phone_number (
-  id                            bigint auto_increment not null,
+  id                            bigserial not null,
   created_at                    timestamp,
   updated_at                    timestamp,
   phone_number                  varchar(255),
@@ -97,7 +97,7 @@ create table phone_number (
 
 create table users (
   dtype                         varchar(31) not null,
-  id                            bigint auto_increment not null,
+  id                            bigserial not null,
   created_at                    timestamp,
   updated_at                    timestamp,
   company_name                  varchar(255) not null,
@@ -177,79 +177,79 @@ create index ix_users_sellers_sellers on users_sellers (sellers_id);
 
 # --- !Downs
 
-alter table bids drop constraint if exists fk_bids_trader_id;
+alter table if exists bids drop constraint if exists fk_bids_trader_id;
 drop index if exists ix_bids_trader_id;
 
-alter table bids drop constraint if exists fk_bids_batch_id;
+alter table if exists bids drop constraint if exists fk_bids_batch_id;
 drop index if exists ix_bids_batch_id;
 
-alter table bids drop constraint if exists fk_bids_handler_id;
+alter table if exists bids drop constraint if exists fk_bids_handler_id;
 drop index if exists ix_bids_handler_id;
 
-alter table trader_bids_handler_sellers drop constraint if exists fk_trader_bids_handler_sellers_bids;
+alter table if exists trader_bids_handler_sellers drop constraint if exists fk_trader_bids_handler_sellers_bids;
 drop index if exists ix_trader_bids_handler_sellers_bids;
 
-alter table trader_bids_handler_sellers drop constraint if exists fk_trader_bids_handler_sellers_sellers;
+alter table if exists trader_bids_handler_sellers drop constraint if exists fk_trader_bids_handler_sellers_sellers;
 drop index if exists ix_trader_bids_handler_sellers_sellers;
 
-alter table handler_bids_growers drop constraint if exists fk_handler_bids_growers_bids;
+alter table if exists handler_bids_growers drop constraint if exists fk_handler_bids_growers_bids;
 drop index if exists ix_handler_bids_growers_bids;
 
-alter table handler_bids_growers drop constraint if exists fk_handler_bids_growers_sellers;
+alter table if exists handler_bids_growers drop constraint if exists fk_handler_bids_growers_sellers;
 drop index if exists ix_handler_bids_growers_sellers;
 
-alter table bid_responses drop constraint if exists fk_bid_responses_grower_id;
+alter table if exists bid_responses drop constraint if exists fk_bid_responses_grower_id;
 drop index if exists ix_bid_responses_grower_id;
 
-alter table bid_responses drop constraint if exists fk_bid_responses_handler_bid_id;
+alter table if exists bid_responses drop constraint if exists fk_bid_responses_handler_bid_id;
 drop index if exists ix_bid_responses_handler_bid_id;
 
-alter table bid_responses drop constraint if exists fk_bid_responses_handler_seller_id;
+alter table if exists bid_responses drop constraint if exists fk_bid_responses_handler_seller_id;
 drop index if exists ix_bid_responses_handler_seller_id;
 
-alter table bid_responses drop constraint if exists fk_bid_responses_trader_bid_id;
+alter table if exists bid_responses drop constraint if exists fk_bid_responses_trader_bid_id;
 drop index if exists ix_bid_responses_trader_bid_id;
 
-alter table sellers drop constraint if exists fk_sellers_email_address_id;
+alter table if exists sellers drop constraint if exists fk_sellers_email_address_id;
 
-alter table sellers drop constraint if exists fk_sellers_phone_number_id;
+alter table if exists sellers drop constraint if exists fk_sellers_phone_number_id;
 
-alter table sellers drop constraint if exists fk_sellers_handler_id;
+alter table if exists sellers drop constraint if exists fk_sellers_handler_id;
 drop index if exists ix_sellers_handler_id;
 
-alter table sellers drop constraint if exists fk_sellers_trader_id;
+alter table if exists sellers drop constraint if exists fk_sellers_trader_id;
 drop index if exists ix_sellers_trader_id;
 
-alter table batch drop constraint if exists fk_batch_trader_id;
+alter table if exists batch drop constraint if exists fk_batch_trader_id;
 drop index if exists ix_batch_trader_id;
 
-alter table users drop constraint if exists fk_users_email_address_id;
+alter table if exists users drop constraint if exists fk_users_email_address_id;
 
-alter table users drop constraint if exists fk_users_phone_number_id;
+alter table if exists users drop constraint if exists fk_users_phone_number_id;
 
-alter table users_sellers drop constraint if exists fk_users_sellers_users;
+alter table if exists users_sellers drop constraint if exists fk_users_sellers_users;
 drop index if exists ix_users_sellers_users;
 
-alter table users_sellers drop constraint if exists fk_users_sellers_sellers;
+alter table if exists users_sellers drop constraint if exists fk_users_sellers_sellers;
 drop index if exists ix_users_sellers_sellers;
 
-drop table if exists bids;
+drop table if exists bids cascade;
 
-drop table if exists trader_bids_handler_sellers;
+drop table if exists trader_bids_handler_sellers cascade;
 
-drop table if exists handler_bids_growers;
+drop table if exists handler_bids_growers cascade;
 
-drop table if exists bid_responses;
+drop table if exists bid_responses cascade;
 
-drop table if exists sellers;
+drop table if exists sellers cascade;
 
-drop table if exists batch;
+drop table if exists batch cascade;
 
-drop table if exists email_address;
+drop table if exists email_address cascade;
 
-drop table if exists phone_number;
+drop table if exists phone_number cascade;
 
-drop table if exists users;
+drop table if exists users cascade;
 
-drop table if exists users_sellers;
+drop table if exists users_sellers cascade;
 
