@@ -17,7 +17,7 @@ CSV.foreach(ARGV[0]) do |row|
     next
   end
 
-  system("./new-trader.sh '#{row[0]}' '#{row[1]}' '#{row[2]}' '#{row[3]}' '#{row[4]}' '#{row[5]}'>> result")
+  system("./new-csv-trader.sh '#{row[0]}' '#{row[1]}' '#{row[2]}' '#{row[3]}' '#{row[4]}' '#{row[5]}'>> result")
   system("echo >> result")
   system("echo >> result")
 end
