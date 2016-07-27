@@ -19,7 +19,7 @@ public abstract class MessageServiceConstants {
     private static final String FROM_EMAIL_ADDRESS = "noreply@agrity.net";
 
     /* ===== TEMP FOR TESTING ===== */
-    private static final String DOMAIN = "http://localhost:9000";
+    private static final String DOMAIN = "http://server.agrity.net";
 
     // Used for Raw Email
     private static final String FROM_ADDRESS = "Agrity <noreply@agrity.net>";
