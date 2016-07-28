@@ -270,7 +270,7 @@ public class TraderBidJsonParser extends BidJsonParser {
     
     if(typeMap.has(BidJsonConstants.TYPE_KEY)) {
       String className = typeMap.get(BidJsonConstants.TYPE_KEY).asText();
-      Duration delayTime = Duration.ofMinutes(delayInt);
+      Duration delayTime = Duration.ofHours(delayInt);
       switch(className) {
         // case BidJsonConstants.ManagementTypes.WATERFALL:
         //   return new TraderManagementTypeInfo(WaterfallService.class, delayTime);

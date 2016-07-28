@@ -349,7 +349,7 @@ public class HandlerBidJsonParser extends BidJsonParser {
     
     if(typeMap.has(BidJsonConstants.TYPE_KEY)) {
       String className = typeMap.get(BidJsonConstants.TYPE_KEY).asText();
-      Duration delayTime = Duration.ofMinutes(delayInt);
+      Duration delayTime = Duration.ofHours(delayInt);
       switch(className) {
         case BidJsonConstants.ManagementTypes.WATERFALL:
           return new HandlerManagementTypeInfo(WaterfallService.class, delayTime);
