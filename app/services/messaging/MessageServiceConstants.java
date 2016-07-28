@@ -12,14 +12,17 @@ import com.twilio.sdk.resource.instance.*;
 import com.twilio.sdk.resource.list.*;
 import com.twilio.sdk.TwilioRestResponse;
 
+import play.Play;
+import play.Logger;
+
 public abstract class MessageServiceConstants {
   public static class EmailFields {
     // Used for SendGrid
     private static final String FROM_NAME = "Agrity";
     private static final String FROM_EMAIL_ADDRESS = "noreply@agrity.net";
 
-    /* ===== TEMP FOR TESTING ===== */
-    private static final String DOMAIN = "http://server.agrity.net";
+    //Current domain accessed from config file
+    private static final String DOMAIN = Play.application().configuration().getString("domainString");
 
     // Used for Raw Email
     private static final String FROM_ADDRESS = "Agrity <noreply@agrity.net>";
@@ -33,10 +36,12 @@ public abstract class MessageServiceConstants {
     }
 
     public static String getEmailHTMLContent(HandlerBid handlerBid, Grower grower) {
+      Logger.info("\n"+DOMAIN+"\n");
       return views.html.emailBidBody.render(handlerBid, grower, DOMAIN).toString();
     }
 
     public static String getBatchHTMLContent(Batch batch, HandlerSeller handlerSeller) {
+      Logger.info("\n"+DOMAIN+"\n");
       return views.html.emailBatchBody.render(batch, handlerSeller, DOMAIN).toString();
     }
 
