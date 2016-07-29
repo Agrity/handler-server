@@ -52,7 +52,6 @@ h3 {
   height: auto;
   padding: 30px;
   padding-top:60px;
-  z-index: -1
 }
 
 .circle {
@@ -63,13 +62,12 @@ h3 {
   font-size: 40px;
   position:absolute;
   border: 8px solid #e1e1e1;
-  z-index: 0;
+  z-index: 1;
   display: table-cell;
   text-align: center;
   vertical-align: middle;
   padding-top: 25px;
   font: 40px Gotham Book, sans-serif;
-
 }
 
 table {
@@ -98,10 +96,6 @@ tons {
   padding-top: 20px;
 }
 
-input {
-  z-index:2;
-}
-
 button {
     color: #ffffff;
     background-color: #419ed2;
@@ -115,7 +109,7 @@ button {
     font: 10px Gotham Medium, sans-serif;
     letter-spacing: 1px;
 
-    z-index:2;
+    z-index:2 !important;
 }
 
 .batchHeader{
@@ -124,6 +118,7 @@ button {
 
 .accept {
   background-color: rgba(50,184,55,0.9);
+  z-index: 2 !important;
 }
 
 .reject {
@@ -240,7 +235,7 @@ button {
   @for(traderBid <- traderBids) {
     <div class="col-md-12">
     <div class="centercircle">
-        <div class="circle">@traderBid.getId()</div>
+      <div class="circle">@traderBid.getId()</div>
     </div>
 
     <div class="col-md-12 col-sm-12 col-xs-12 spacetop">
