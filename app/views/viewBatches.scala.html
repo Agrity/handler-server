@@ -98,6 +98,10 @@ tons {
   padding-top: 20px;
 }
 
+input {
+  z-index:2;
+}
+
 button {
     color: #ffffff;
     background-color: #419ed2;
@@ -110,6 +114,8 @@ button {
     border-width: 10px;
     font: 10px Gotham Medium, sans-serif;
     letter-spacing: 1px;
+
+    z-index:2;
 }
 
 .batchHeader{
@@ -232,12 +238,12 @@ button {
   </div>
 
   @for(traderBid <- traderBids) {
-
+    <div class="col-md-12">
     <div class="centercircle">
         <div class="circle">@traderBid.getId()</div>
     </div>
 
-    <div style="padding-bottom: 40px" class="col-md-12 col-sm-12 col-xs-12 spacetop">
+    <div class="col-md-12 col-sm-12 col-xs-12 spacetop">
 
       <div class="col-md-12 col-sm-12 col-xs-12 bid-box center">
 
@@ -263,11 +269,11 @@ button {
 
         <div class="right-side col-md-2 col-sm-2 col-xs-2">
 
-          <a href="@domain/traderBids/@traderBid.getId()/accept/@handlerSeller.getId()">
-            <div class="spacebottom">
+          <div class="spacebottom">
+            <a href="@domain/traderBids/@traderBid.getId()/accept/@handlerSeller.getId()">
               <button class="accept">ACCEPT FULL</button>
-            </div>
-          </a>
+            </a>
+          </div>
 
           <a href="@domain/traderBids/@traderBid.getId()/reject/@handlerSeller.getId()">
             <button class="reject">REJECT</button>
@@ -283,6 +289,7 @@ button {
         </div>
 
       </div>
+    </div>
     </div>
   }
 
