@@ -5,6 +5,7 @@ import models.Grower;
 import models.HandlerBid;
 import models.Batch;
 import models.HandlerSeller;
+import models.TraderBid;
 
 import com.twilio.sdk.*;
 import com.twilio.sdk.resource.factory.*;
@@ -40,6 +41,14 @@ public abstract class MessageServiceConstants {
       return views.html.emailBatchBody.render(batch, handlerSeller, domain).toString();
     }
 
+    public static String getTraderReceiptHTMLContent(TraderBid traderBid, HandlerSeller handlerSeller) {
+      return views.html.emailTraderReceiptBody.render(traderBid, handlerSeller, domain).toString();
+    }
+
+    public static String getHandlerSellerReceiptHTMLContent(TraderBid traderBid, HandlerSeller handlerSeller) {
+      return views.html.emailHandlerSellerReceiptBody.render(traderBid, handlerSeller, domain).toString();
+    }
+
     public static void setDomain(String domainString) {
       domain = domainString;
     }
@@ -66,6 +75,10 @@ public abstract class MessageServiceConstants {
 
     public static String getSubjectLineUpdated(Long id) {
       return "Bid " + Long.toString(id) + " Updated";
+    }
+
+    public static String getSubjectLineReceipt(Long id) {
+      return "Bid (ID " + id + ") Transaction Receipt";
     }
   }
 

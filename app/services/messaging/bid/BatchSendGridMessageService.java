@@ -14,6 +14,7 @@ import java.util.List;
 
 import models.HandlerSeller;
 import models.TraderBid;
+import models.Trader;
 import models.Batch;
 import models.EmailAddress;
 
@@ -21,10 +22,13 @@ import play.Logger;
 
 import services.messaging.MessageServiceConstants;
 import services.bid_management.TraderBidManagementService;
+import services.HandlerSellerService;
+import services.impl.EbeanHandlerSellerService;
 
 public class BatchSendGridMessageService implements BatchMessageService {
 
   private static final SendGridMessageService sendGridService = new SendGridMessageService();
+  private static final HandlerSellerService handlerSellerService = new EbeanHandlerSellerService();
 
   private static final Email FROM_EMAIL
       = new Email(MessageServiceConstants.EmailFields.getFromEmailAddress());
@@ -59,6 +63,11 @@ public class BatchSendGridMessageService implements BatchMessageService {
       MessageServiceConstants.EmailFields.getSubjectLineNewBid(),
       toEmail,
       content);
+  
+    List<TraderBid> traderBids = batch.getTraderBids();
+    for (TraderBid traderBid : traderBids) {
+      boolean success = sendReceipt(traderBid, handlerSeller.getId(), traderBid.getAlmondPounds());
+    }
 
     return sendGridService.sendEmail(mail, toEmail);
   }
@@ -80,7 +89,7 @@ public class BatchSendGridMessageService implements BatchMessageService {
 
     Content content
     = new Content(
-      "text/plain",
+      "text/html",
       "Your batch " + batch.getId() + " has expired.");
 
     Mail mail
@@ -92,4 +101,43 @@ public class BatchSendGridMessageService implements BatchMessageService {
 
     return sendGridService.sendEmail(mail, toEmail);
   }
+
+  public boolean sendReceipt(TraderBid traderBid, long handlerSellerId, long pounds) {
+    HandlerSeller handlerSeller = handlerSellerService.getById(handlerSellerId);
+    String handlerSellerEmailAddr = handlerSeller.getEmailAddressString();
+    Email handlerSellerEmail = new Email(handlerSellerEmailAddr);
+
+    Content handlerSellerContent
+    = new Content(
+      "text/html",
+      MessageServiceConstants.EmailFields.getHandlerSellerReceiptHTMLContent(traderBid, handlerSeller));
+
+    Mail handlerSellerMail
+    = new Mail(
+      FROM_EMAIL,
+      MessageServiceConstants.EmailFields.getSubjectLineReceipt(traderBid.getId()),
+      handlerSellerEmail,
+      handlerSellerContent);
+
+
+    Trader trader = handlerSeller.getTrader();
+    String traderEmailAddr = trader.getEmailAddressString();
+    Email traderEmail = new Email(traderEmailAddr);
+
+    Content traderContent
+    = new Content(
+      "text/html",
+      MessageServiceConstants.EmailFields.getTraderReceiptHTMLContent(traderBid, handlerSeller));
+
+    Mail traderMail
+    = new Mail(
+      FROM_EMAIL,
+      MessageServiceConstants.EmailFields.getSubjectLineReceipt(traderBid.getId()),
+      traderEmail,
+      traderContent);
+
+    return sendGridService.sendEmail(handlerSellerMail, handlerSellerEmail) 
+      && sendGridService.sendEmail(traderMail, traderEmail);
+  }
+
 }
