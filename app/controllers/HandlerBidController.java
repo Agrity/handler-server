@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
+import play.Configuration;
 
 import services.HandlerBidService;
 import services.GrowerService;
@@ -27,9 +28,15 @@ public class HandlerBidController extends Controller {
  // private final ObjectMapper jsonMapper;
 
   @Inject
-  public HandlerBidController(HandlerBidService handlerBidService, GrowerService growerService) {
+  public HandlerBidController(HandlerBidService handlerBidService, 
+      GrowerService growerService, Configuration config) {
     this.handlerBidService = handlerBidService;
     this.growerService = growerService;
+    MessageServiceConstants.EmailFields.setDomain(
+      config.getString(
+        MessageServiceConstants.DOMAIN_KEY
+      )
+    );
 
   //  this.jsonMapper = new ObjectMapper();
   }
