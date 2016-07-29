@@ -254,11 +254,11 @@ public abstract class BaseParser {
 
 
     // Check if email is already in use.
-    if (!handlerService.checkEmailAddressAvailable(emailAddressString)
-        || !traderService.checkEmailAddressAvailable(emailAddressString)) {
-      setInvalid("Email address [" + emailAddressString + "] is already in use.\n");
-      return null;
-    }
+    // if (!handlerService.checkEmailAddressAvailable(emailAddressString)
+    //     || !traderService.checkEmailAddressAvailable(emailAddressString)) {
+    //   setInvalid("Email address [" + emailAddressString + "] is already in use.\n");
+    //   return null;
+    // }
 
     EmailAddress emailAddress = EmailService.stringToEmailAddress(emailAddressString);
 
