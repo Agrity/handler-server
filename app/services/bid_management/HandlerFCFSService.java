@@ -44,7 +44,7 @@ public class HandlerFCFSService implements HandlerBidManagementService {
     HandlerBidManagementService.bidToManageService.put(handlerBid, this);
 
     cancellable = Akka.system().scheduler()
-        .scheduleOnce(FiniteDuration.create(timeAllowed.toMillis(), TimeUnit.MILLISECONDS), new Runnable() {
+        .scheduleOnce(FiniteDuration.create(timeAllowed.toMinutes(), TimeUnit.MINUTES), new Runnable() {
           @Override
           public void run() {
             if(poundsRemaining == handlerBid.getAlmondPounds()) {
