@@ -64,11 +64,6 @@ public class BatchSendGridMessageService implements BatchMessageService {
       toEmail,
       content);
   
-    List<TraderBid> traderBids = batch.getTraderBids();
-    for (TraderBid traderBid : traderBids) {
-      boolean success = sendReceipt(traderBid, handlerSeller.getId(), traderBid.getAlmondPounds());
-    }
-
     return sendGridService.sendEmail(mail, toEmail);
   }
 
