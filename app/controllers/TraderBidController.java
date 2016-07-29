@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
+import play.Configuration;
 
 import services.TraderBidService;
 import services.HandlerSellerService;
@@ -21,8 +22,6 @@ import play.mvc.Result;
 import utils.JsonMsgUtils;
 import services.messaging.MessageServiceConstants;
 
-/* TODO: Write HTML for TraderBid partial accept page */
-
 public class TraderBidController extends Controller {
   
   private final TraderBidService traderBidService;
@@ -33,10 +32,16 @@ public class TraderBidController extends Controller {
   @Inject
   public TraderBidController(TraderBidService traderBidService, 
       HandlerSellerService handlerSellerService,
-      BatchService batchService) {
+      BatchService batchService,
+      Configuration config) {
     this.traderBidService = traderBidService;
     this.handlerSellerService = handlerSellerService;
     this.batchService = batchService;
+    MessageServiceConstants.EmailFields.setDomain(
+      config.getString(
+        MessageServiceConstants.DOMAIN_KEY
+      )
+    );
   }
 
   /* Accept whole bid */
