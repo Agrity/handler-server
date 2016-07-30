@@ -49,6 +49,14 @@ public abstract class MessageServiceConstants {
       return views.html.emailHandlerSellerReceiptBody.render(traderBid, handlerSeller, domain).toString();
     }
 
+    public static String getHandlerReceiptHTMLContent(HandlerBid handlerBid, Grower grower) {
+      return views.html.emailHandlerReceiptBody.render(handlerBid, grower, domain).toString();
+    }
+
+    public static String getGrowerReceiptHTMLContent(HandlerBid handlerBid, Grower grower) {
+      return views.html.emailGrowerReceiptBody.render(handlerBid, grower, domain).toString();
+    }
+
     public static void setDomain(String domainString) {
       domain = domainString;
     }

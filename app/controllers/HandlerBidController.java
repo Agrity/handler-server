@@ -19,11 +19,15 @@ import play.mvc.Result;
 
 import utils.JsonMsgUtils;
 import services.messaging.MessageServiceConstants;
+import services.messaging.bid.HandlerBidSendGridMessageService;
+
+import play.Logger;
 
 public class HandlerBidController extends Controller {
   
   private final HandlerBidService handlerBidService;
   private final GrowerService growerService;
+  private static final HandlerBidSendGridMessageService sendGridService = new HandlerBidSendGridMessageService();
 
  // private final ObjectMapper jsonMapper;
 
@@ -48,7 +52,13 @@ public class HandlerBidController extends Controller {
       return notFound(JsonMsgUtils.bidNotFoundMessage(bidId));
     }
 
-    BidResponseResult success = handlerBid.growerAcceptBid(growerId, handlerBid.getAlmondPounds());
+    BidResponseResult success =
+      handlerBid.growerAcceptBid(growerId, handlerBid.getAlmondPounds());
+
+    if (success.isValid()) {
+      boolean sendSuccess = sendGridService.sendReceipt(handlerBid, growerId, handlerBid.getAlmondPounds());
+      if (!sendSuccess) Logger.error("Error sending bid receipts.");
+    }
     
     return success.isValid() ? ok(JsonMsgUtils.successfullAccept())
         : internalServerError(JsonMsgUtils.bidNotAccepted(success.getInvalidResponseMessage()));
@@ -61,8 +71,13 @@ public class HandlerBidController extends Controller {
       return notFound(JsonMsgUtils.bidNotFoundMessage(bidId));
     }
 
-    // TODO Change to actual pounds accepted once implemented.
-    BidResponseResult success = handlerBid.growerAcceptBid(growerId, pounds);
+    BidResponseResult success =
+      handlerBid.growerAcceptBid(growerId, pounds);
+
+    if (success.isValid()) {
+      boolean sendSuccess = sendGridService.sendReceipt(handlerBid, growerId, pounds);
+      if (!sendSuccess) Logger.error("Error sending bid receipts.");
+    }
     
     return success.isValid() ? ok(JsonMsgUtils.successfullAccept())
         : internalServerError(JsonMsgUtils.bidNotAccepted(success.getInvalidResponseMessage()));
