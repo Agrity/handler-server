@@ -41,20 +41,28 @@ public abstract class MessageServiceConstants {
       return views.html.emailBatchBody.render(batch, handlerSeller, domain).toString();
     }
 
-    public static String getTraderReceiptHTMLContent(TraderBid traderBid, HandlerSeller handlerSeller) {
-      return views.html.emailTraderReceiptBody.render(traderBid, handlerSeller, domain).toString();
+    public static String getTraderReceiptHTMLContent(TraderBid traderBid, 
+        HandlerSeller handlerSeller, long pounds) {
+      return views.html.emailTraderReceiptBody
+        .render(traderBid, handlerSeller, pounds, domain).toString();
     }
 
-    public static String getHandlerSellerReceiptHTMLContent(TraderBid traderBid, HandlerSeller handlerSeller) {
-      return views.html.emailHandlerSellerReceiptBody.render(traderBid, handlerSeller, domain).toString();
+    public static String getHandlerSellerReceiptHTMLContent(TraderBid traderBid,
+        HandlerSeller handlerSeller, long pounds) {
+      return views.html.emailHandlerSellerReceiptBody
+        .render(traderBid, handlerSeller, pounds, domain).toString();
     }
 
-    public static String getHandlerReceiptHTMLContent(HandlerBid handlerBid, Grower grower) {
-      return views.html.emailHandlerReceiptBody.render(handlerBid, grower, domain).toString();
+    public static String getHandlerReceiptHTMLContent(HandlerBid handlerBid,
+        Grower grower, long pounds) {
+      return views.html.emailHandlerReceiptBody
+        .render(handlerBid, grower, pounds, domain).toString();
     }
 
-    public static String getGrowerReceiptHTMLContent(HandlerBid handlerBid, Grower grower) {
-      return views.html.emailGrowerReceiptBody.render(handlerBid, grower, domain).toString();
+    public static String getGrowerReceiptHTMLContent(HandlerBid handlerBid,
+        Grower grower, long pounds) {
+      return views.html.emailGrowerReceiptBody
+        .render(handlerBid, grower, pounds, domain).toString();
     }
 
     public static void setDomain(String domainString) {

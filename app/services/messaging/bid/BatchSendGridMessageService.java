@@ -105,7 +105,8 @@ public class BatchSendGridMessageService implements BatchMessageService {
     Content handlerSellerContent
     = new Content(
       "text/html",
-      MessageServiceConstants.EmailFields.getHandlerSellerReceiptHTMLContent(traderBid, handlerSeller));
+      MessageServiceConstants.EmailFields
+      .getHandlerSellerReceiptHTMLContent(traderBid, handlerSeller, pounds));
 
     Mail handlerSellerMail
     = new Mail(
@@ -122,7 +123,8 @@ public class BatchSendGridMessageService implements BatchMessageService {
     Content traderContent
     = new Content(
       "text/html",
-      MessageServiceConstants.EmailFields.getTraderReceiptHTMLContent(traderBid, handlerSeller));
+      MessageServiceConstants.EmailFields
+      .getTraderReceiptHTMLContent(traderBid, handlerSeller, pounds));
 
     Mail traderMail
     = new Mail(

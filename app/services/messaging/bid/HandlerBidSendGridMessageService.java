@@ -133,7 +133,8 @@ public class HandlerBidSendGridMessageService implements HandlerBidMessageServic
     Content growerContent
     = new Content(
       "text/html",
-      MessageServiceConstants.EmailFields.getGrowerReceiptHTMLContent(handlerBid, grower));
+      MessageServiceConstants.EmailFields
+      .getGrowerReceiptHTMLContent(handlerBid, grower, pounds));
 
     Mail growerMail
     = new Mail(
@@ -150,7 +151,8 @@ public class HandlerBidSendGridMessageService implements HandlerBidMessageServic
     Content handlerContent
     = new Content(
       "text/html",
-      MessageServiceConstants.EmailFields.getHandlerReceiptHTMLContent(handlerBid, grower));
+      MessageServiceConstants.EmailFields
+      .getHandlerReceiptHTMLContent(handlerBid, grower, pounds));
 
     Mail handlerMail
     = new Mail(

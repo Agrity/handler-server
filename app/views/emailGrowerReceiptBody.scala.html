@@ -1,4 +1,4 @@
-@(handlerBid: HandlerBid, grower: Grower, domain: String)
+@(handlerBid: HandlerBid, grower: Grower, pounds: Long, domain: String)
 
 <!DOCTYPE html>
 <html>
@@ -16,9 +16,12 @@
   <body>
     <p>
       Congratulations! <br>
-      You have successfully accepted a bid from @grower.getHandler().getCompanyName()!<br>
-      This will serve as an official record of the transaction:<br><br>
+      You have successfully accepted a bid from @grower.getHandler().getCompanyName()!
+    </p>
+    <p>
+      Details:<br>
       "Insert Bid Info Here"
+      This will serve as an official record of the transaction.
     </p>
   </body>
   <footer>

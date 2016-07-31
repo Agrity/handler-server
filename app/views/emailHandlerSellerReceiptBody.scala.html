@@ -1,26 +1,49 @@
-@(traderBid: TraderBid, handlerSeller: HandlerSeller, domain: String)
+@(traderBid: TraderBid, handlerSeller: HandlerSeller, pounds: Long, domain: String)
+@import models.Trader; var trader = handlerSeller.getTrader()
 
 <!DOCTYPE html>
 <html>
   <head>
-    <style> 
-     button {
-        background-color: #47d147;
-      }
-      footer {
-        margin: 30px;
-      }
-    </style>
   </head>
 
   <body>
+    <h1>Bid Transaction Confirmation</h1>
     <p>
-      Congratulations! <br>
-      You have successfully accepted a bid from @handlerSeller.getTrader().getCompanyName()!<br>
-      This will serve as an official record of the transaction:<br><br>
-      "Insert Bid Info Here"
+      Congratulations, @handlerSeller.getFullName()!<br>
+      You have successfully accepted a bid from @handlerSeller.getTrader().getCompanyName()!
     </p>
+
+    <hr>
+
+    <h2>Details</h2>
+    <p>
+      Almonds Sold:
+        <center>
+          <b>@pounds Metric Tons</b>
+        </center><br>
+      Price: 
+        <center>
+          <b>@traderBid.getPricePerPound()/lb</b>
+        </center><br>
+      Type: 
+        <center>
+          <b>@traderBid.getAlmondVariety()</b>
+        </center><br>
+      Size: 
+        <center>
+          <b>@traderBid.getAlmondSize()</b>
+        </center><br><br>
+      Comment: @traderBid.getComment()<br>
+      *Some sort of shipping/logistical/payment information*
+    </p> 
+
+    <hr>
+
+    <b>This will serve as an official record of the transaction.</b>
   </body>
   <footer>
+    <p>
+      *Some sort of contact information*
+    </p>
   </footer>
 </html>
