@@ -1,0 +1,158 @@
+@(batch: Batch, handlerSeller: HandlerSeller, domain: String)
+@import models.Trader; var trader = batch.getTrader()
+@import models.TraderBid; var traderBids = batch.getTraderBids()
+@import java.time.LocalDateTime; var expiration = traderBids.get(0).getExpirationTime()
+
+<!DOCTYPE html>
+
+<head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+        <script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+        <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href="styles.css" rel="stylesheet" type="text/css">
+        <title>Agrity</title>
+</head>
+    <style>
+
+	.centercircle {
+	  width:10%;
+	  margin: 0 auto;
+	  margin-bottom:3.5em;
+	}
+
+	.circle {
+	  height: 1.6em;
+	  width: 1.6em;
+	  border-radius: 500em;
+	  background-color: #ffffff;
+	  font-size: 1em;
+	  position:absolute;
+	  border: 0.2em solid #e1e1e1;
+	  z-index: 1;
+	  display: table-cell;
+	  text-align: center;
+	  vertical-align: middle;
+	  padding-top: 0.2em;
+	  font: 2.9em Gotham Book, sans-serif;
+	}
+
+    </style>
+
+	<script>
+	  function getTons(tonsRemaining, bidId) {
+	    var input = document.getElementById("numTons"+bidId).value;
+	    if(input > tonsRemaining) {
+	      alert("Please enter a value less than " + tonsRemaining);
+	      location.reload(true);
+	      return;
+	    } else if(input < 1){
+	      alert("Please enter a value greater than 0");
+	      location.reload(true);
+	      return;
+	    } else {
+	      var redirect = "@domain/traderBids/" + bidId + "/accept/@handlerSeller.getId()/" + input;
+	      window.location.replace(redirect);
+	    }
+	  }
+	  function getExpirationTime(expTime) {
+	    var hour = expTime.getHour();
+	    var ampm = "AM";
+	    if(hour > 12) {
+	      hour -= 12;
+	      ampm = "PM";
+	    }
+	    var minute = expTime.getMinute().toString();
+	    if(minute < 10) {
+	      minute = "0" + minute;
+	    }
+	    return hour.toString() + ":" + minute + " " + ampm;
+	  }
+	</script>
+    
+    <body>
+
+    <div class="section">
+    	<div class="container">
+    		<div class="row">
+    			<div class="col-md-12">
+    				<h2 class="title">BIDS FROM @trader.getCompanyName().toUpperCase()</h2>
+
+    				<h5>@trader.getPhoneNumberString()</h5>
+
+    				<h4 contenteditable="true" class="text-info text-right">EXPIRES @expiration.getMonthValue()/@expiration.getDayOfMonth() AT @{var hour = expiration.getHour();
+				        var minute = expiration.getMinute().toString();
+				        var ampm = "AM";
+				        if(hour > 12) {
+				          hour = hour - 12;
+				          ampm = "PM";
+				        }
+				        if(expiration.getMinute() < 10) {
+				          minute = "0" + minute;
+				        }
+				        val str = hour.toString() + ":" + minute + " " + ampm; 
+				        str;
+				      }
+      				</h4>
+  @for(traderBid <- traderBids) {
+  <div class="col-md-12">
+  <div class="centercircle">
+      <div class="circle">@traderBid.getId()</div>
+    </div>  
+    		<div class="section text-center background">
+    			<div class="container">
+    				<div class="row">
+    					<div class="col-md-4">
+    				<table class="table table-condensed">
+    					
+    					<tbody>
+    						<tr>
+    						<td>@traderBid.getAlmondVariety()</td>
+	            			<td style="color: #419ed2;">◼</td>
+    						<td>@traderBid.getAlmondSize()</td>
+    						<td style="color: #419ed2;">◼</td>
+    						<td>@traderBid.getPricePerPound()</td>
+    						<td style="color: #419ed2;">◼</td>
+    						<td>@traderBid.getPoundsRemaining() OF @traderBid.getAlmondPounds() MT</td>
+    						</tr>
+    						<tr></tr>
+    					</tbody>
+    				</table>
+    		<div class="row">
+    			<div class="col-md-12">
+    				<p class="lead text-center">@traderBid.getComment()</p>
+
+    			<div class="row">
+    				<div class="col-md-12">
+					<input type="number" min="0" placeholder="partial amount in metric tons" class="number" id="numTons@traderBid.getId()"> MT
+    				<a class="btn btn-primary btn-sm" onclick="getTons(@traderBid.getPoundsRemaining(), @traderBid.getId())" style="background-color:#419ed2; border:none">ACCEPT PARTIAL</a>
+    			</div>
+
+    			</div></div>
+
+    			</div>
+
+    			</div>
+
+    		<div class="col-md-4 text-center" style="margin-top:1em;">
+    			
+    			<a href="@domain/traderBids/@traderBid.getId()/accept/@handlerSeller.getId()"
+    			class="btn btn-sm btn-success" style="background-color:rgba(50,184,55,0.9); border:none; margin:1em;">ACCEPT FULL</a>
+
+    			<a href="@domain/traderBids/@traderBid.getId()/reject/@handlerSeller.getId()" class="btn btn-danger btn-sm" style="border: none; background-color: rgba(184, 79, 55, 0.901961);">REJECT</a>
+    		</div>
+    		</div>
+    	</div>
+    	</div>
+		</div>
+
+   }
+      </div>
+     </div>
+    </div>
+   </div>
+  
+
+
+</body></html>
