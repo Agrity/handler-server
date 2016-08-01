@@ -16,26 +16,46 @@
     <hr>
 
     <h2>Details</h2>
-    <p>
-      Almonds Sold:
-        <center>
-          <b>@pounds Metric Tons</b>
-        </center><br>
-      Price: 
-        <center>
+
+    <table>
+      <tr>
+        <td style="float:right;">
+          <font color="gray">Almonds Sold:</font>
+        </td>
+        <td style="padding-left:5%";>
+          <b>@pounds MT</b>
+        </td>
+      </tr>
+      <tr>
+        <td style="float:right;">
+          <font color="gray">Price:</font>
+        </td>
+        <td style="padding-left:5%";>
           <b>@traderBid.getPricePerPound()/lb</b>
-        </center><br>
-      Type: 
-        <center>
+        </td>
+      </tr>
+      <tr>
+        <td style="float:right;">
+          <font color="gray">Type:</font>
+        </td>
+        <td style="padding-left:5%;">
           <b>@traderBid.getAlmondVariety()</b>
-        </center><br>
-      Size: 
-        <center>
+        </td>
+      </tr>
+      <tr>
+        <td style="float:right;">
+          <font color="gray">Size:</font>
+        </td>
+        <td style="padding-left:5%;">
           <b>@traderBid.getAlmondSize()</b>
-        </center><br><br>
-      Comment: @traderBid.getComment()<br>
+        </td>
+      </tr>
+    </table>
+      
+    <p>
+      Comment: @traderBid.getComment()<br><br>
       *Some sort of shipping/logistical/payment information*
-    </p> 
+    </p>
 
     <hr>
 
