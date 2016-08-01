@@ -34,6 +34,15 @@ h1 {
   float: left;
 }
 
+h1.bidClosed {
+  color: red;
+  font-size: 225%;
+
+  -ms-transform: rotate(-30deg); /* IE 9 */
+  -webkit-transform: rotate(-30deg); /* Chrome, Safari, Opera */
+  transform: rotate(-30deg);
+}
+
 h2 {
   font: 20px Gotham Medium, sans-serif;
   color: #419ed2;
@@ -262,26 +271,33 @@ button {
         <p class="comment">@traderBid.getComment()</p>
         </div>
 
-        <div class="right-side col-md-2 col-sm-2 col-xs-2">
+        @if(traderBid.bidCurrentlyOpen()) {
+          <div class="right-side col-md-2 col-sm-2 col-xs-2">
 
-          <div class="spacebottom">
-            <a href="@domain/traderBids/@traderBid.getId()/accept/@handlerSeller.getId()">
-              <button class="accept">ACCEPT FULL</button>
+            <div class="spacebottom">
+              <a href="@domain/traderBids/@traderBid.getId()/accept/@handlerSeller.getId()">
+                <button class="accept">ACCEPT FULL</button>
+              </a>
+            </div>
+
+            <a href="@domain/traderBids/@traderBid.getId()/reject/@handlerSeller.getId()">
+              <button class="reject">REJECT</button>
             </a>
+
           </div>
 
-          <a href="@domain/traderBids/@traderBid.getId()/reject/@handlerSeller.getId()">
-            <button class="reject">REJECT</button>
-          </a>
+          <div class="col-md-10 col-sm-10 col-xs-10 movebutton">
+            <input type="number" class="number" id="numTons@traderBid.getId()"><tons> MT</tons>
+            <button class="partial" onclick="getTons(@traderBid.getPoundsRemaining(), @traderBid.getId())">
+              ACCEPT PARTIAL
+            </button>
+          </div>
 
-        </div>
-
-        <div class="col-md-10 col-sm-10 col-xs-10 movebutton">
-          <input type="number" class="number" id="numTons@traderBid.getId()"><tons> MT</tons>
-          <button class="partial" onclick="getTons(@traderBid.getPoundsRemaining(), @traderBid.getId())">
-            ACCEPT PARTIAL
-          </button>
-        </div>
+        } else {
+          <div>
+            <h1 class="bidClosed"><strong> CLOSED </strong></h1>
+          </div>
+        }      
 
       </div>
     </div>
