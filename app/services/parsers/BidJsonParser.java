@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -115,7 +116,7 @@ public class BidJsonParser extends BaseParser {
     JsonNode typeMap = data.get(BidJsonConstants.MANAGEMENT_TYPE);
     if(typeMap.has(BidJsonConstants.DELAY_KEY)) {
       int delayInt = typeMap.get(BidJsonConstants.DELAY_KEY).asInt();
-      return LocalDateTime.now().plusHours(delayInt);
+      return LocalDateTime.now(ZoneId.of("PST")).plusHours(delayInt);
     }
     setInvalid(missingParameterError(BidJsonConstants.DELAY_KEY));
     return null;
