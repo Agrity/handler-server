@@ -32,7 +32,7 @@ public class BatchSMSMessageService implements BatchMessageService {
     String msg 
       = "Hi " + handlerSeller.getFullName() + ",\n"
       + "You have received new bids from " + batch.getTrader().getCompanyName()
-      + "! Clock on the link below to view and/or accept them.\n" 
+      + "! Click on the link below to view and/or accept them.\n" 
       + TwilioFields.getDomain() + "/traderBids/batch/" 
       + batchId + "/display/" + handlerSeller.getId() + "\n"
       + "- " + batch.getTrader().getFullName() + "\n"

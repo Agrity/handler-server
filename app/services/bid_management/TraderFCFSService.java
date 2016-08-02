@@ -36,7 +36,7 @@ public class TraderFCFSService implements TraderBidManagementService {
     TraderBidManagementService.bidToManageService.put(traderBid, this);
 
     cancellable = Akka.system().scheduler()
-        .scheduleOnce(FiniteDuration.create(timeAllowed.toMillis(), TimeUnit.MILLISECONDS), new Runnable() {
+        .scheduleOnce(FiniteDuration.create(timeAllowed.toMinutes(), TimeUnit.MINUTES), new Runnable() {
           @Override
           public void run() {
             if(poundsRemaining == traderBid.getAlmondPounds()) {
