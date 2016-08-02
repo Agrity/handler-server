@@ -215,7 +215,18 @@ button {
     return hour.toString() + ":" + minute + " " + ampm;
   }
 </script>
+
+<script type="text/javascript">
+
+  if (screen.width <= 800) {
+    document.location = "@domain/traderBids/batch/@batch.getId()/mobile/@handlerSeller.getId()";
+  }
+
+</script>
+
 <body>
+
+
 
   <section class="background">
 
