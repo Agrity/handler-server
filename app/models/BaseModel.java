@@ -32,12 +32,12 @@ public abstract class BaseModel extends Model {
 
   @PrePersist
   public void createdAt() {
-    this.createdAt = this.updatedAt = LocalDateTime.now(ZoneId.of("PST"));
+    this.createdAt = this.updatedAt = LocalDateTime.now(ZoneId.of("America/Los_Angeles"));
   }
 
   @PreUpdate
   public void updatedAt() {
-    this.updatedAt = LocalDateTime.now(ZoneId.of("PST"));
+    this.updatedAt = LocalDateTime.now(ZoneId.of("America/Los_Angeles"));
   }
 
   public Long getId() {
