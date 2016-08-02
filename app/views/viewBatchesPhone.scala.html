@@ -3,6 +3,8 @@
 @import models.TraderBid; var traderBids = batch.getTraderBids()
 @import java.time.LocalDateTime; var expiration = traderBids.get(0).getExpirationTime()
 
+@import helper._
+
 <!DOCTYPE html>
 
 <head>
@@ -11,11 +13,10 @@
         <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
         <script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
         <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-        <link href="styles/styles.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type="text/css" href='http://pingendo.github.io/pingendo-bootstrap/themes/default/bootstrap.css'>
         <title>Agrity</title>
 </head>
-    <style>
-
+<style>
 	.centercircle {
 	  width:10%;
 	  margin: 0 auto;
@@ -38,7 +39,7 @@
 	  font: 2.9em Gotham Book, sans-serif;
 	}
 
-    </style>
+</style>
 
 	<script>
 	  function getTons(tonsRemaining, bidId) {
@@ -96,10 +97,7 @@
 				      }
       				</h4>
   @for(traderBid <- traderBids) {
-  <div class="col-md-12">
-  <div class="centercircle">
-      <div class="circle">@traderBid.getId()</div>
-    </div>  
+  <div class="col-md-12"> 
     		<div class="section text-center background">
     			<div class="container">
     				<div class="row">
