@@ -47,7 +47,15 @@ public abstract class BaseModel extends Model {
     return createdAt;
   }
 
+  public String getCreatedAtAsString() {
+    return createdAt.toString();
+  }
+
   public LocalDateTime getUpdatedAt() {
     return updatedAt;
+  }
+
+  public String getUpdatedAtAsString() {
+    return updatedAt.toString();
   }
 }
