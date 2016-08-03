@@ -103,6 +103,17 @@ public class HandlerFCFSService implements HandlerBidManagementService {
     return BidResponseResult.getValidResult();
   }
 
+  @Override
+  public void close() {
+    if (poundsRemaining == handlerBid.getAlmondPounds()) {
+      handlerBid.setBidStatus(BidStatus.REJECTED);
+    } else {
+      handlerBid.setBidStatus(BidStatus.PARTIAL);
+    }
+    cancellable.cancel();
+    sendClosedToRemaining();
+  }
+
   public Boolean subtractFromPoundsRemaining(long pounds) {
     if (pounds > poundsRemaining) {
       return false;

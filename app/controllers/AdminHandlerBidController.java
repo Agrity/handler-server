@@ -199,6 +199,18 @@ public class AdminHandlerBidController extends Controller {
   }  
 
   @Security.Authenticated(AdminSecured.class)
+  public Result closeBid(long id) {
+    HandlerBid handlerBid = handlerBidService.getById(id);
+
+    if (handlerBid == null) {
+      return notFound(JsonMsgUtils.bidNotFoundMessage(id));
+    }
+
+    handlerBid.manualCloseBid();
+    return ok(JsonMsgUtils.bidClosed(id));
+  }
+
+  @Security.Authenticated(AdminSecured.class)
   public Result getAllHandlerBids(long handlerId) {
     List<HandlerBid> handlerBids = handlerBidService.getByHandler(handlerId);
 

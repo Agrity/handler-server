@@ -110,4 +110,15 @@ public class TraderBidController extends Controller {
     return ok(views.html.viewBatches.render(batch, handlerSeller, MessageServiceConstants.EmailFields.getDomain()));
   }
 
+  public Result displayMobilePage(long batchId, long handlerSellerId) {
+    Batch batch = batchService.getById(batchId);
+    if (batch == null) {
+      return notFound(JsonMsgUtils.batchNotFoundMessage(batchId));
+    }
+    HandlerSeller handlerSeller = handlerSellerService.getById(handlerSellerId);
+    if (handlerSeller == null) {
+      return notFound(JsonMsgUtils.handlerSellerNotFoundMessage(handlerSellerId));
+    }
+    return ok(views.html.viewBatchesPhone.render(batch, handlerSeller, MessageServiceConstants.EmailFields.getDomain()));
+  }
 }

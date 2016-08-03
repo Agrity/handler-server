@@ -120,6 +120,11 @@ public class WaterfallService implements HandlerBidManagementService {
     
   }
 
+  @Override
+  public void close() {
+    Logger.info("cannot close Waterfall service manually.");
+  }
+
   public Boolean subtractFromPoundsRemaining(long pounds) {
     if (pounds > poundsRemaining) {
       return false;

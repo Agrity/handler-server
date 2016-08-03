@@ -252,6 +252,18 @@ public class AdminTraderBidController extends Controller {
   }  
 
   @Security.Authenticated(AdminSecured.class)
+  public Result closeBid(long id) {
+    TraderBid traderBid = traderBidService.getById(id);
+
+    if (traderBid == null) {
+      return notFound(JsonMsgUtils.bidNotFoundMessage(id));
+    }
+
+    traderBid.manualCloseBid();
+    return ok(JsonMsgUtils.bidClosed(id));
+  }  
+
+  @Security.Authenticated(AdminSecured.class)
   public Result getAllTraderBids(long traderId) {
     List<TraderBid> traderBids = traderBidService.getByTrader(traderId);
 

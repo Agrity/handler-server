@@ -3,6 +3,7 @@ package models;
 import com.avaje.ebean.Model;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -31,12 +32,12 @@ public abstract class BaseModel extends Model {
 
   @PrePersist
   public void createdAt() {
-    this.createdAt = this.updatedAt = LocalDateTime.now();
+    this.createdAt = this.updatedAt = LocalDateTime.now(ZoneId.of("America/Los_Angeles"));
   }
 
   @PreUpdate
   public void updatedAt() {
-    this.updatedAt = LocalDateTime.now();
+    this.updatedAt = LocalDateTime.now(ZoneId.of("America/Los_Angeles"));
   }
 
   public Long getId() {

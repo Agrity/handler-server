@@ -6,8 +6,8 @@ import java.util.List;
 import models.PhoneNumber;
 import models.HandlerSeller;
 import models.Batch;
-import play.Logger;
 import services.messaging.MessageServiceConstants.TwilioFields;
+import services.messaging.MessageServiceConstants;
 import services.bid_management.TraderBidManagementService;
 
 
@@ -17,7 +17,6 @@ public class BatchSMSMessageService implements BatchMessageService {
   
   /* Takes a batch and sends out SMS message containing bid to all growers using Twilio account */
   public boolean send(Batch batch) {
-    Logger.info("entered send method\n\n");
     boolean success = true;
 
     for (HandlerSeller handlerSeller : batch.getAllHandlerSellers()) { 
@@ -29,7 +28,7 @@ public class BatchSMSMessageService implements BatchMessageService {
     
   public boolean send(Batch batch, HandlerSeller handlerSeller) {
     Long batchId = batch.getId();
-    String msg 
+    String msg
       = "Hi " + handlerSeller.getFullName() + ",\n"
       + "You have received new bids from " + batch.getTrader().getCompanyName()
       + "! Click on the link below to view and/or accept them.\n" 
@@ -37,7 +36,6 @@ public class BatchSMSMessageService implements BatchMessageService {
       + batchId + "/display/" + handlerSeller.getId() + "\n"
       + "- " + batch.getTrader().getFullName() + "\n"
       + batch.getTrader().getPhoneNumberString();
-    Logger.info(msg);
     return sendMessage(batch, handlerSeller, msg);
   }
 
