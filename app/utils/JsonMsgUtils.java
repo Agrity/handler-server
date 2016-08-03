@@ -73,6 +73,10 @@ public class JsonMsgUtils {
     return errorToJson("Bid Could not be Rejected: " + invalidResponseMessage + " \n");
   }
 
+  public static ObjectNode bidNotClosed(String invalidResponseMessage) {
+    return errorToJson("Bid Could not be closed: " + invalidResponseMessage + " \n");
+  }
+
   public static ObjectNode callNotRequested(String invalidResponseMessage) {
     return errorToJson("Call Could not be Requested: " + invalidResponseMessage + " \n");
   }
@@ -133,6 +137,10 @@ public class JsonMsgUtils {
 
   public static ObjectNode bidDeleted(long bidId) {
     return validToJson("Bid " + bidId + " deleted.");
+  }
+
+  public static ObjectNode bidClosed(long bidId) {
+    return validToJson("Bid " + bidId + " closed.");
   }
 
   public static ObjectNode growerDeleted(long growerId) {

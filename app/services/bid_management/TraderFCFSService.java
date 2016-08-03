@@ -90,6 +90,16 @@ public class TraderFCFSService implements TraderBidManagementService {
     return BidResponseResult.getValidResult();
   }
 
+  @Override
+  public void close() {
+    if (poundsRemaining == traderBid.getAlmondPounds()) {
+      traderBid.setBidStatus(BidStatus.REJECTED);
+    } else {
+      traderBid.setBidStatus(BidStatus.PARTIAL);
+    }
+    cancellable.cancel();
+  }
+
   public Boolean subtractFromPoundsRemaining(long pounds) {
     if (pounds > poundsRemaining) {
       return false;

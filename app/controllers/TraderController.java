@@ -389,6 +389,29 @@ public class TraderController extends Controller {
     return ok(JsonMsgUtils.bidDeleted(bidId));
   }
 
+    public Result closeBid(long bidId) {
+    ResponseHeaders.addResponseHeaders(response());
+
+    Trader trader = TraderSecurityController.getTrader();
+
+    if (trader == null) {
+      return traderNotFound();
+    }
+
+    TraderBid traderBid = traderBidService.getById(bidId);
+    if (traderBid == null) {
+      return notFound(JsonMsgUtils.bidNotFoundMessage(bidId));
+    }
+
+    if (!traderService.checkTraderOwnsBid(trader, traderBid)) {
+      return badRequest(JsonMsgUtils.traderDoesNotOwnBidMessage(trader, traderBid));
+    }
+
+    traderBid.manualCloseBid();
+    
+    return ok(JsonMsgUtils.bidClosed(bidId));
+  }
+
   public Result getAllBids() {
     ResponseHeaders.addResponseHeaders(response());
 

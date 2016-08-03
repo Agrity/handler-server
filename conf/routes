@@ -94,6 +94,8 @@ GET     /admin/handlerBids/:bidId/accept/:growerId         controllers.AdminHand
 
 GET     /admin/handlerBids/:bidId/reject/:growerId         controllers.AdminHandlerBidController.rejectBid(bidId: Long, growerId: Long)
 
+GET     /admin/handlerBids/:bidId/close                    controllers.AdminHandlerBidController.closeBid(bidId: Long)
+
 GET     /admin/handlerBids/:bidId/requestcall/:growerId    controllers.AdminHandlerBidController.requestCall(bidId: Long, growerId: Long)
 
 
@@ -113,6 +115,8 @@ GET     /admin/traderBids/:id                             controllers.AdminTrade
 GET     /admin/traderBids/:bidId/accept/:handlerSellerId         controllers.AdminTraderBidController.acceptBid(bidId: Long, handlerSellerId: Long)
 
 GET     /admin/traderBids/:bidId/reject/:handlerSellerId         controllers.AdminTraderBidController.rejectBid(bidId: Long, handlerSellerId: Long)
+
+GET     /admin/traderBids/:bidId/close                    controllers.AdminTraderBidController.closeBid(bidId: Long)
 
 GET     /admin/traderBids/:bidId/requestcall/:handlerSellerId    controllers.AdminTraderBidController.requestCall(bidId: Long, handlerSellerId: Long)
 
@@ -168,6 +172,8 @@ PUT     /handler/handlerBids/:bidId                        controllers.HandlerCo
 
 GET     /handler/handlerBids/:bidId                        controllers.HandlerController.getBid(bidId: Long)
 
+GET     /handler/handlerBids/:bidId/close                  controllers.HandlerController.closeBid(bidId: Long)
+
 
 # ========== Trader User ========== #
 
@@ -197,6 +203,8 @@ DELETE  /trader/traderBids/:bidId                        controllers.TraderContr
 PUT     /trader/traderBids/:bidId                        controllers.TraderController.updateBid(bidId: Long)
 
 GET     /trader/traderBids/:bidId                        controllers.TraderController.getBid(bidId: Long)
+
+GET     /trader/traderBids/:bidId/close                  controllers.TraderController.closeBid(bidId: Long)
 
 
 # ========== **TEMP** Response to Bid ========== #

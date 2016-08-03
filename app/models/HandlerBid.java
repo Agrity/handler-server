@@ -153,6 +153,22 @@ public class HandlerBid extends BaseBid implements PrettyString {
     save();
   }
 
+  public void manualCloseBid() {
+    HandlerBidManagementService managementService
+        = HandlerBidManagementService.getBidManagementService(this);
+
+    if (managementService != null) {
+      managementService.close();
+    }
+    else {
+      // TODO: Determine whether to log error.
+      // Logger.error("managementService returned null for HandlerBidID: " + getId());
+    }
+    
+    HandlerBidManagementService.removeBidManagementService(this);
+    save();
+  }
+
   public List<Grower> getAcceptedGrowers() {
     return getGrowersWithResponse(ResponseStatus.ACCEPTED);
   }

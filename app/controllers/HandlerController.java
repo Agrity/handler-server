@@ -360,6 +360,28 @@ public class HandlerController extends Controller {
     return ok(JsonMsgUtils.bidDeleted(bidId));
   }
 
+    public Result closeBid(long bidId) {
+    ResponseHeaders.addResponseHeaders(response());
+
+    Handler handler = HandlerSecurityController.getHandler();
+
+    if (handler == null) {
+      return handlerNotFound();
+    }
+
+    HandlerBid handlerBid = handlerBidService.getById(bidId);
+    if (handlerBid == null) {
+      return notFound(JsonMsgUtils.bidNotFoundMessage(bidId));
+    }
+
+    if (!handlerService.checkHandlerOwnsBid(handler, handlerBid)) {
+      return badRequest(JsonMsgUtils.handlerDoesNotOwnBidMessage(handler, handlerBid));
+    }
+
+    handlerBid.manualCloseBid();
+    return ok(JsonMsgUtils.bidClosed(bidId));
+  }
+
   public Result getAllBids() {
     ResponseHeaders.addResponseHeaders(response());
 
