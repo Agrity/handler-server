@@ -92,11 +92,6 @@ public class TraderFCFSService implements TraderBidManagementService {
 
   @Override
   public void close() {
-    if (poundsRemaining == traderBid.getAlmondPounds()) {
-      traderBid.setBidStatus(BidStatus.REJECTED);
-    } else {
-      traderBid.setBidStatus(BidStatus.PARTIAL);
-    }
     cancellable.cancel();
   }
 
