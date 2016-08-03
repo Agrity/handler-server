@@ -136,6 +136,18 @@ public class TraderBid extends BaseBid implements PrettyString {
     save();
   }
 
+  public void addHandlerSeller(HandlerSeller handlerSeller) {
+    handlerSellers.add(handlerSeller);
+    TraderBidManagementService managementService 
+      = TraderBidManagementService.getBidManagementService(this);
+
+    if(managementService != null) {
+      //Log Error
+    }
+    
+    save();
+  }
+
   public List<HandlerSeller> getAcceptedHandlerSellers() {
     return getHandlerSellersWithResponse(ResponseStatus.ACCEPTED);
   }

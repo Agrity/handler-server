@@ -367,6 +367,58 @@ public class TraderController extends Controller {
     }    
   }
 
+  public Result addHandlerSellerToBid(long bidId, long handlerSellerId) {
+    ResponseHeaders.addResponseHeaders(response());
+
+    Trader trader = TraderSecurityController.getTrader();
+    if (trader == null) {
+      return traderNotFound();
+    }
+
+    HandlerSeller handlerSeller = handlerSellerService.getById(handlerSellerId);
+    if(handlerSeller == null) {
+      return notFound(JsonMsgUtils.handlerSellerNotFoundMessage(handlerSellerId));
+    }
+
+    if(!traderService.checkTraderOwnsHandlerSeller(trader, handlerSeller)) {
+      return badRequest(JsonMsgUtils.traderDoesNotOwnHandlerMessage(trader, handlerSeller));
+    }
+
+    TraderBid traderBid = traderBidService.getById(bidId);
+    if(traderBid == null) {
+      return notFound(JsonMsgUtils.bidNotFoundMessage(bidId));
+    }
+
+    // JsonNode data = request().body().asJson();
+
+    // if (data == null) {
+    //   return badRequest(JsonMsgUtils.expectingData());
+    // }
+
+    // addCurrentTraderId(trader, data);
+
+    // TraderBidJsonParser parser = new TraderBidJsonParser(data);
+
+    // if (!parser.isValid()) {
+    //   return badRequest(JsonMsgUtils.caughtException(parser.getErrorMessage()));
+    // }
+
+    // if (!parser.getTrader().equals(trader)) {
+    //   JsonMsgUtils.caughtException(
+    //       "Can only add handler sellers to bids that belong to "
+    //       + trader.getCompanyName() + ".");
+    // }
+
+    
+
+
+    try {
+      return created(jsonMapper.writeValueAsString(traderBid));
+    } catch (JsonProcessingException e) {
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
+    } 
+  }
+
   public Result deleteBid(long bidId) {
     ResponseHeaders.addResponseHeaders(response());
 
@@ -389,7 +441,7 @@ public class TraderController extends Controller {
     return ok(JsonMsgUtils.bidDeleted(bidId));
   }
 
-    public Result closeBid(long bidId) {
+  public Result closeBid(long bidId) {
     ResponseHeaders.addResponseHeaders(response());
 
     Trader trader = TraderSecurityController.getTrader();
