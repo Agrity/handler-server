@@ -1,0 +1,65 @@
+@(handlerBid: HandlerBid, grower: Grower, pounds: Long, domain: String)
+@import models.Handler; var handler = grower.getHandler()
+
+<!DOCTYPE html>
+<html>
+  <head>
+  </head>
+
+  <body>
+    <h1>Bid Transaction Confirmation</h1>
+    <p>
+      Congratulations, @handler.getFullName()!<br>
+      @grower.getFullName() has accepted your bid!
+    </p>
+
+    <hr>
+
+    <h2>Details</h2>
+
+    <table>
+      <tr>
+        <td style="float:right;">
+          <font color="gray">Almonds Bought:</font>
+        </td>
+        <td style="padding-left:5%";>
+          <b>@pounds lbs</b>
+        </td>
+      </tr>
+      <tr>
+        <td style="float:right;">
+          <font color="gray">Price:</font>
+        </td>
+        <td style="padding-left:5%";>
+          <b>@handlerBid.getPricePerPound()/lb</b>
+        </td>
+      </tr>
+      <tr>
+        <td style="float:right;">
+          <font color="gray">Type:</font>
+        </td>
+        <td style="padding-left:5%;">
+          <b>@handlerBid.getAlmondVariety()</b>
+        </td>
+      </tr>
+      <tr>
+        <td style="float:right;">
+          <font color="gray">Size:</font>
+        </td>
+        <td style="padding-left:5%;">
+          <b>@handlerBid.getAlmondSize()</b>
+        </td>
+      </tr>
+    </table>
+      
+    <p>
+      Comment: @handlerBid.getComment()<br><br>
+    </p>
+
+    <hr>
+
+    <b>This will serve as an official record of the transaction.</b>
+  </body>
+  <footer>
+  </footer>
+</html>
