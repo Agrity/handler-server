@@ -21,12 +21,16 @@ import play.mvc.Result;
 
 import utils.JsonMsgUtils;
 import services.messaging.MessageServiceConstants;
+import services.messaging.bid.BatchSendGridMessageService;
+
+import play.Logger;
 
 public class TraderBidController extends Controller {
   
   private final TraderBidService traderBidService;
   private final HandlerSellerService handlerSellerService;
   private final BatchService batchService;
+  private static final BatchSendGridMessageService sendGridService = new BatchSendGridMessageService();
 
 
   @Inject
@@ -53,6 +57,11 @@ public class TraderBidController extends Controller {
 
     BidResponseResult success = 
       traderBid.handlerSellerAcceptBid(handlerSellerId, traderBid.getAlmondPounds());
+
+    if (success.isValid()) {
+      boolean sendSuccess = sendGridService.sendReceipt(traderBid, handlerSellerId, traderBid.getAlmondPounds());
+      if (!sendSuccess) Logger.error("Error sending bid receipts.");
+    }
     
     return success.isValid() ? ok(JsonMsgUtils.successfullAccept())
         : internalServerError(JsonMsgUtils.bidNotAccepted(success.getInvalidResponseMessage()));
@@ -67,6 +76,11 @@ public class TraderBidController extends Controller {
 
     BidResponseResult success = 
       traderBid.handlerSellerAcceptBid(handlerSellerId, pounds);
+
+    if (success.isValid()) {
+      boolean sendSuccess = sendGridService.sendReceipt(traderBid, handlerSellerId, pounds);
+      if (!sendSuccess) Logger.error("Error sending bid receipts.");
+    }
     
     return success.isValid() ? ok(JsonMsgUtils.successfullAccept())
         : internalServerError(JsonMsgUtils.bidNotAccepted(success.getInvalidResponseMessage()));

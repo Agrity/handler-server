@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.List;
 
 import models.Grower;
+import models.Handler;
 import models.HandlerBid;
 import models.EmailAddress;
 
@@ -20,10 +21,14 @@ import play.Logger;
 
 import services.messaging.MessageServiceConstants;
 import services.bid_management.HandlerBidManagementService;
+import services.GrowerService;
+import services.impl.EbeanGrowerService;
 
 public class HandlerBidSendGridMessageService implements HandlerBidMessageService {
 
   private static final SendGridMessageService sendGridService = new SendGridMessageService();
+
+  private static final GrowerService growerService = new EbeanGrowerService();
 
   private static final Email FROM_EMAIL
       = new Email(MessageServiceConstants.EmailFields.getFromEmailAddress());
@@ -118,6 +123,46 @@ public class HandlerBidSendGridMessageService implements HandlerBidMessageServic
       content);
 
     return sendGridService.sendEmail(mail, toEmail);
+  }
+
+  public boolean sendReceipt(HandlerBid handlerBid, long growerId, long pounds) {
+    Grower grower = growerService.getById(growerId);
+    String growerEmailAddr = grower.getEmailAddressString();
+    Email growerEmail = new Email(growerEmailAddr);
+
+    Content growerContent
+    = new Content(
+      "text/html",
+      MessageServiceConstants.EmailFields
+      .getGrowerReceiptHTMLContent(handlerBid, grower, pounds));
+
+    Mail growerMail
+    = new Mail(
+      FROM_EMAIL,
+      MessageServiceConstants.EmailFields.getSubjectLineReceipt(handlerBid.getId()),
+      growerEmail,
+      growerContent);
+
+
+    Handler handler = grower.getHandler();
+    String handlerEmailAddr = handler.getEmailAddressString();
+    Email handlerEmail = new Email(handlerEmailAddr);
+
+    Content handlerContent
+    = new Content(
+      "text/html",
+      MessageServiceConstants.EmailFields
+      .getHandlerReceiptHTMLContent(handlerBid, grower, pounds));
+
+    Mail handlerMail
+    = new Mail(
+      FROM_EMAIL,
+      MessageServiceConstants.EmailFields.getSubjectLineReceipt(handlerBid.getId()),
+      handlerEmail,
+      handlerContent);
+
+    return sendGridService.sendEmail(growerMail, growerEmail) 
+      && sendGridService.sendEmail(handlerMail, handlerEmail);
   }
 
 }
