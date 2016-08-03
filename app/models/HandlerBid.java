@@ -164,12 +164,15 @@ public class HandlerBid extends BaseBid implements PrettyString {
       } else {
         setBidStatus(BidStatus.PARTIAL);
       }
+
+      HandlerBidManagementService.removeBidManagementService(this);
       save();
+
     } else {
       // TODO: Determine whether to log error.
       Logger.error("management service does not exist for this bid");
       return;
-    }
+    }  
   }
 
   public List<Grower> getAcceptedGrowers() {
