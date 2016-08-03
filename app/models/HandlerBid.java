@@ -159,14 +159,17 @@ public class HandlerBid extends BaseBid implements PrettyString {
 
     if (managementService != null) {
       managementService.close();
-    }
-    else {
+      if (getPoundsRemaining().equals(getAlmondPounds())) {
+        setBidStatus(BidStatus.REJECTED);
+      } else {
+        setBidStatus(BidStatus.PARTIAL);
+      }
+      save();
+    } else {
       // TODO: Determine whether to log error.
-      // Logger.error("managementService returned null for HandlerBidID: " + getId());
+      Logger.error("management service does not exist for this bid");
+      return;
     }
-    
-    HandlerBidManagementService.removeBidManagementService(this);
-    save();
   }
 
   public List<Grower> getAcceptedGrowers() {
