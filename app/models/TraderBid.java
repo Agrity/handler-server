@@ -292,6 +292,7 @@ public class TraderBid extends BaseBid implements PrettyString {
 
     if (getManagementService().equals("FCFSService")) {
       /* Pounds remaining edited if FCFS */
+      Logger.debug("editing pounds remaining\n");
       setPoundsRemaining(getPoundsRemaining() - (int)pounds);
     } else {
       /* Pounds remaining not edited unless approved for STFC */
