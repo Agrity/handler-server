@@ -6,10 +6,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import controllers.security.AdminSecured;
 
 import models.HandlerBid;
+import models.Grower;
 
 import models.BidResponseResult;
 import play.mvc.BodyParser;
@@ -18,6 +20,7 @@ import play.mvc.Result;
 import play.mvc.Security;
 
 import services.HandlerBidService;
+import services.GrowerService;
 import services.messaging.bid.HandlerBidMessageService;
 import services.bid_management.HandlerFCFSService;
 import services.parsers.HandlerBidJsonParser;
@@ -33,13 +36,17 @@ public class AdminHandlerBidController extends Controller {
 
   private final HandlerBidService handlerBidService;
   private final HandlerBidMessageService bidMessageService;
+  private final GrowerService growerService;
 
   private final ObjectMapper jsonMapper;
 
   @Inject
-  public AdminHandlerBidController(HandlerBidService handlerBidService, HandlerBidMessageService bidMessageService) {
+  public AdminHandlerBidController(HandlerBidService handlerBidService, 
+                                  HandlerBidMessageService bidMessageService,
+                                  GrowerService growerService) {
     this.handlerBidService = handlerBidService;
     this.bidMessageService = bidMessageService;
+    this.growerService = growerService;
 
     this.jsonMapper = new ObjectMapper();
   }
@@ -158,6 +165,49 @@ public class AdminHandlerBidController extends Controller {
     } catch (JsonProcessingException e) {
       return internalServerError(JsonMsgUtils.caughtException(e.toString()));
     }
+  }
+
+  @Security.Authenticated(AdminSecured.class)
+  @BodyParser.Of(BodyParser.Json.class)
+  public Result addGrowersToBid(long bidId) {
+
+    HandlerBid handlerBid = handlerBidService.getById(bidId);
+    if(handlerBid == null) {
+      return notFound(JsonMsgUtils.bidNotFoundMessage(bidId));
+    }
+
+    JsonNode data = request().body().asJson();
+
+    if (data == null) {
+      return badRequest(JsonMsgUtils.expectingData());
+    }
+
+    if(!data.isArray()) {
+      //Log error, return badResult or something
+    }
+
+    List<Grower> addedGrowers = new ArrayList<>();
+    for(JsonNode node : data) {
+      Long growerId = Long.parseLong(node.asText());
+
+      Logger.info("\nHandler Seller Id: " + growerId);
+
+      Grower grower = growerService.getById(growerId);
+      
+      if(grower == null) {
+        return notFound(JsonMsgUtils.growerNotFoundMessage(growerId));
+      }
+      addedGrowers.add(grower);
+    }
+
+    handlerBid.addGrowers(addedGrowers);
+    handlerBid.save();
+
+    try {
+      return created(jsonMapper.writeValueAsString(handlerBid));
+    } catch (JsonProcessingException e) {
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
+    } 
   }
 
   @Security.Authenticated(AdminSecured.class)

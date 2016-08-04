@@ -98,6 +98,8 @@ GET     /admin/handlerBids/:bidId/close                    controllers.AdminHand
 
 GET     /admin/handlerBids/:bidId/requestcall/:growerId    controllers.AdminHandlerBidController.requestCall(bidId: Long, growerId: Long)
 
+PUT     /admin/handlerBids/:bidId/addGrowers               controllers.AdminHandlerBidController.addGrowersToBid(bidId: Long)
+
 
 # ========== Admin TraderBid ========== #
 
