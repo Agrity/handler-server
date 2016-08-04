@@ -263,6 +263,14 @@ public class HandlerBid extends BaseBid implements PrettyString {
     return getGrowersWithResponse(ResponseStatus.REQUEST_CALL);
   }
 
+  public List<Grower> getPendingGrowers() {
+    return getGrowersWithResponse(ResponseStatus.PENDING);
+  }
+
+  public List<Grower> getDisapprovedGrowers() {
+    return getGrowersWithResponse(ResponseStatus.DISAPPROVED);
+  }
+
   private List<Grower> getGrowersWithResponse(ResponseStatus response) {
     return getBidResponses().stream()
       .filter(bidResponse -> bidResponse.getResponseStatus().equals(response))

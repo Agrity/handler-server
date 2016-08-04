@@ -230,6 +230,14 @@ public class TraderBid extends BaseBid implements PrettyString {
     return getHandlerSellersWithResponse(ResponseStatus.REQUEST_CALL);
   }
 
+  public List<HandlerSeller> getPendingHandlerSellers() {
+    return getHandlerSellersWithResponse(ResponseStatus.PENDING);
+  }
+
+  public List<HandlerSeller> getDisapprovedHandlerSellers() {
+    return getHandlerSellersWithResponse(ResponseStatus.DISAPPROVED);
+  }
+
   private List<HandlerSeller> getHandlerSellersWithResponse(ResponseStatus response) {
     return getBidResponses().stream()
       .filter(bidResponse -> bidResponse.getResponseStatus().equals(response))
