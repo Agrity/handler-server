@@ -216,6 +216,9 @@ public class AdminTraderBidController extends Controller {
     List<HandlerSeller> addedHandlerSellers = new ArrayList<>();
     for(JsonNode node : data) {
       Long handlerSellerId = Long.parseLong(node.asText());
+
+      Logger.info("\nHandler Seller Id: " + handlerSellerId);
+
       HandlerSeller handlerSeller = handlerSellerService.getById(handlerSellerId);
       
       if(handlerSeller == null) {

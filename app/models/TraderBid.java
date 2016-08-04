@@ -76,7 +76,7 @@ public class TraderBid extends BaseBid implements PrettyString {
 
     bidResponses =
       allHandlerSellers.stream()
-      .map(grower -> new TraderBidResponse(grower))
+      .map(handlerSeller -> new TraderBidResponse(handlerSeller))
       .collect(Collectors.toSet());
 
     this.trader = trader;
@@ -146,6 +146,8 @@ public class TraderBid extends BaseBid implements PrettyString {
     List<Long> addedIds = new ArrayList<>();
     for(HandlerSeller handlerSeller : addedHandlerSellers) {
       if(handlerSellers.contains(handlerSeller)) {
+        Logger.error("ERROR ERROR======");
+        return;
         //repeat, log error/return false?
       } 
       addedIds.add(handlerSeller.getId());
@@ -155,9 +157,15 @@ public class TraderBid extends BaseBid implements PrettyString {
     TraderBidManagementService managementService 
       = TraderBidManagementService.getBidManagementService(this);
 
-    if(managementService != null) {
-      //Log Error
+    if(managementService == null) {
+      Logger.error("management service does not exist for this bid");
+      return;
     }
+
+    bidResponses.addAll(
+      addedHandlerSellers.stream()
+      .map(handlerSeller -> new TraderBidResponse(handlerSeller))
+      .collect(Collectors.toSet()));
 
     managementService.addHandlerSellers(addedIds);
     save();
