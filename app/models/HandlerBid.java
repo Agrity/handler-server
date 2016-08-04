@@ -323,7 +323,7 @@ public class HandlerBid extends BaseBid implements PrettyString {
 
     boolean fcfs = true;
 
-    if (getManagementService().equals("FCFSService")) {
+    if (getManagementService().equals("services.bid_management.HandlerFCFSService")) {
       /* Pounds remaining edited if FCFS */
       setPoundsRemaining(getPoundsRemaining() - (int)pounds);
     } else {
