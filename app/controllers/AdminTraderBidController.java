@@ -12,6 +12,7 @@ import controllers.security.AdminSecured;
 
 import models.TraderBid;
 import models.Batch;
+import models.HandlerSeller;
 
 import models.BidResponseResult;
 import play.mvc.BodyParser;
@@ -22,6 +23,7 @@ import play.mvc.Security;
 import services.TraderBidService;
 import services.TraderService;
 import services.impl.EbeanTraderService;
+import services.HandlerSellerService;
 import services.BatchService;
 import services.messaging.bid.BatchSMSMessageService;
 import services.messaging.bid.BatchSendGridMessageService;
@@ -41,6 +43,7 @@ public class AdminTraderBidController extends Controller {
   private final BatchSMSMessageService batchSMSMessageService;
   private final BatchSendGridMessageService batchSendGridMessageService;
   private final BatchService batchService;
+  private final HandlerSellerService handlerSellerService;
 
   private final ObjectMapper jsonMapper;
 
@@ -48,11 +51,13 @@ public class AdminTraderBidController extends Controller {
   public AdminTraderBidController(TraderBidService traderBidService,
           BatchSMSMessageService batchSMSMessageService,
           BatchSendGridMessageService batchSendGridMessageService,
-          BatchService batchService) {
+          BatchService batchService,
+          HandlerSellerService handlerSellerService) {
     this.traderBidService = traderBidService;
     this.batchSMSMessageService = batchSMSMessageService;
     this.batchSendGridMessageService = batchSendGridMessageService;
     this.batchService = batchService;
+    this.handlerSellerService = handlerSellerService;
 
     this.jsonMapper = new ObjectMapper();
   }
@@ -187,6 +192,43 @@ public class AdminTraderBidController extends Controller {
     } catch (JsonProcessingException e) {
       return internalServerError(JsonMsgUtils.caughtException(e.toString()));
     }
+  }
+
+  @Security.Authenticated(AdminSecured.class)
+  @BodyParser.Of(BodyParser.Json.class)
+  public Result addHandlerSellersToBid(long bidId) {
+    
+    TraderBid traderBid = traderBidService.getById(bidId);
+    if(traderBid == null) {
+      return notFound(JsonMsgUtils.bidNotFoundMessage(bidId));
+    }
+
+    JsonNode data = request().body().asJson();
+
+    if (data == null) {
+      return badRequest(JsonMsgUtils.expectingData());
+    }
+
+    if(!data.isArray()) {
+      //Log error, return badResult or something
+    }
+
+    List<HandlerSeller> addedHandlerSellers = new ArrayList<>();
+    for(JsonNode node : data) {
+      Long handlerSellerId = Long.parseLong(node.asText());
+      HandlerSeller handlerSeller = handlerSellerService.getById(handlerSellerId);
+      
+      if(handlerSeller == null) {
+        return notFound(JsonMsgUtils.handlerSellerNotFoundMessage(handlerSellerId));
+      }
+      addedHandlerSellers.add(handlerSeller);
+    }
+
+    try {
+      return created(jsonMapper.writeValueAsString(traderBid));
+    } catch (JsonProcessingException e) {
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
+    } 
   }
 
   @Security.Authenticated(AdminSecured.class)

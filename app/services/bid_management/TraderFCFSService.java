@@ -91,6 +91,11 @@ public class TraderFCFSService implements TraderBidManagementService {
   }
 
   @Override
+  public void addHandlerSellers(List<Long> handlerSellerIds) {
+    handlerSellerIdsRemaining.addAll(handlerSellerIds);
+  }
+
+  @Override
   public void close() {
     cancellable.cancel();
   }

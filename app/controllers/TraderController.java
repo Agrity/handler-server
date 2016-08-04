@@ -367,7 +367,7 @@ public class TraderController extends Controller {
     }    
   }
 
-  public Result addHandlerSellerToBid(long bidId, long handlerSellerId) {
+  public Result addHandlerSellersToBid(long bidId) {
     ResponseHeaders.addResponseHeaders(response());
 
     Trader trader = TraderSecurityController.getTrader();
@@ -375,42 +375,36 @@ public class TraderController extends Controller {
       return traderNotFound();
     }
 
-    HandlerSeller handlerSeller = handlerSellerService.getById(handlerSellerId);
-    if(handlerSeller == null) {
-      return notFound(JsonMsgUtils.handlerSellerNotFoundMessage(handlerSellerId));
-    }
-
-    if(!traderService.checkTraderOwnsHandlerSeller(trader, handlerSeller)) {
-      return badRequest(JsonMsgUtils.traderDoesNotOwnHandlerMessage(trader, handlerSeller));
-    }
-
     TraderBid traderBid = traderBidService.getById(bidId);
     if(traderBid == null) {
       return notFound(JsonMsgUtils.bidNotFoundMessage(bidId));
     }
 
-    // JsonNode data = request().body().asJson();
+    JsonNode data = request().body().asJson();
 
-    // if (data == null) {
-    //   return badRequest(JsonMsgUtils.expectingData());
-    // }
+    if (data == null) {
+      return badRequest(JsonMsgUtils.expectingData());
+    }
 
-    // addCurrentTraderId(trader, data);
+    if(!data.isArray()) {
+      //Log error, return badResult or something
+    }
 
-    // TraderBidJsonParser parser = new TraderBidJsonParser(data);
+    List<HandlerSeller> addedHandlerSellers = new ArrayList<>();
+    for(JsonNode node : data) {
+      Long handlerSellerId = Long.parseLong(node.asText());
+      HandlerSeller handlerSeller = handlerSellerService.getById(handlerSellerId);
+      
+      if(handlerSeller == null) {
+        return notFound(JsonMsgUtils.handlerSellerNotFoundMessage(handlerSellerId));
+      }
 
-    // if (!parser.isValid()) {
-    //   return badRequest(JsonMsgUtils.caughtException(parser.getErrorMessage()));
-    // }
+      if(!traderService.checkTraderOwnsHandlerSeller(trader, handlerSeller)) {
+        return badRequest(JsonMsgUtils.traderDoesNotOwnHandlerMessage(trader, handlerSeller));
+      }
 
-    // if (!parser.getTrader().equals(trader)) {
-    //   JsonMsgUtils.caughtException(
-    //       "Can only add handler sellers to bids that belong to "
-    //       + trader.getCompanyName() + ".");
-    // }
-
-    
-
+      addedHandlerSellers.add(handlerSeller);
+    }
 
     try {
       return created(jsonMapper.writeValueAsString(traderBid));

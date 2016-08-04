@@ -120,6 +120,8 @@ GET     /admin/traderBids/:bidId/close                    controllers.AdminTrade
 
 GET     /admin/traderBids/:bidId/requestcall/:handlerSellerId    controllers.AdminTraderBidController.requestCall(bidId: Long, handlerSellerId: Long)
 
+PUT     /admin/traderBids/:bidId/addHandlerSellers         controllers.AdminTraderBidController.addHandlerSellersToBid(bidId: Long)
+
 
 # ========== Admin Batch ========== #
 
@@ -201,6 +203,8 @@ GET     /trader/batch/:id/send                           controllers.TraderContr
 DELETE  /trader/traderBids/:bidId                        controllers.TraderController.deleteBid(bidId: Long)
 
 PUT     /trader/traderBids/:bidId                        controllers.TraderController.updateBid(bidId: Long)
+
+PUT     /trader/traderBids/:bidId/addHandlerSellers      controllers.TraderController.addHandlerSellersToBid(bidId: Long)
 
 GET     /trader/traderBids/:bidId                        controllers.TraderController.getBid(bidId: Long)
 

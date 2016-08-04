@@ -142,15 +142,24 @@ public class TraderBid extends BaseBid implements PrettyString {
     save();
   }
 
-  public void addHandlerSeller(HandlerSeller handlerSeller) {
-    handlerSellers.add(handlerSeller);
+  public void addHandlerSellers(List<HandlerSeller> addedHandlerSellers) {
+    List<Long> addedIds = new ArrayList<>();
+    for(HandlerSeller handlerSeller : addedHandlerSellers) {
+      if(handlerSellers.contains(handlerSeller)) {
+        //repeat, log error/return false?
+      } 
+      addedIds.add(handlerSeller.getId());
+    }
+
+    handlerSellers.addAll(addedHandlerSellers);
     TraderBidManagementService managementService 
       = TraderBidManagementService.getBidManagementService(this);
 
     if(managementService != null) {
       //Log Error
     }
-    
+
+    managementService.addHandlerSellers(addedIds);
     save();
   }
 
