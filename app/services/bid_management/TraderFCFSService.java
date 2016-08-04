@@ -95,6 +95,16 @@ public class TraderFCFSService implements TraderBidManagementService {
     cancellable.cancel();
   }
 
+  @Override
+  public BidResponseResult approve(long pounds, long handlerSellerId) {
+    return BidResponseResult.getInvalidResult("Cannot approve a response in FCFS.");
+  }
+
+  @Override
+  public BidResponseResult disapprove(long handlerSellerId) {
+    return BidResponseResult.getInvalidResult("Cannot approve a response in FCFS.");
+  }
+
   public Boolean subtractFromPoundsRemaining(long pounds) {
     if (pounds > poundsRemaining) {
       return false;

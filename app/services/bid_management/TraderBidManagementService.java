@@ -21,5 +21,7 @@ public interface TraderBidManagementService {
 
   public BidResponseResult accept(long pounds, long handlerSellerId);
   public BidResponseResult reject(long handlerSellerId);
+  public BidResponseResult approve(long pounds, long handlerSellerId);
+  public BidResponseResult disapprove(long handlerSellerId);
   public void close();
 }

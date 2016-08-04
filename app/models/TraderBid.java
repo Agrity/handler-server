@@ -142,6 +142,78 @@ public class TraderBid extends BaseBid implements PrettyString {
     }
   }
 
+  public BidResponseResult approve(long handlerSellerId) {
+
+    TraderBidResponse response = getBidResponse(handlerSellerId);
+
+    if (response == null) {
+      Logger.error("Response returned null for handlerSellerId: " + handlerSellerId + " and TraderBidID: " + getId());
+      return BidResponseResult.getInvalidResult("Cannot approve bid."); // TODO: What to tell grower when this inexplicable error happens.
+    }
+
+    response.refresh();
+    if (response.getResponseStatus() != ResponseStatus.PENDING) {
+      return BidResponseResult.getInvalidResult("Cannot approve bid because response status is not pending.");
+    }
+
+    long pounds = response.getPoundsAccepted();
+
+
+    TraderBidManagementService managementService
+        = TraderBidManagementService.getBidManagementService(this);
+
+    if (managementService != null) {
+      BidResponseResult bidResponseResult = managementService.approve(pounds, handlerSellerId);
+      if (!bidResponseResult.isValid()) {
+        /* managementService is NOT STFC */
+        return bidResponseResult;
+      }
+    }
+    else {
+      // TODO: Determine whether to log error.
+      // Logger.error("managementService returned null for HandlerBidID: " + getId());
+    }
+
+    setPoundsRemaining(getPoundsRemaining() - (int)pounds);
+    response.setResponseStatus(ResponseStatus.ACCEPTED);
+    save();
+    return BidResponseResult.getValidResult();
+  }
+
+  public BidResponseResult disapprove(long handlerSellerId) {
+
+    TraderBidResponse response = getBidResponse(handlerSellerId);
+
+    if (response == null) {
+      Logger.error("Response returned null for handlerSellerId: " + handlerSellerId + " and TraderBidID: " + getId());
+      return BidResponseResult.getInvalidResult("Cannot approve bid."); // TODO: What to tell grower when this inexplicable error happens.
+    }
+
+    response.refresh();
+    if (response.getResponseStatus() != ResponseStatus.PENDING) {
+      return BidResponseResult.getInvalidResult("Cannot approve bid because response status is not pending.");
+    }
+
+    TraderBidManagementService managementService
+        = TraderBidManagementService.getBidManagementService(this);
+
+    if (managementService != null) {
+      BidResponseResult bidResponseResult = managementService.disapprove(handlerSellerId);
+      if (!bidResponseResult.isValid()) {
+        /* managementService is NOT STFC */
+        return bidResponseResult;
+      }
+    }
+    else {
+      // TODO: Determine whether to log error.
+      // Logger.error("managementService returned null for HandlerBidID: " + getId());
+    }
+
+    response.setResponseStatus(ResponseStatus.DISAPPROVED);
+    save();
+    return BidResponseResult.getValidResult();
+  }
+
   public List<HandlerSeller> getAcceptedHandlerSellers() {
     return getHandlerSellersWithResponse(ResponseStatus.ACCEPTED);
   }
@@ -216,10 +288,20 @@ public class TraderBid extends BaseBid implements PrettyString {
       // Logger.error("managementService returned null for HandlerBidID: " + getId());
     }
 
-    setPoundsRemaining(getPoundsRemaining() - (int)pounds);
+    boolean fcfs = true;
+
+    if (getManagementService().equals("FCFSService")) {
+      /* Pounds remaining edited if FCFS */
+      setPoundsRemaining(getPoundsRemaining() - (int)pounds);
+    } else {
+      /* Pounds remaining not edited unless approved for STFC */
+      fcfs = false;
+    }
+
     save();
 
-    return setHandlerSellerReponseAccept(handlerSellerId, pounds);
+    return setHandlerSellerReponseAccept(handlerSellerId, pounds, fcfs);
+
   }
 
   public BidResponseResult handlerSellerRejectBid(Long handlerSellerId) {
@@ -266,16 +348,23 @@ public class TraderBid extends BaseBid implements PrettyString {
     return setHandlerSellerResponseForBid(handlerSellerId, ResponseStatus.REQUEST_CALL);
   }
 
-  private BidResponseResult setHandlerSellerReponseAccept(Long handlerSellerId, long poundsAccepted) {
+  private BidResponseResult setHandlerSellerReponseAccept(Long handlerSellerId, long poundsAccepted, boolean fcfs) {
     TraderBidResponse response = getBidResponse(handlerSellerId);
     if (response == null) {
       Logger.error("Response returned null for handlerSellerId: " + handlerSellerId + " and TraderBidID: " + getId());
       return BidResponseResult.getInvalidResult("Cannot accept bid."); // TODO: What to tell grower when this inexplicable error happens.
 
     }
-
+    
+    /* Set pounds accepted in response even if STFC so we can get pounds on approval */
     response.setPoundsAccepted(poundsAccepted);
-    response.setResponseStatus(ResponseStatus.ACCEPTED);
+
+    if (fcfs) {
+      response.setResponseStatus(ResponseStatus.ACCEPTED);
+    } else {
+      response.setResponseStatus(ResponseStatus.PENDING);
+    }
+
     response.save();
 
     return BidResponseResult.getValidResult();
