@@ -378,7 +378,7 @@ public class HandlerController extends Controller {
       addedGrowers.add(grower);
     }
 
-//    handlerBid.addGrowers(addedGrowers);
+    handlerBid.addGrowers(addedGrowers);
     handlerBid.save();
 
     try {

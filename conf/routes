@@ -172,6 +172,8 @@ DELETE  /handler/handlerBids/:bidId                        controllers.HandlerCo
 
 PUT     /handler/handlerBids/:bidId                        controllers.HandlerController.updateBid(bidId: Long)
 
+PUT     /handler/handlerBids/:bidId/addGrowers             controllers.HandlerController.addGrowersToBid(bidId: Long)
+
 GET     /handler/handlerBids/:bidId                        controllers.HandlerController.getBid(bidId: Long)
 
 GET     /handler/handlerBids/:bidId/close                  controllers.HandlerController.closeBid(bidId: Long)

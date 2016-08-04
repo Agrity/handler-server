@@ -104,6 +104,11 @@ public class HandlerFCFSService implements HandlerBidManagementService {
   }
 
   @Override
+  public void addGrowers(List<Long> growerIds) {
+    growerIdsRemaining.addAll(growerIds);
+  }
+
+  @Override
   public void close() {
     cancellable.cancel();
     sendClosedToRemaining();
