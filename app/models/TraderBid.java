@@ -191,7 +191,7 @@ public class TraderBid extends BaseBid implements PrettyString {
 
     response.refresh();
     if (response.getResponseStatus() != ResponseStatus.PENDING) {
-      return BidResponseResult.getInvalidResult("Cannot approve bid because response status is not pending.");
+      return BidResponseResult.getInvalidResult("Cannot disapprove bid because response status is not pending.");
     }
 
     TraderBidManagementService managementService

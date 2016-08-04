@@ -175,6 +175,78 @@ public class HandlerBid extends BaseBid implements PrettyString {
     }  
   }
 
+  public BidResponseResult approve(long growerId) {
+
+    HandlerBidResponse response = getBidResponse(growerId);
+
+    if (response == null) {
+      Logger.error("Response returned null for growerId: " + growerId + " and handlerID: " + getId());
+      return BidResponseResult.getInvalidResult("Cannot approve bid."); // TODO: What to tell grower when this inexplicable error happens.
+    }
+
+    response.refresh();
+    if (response.getResponseStatus() != ResponseStatus.PENDING) {
+      return BidResponseResult.getInvalidResult("Cannot approve bid because response status is not pending.");
+    }
+
+    long pounds = response.getPoundsAccepted();
+
+
+    HandlerBidManagementService managementService
+        = HandlerBidManagementService.getBidManagementService(this);
+
+    if (managementService != null) {
+      BidResponseResult bidResponseResult = managementService.approve(pounds, growerId);
+      if (!bidResponseResult.isValid()) {
+        /* managementService is NOT STFC */
+        return bidResponseResult;
+      }
+    }
+    else {
+      // TODO: Determine whether to log error.
+      // Logger.error("managementService returned null for HandlerBidID: " + getId());
+    }
+
+    setPoundsRemaining(getPoundsRemaining() - (int)pounds);
+    response.setResponseStatus(ResponseStatus.ACCEPTED);
+    save();
+    return BidResponseResult.getValidResult();
+  }
+
+  public BidResponseResult disapprove(long growerId) {
+
+    HandlerBidResponse response = getBidResponse(growerId);
+
+    if (response == null) {
+      Logger.error("Response returned null for growerId: " + growerId + " and handlerID: " + getId());
+      return BidResponseResult.getInvalidResult("Cannot approve bid."); // TODO: What to tell grower when this inexplicable error happens.
+    }
+
+    response.refresh();
+    if (response.getResponseStatus() != ResponseStatus.PENDING) {
+      return BidResponseResult.getInvalidResult("Cannot disapprove bid because response status is not pending.");
+    }
+
+    HandlerBidManagementService managementService
+        = HandlerBidManagementService.getBidManagementService(this);
+
+    if (managementService != null) {
+      BidResponseResult bidResponseResult = managementService.disapprove(growerId);
+      if (!bidResponseResult.isValid()) {
+        /* managementService is NOT STFC */
+        return bidResponseResult;
+      }
+    }
+    else {
+      // TODO: Determine whether to log error.
+      // Logger.error("managementService returned null for HandlerBidID: " + getId());
+    }
+
+    response.setResponseStatus(ResponseStatus.DISAPPROVED);
+    save();
+    return BidResponseResult.getValidResult();
+  }
+
   public List<Grower> getAcceptedGrowers() {
     return getGrowersWithResponse(ResponseStatus.ACCEPTED);
   }
@@ -249,10 +321,18 @@ public class HandlerBid extends BaseBid implements PrettyString {
       // Logger.error("managementService returned null for HandlerBidID: " + getId());
     }
 
-    setPoundsRemaining(getPoundsRemaining() - (int)pounds);
+    boolean fcfs = true;
+
+    if (getManagementService().equals("FCFSService")) {
+      /* Pounds remaining edited if FCFS */
+      setPoundsRemaining(getPoundsRemaining() - (int)pounds);
+    } else {
+      /* Pounds remaining not edited unless approved for STFC */
+      fcfs = false;
+    }
     save();
 
-    return setGrowerResponseAccept(growerId, pounds);
+    return setGrowerResponseAccept(growerId, pounds, fcfs);
   }
 
   public BidResponseResult growerRejectBid(Long growerId) {
@@ -299,7 +379,7 @@ public class HandlerBid extends BaseBid implements PrettyString {
     return setGrowerResponseForBid(growerId, ResponseStatus.REQUEST_CALL);
   }
 
-  private BidResponseResult setGrowerResponseAccept(Long growerId, long poundsAccepted) {
+  private BidResponseResult setGrowerResponseAccept(Long growerId, long poundsAccepted, boolean fcfs) {
     HandlerBidResponse response = getBidResponse(growerId);
     if (response == null) {
       Logger.error("Response returned null for growerId: " + growerId + " and HandlerBidID: " + getId());
@@ -308,7 +388,13 @@ public class HandlerBid extends BaseBid implements PrettyString {
     }
 
     response.setPoundsAccepted(poundsAccepted);
-    response.setResponseStatus(ResponseStatus.ACCEPTED);
+
+    if (fcfs) {
+      response.setResponseStatus(ResponseStatus.ACCEPTED);
+    } else {
+      response.setResponseStatus(ResponseStatus.PENDING);
+    }
+
     response.save();
 
     return BidResponseResult.getValidResult();
