@@ -55,7 +55,8 @@ public class HandlerBidController extends Controller {
     BidResponseResult success =
       handlerBid.growerAcceptBid(growerId, handlerBid.getAlmondPounds());
 
-    if (success.isValid()) {
+    if (success.isValid() && handlerBid.getManagementService().equals("services.bid_management.HandlerFCFSService")) {
+      /* Send Receipt */
       boolean sendSuccess = sendGridService.sendReceipt(handlerBid, growerId, handlerBid.getAlmondPounds());
       if (!sendSuccess) Logger.error("Error sending bid receipts.");
     }
@@ -74,7 +75,8 @@ public class HandlerBidController extends Controller {
     BidResponseResult success =
       handlerBid.growerAcceptBid(growerId, pounds);
 
-    if (success.isValid()) {
+    if (success.isValid() && handlerBid.getManagementService().equals("services.bid_management.HandlerFCFSService")) {
+      /* Send Receipt */
       boolean sendSuccess = sendGridService.sendReceipt(handlerBid, growerId, pounds);
       if (!sendSuccess) Logger.error("Error sending bid receipts.");
     }
@@ -93,6 +95,40 @@ public class HandlerBidController extends Controller {
 
     return success.isValid() ? ok(JsonMsgUtils.successfullReject())
         : internalServerError(JsonMsgUtils.bidNotRejected(success.getInvalidResponseMessage()));
+  }
+
+  public Result approveBid(long bidId, long growerId) {
+    HandlerBid handlerBid = handlerBidService.getById(bidId);
+
+    if (handlerBid == null) {
+      return notFound(JsonMsgUtils.bidNotFoundMessage(bidId));
+    }
+
+    BidResponseResult success = 
+      handlerBid.approve(growerId);
+
+    if (success.isValid()) {
+      /* Send Receipt */
+      boolean sendSuccess = 
+        sendGridService.sendReceipt(handlerBid, growerId, handlerBid.getBidResponse(growerId).getPoundsAccepted());
+      if (!sendSuccess) Logger.error("Error sending bid receipts.");
+    }
+    
+    return success.isValid() ? ok(JsonMsgUtils.successfullApprove())
+        : internalServerError(JsonMsgUtils.bidNotApproved(success.getInvalidResponseMessage()));
+  }
+
+  public Result disapproveBid(long bidId, long growerId) {
+    HandlerBid handlerBid = handlerBidService.getById(bidId);
+
+    if (handlerBid == null) {
+      return notFound(JsonMsgUtils.bidNotFoundMessage(bidId));
+    }
+
+    BidResponseResult success = handlerBid.disapprove(growerId);
+
+    return success.isValid() ? ok(JsonMsgUtils.successfullDisapprove())
+        : internalServerError(JsonMsgUtils.bidNotDisapproved(success.getInvalidResponseMessage()));
   }
 
   public Result displayPartialPage(long bidId, long growerId) {

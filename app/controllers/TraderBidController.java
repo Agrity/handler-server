@@ -58,7 +58,8 @@ public class TraderBidController extends Controller {
     BidResponseResult success = 
       traderBid.handlerSellerAcceptBid(handlerSellerId, traderBid.getAlmondPounds());
 
-    if (success.isValid()) {
+    if (success.isValid() && traderBid.getManagementService().equals("services.bid_management.TraderFCFSService")) {
+      /* Send Receipt */
       boolean sendSuccess = sendGridService.sendReceipt(traderBid, handlerSellerId, traderBid.getAlmondPounds());
       if (!sendSuccess) Logger.error("Error sending bid receipts.");
     }
@@ -77,7 +78,8 @@ public class TraderBidController extends Controller {
     BidResponseResult success = 
       traderBid.handlerSellerAcceptBid(handlerSellerId, pounds);
 
-    if (success.isValid()) {
+    if (success.isValid() && traderBid.getManagementService().equals("services.bid_management.TraderFCFSService")) {
+      /* Send Receipt */
       boolean sendSuccess = sendGridService.sendReceipt(traderBid, handlerSellerId, pounds);
       if (!sendSuccess) Logger.error("Error sending bid receipts.");
     }
@@ -96,6 +98,40 @@ public class TraderBidController extends Controller {
 
     return success.isValid() ? ok(JsonMsgUtils.successfullReject())
         : internalServerError(JsonMsgUtils.bidNotRejected(success.getInvalidResponseMessage()));
+  }
+
+  public Result approveBid(long bidId, long handlerSellerId) {
+    TraderBid traderBid = traderBidService.getById(bidId);
+
+    if (traderBid == null) {
+      return notFound(JsonMsgUtils.bidNotFoundMessage(bidId));
+    }
+
+    BidResponseResult success = 
+      traderBid.approve(handlerSellerId);
+
+    if (success.isValid()) {
+      /* Send Receipt */
+      boolean sendSuccess = 
+        sendGridService.sendReceipt(traderBid, handlerSellerId, traderBid.getBidResponse(handlerSellerId).getPoundsAccepted());
+      if (!sendSuccess) Logger.error("Error sending bid receipts.");
+    }
+    
+    return success.isValid() ? ok(JsonMsgUtils.successfullApprove())
+        : internalServerError(JsonMsgUtils.bidNotApproved(success.getInvalidResponseMessage()));
+  }  
+
+  public Result disapproveBid(long bidId, long handlerSellerId) {
+    TraderBid traderBid = traderBidService.getById(bidId);
+
+    if (traderBid == null) {
+      return notFound(JsonMsgUtils.bidNotFoundMessage(bidId));
+    }
+
+    BidResponseResult success = traderBid.disapprove(handlerSellerId);
+
+    return success.isValid() ? ok(JsonMsgUtils.successfullDisapprove())
+        : internalServerError(JsonMsgUtils.bidNotDisapproved(success.getInvalidResponseMessage()));
   }
 
   public Result displayBatchPage(long batchId, long handlerSellerId) {

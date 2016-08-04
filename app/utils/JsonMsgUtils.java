@@ -77,6 +77,14 @@ public class JsonMsgUtils {
     return errorToJson("Bid Could not be closed: " + invalidResponseMessage + " \n");
   }
 
+  public static ObjectNode bidNotApproved(String invalidResponseMessage) {
+    return errorToJson("Bid Could not be approved: " + invalidResponseMessage + " \n");
+  }
+
+  public static ObjectNode bidNotDisapproved(String invalidResponseMessage) {
+    return errorToJson("Bid Could not be disapproved: " + invalidResponseMessage + " \n");
+  }
+
   public static ObjectNode callNotRequested(String invalidResponseMessage) {
     return errorToJson("Call Could not be Requested: " + invalidResponseMessage + " \n");
   }
@@ -129,6 +137,14 @@ public class JsonMsgUtils {
 
   public static ObjectNode successfullCallRequest() {
     return validToJson("Successfully Requested Call.");
+  }
+
+  public static ObjectNode successfullApprove() {
+    return validToJson("Successfully Approved Bid.");
+  }
+
+  public static ObjectNode successfullDisapprove() {
+    return validToJson("Successfully Disapproved Bid.");
   }
 
   public static ObjectNode successfullEmail() {
