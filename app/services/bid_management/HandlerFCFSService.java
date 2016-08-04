@@ -106,6 +106,11 @@ public class HandlerFCFSService implements HandlerBidManagementService {
   @Override
   public void addGrowers(List<Long> growerIds) {
     growerIdsRemaining.addAll(growerIds);
+    for(Long id : growerIds) {
+      Grower grower = growerService.getById(id);
+      emailService.send(handlerBid, grower);
+      smsService.send(hanlderBid, grower);
+    }
   }
 
   @Override
