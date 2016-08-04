@@ -197,7 +197,7 @@ public class AdminTraderBidController extends Controller {
   @Security.Authenticated(AdminSecured.class)
   @BodyParser.Of(BodyParser.Json.class)
   public Result addHandlerSellersToBid(long bidId) {
-    
+
     TraderBid traderBid = traderBidService.getById(bidId);
     if(traderBid == null) {
       return notFound(JsonMsgUtils.bidNotFoundMessage(bidId));
@@ -223,6 +223,9 @@ public class AdminTraderBidController extends Controller {
       }
       addedHandlerSellers.add(handlerSeller);
     }
+
+    traderBid.addHandlerSellers(addedHandlerSellers);
+    traderBid.save();
 
     try {
       return created(jsonMapper.writeValueAsString(traderBid));

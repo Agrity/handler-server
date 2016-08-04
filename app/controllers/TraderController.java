@@ -406,6 +406,9 @@ public class TraderController extends Controller {
       addedHandlerSellers.add(handlerSeller);
     }
 
+    traderBid.addHandlerSellers(addedHandlerSellers);
+    traderBid.save();
+
     try {
       return created(jsonMapper.writeValueAsString(traderBid));
     } catch (JsonProcessingException e) {
