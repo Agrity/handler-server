@@ -20,6 +20,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 
 import utils.JsonMsgUtils;
+import java.util.Collections;
 import services.messaging.MessageServiceConstants;
 import services.messaging.bid.BatchSendGridMessageService;
 
@@ -108,6 +109,21 @@ public class TraderBidController extends Controller {
       return notFound(JsonMsgUtils.handlerSellerNotFoundMessage(handlerSellerId));
     }
     return ok(views.html.viewBatches.render(batch, handlerSeller, MessageServiceConstants.EmailFields.getDomain()));
+  }
+
+  public Result displaySingleBidPage(long bidId, long handlerSellerId) {
+    TraderBid traderBid = traderBidService.getById(bidId);
+    if(traderBid == null) {
+      return notFound(JsonMsgUtils.bidNotFoundMessage(bidId));
+    }
+    HandlerSeller handlerSeller = handlerSellerService.getById(handlerSellerId);
+    if (handlerSeller == null) {
+      return notFound(JsonMsgUtils.handlerSellerNotFoundMessage(handlerSellerId));
+    }
+    return ok(views.html.viewBatches.render(
+      new Batch(traderBid.getTrader(), Collections.singletonList(traderBid)), 
+      handlerSeller, 
+      MessageServiceConstants.EmailFields.getDomain()));
   }
 
   public Result displayMobilePage(long batchId, long handlerSellerId) {

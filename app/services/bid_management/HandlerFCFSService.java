@@ -109,7 +109,7 @@ public class HandlerFCFSService implements HandlerBidManagementService {
     for(Long id : growerIds) {
       Grower grower = growerService.getById(id);
       emailService.send(handlerBid, grower);
-      smsService.send(hanlderBid, grower);
+      smsService.send(handlerBid, grower);
     }
   }
 

@@ -7,6 +7,7 @@ import com.google.inject.Inject;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import controllers.security.AdminSecured;
 
@@ -106,6 +107,11 @@ public class AdminTraderBidController extends Controller {
   @Security.Authenticated(AdminSecured.class)
   public Result sendBatch(long id) {
     Batch batch = batchService.getById(id);
+    return sendBatch(batch);
+  }
+
+  @Security.Authenticated(AdminSecured.class)
+  private Result sendBatch(Batch batch) {
     boolean emailSuccess 
       = batchSendGridMessageService.send(batch) && batchSMSMessageService.send(batch);
 
@@ -229,6 +235,13 @@ public class AdminTraderBidController extends Controller {
 
     traderBid.addHandlerSellers(addedHandlerSellers);
     traderBid.save();
+
+    List<TraderBid> processedTraderBids = Collections.singletonList(traderBid);
+
+    Result sendResult = sendBatch(new Batch(traderBid.getTrader(), processedTraderBids));
+    if(sendResult.status() != 200) {
+      return sendResult;
+    }
 
     try {
       return created(jsonMapper.writeValueAsString(traderBid));

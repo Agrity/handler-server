@@ -22,7 +22,12 @@
       a nice day! <br>
     </p>
     <div id="bidsButton">
-      <a href="@domain/traderBids/batch/@batch.getId()/display/@handlerSeller.getId()"> 
+
+      @if(batch.getId() == null) {
+        <a href="@domain/traderBids/@batch.getTraderBids.get(0).getId()/displayBid/@handlerSeller.getId()">
+      } else {
+        <a href="@domain/traderBids/batch/@batch.getId()/display/@handlerSeller.getId()">
+      } 
         <button> Go To Bids</button>
       </a>
     </div>
