@@ -131,15 +131,15 @@ public class TraderBid extends BaseBid implements PrettyString {
       } else {
         setBidStatus(BidStatus.PARTIAL);
       }
+
+      TraderBidManagementService.removeBidManagementService(this);
       save();
+      
     } else {
       // TODO: Determine whether to log error.
       Logger.error("management service does not exist for this bid");
       return;
     }
-
-    TraderBidManagementService.removeBidManagementService(this);
-    save();
   }
 
   public void addHandlerSellers(List<HandlerSeller> addedHandlerSellers) {
