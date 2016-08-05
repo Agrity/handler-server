@@ -352,6 +352,10 @@ public class HandlerController extends Controller {
       return notFound(JsonMsgUtils.bidNotFoundMessage(bidId));
     }
 
+    if(!handlerBid.bidCurrentlyOpen()) {
+      return badRequest(JsonMsgUtils.cantAddSeller(bidId));
+    }
+
     JsonNode data = request().body().asJson();
 
     if (data == null) {
