@@ -110,12 +110,6 @@ public class TraderBidController extends Controller {
     BidResponseResult success = 
       traderBid.approve(handlerSellerId);
 
-    if (success.isValid()) {
-      /* Send Receipt */
-      boolean sendSuccess = 
-        sendGridService.sendReceipt(traderBid, handlerSellerId, traderBid.getBidResponse(handlerSellerId).getPoundsAccepted());
-      if (!sendSuccess) Logger.error("Error sending bid receipts.");
-    }
     
     return success.isValid() ? ok(JsonMsgUtils.successfullApprove())
         : internalServerError(JsonMsgUtils.bidNotApproved(success.getInvalidResponseMessage()));

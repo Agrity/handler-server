@@ -4,4 +4,4 @@
 
 ./new-handlerSeller.sh "HandlerSeller Company"
 
-./new-batch.sh
+./new-batch-STFC.sh

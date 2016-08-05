@@ -26,6 +26,7 @@ import services.BatchService;
 import services.messaging.bid.BatchSMSMessageService;
 import services.messaging.bid.BatchSendGridMessageService;
 import services.bid_management.TraderFCFSService;
+import services.bid_management.TraderSTFCService;
 import services.parsers.TraderBidJsonParser;
 import services.parsers.TraderBidJsonParser.TraderManagementTypeInfo;
 
@@ -144,6 +145,8 @@ public class AdminTraderBidController extends Controller {
 
       if (classType == TraderFCFSService.class) {
         new TraderFCFSService(traderBid, managementType.getDelay());
+      } else if (classType == TraderSTFCService.class) {
+        new TraderSTFCService(traderBid, managementType.getDelay());
       } else {
         return internalServerError(JsonMsgUtils.caughtException(classType.getName() 
           + " management type not found for Bid " + Long.toString(traderBid.getId()) 
