@@ -30,6 +30,11 @@ import models.Batch;
 import models.interfaces.PrettyString;
 import services.bid_management.TraderBidManagementService;
 
+import services.messaging.bid.BatchSendGridMessageService;
+import services.messaging.bid.TwilioMessageService;
+import services.impl.EbeanHandlerSellerService;
+import services.HandlerSellerService;
+
 import play.Logger;
 
 
@@ -64,6 +69,12 @@ public class TraderBid extends BaseBid implements PrettyString {
 
 
   public static Finder<Long, TraderBid> find = new Finder<Long, TraderBid>(TraderBid.class);
+
+  private static final BatchSendGridMessageService sendGridService = new BatchSendGridMessageService();
+
+  private static final TwilioMessageService smsService = new TwilioMessageService();
+
+  private static final HandlerSellerService handlerSellerService = new EbeanHandlerSellerService();
 
 
   /* ===================================== Implementation ===================================== */
@@ -174,6 +185,11 @@ public class TraderBid extends BaseBid implements PrettyString {
       }
     }
 
+    if (getPoundsRemaining() < pounds) {
+      return BidResponseResult.getInvalidResult("Cannot approve bid for :" 
+        + pounds + "lbs. Only " + getPoundsRemaining() + "lbs remaining.");
+    }
+
     setPoundsRemaining(getPoundsRemaining() - (int)pounds);
     response.setResponseStatus(ResponseStatus.ACCEPTED);
 
@@ -183,6 +199,8 @@ public class TraderBid extends BaseBid implements PrettyString {
     } else {
       setBidStatus(BidStatus.PARTIAL); 
     }
+
+    sendApproved(handlerSellerId, pounds);
 
     save();
     return BidResponseResult.getValidResult();
@@ -218,6 +236,9 @@ public class TraderBid extends BaseBid implements PrettyString {
     }
 
     response.setResponseStatus(ResponseStatus.DISAPPROVED);
+
+    sendDisapproved(handlerSellerId);
+
     save();
     return BidResponseResult.getValidResult();
   }
@@ -398,6 +419,33 @@ public class TraderBid extends BaseBid implements PrettyString {
     response.save();
 
     return BidResponseResult.getValidResult();
+  }
+
+  private boolean sendApproved(long handlerSellerId, long pounds) {
+    HandlerSeller handlerSeller = handlerSellerService.getById(handlerSellerId);
+
+    String msg = "Congratulations " + handlerSeller.getFullName() + ",\n" 
+      + "Your bid (ID " + getId() + ") has been approved by " + getTrader().getCompanyName()
+      + ". Check your email for a receipt of this transaction.";
+
+
+
+    return sendGridService.sendReceipt(this, handlerSellerId, pounds)
+      && smsService.sendMessage(handlerSeller.getPhoneNumberString(), msg);
+
+  }
+
+  private boolean sendDisapproved(long handlerSellerId) {
+    HandlerSeller handlerSeller = handlerSellerService.getById(handlerSellerId);
+
+    String msg = "Sorry " + handlerSeller.getFullName() + ",\n"
+      + "Your bid (ID " + getId() + ") from " + getTrader().getCompanyName() 
+      + "for " + getAlmondPounds() + "mt, " + getAlmondVariety() + ", " + getAlmondVariety()
+      + " has been disapproved.";
+
+    /* TODO: Send email on disapproval as well */  
+    return smsService.sendMessage(handlerSeller.getPhoneNumberString(), msg);
+    
   }
 
   @Override

@@ -65,12 +65,14 @@ public class TraderSTFCService implements TraderBidManagementService {
 
     handlerSellerIdsRemaining.remove((Long) handlerSellerId);
 
-    if (poundsRemaining == 0) {
+  
+    if (handlerSellerIdsRemaining.isEmpty()) {
+      if (poundsRemaining == traderBid.getAlmondPounds()) {
+        traderBid.closeBid(BidStatus.REJECTED); 
+      } else {
+        traderBid.closeBid(BidStatus.PARTIAL); 
+      }
       cancellable.cancel();
-      traderBid.closeBid(BidStatus.ACCEPTED);
-    } else if(handlerSellerIdsRemaining.isEmpty()) {
-      traderBid.closeBid(BidStatus.PARTIAL); 
-      cancellable.cancel(); 
     }
 
     return BidResponseResult.getValidResult();
@@ -79,14 +81,16 @@ public class TraderSTFCService implements TraderBidManagementService {
   @Override
   public BidResponseResult reject(long handlerSellerId) {
     handlerSellerIdsRemaining.remove((Long) handlerSellerId);
-    if(handlerSellerIdsRemaining.isEmpty()) {
-      cancellable.cancel();
-      if(poundsRemaining == traderBid.getAlmondPounds()) {
-        traderBid.closeBid(BidStatus.REJECTED);
+
+    if (handlerSellerIdsRemaining.isEmpty()) {
+      if (poundsRemaining == traderBid.getAlmondPounds()) {
+        traderBid.closeBid(BidStatus.REJECTED); 
       } else {
-        traderBid.closeBid(BidStatus.PARTIAL);
+        traderBid.closeBid(BidStatus.PARTIAL); 
       }
+      cancellable.cancel();
     }
+
     return BidResponseResult.getValidResult();
   }
 
@@ -103,6 +107,11 @@ public class TraderSTFCService implements TraderBidManagementService {
     }
 
     poundsRemaining -= pounds;
+
+    if (poundsRemaining == 0) {
+      traderBid.closeBid(BidStatus.ACCEPTED); 
+      cancellable.cancel();
+    }
 
     return BidResponseResult.getValidResult();
   }
