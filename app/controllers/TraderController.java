@@ -412,7 +412,9 @@ public class TraderController extends Controller {
 
     List<TraderBid> processedTraderBids = Collections.singletonList(traderBid);
 
-    Result sendResult = sendBatch(new Batch(trader, processedTraderBids));
+    Result sendResult = sendBatch(
+      new Batch(trader, processedTraderBids),
+      addedHandlerSellers);
     if(sendResult.status() != 200) {
       return sendResult;
     }
@@ -568,6 +570,28 @@ public class TraderController extends Controller {
 
     boolean sendSuccess 
       = batchSendGridMessageService.send(batch) && batchSMSMessageService.send(batch);
+
+    return sendSuccess
+       ? ok(JsonMsgUtils.successfullEmail())
+       : internalServerError(JsonMsgUtils.messagesNotSent());
+  }
+
+  private Result sendBatch(Batch batch, List<HandlerSeller> handlerSellers) {
+    ResponseHeaders.addResponseHeaders(response());
+
+    Trader trader = TraderSecurityController.getTrader();
+
+    if (trader == null) {
+      return traderNotFound();
+    }
+
+    if (!traderService.checkTraderOwnsBatch(trader, batch)) {
+      return badRequest(JsonMsgUtils.traderDoesNotOwnBatchMessage(trader, batch));
+    }
+
+    boolean sendSuccess 
+      = batchSendGridMessageService.send(batch, handlerSellers) 
+      && batchSMSMessageService.send(batch, handlerSellers);
 
     return sendSuccess
        ? ok(JsonMsgUtils.successfullEmail())
