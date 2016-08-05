@@ -144,6 +144,10 @@ public class TraderBid extends BaseBid implements PrettyString {
 
   public BidResponseResult approve(long handlerSellerId) {
 
+    if (getManagementService().equals("services.bid_management.TraderFCFSService")) {
+      return BidResponseResult.getInvalidResult("Cannot approve bid in FCFS service.");
+    }
+
     TraderBidResponse response = getBidResponse(handlerSellerId);
 
     if (response == null) {
@@ -169,18 +173,26 @@ public class TraderBid extends BaseBid implements PrettyString {
         return bidResponseResult;
       }
     }
-    else {
-      // TODO: Determine whether to log error.
-      // Logger.error("managementService returned null for HandlerBidID: " + getId());
-    }
 
     setPoundsRemaining(getPoundsRemaining() - (int)pounds);
     response.setResponseStatus(ResponseStatus.ACCEPTED);
+
+
+    if (getPoundsRemaining() == 0) {
+      setBidStatus(BidStatus.ACCEPTED);
+    } else {
+      setBidStatus(BidStatus.PARTIAL); 
+    }
+
     save();
     return BidResponseResult.getValidResult();
   }
 
   public BidResponseResult disapprove(long handlerSellerId) {
+
+    if (getManagementService().equals("services.bid_management.TraderFCFSService")) {
+      return BidResponseResult.getInvalidResult("Cannot approve bid in FCFS service.");
+    }
 
     TraderBidResponse response = getBidResponse(handlerSellerId);
 
@@ -203,10 +215,6 @@ public class TraderBid extends BaseBid implements PrettyString {
         /* managementService is NOT STFC */
         return bidResponseResult;
       }
-    }
-    else {
-      // TODO: Determine whether to log error.
-      // Logger.error("managementService returned null for HandlerBidID: " + getId());
     }
 
     response.setResponseStatus(ResponseStatus.DISAPPROVED);

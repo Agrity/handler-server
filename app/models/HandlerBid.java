@@ -177,6 +177,10 @@ public class HandlerBid extends BaseBid implements PrettyString {
 
   public BidResponseResult approve(long growerId) {
 
+    if (getManagementService().equals("services.bid_management.HandlerFCFSService")) {
+      return BidResponseResult.getInvalidResult("Cannot approve bid in FCFS service.");
+    }
+
     HandlerBidResponse response = getBidResponse(growerId);
 
     if (response == null) {
@@ -214,6 +218,10 @@ public class HandlerBid extends BaseBid implements PrettyString {
   }
 
   public BidResponseResult disapprove(long growerId) {
+
+    if (getManagementService().equals("services.bid_management.HandlerFCFSService")) {
+      return BidResponseResult.getInvalidResult("Cannot approve bid in FCFS service.");
+    }
 
     HandlerBidResponse response = getBidResponse(growerId);
 
