@@ -23,6 +23,7 @@ import services.bid_management.TraderBidManagementService;
 
 import services.bid_management.WaterfallService;
 import services.bid_management.TraderFCFSService;
+import services.bid_management.TraderSTFCService;
 
 import java.util.Date;
 
@@ -272,8 +273,8 @@ public class TraderBidJsonParser extends BidJsonParser {
       String className = typeMap.get(BidJsonConstants.TYPE_KEY).asText();
       Duration delayTime = Duration.ofHours(delayInt);
       switch(className) {
-        // case BidJsonConstants.ManagementTypes.WATERFALL:
-        //   return new TraderManagementTypeInfo(WaterfallService.class, delayTime);
+        case BidJsonConstants.ManagementTypes.STFC:
+           return new TraderManagementTypeInfo(TraderSTFCService.class, delayTime);
         case BidJsonConstants.ManagementTypes.FCFS: 
           return new TraderManagementTypeInfo(TraderFCFSService.class, delayTime);
         default:
