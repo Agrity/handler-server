@@ -2,6 +2,7 @@ package services.bid_management;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 import models.HandlerBid;
 import models.BidResponseResult;
@@ -21,5 +22,6 @@ public interface HandlerBidManagementService {
 
 	public BidResponseResult accept(long pounds, long growerId);
 	public BidResponseResult reject(long growerId);
+  public void addGrowers(List<Long> growerIds);
   public void close();
 }

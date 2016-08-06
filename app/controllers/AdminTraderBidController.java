@@ -7,11 +7,13 @@ import com.google.inject.Inject;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import controllers.security.AdminSecured;
 
 import models.TraderBid;
 import models.Batch;
+import models.HandlerSeller;
 
 import models.BidResponseResult;
 import play.mvc.BodyParser;
@@ -22,6 +24,7 @@ import play.mvc.Security;
 import services.TraderBidService;
 import services.TraderService;
 import services.impl.EbeanTraderService;
+import services.HandlerSellerService;
 import services.BatchService;
 import services.messaging.bid.BatchSMSMessageService;
 import services.messaging.bid.BatchSendGridMessageService;
@@ -41,6 +44,7 @@ public class AdminTraderBidController extends Controller {
   private final BatchSMSMessageService batchSMSMessageService;
   private final BatchSendGridMessageService batchSendGridMessageService;
   private final BatchService batchService;
+  private final HandlerSellerService handlerSellerService;
 
   private final ObjectMapper jsonMapper;
 
@@ -48,11 +52,13 @@ public class AdminTraderBidController extends Controller {
   public AdminTraderBidController(TraderBidService traderBidService,
           BatchSMSMessageService batchSMSMessageService,
           BatchSendGridMessageService batchSendGridMessageService,
-          BatchService batchService) {
+          BatchService batchService,
+          HandlerSellerService handlerSellerService) {
     this.traderBidService = traderBidService;
     this.batchSMSMessageService = batchSMSMessageService;
     this.batchSendGridMessageService = batchSendGridMessageService;
     this.batchService = batchService;
+    this.handlerSellerService = handlerSellerService;
 
     this.jsonMapper = new ObjectMapper();
   }
@@ -97,10 +103,25 @@ public class AdminTraderBidController extends Controller {
         : internalServerError(JsonMsgUtils.callNotRequested(success.getInvalidResponseMessage()));
   }
 
-
   @Security.Authenticated(AdminSecured.class)
   public Result sendBatch(long id) {
     Batch batch = batchService.getById(id);
+    return sendBatch(batch);
+  }
+
+  @Security.Authenticated(AdminSecured.class)
+  public Result sendBatch(Batch batch, List<HandlerSeller> handlerSellers) {
+    boolean emailSuccess 
+      = batchSendGridMessageService.send(batch, handlerSellers) 
+      && batchSMSMessageService.send(batch, handlerSellers);
+
+    return emailSuccess
+        ? ok(JsonMsgUtils.successfullEmail())
+        : internalServerError(JsonMsgUtils.messagesNotSent());
+  }
+
+  @Security.Authenticated(AdminSecured.class)
+  private Result sendBatch(Batch batch) {
     boolean emailSuccess 
       = batchSendGridMessageService.send(batch) && batchSMSMessageService.send(batch);
 
@@ -187,6 +208,63 @@ public class AdminTraderBidController extends Controller {
     } catch (JsonProcessingException e) {
       return internalServerError(JsonMsgUtils.caughtException(e.toString()));
     }
+  }
+
+  @Security.Authenticated(AdminSecured.class)
+  @BodyParser.Of(BodyParser.Json.class)
+  public Result addHandlerSellersToBid(long bidId) {
+
+    TraderBid traderBid = traderBidService.getById(bidId);
+    if(traderBid == null) {
+      return notFound(JsonMsgUtils.bidNotFoundMessage(bidId));
+    }
+
+    if(!traderBid.bidCurrentlyOpen()) {
+      return badRequest(JsonMsgUtils.cantAddSeller(bidId));
+    }
+
+    JsonNode data = request().body().asJson();
+
+    if (data == null) {
+      return badRequest(JsonMsgUtils.expectingData());
+    }
+
+    if(!data.isArray()) {
+      //Log error, return badResult or something
+    }
+
+    List<HandlerSeller> addedHandlerSellers = new ArrayList<>();
+    for(JsonNode node : data) {
+      Long handlerSellerId = Long.parseLong(node.asText());
+
+      Logger.info("\nHandler Seller Id: " + handlerSellerId);
+
+      HandlerSeller handlerSeller = handlerSellerService.getById(handlerSellerId);
+      
+      if(handlerSeller == null) {
+        return notFound(JsonMsgUtils.handlerSellerNotFoundMessage(handlerSellerId));
+      }
+      addedHandlerSellers.add(handlerSeller);
+    }
+
+    traderBid.addHandlerSellers(addedHandlerSellers);
+    traderBid.save();
+
+    List<TraderBid> processedTraderBids = Collections.singletonList(traderBid);
+
+    Result sendResult = sendBatch(
+      new Batch(traderBid.getTrader(), processedTraderBids), 
+      addedHandlerSellers);
+
+    if(sendResult.status() != 200) {
+      return sendResult;
+    }
+
+    try {
+      return created(jsonMapper.writeValueAsString(traderBid));
+    } catch (JsonProcessingException e) {
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
+    } 
   }
 
   @Security.Authenticated(AdminSecured.class)

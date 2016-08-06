@@ -25,7 +25,7 @@ public class TwilioMessageService {
 
     try {
       Message message = TwilioFields.getMessageFactory().create(params);
-      Logger.info("Message sent\n\n");
+      Logger.info("SMS message sent\n\n");
     } catch (TwilioRestException e) {
       success = false;
       Logger.error("=== Error Sending SMS Message === to " + to

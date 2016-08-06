@@ -40,6 +40,7 @@ import services.parsers.TraderBidJsonParser;
 import services.parsers.TraderBidJsonParser.TraderManagementTypeInfo;
 
 import utils.JsonMsgUtils;
+import java.util.Collections;
 import utils.ResponseHeaders;
 
 @Security.Authenticated(TraderSecured.class)
@@ -367,6 +368,64 @@ public class TraderController extends Controller {
     }    
   }
 
+  public Result addHandlerSellersToBid(long bidId) {
+    ResponseHeaders.addResponseHeaders(response());
+
+    Trader trader = TraderSecurityController.getTrader();
+    if (trader == null) {
+      return traderNotFound();
+    }
+
+    TraderBid traderBid = traderBidService.getById(bidId);
+    if(traderBid == null) {
+      return notFound(JsonMsgUtils.bidNotFoundMessage(bidId));
+    }
+
+    JsonNode data = request().body().asJson();
+
+    if (data == null) {
+      return badRequest(JsonMsgUtils.expectingData());
+    }
+
+    if(!data.isArray()) {
+      //Log error, return badResult or something
+    }
+
+    List<HandlerSeller> addedHandlerSellers = new ArrayList<>();
+    for(JsonNode node : data) {
+      Long handlerSellerId = Long.parseLong(node.asText());
+      HandlerSeller handlerSeller = handlerSellerService.getById(handlerSellerId);
+      
+      if(handlerSeller == null) {
+        return notFound(JsonMsgUtils.handlerSellerNotFoundMessage(handlerSellerId));
+      }
+
+      if(!traderService.checkTraderOwnsHandlerSeller(trader, handlerSeller)) {
+        return badRequest(JsonMsgUtils.traderDoesNotOwnHandlerMessage(trader, handlerSeller));
+      }
+
+      addedHandlerSellers.add(handlerSeller);
+    }
+
+    traderBid.addHandlerSellers(addedHandlerSellers);
+    traderBid.save();
+
+    List<TraderBid> processedTraderBids = Collections.singletonList(traderBid);
+
+    Result sendResult = sendBatch(
+      new Batch(trader, processedTraderBids),
+      addedHandlerSellers);
+    if(sendResult.status() != 200) {
+      return sendResult;
+    }
+
+    try {
+      return created(jsonMapper.writeValueAsString(traderBid));
+    } catch (JsonProcessingException e) {
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
+    } 
+  }
+
   public Result deleteBid(long bidId) {
     ResponseHeaders.addResponseHeaders(response());
 
@@ -389,7 +448,7 @@ public class TraderController extends Controller {
     return ok(JsonMsgUtils.bidDeleted(bidId));
   }
 
-    public Result closeBid(long bidId) {
+  public Result closeBid(long bidId) {
     ResponseHeaders.addResponseHeaders(response());
 
     Trader trader = TraderSecurityController.getTrader();
@@ -495,19 +554,14 @@ public class TraderController extends Controller {
       return internalServerError(JsonMsgUtils.caughtException(e.toString()));
     }
   }
-  
-  public Result sendBatch(long id) {
+
+  private Result sendBatch(Batch batch) {
     ResponseHeaders.addResponseHeaders(response());
 
     Trader trader = TraderSecurityController.getTrader();
 
     if (trader == null) {
       return traderNotFound();
-    }
-    
-    Batch batch = batchService.getById(id);
-    if (batch == null) {
-      return notFound(JsonMsgUtils.bidNotFoundMessage(id));
     }
 
     if (!traderService.checkTraderOwnsBatch(trader, batch)) {
@@ -520,6 +574,36 @@ public class TraderController extends Controller {
     return sendSuccess
        ? ok(JsonMsgUtils.successfullEmail())
        : internalServerError(JsonMsgUtils.messagesNotSent());
+  }
+
+  private Result sendBatch(Batch batch, List<HandlerSeller> handlerSellers) {
+    ResponseHeaders.addResponseHeaders(response());
+
+    Trader trader = TraderSecurityController.getTrader();
+
+    if (trader == null) {
+      return traderNotFound();
+    }
+
+    if (!traderService.checkTraderOwnsBatch(trader, batch)) {
+      return badRequest(JsonMsgUtils.traderDoesNotOwnBatchMessage(trader, batch));
+    }
+
+    boolean sendSuccess 
+      = batchSendGridMessageService.send(batch, handlerSellers) 
+      && batchSMSMessageService.send(batch, handlerSellers);
+
+    return sendSuccess
+       ? ok(JsonMsgUtils.successfullEmail())
+       : internalServerError(JsonMsgUtils.messagesNotSent());
+  }
+  
+  public Result sendBatch(long id) {
+    Batch batch = batchService.getById(id);
+    if (batch == null) {
+      return notFound(JsonMsgUtils.bidNotFoundMessage(id));
+    }
+    return sendBatch(batch);
   }
 
   private Result traderNotFound() {

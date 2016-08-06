@@ -98,6 +98,8 @@ GET     /admin/handlerBids/:bidId/close                    controllers.AdminHand
 
 GET     /admin/handlerBids/:bidId/requestcall/:growerId    controllers.AdminHandlerBidController.requestCall(bidId: Long, growerId: Long)
 
+PUT     /admin/handlerBids/:bidId/addGrowers               controllers.AdminHandlerBidController.addGrowersToBid(bidId: Long)
+
 
 # ========== Admin TraderBid ========== #
 
@@ -119,6 +121,8 @@ GET     /admin/traderBids/:bidId/reject/:handlerSellerId         controllers.Adm
 GET     /admin/traderBids/:bidId/close                    controllers.AdminTraderBidController.closeBid(bidId: Long)
 
 GET     /admin/traderBids/:bidId/requestcall/:handlerSellerId    controllers.AdminTraderBidController.requestCall(bidId: Long, handlerSellerId: Long)
+
+PUT     /admin/traderBids/:bidId/addHandlerSellers         controllers.AdminTraderBidController.addHandlerSellersToBid(bidId: Long)
 
 
 # ========== Admin Batch ========== #
@@ -170,6 +174,8 @@ DELETE  /handler/handlerBids/:bidId                        controllers.HandlerCo
 
 PUT     /handler/handlerBids/:bidId                        controllers.HandlerController.updateBid(bidId: Long)
 
+PUT     /handler/handlerBids/:bidId/addGrowers             controllers.HandlerController.addGrowersToBid(bidId: Long)
+
 GET     /handler/handlerBids/:bidId                        controllers.HandlerController.getBid(bidId: Long)
 
 GET     /handler/handlerBids/:bidId/close                  controllers.HandlerController.closeBid(bidId: Long)
@@ -202,6 +208,8 @@ DELETE  /trader/traderBids/:bidId                        controllers.TraderContr
 
 PUT     /trader/traderBids/:bidId                        controllers.TraderController.updateBid(bidId: Long)
 
+PUT     /trader/traderBids/:bidId/addHandlerSellers      controllers.TraderController.addHandlerSellersToBid(bidId: Long)
+
 GET     /trader/traderBids/:bidId                        controllers.TraderController.getBid(bidId: Long)
 
 GET     /trader/traderBids/:bidId/close                  controllers.TraderController.closeBid(bidId: Long)
@@ -225,6 +233,8 @@ GET     /traderBids/:bidId/reject/:handlerSellerId               controllers.Tra
 GET     /traderBids/batch/:batchId/display/:handlerSellerId                         controllers.TraderBidController.displayBatchPage(batchId: Long, handlerSellerId: Long)
 
 GET     /traderBids/batch/:batchId/mobile/:handlerSellerId                         controllers.TraderBidController.displayMobilePage(batchId: Long, handlerSellerId: Long)
+
+GET     /traderBids/:bidId/displayBid/:handlerSellerId          controllers.TraderBidController.displaySingleBidPage(bidId: Long, handlerSellerId: Long)
 
 GET     /traderBids/:bidId/accept/:handlerSellerId/:pounds       controllers.TraderBidController.acceptPartial(bidId: Long, handlerSellerId: Long, pounds: Long)
 

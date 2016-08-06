@@ -77,6 +77,10 @@ public class JsonMsgUtils {
     return errorToJson("Bid Could not be closed: " + invalidResponseMessage + " \n");
   }
 
+  public static ObjectNode cantAddSeller(Long id) {
+    return errorToJson("Bid " + id + " is already closed, seller could not be added.");
+  }
+
   public static ObjectNode callNotRequested(String invalidResponseMessage) {
     return errorToJson("Call Could not be Requested: " + invalidResponseMessage + " \n");
   }

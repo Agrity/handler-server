@@ -175,6 +175,35 @@ public class HandlerBid extends BaseBid implements PrettyString {
     }  
   }
 
+  public void addGrowers(List<Grower> addedGrowers) {
+    List<Long> addedIds = new ArrayList<>();
+    for(Grower grower : addedGrowers) {
+      if(growers.contains(grower)) {
+        Logger.error("ERROR ERROR======");
+        return;
+        //repeat, log error/return false?
+      } 
+      addedIds.add(grower.getId());
+    }
+
+    growers.addAll(addedGrowers);
+    HandlerBidManagementService managementService 
+      = HandlerBidManagementService.getBidManagementService(this);
+
+    if(managementService == null) {
+      Logger.error("management service does not exist for this bid");
+      return;
+    }
+
+    bidResponses.addAll(
+      addedGrowers.stream()
+      .map(grower -> new HandlerBidResponse(grower))
+      .collect(Collectors.toSet()));
+
+    managementService.addGrowers(addedIds);
+    save();
+  }
+
   public List<Grower> getAcceptedGrowers() {
     return getGrowersWithResponse(ResponseStatus.ACCEPTED);
   }
