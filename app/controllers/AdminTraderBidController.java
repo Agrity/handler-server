@@ -104,7 +104,6 @@ public class AdminTraderBidController extends Controller {
         : internalServerError(JsonMsgUtils.callNotRequested(success.getInvalidResponseMessage()));
   }
 
-<<<<<<< HEAD
   public Result approveBid(long bidId, long handlerSellerId) {
     return ok("Not implemented.");
   }
@@ -113,8 +112,6 @@ public class AdminTraderBidController extends Controller {
     return ok("Not implemented.");
   }
 
-=======
->>>>>>> master
   @Security.Authenticated(AdminSecured.class)
   public Result sendBatch(long id) {
     Batch batch = batchService.getById(id);

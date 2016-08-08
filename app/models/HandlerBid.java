@@ -175,7 +175,6 @@ public class HandlerBid extends BaseBid implements PrettyString {
     }  
   }
 
-<<<<<<< HEAD
   public BidResponseResult approve(long growerId) {
 
     if (getManagementService().equals("services.bid_management.HandlerFCFSService")) {
@@ -254,7 +253,8 @@ public class HandlerBid extends BaseBid implements PrettyString {
     response.setResponseStatus(ResponseStatus.DISAPPROVED);
     save();
     return BidResponseResult.getValidResult();
-=======
+}
+
   public void addGrowers(List<Grower> addedGrowers) {
     List<Long> addedIds = new ArrayList<>();
     for(Grower grower : addedGrowers) {
@@ -282,7 +282,6 @@ public class HandlerBid extends BaseBid implements PrettyString {
 
     managementService.addGrowers(addedIds);
     save();
->>>>>>> master
   }
 
   public List<Grower> getAcceptedGrowers() {

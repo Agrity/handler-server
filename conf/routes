@@ -98,13 +98,11 @@ GET     /admin/handlerBids/:bidId/close                    controllers.AdminHand
 
 GET     /admin/handlerBids/:bidId/requestcall/:growerId    controllers.AdminHandlerBidController.requestCall(bidId: Long, growerId: Long)
 
-<<<<<<< HEAD
 GET     /admin/handlerBids/:bidId/approve/:growerId        controllers.AdminHandlerBidController.approveBid(bidId: Long, growerId: Long)
 
 GET     /admin/handlerBids/:bidId/disapprove/:growerId     controllers.AdminHandlerBidController.disapproveBid(bidId: Long, growerId: Long)
-=======
+
 PUT     /admin/handlerBids/:bidId/addGrowers               controllers.AdminHandlerBidController.addGrowersToBid(bidId: Long)
->>>>>>> master
 
 
 # ========== Admin TraderBid ========== #
@@ -128,13 +126,11 @@ GET     /admin/traderBids/:bidId/close                    controllers.AdminTrade
 
 GET     /admin/traderBids/:bidId/requestcall/:handlerSellerId    controllers.AdminTraderBidController.requestCall(bidId: Long, handlerSellerId: Long)
 
-<<<<<<< HEAD
 GET     /admin/traderBids/:bidId/approve/:handlerSellerId        controllers.AdminTraderBidController.approveBid(bidId: Long, handlerSellerId: Long)
 
 GET     /admin/traderBids/:bidId/disapprove/:handlerSellerId     controllers.AdminTraderBidController.disapproveBid(bidId: Long, handlerSellerId: Long)
-=======
+
 PUT     /admin/traderBids/:bidId/addHandlerSellers         controllers.AdminTraderBidController.addHandlerSellersToBid(bidId: Long)
->>>>>>> master
 
 
 # ========== Admin Batch ========== #

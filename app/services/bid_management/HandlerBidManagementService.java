@@ -22,11 +22,8 @@ public interface HandlerBidManagementService {
 
 	public BidResponseResult accept(long pounds, long growerId);
 	public BidResponseResult reject(long growerId);
-<<<<<<< HEAD
   public BidResponseResult approve(long pounds, long growerId);
   public BidResponseResult disapprove(long growerId);
-=======
   public void addGrowers(List<Long> growerIds);
->>>>>>> master
   public void close();
 }

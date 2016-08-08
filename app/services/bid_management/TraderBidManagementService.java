@@ -23,11 +23,8 @@ public interface TraderBidManagementService {
 
   public BidResponseResult accept(long pounds, long handlerSellerId);
   public BidResponseResult reject(long handlerSellerId);
-<<<<<<< HEAD
   public BidResponseResult approve(long pounds, long handlerSellerId);
   public BidResponseResult disapprove(long handlerSellerId);
-=======
   public void addHandlerSellers(List<Long> handlerSellerIds);
->>>>>>> master
   public void close();
 }

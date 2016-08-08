@@ -153,7 +153,6 @@ public class TraderBid extends BaseBid implements PrettyString {
     }
   }
 
-<<<<<<< HEAD
   public BidResponseResult approve(long handlerSellerId) {
 
     if (getManagementService().equals("services.bid_management.TraderFCFSService")) {
@@ -242,7 +241,8 @@ public class TraderBid extends BaseBid implements PrettyString {
 
     save();
     return BidResponseResult.getValidResult();
-=======
+}
+
   public void addHandlerSellers(List<HandlerSeller> addedHandlerSellers) {
     List<Long> addedIds = new ArrayList<>();
     for(HandlerSeller handlerSeller : addedHandlerSellers) {
@@ -270,7 +270,6 @@ public class TraderBid extends BaseBid implements PrettyString {
 
     managementService.addHandlerSellers(addedIds);
     save();
->>>>>>> master
   }
 
   public List<HandlerSeller> getAcceptedHandlerSellers() {
