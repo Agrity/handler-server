@@ -22,6 +22,8 @@ import services.HandlerBidService;
 import services.messaging.MessageServiceConstants.TwilioFields;
 import services.parsers.SMSParser;
 
+import utils.ResponseHeaders;
+
 public class MessageReceivingController extends Controller {
 
   private static Integer numResponses = 0;
@@ -34,10 +36,14 @@ public class MessageReceivingController extends Controller {
   }
 
   public Result numberTwilioResponses() {
+    ResponseHeaders.addResponseHeaders(response());
+
     return ok("Number Responses Recieved: " + numResponses);
   }
 
   public Result receiveTwilioResponse() {
+    ResponseHeaders.addResponseHeaders(response());
+    
     numResponses++;
     Map<String, String[]> bodyMap = request().body().asFormUrlEncoded();
     String phoneNum;

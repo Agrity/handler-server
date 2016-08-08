@@ -21,6 +21,8 @@ import utils.JsonMsgUtils;
 import services.messaging.MessageServiceConstants;
 import services.messaging.bid.HandlerBidSendGridMessageService;
 
+import utils.ResponseHeaders;
+
 import play.Logger;
 
 public class HandlerBidController extends Controller {
@@ -47,6 +49,8 @@ public class HandlerBidController extends Controller {
 
   /* Accept whole bid */
   public Result acceptBid(long bidId, long growerId) {
+    ResponseHeaders.addResponseHeaders(response());
+
     HandlerBid handlerBid = handlerBidService.getById(bidId);
     if (handlerBid == null) {
       return notFound(JsonMsgUtils.bidNotFoundMessage(bidId));
@@ -69,6 +73,8 @@ public class HandlerBidController extends Controller {
 
   /* Partially accept bid */
   public Result acceptPartial(long bidId, long growerId, long pounds) {
+    ResponseHeaders.addResponseHeaders(response());
+
     HandlerBid handlerBid = handlerBidService.getById(bidId);
     if (handlerBid == null) {
       return notFound(JsonMsgUtils.bidNotFoundMessage(bidId));
@@ -100,6 +106,8 @@ public class HandlerBidController extends Controller {
   }  
 
   public Result rejectBid(long bidId, long growerId) {
+    ResponseHeaders.addResponseHeaders(response());
+
     HandlerBid handlerBid = handlerBidService.getById(bidId);
     if (handlerBid == null) {
       return notFound(JsonMsgUtils.bidNotFoundMessage(bidId));
@@ -112,6 +120,8 @@ public class HandlerBidController extends Controller {
   }
 
   public Result approveBid(long bidId, long growerId) {
+    ResponseHeaders.addResponseHeaders(response());
+
     HandlerBid handlerBid = handlerBidService.getById(bidId);
 
     if (handlerBid == null) {
@@ -127,6 +137,8 @@ public class HandlerBidController extends Controller {
   }
 
   public Result disapproveBid(long bidId, long growerId) {
+    ResponseHeaders.addResponseHeaders(response());
+
     HandlerBid handlerBid = handlerBidService.getById(bidId);
 
     if (handlerBid == null) {
@@ -140,6 +152,8 @@ public class HandlerBidController extends Controller {
   }
 
   public Result displayPartialPage(long bidId, long growerId) {
+    ResponseHeaders.addResponseHeaders(response());
+    
     HandlerBid handlerBid = handlerBidService.getById(bidId);
     if (handlerBid == null) {
       return notFound(JsonMsgUtils.bidNotFoundMessage(bidId));
