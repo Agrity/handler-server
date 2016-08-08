@@ -3358,19 +3358,13 @@
 
 	<body>
 
-<<<<<<< HEAD
-    				<h5>@trader.getPrettyPhoneNumberString()</h5>
-
-    				<h4 contenteditable="true" class="text-info text-right">EXPIRES @expiration.getMonthValue()/@expiration.getDayOfMonth() AT @{var hour = expiration.getHour();
-=======
 		<!-- Header -->
 			<section id="header">
 				<div class="inner">
 					<span class="icon major fa-leaf"></span>
 					<h1>Hi, you've received bids from <strong>@trader.getCompanyName().toUpperCase()</strong></h1>
-					<p>@trader.getPhoneNumberString()<br/></p>
+					<p>@trader.getPrettyPhoneNumberString()<br/></p>
 					<h2>EXPIRES @expiration.getMonthValue()/@expiration.getDayOfMonth() AT @{var hour = expiration.getHour();
->>>>>>> master
 				        var minute = expiration.getMinute().toString();
 				        var ampm = "AM";
 				        if(hour > 12) {
