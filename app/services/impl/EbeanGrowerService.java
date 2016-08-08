@@ -4,10 +4,8 @@ import com.avaje.ebean.Model.Finder;
 import java.util.List;
 
 import models.Grower;
-import models.PhoneNumber;
 
 import services.GrowerService;
-import play.Logger;
 
 public class EbeanGrowerService implements GrowerService {
 
@@ -40,10 +38,22 @@ public class EbeanGrowerService implements GrowerService {
         .findList();
   }
 
+  @Override
   public Grower growerLookupByPhoneNum(String phoneNum) {
     List<Grower> growers = getAll(); 
     for (Grower grower: growers) {
       if (grower.getPhoneNumberString().equals(phoneNum)) {
+        return grower;
+      }
+    }
+    return null;
+  }
+
+  @Override
+  public Grower growerLookupByEmailAddress(String emailAddress) {
+    List<Grower> growers = getAll(); 
+    for (Grower grower: growers) {
+      if (grower.getEmailAddressString().equals(emailAddress)) {
         return grower;
       }
     }
