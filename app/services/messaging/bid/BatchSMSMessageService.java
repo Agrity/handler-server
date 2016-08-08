@@ -47,7 +47,7 @@ public class BatchSMSMessageService implements BatchMessageService {
     }
     String msg
       = "Hi " + handlerSeller.getFirstName() + ",\n"
-      + "I've sent you new bids using Agrity."
+      + "I've sent you new bids using Agrity. "
       + "Click on the link below to view your new bids.\n" 
       + route + "\n"
       + "- " + batch.getTrader().getFullName() + "\n"
