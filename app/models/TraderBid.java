@@ -24,7 +24,6 @@ import java.util.NoSuchElementException;
 import java.time.LocalDateTime;
 
 import models.BaseBidResponse.ResponseStatus;
-import models.BaseBid.BidStatus;
 import models.Almond.AlmondVariety;
 import models.Batch;
 import models.interfaces.PrettyString;
@@ -64,6 +63,8 @@ public class TraderBid extends BaseBid implements PrettyString {
   @ManyToOne()
   private Batch batch;
 
+  private String grade;
+
 
   /* ==================================== Static Functions ==================================== */
 
@@ -81,7 +82,7 @@ public class TraderBid extends BaseBid implements PrettyString {
 
 
   public TraderBid(Trader trader, List<HandlerSeller> allHandlerSellers, AlmondVariety almondVariety, 
-      String almondSize, Integer almondPounds, String pricePerPound, String comment, String managementService,
+      String almondSize, String grade, Integer almondPounds, String pricePerPound, String comment, String managementService,
       LocalDateTime expirationTime) {
     super();
 
@@ -94,6 +95,7 @@ public class TraderBid extends BaseBid implements PrettyString {
     this.handlerSellers = allHandlerSellers;
     setAlmondVariety(almondVariety);
     setAlmondSize(almondSize);
+    setGrade(grade);
     setAlmondPounds(almondPounds);
     setPricePerPound(pricePerPound);
     setComment(comment);
@@ -122,6 +124,13 @@ public class TraderBid extends BaseBid implements PrettyString {
     return handlerSellers;
   }
 
+  public String getGrade() {
+    return grade;
+  }
+
+  public void setGrade(String grade) {
+    this.grade = grade;
+  }
 
   /* ======================================= Member Functions ======================================= */
 
