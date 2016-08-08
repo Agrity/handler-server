@@ -57,6 +57,11 @@ public class TraderSTFCService implements TraderBidManagementService {
   }
 
   @Override
+  public void addHandlerSellers(List<Long> handlerSellerIds) {
+    handlerSellerIdsRemaining.addAll(handlerSellerIds);
+  }
+
+  @Override
   public BidResponseResult accept(long pounds, long handlerSellerId) {
     
     if (!checkPoundsRemaining(pounds)) {
