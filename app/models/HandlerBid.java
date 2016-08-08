@@ -33,6 +33,10 @@ import play.Logger;
 import play.data.validation.Constraints;
 
 import services.bid_management.HandlerBidManagementService;
+import services.messaging.bid.HandlerBidSendGridMessageService;
+import services.messaging.bid.TwilioMessageService;
+import services.impl.EbeanGrowerService;
+import services.GrowerService;
 
 import services.DateService;
 
@@ -68,6 +72,12 @@ public class HandlerBid extends BaseBid implements PrettyString {
 
 
   public static Finder<Long, HandlerBid> find = new Finder<Long, HandlerBid>(HandlerBid.class);
+
+  private static final HandlerBidSendGridMessageService sendGridService = new HandlerBidSendGridMessageService();
+
+  private static final TwilioMessageService smsService = new TwilioMessageService();
+
+  private static final GrowerService growerService = new EbeanGrowerService();
 
 
   /* ===================================== Implementation ===================================== */
@@ -175,6 +185,106 @@ public class HandlerBid extends BaseBid implements PrettyString {
     }  
   }
 
+  public BidResponseResult approve(long growerId) {
+
+    if (getManagementService().equals("services.bid_management.HandlerFCFSService")) {
+      return BidResponseResult.getInvalidResult("Cannot approve bid in FCFS service.");
+    }
+
+    HandlerBidResponse response = getBidResponse(growerId);
+
+    if (response == null) {
+      Logger.error("Response returned null for growerId: " + growerId + " and handlerID: " + getId());
+      return BidResponseResult.getInvalidResult("Cannot approve bid."); // TODO: What to tell grower when this inexplicable error happens.
+    }
+
+    response.refresh();
+    if (response.getResponseStatus() != ResponseStatus.PENDING) {
+      return BidResponseResult.getInvalidResult("Cannot approve bid because response status is not pending.");
+    }
+
+    long pounds = response.getPoundsAccepted();
+
+
+    HandlerBidManagementService managementService
+        = HandlerBidManagementService.getBidManagementService(this);
+
+    if (managementService != null) {
+      BidResponseResult bidResponseResult = managementService.approve(pounds, growerId);
+      if (!bidResponseResult.isValid()) {
+        /* managementService is NOT STFC */
+        return bidResponseResult;
+      }
+    }
+    
+  if (getPoundsRemaining() < pounds) {
+      return BidResponseResult.getInvalidResult("Cannot approve bid for :" 
+        + pounds + "lbs. Only " + getPoundsRemaining() + "lbs remaining.");
+    }
+
+    setPoundsRemaining(getPoundsRemaining() - (int)pounds);
+    response.setResponseStatus(ResponseStatus.ACCEPTED);
+
+
+    if (getPoundsRemaining() == 0) {
+      setBidStatus(BidStatus.ACCEPTED);
+    } else if (managementService == null) {
+      /* timer is up */
+      setBidStatus(BidStatus.PARTIAL); 
+    }
+
+    sendApproved(growerId, pounds);
+    save();
+
+    return BidResponseResult.getValidResult();
+  }
+
+  public BidResponseResult disapprove(long growerId) {
+
+    if (getManagementService().equals("services.bid_management.HandlerFCFSService")) {
+      return BidResponseResult.getInvalidResult("Cannot approve bid in FCFS service.");
+    }
+
+    HandlerBidResponse response = getBidResponse(growerId);
+
+    if (response == null) {
+      Logger.error("Response returned null for growerId: " + growerId + " and handlerID: " + getId());
+      return BidResponseResult.getInvalidResult("Cannot approve bid."); // TODO: What to tell grower when this inexplicable error happens.
+    }
+
+    response.refresh();
+    if (response.getResponseStatus() != ResponseStatus.PENDING) {
+      return BidResponseResult.getInvalidResult("Cannot disapprove bid because response status is not pending.");
+    }
+
+    HandlerBidManagementService managementService
+        = HandlerBidManagementService.getBidManagementService(this);
+
+    if (managementService != null) {
+      BidResponseResult bidResponseResult = managementService.disapprove(growerId);
+      if (!bidResponseResult.isValid()) {
+        /* managementService is NOT STFC */
+        return bidResponseResult;
+      }
+    }
+
+    response.setResponseStatus(ResponseStatus.DISAPPROVED);
+    sendDisapproved(growerId);
+
+    if ((managementService == null) && (getPendingGrowers().size() == 0)) {
+      /* timer is up and all growers have been approved/disapproved */
+      if (getPoundsRemaining() == getAlmondPounds()) {
+        setBidStatus(BidStatus.REJECTED);
+      } else if (getPoundsRemaining() > 0) {
+        setBidStatus(BidStatus.PARTIAL);
+      }
+    }
+
+    save();
+
+    return BidResponseResult.getValidResult();
+}
+
   public void addGrowers(List<Grower> addedGrowers) {
     List<Long> addedIds = new ArrayList<>();
     for(Grower grower : addedGrowers) {
@@ -218,6 +328,14 @@ public class HandlerBid extends BaseBid implements PrettyString {
 
   public List<Grower> getCallRequestedGrowers() {
     return getGrowersWithResponse(ResponseStatus.REQUEST_CALL);
+  }
+
+  public List<Grower> getPendingGrowers() {
+    return getGrowersWithResponse(ResponseStatus.PENDING);
+  }
+
+  public List<Grower> getDisapprovedGrowers() {
+    return getGrowersWithResponse(ResponseStatus.DISAPPROVED);
   }
 
   private List<Grower> getGrowersWithResponse(ResponseStatus response) {
@@ -278,10 +396,19 @@ public class HandlerBid extends BaseBid implements PrettyString {
       // Logger.error("managementService returned null for HandlerBidID: " + getId());
     }
 
-    setPoundsRemaining(getPoundsRemaining() - (int)pounds);
+    boolean fcfs = true;
+
+    if (getManagementService().equals("services.bid_management.HandlerFCFSService")) {
+      /* Pounds remaining edited if FCFS */
+      setPoundsRemaining(getPoundsRemaining() - (int)pounds);
+    } else {
+      /* Pounds remaining not edited unless approved for STFC */
+      fcfs = false;
+    }
+
     save();
 
-    return setGrowerResponseAccept(growerId, pounds);
+    return setGrowerResponseAccept(growerId, pounds, fcfs);
   }
 
   public BidResponseResult growerRejectBid(Long growerId) {
@@ -328,7 +455,7 @@ public class HandlerBid extends BaseBid implements PrettyString {
     return setGrowerResponseForBid(growerId, ResponseStatus.REQUEST_CALL);
   }
 
-  private BidResponseResult setGrowerResponseAccept(Long growerId, long poundsAccepted) {
+  private BidResponseResult setGrowerResponseAccept(Long growerId, long poundsAccepted, boolean fcfs) {
     HandlerBidResponse response = getBidResponse(growerId);
     if (response == null) {
       Logger.error("Response returned null for growerId: " + growerId + " and HandlerBidID: " + getId());
@@ -336,8 +463,15 @@ public class HandlerBid extends BaseBid implements PrettyString {
 
     }
 
+    /* Set pounds accepted in response even if STFC so we can get pounds on approval */
     response.setPoundsAccepted(poundsAccepted);
-    response.setResponseStatus(ResponseStatus.ACCEPTED);
+
+    if (fcfs) {
+      response.setResponseStatus(ResponseStatus.ACCEPTED);
+    } else {
+      response.setResponseStatus(ResponseStatus.PENDING);
+    }
+
     response.save();
 
     return BidResponseResult.getValidResult();
@@ -355,6 +489,31 @@ public class HandlerBid extends BaseBid implements PrettyString {
     response.save();
 
     return BidResponseResult.getValidResult();
+  }
+
+    private boolean sendApproved(long growerId, long pounds) {
+    Grower grower = growerService.getById(growerId);
+
+    String msg = "Congratulations " + grower.getFullName() + ",\n" 
+      + "Your bid (ID " + getId() + ") has been approved by " + getHandler().getCompanyName()
+      + ". Check your email for a receipt of this transaction.";
+
+
+
+    return sendGridService.sendReceipt(this, growerId, pounds)
+      && smsService.sendMessage(grower.getPhoneNumberString(), msg);
+  }
+
+  private boolean sendDisapproved(long growerId) {
+    Grower grower = growerService.getById(growerId);
+
+    String msg = "Sorry " + grower.getFullName() + ",\n"
+      + "Your bid (ID " + getId() + ") from " + getHandler().getCompanyName() 
+      + " for " + getAlmondPounds() + "lbs, " + getAlmondVariety() + ", " + getAlmondSize()
+      + ", " + getPricePerPound() + "/lb has been disapproved.";
+
+    /* TODO: Send email on disapproval as well */  
+    return smsService.sendMessage(grower.getPhoneNumberString(), msg); 
   }
 
   @Override

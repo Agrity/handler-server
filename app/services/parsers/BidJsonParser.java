@@ -137,6 +137,7 @@ public class BidJsonParser extends BaseParser {
     public static class ManagementTypes {
       protected static final String WATERFALL = "WaterfallService";
       protected static final String FCFS = "FCFSService";
+      protected static final String STFC = "STFCService";
     }
   }
 }

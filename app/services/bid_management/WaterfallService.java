@@ -130,6 +130,16 @@ public class WaterfallService implements HandlerBidManagementService {
     Logger.info("cannot close Waterfall service manually.");
   }
 
+  @Override
+  public BidResponseResult approve(long pounds, long growerId) {
+    return BidResponseResult.getInvalidResult("Cannot approve a response in FCFS.");
+  }
+
+  @Override
+  public BidResponseResult disapprove(long growerId) {
+    return BidResponseResult.getInvalidResult("Cannot approve a response in FCFS.");
+  }
+
   public Boolean subtractFromPoundsRemaining(long pounds) {
     if (pounds > poundsRemaining) {
       return false;
