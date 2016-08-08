@@ -15,6 +15,8 @@ public abstract class BaseBidResponse extends BaseModel {
 
   public static enum ResponseStatus {
     NO_RESPONSE,
+    PENDING,
+    DISAPPROVED,
     ACCEPTED,
     REJECTED,
     REQUEST_CALL,

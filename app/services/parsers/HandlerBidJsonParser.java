@@ -23,6 +23,7 @@ import services.bid_management.HandlerBidManagementService;
 
 import services.bid_management.WaterfallService;
 import services.bid_management.HandlerFCFSService;
+import services.bid_management.HandlerSTFCService;
 
 import java.util.Date;
 
@@ -355,6 +356,8 @@ public class HandlerBidJsonParser extends BidJsonParser {
           return new HandlerManagementTypeInfo(WaterfallService.class, delayTime);
         case BidJsonConstants.ManagementTypes.FCFS: 
           return new HandlerManagementTypeInfo(HandlerFCFSService.class, delayTime);
+        case BidJsonConstants.ManagementTypes.STFC: 
+          return new HandlerManagementTypeInfo(HandlerSTFCService.class, delayTime);
         default:
           setInvalid("Management Type invalid: specified type " + className +" not found\n");
           return null;          
