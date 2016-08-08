@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import play.Logger;
 
@@ -336,6 +337,59 @@ public class HandlerController extends Controller {
     } catch (JsonProcessingException e) {
       return internalServerError(JsonMsgUtils.caughtException(e.toString()));
     }    
+  }
+
+  public Result addGrowersToBid(long bidId) {
+    ResponseHeaders.addResponseHeaders(response());
+
+    Handler handler = HandlerSecurityController.getHandler();
+    if (handler == null) {
+      return handlerNotFound();
+    }
+
+    HandlerBid handlerBid = handlerBidService.getById(bidId);
+    if(handlerBid == null) {
+      return notFound(JsonMsgUtils.bidNotFoundMessage(bidId));
+    }
+
+    if(!handlerBid.bidCurrentlyOpen()) {
+      return badRequest(JsonMsgUtils.cantAddSeller(bidId));
+    }
+
+    JsonNode data = request().body().asJson();
+
+    if (data == null) {
+      return badRequest(JsonMsgUtils.expectingData());
+    }
+
+    if(!data.isArray()) {
+      //Log error, return badResult or something
+    }
+
+    List<Grower> addedGrowers = new ArrayList<>();
+    for(JsonNode node : data) {
+      Long growerId = Long.parseLong(node.asText());
+      Grower grower = growerService.getById(growerId);
+      
+      if(grower == null) {
+        return notFound(JsonMsgUtils.growerNotFoundMessage(growerId));
+      }
+
+      if(!handlerService.checkHandlerOwnsGrower(handler, grower)) {
+        return badRequest(JsonMsgUtils.handlerDoesNotOwnGrowerMessage(handler, grower));
+      }
+
+      addedGrowers.add(grower);
+    }
+
+    handlerBid.addGrowers(addedGrowers);
+    handlerBid.save();
+
+    try {
+      return created(jsonMapper.writeValueAsString(handlerBid));
+    } catch (JsonProcessingException e) {
+      return internalServerError(JsonMsgUtils.caughtException(e.toString()));
+    } 
   }
 
   public Result deleteBid(long bidId) {

@@ -6,6 +6,8 @@ import java.util.Map;
 import models.TraderBid;
 import models.BidResponseResult;
 
+import java.util.List;
+
 public interface TraderBidManagementService {
 
   public static final Map<TraderBid, TraderBidManagementService>
@@ -21,7 +23,11 @@ public interface TraderBidManagementService {
 
   public BidResponseResult accept(long pounds, long handlerSellerId);
   public BidResponseResult reject(long handlerSellerId);
+<<<<<<< HEAD
   public BidResponseResult approve(long pounds, long handlerSellerId);
   public BidResponseResult disapprove(long handlerSellerId);
+=======
+  public void addHandlerSellers(List<Long> handlerSellerIds);
+>>>>>>> master
   public void close();
 }

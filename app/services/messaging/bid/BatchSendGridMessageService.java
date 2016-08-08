@@ -46,6 +46,16 @@ public class BatchSendGridMessageService implements BatchMessageService {
     return success;
   }
 
+  public boolean send(Batch batch, List<HandlerSeller> handlerSellers) {
+    boolean success = true;
+
+    for (HandlerSeller handlerSeller : handlerSellers) { 
+      if(!send(batch, handlerSeller)) success = false;
+    }
+
+    return success;
+  }
+
   /* ===== TODO: HTML for accept ===== */
   public boolean send(Batch batch, HandlerSeller handlerSeller) {
     String emailAddr = handlerSeller.getEmailAddress().getEmailAddress();

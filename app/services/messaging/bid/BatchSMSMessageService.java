@@ -25,15 +25,31 @@ public class BatchSMSMessageService implements BatchMessageService {
 
     return success;
   }
-    
+   
+  public boolean send(Batch batch, List<HandlerSeller> handlerSellers) {
+    boolean success = true;
+
+    for (HandlerSeller handlerSeller : handlerSellers) { 
+      if(!send(batch, handlerSeller)) success = false;
+    }
+
+    return success;
+  }
+
   public boolean send(Batch batch, HandlerSeller handlerSeller) {
     Long batchId = batch.getId();
+    String route = TwilioFields.getDomain() + "/traderBids/batch/" 
+      + batchId + "/display/" + handlerSeller.getId();
+    if(batchId == null) {
+      Long bidId = batch.getTraderBids().get(0).getId();
+      route = TwilioFields.getDomain() + "/traderBids/" 
+        + bidId + "/displayBid/" + handlerSeller.getId();
+    }
     String msg
       = "Hi " + handlerSeller.getFullName() + ",\n"
       + "You have received new bids from " + batch.getTrader().getCompanyName()
       + "! Click on the link below to view and/or accept them.\n" 
-      + TwilioFields.getDomain() + "/traderBids/batch/" 
-      + batchId + "/display/" + handlerSeller.getId() + "\n"
+      + route + "\n"
       + "- " + batch.getTrader().getFullName() + "\n"
       + batch.getTrader().getPhoneNumberString();
     return sendMessage(batch, handlerSeller, msg);

@@ -121,6 +121,11 @@ public class WaterfallService implements HandlerBidManagementService {
   }
 
   @Override
+  public void addGrowers(List<Long> growerIds) {
+    //TODO: implement
+  }
+
+  @Override
   public void close() {
     Logger.info("cannot close Waterfall service manually.");
   }
