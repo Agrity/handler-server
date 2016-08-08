@@ -79,9 +79,6 @@ public class HandlerFCFSService implements HandlerBidManagementService {
       cancellable.cancel();
       handlerBid.closeBid(BidStatus.ACCEPTED);
       sendClosedToRemaining();
-    } else if(growerIdsRemaining.isEmpty()) {
-        handlerBid.closeBid(BidStatus.PARTIAL); 
-        cancellable.cancel(); 
     } else {
       sendUpdatedToRemaining();
     }

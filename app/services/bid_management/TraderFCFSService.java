@@ -68,9 +68,6 @@ public class TraderFCFSService implements TraderBidManagementService {
     if (poundsRemaining == 0) {
       cancellable.cancel();
       traderBid.closeBid(BidStatus.ACCEPTED);
-    } else if(handlerSellerIdsRemaining.isEmpty()) {
-      traderBid.closeBid(BidStatus.PARTIAL); 
-      cancellable.cancel(); 
     }
 
     return BidResponseResult.getValidResult();
