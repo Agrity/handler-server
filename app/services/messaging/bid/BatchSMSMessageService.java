@@ -51,12 +51,8 @@ public class BatchSMSMessageService implements BatchMessageService {
       + "Click on the link below to view your new bids.\n" 
       + route + "\n"
       + "- " + batch.getTrader().getFullName() + "\n"
-<<<<<<< HEAD
-      + batch.getTrader().getPrettyPhoneNumberString();
-=======
       + batch.getTrader().getCompanyName() + "\n"
-      + batch.getTrader().getPhoneNumberString();
->>>>>>> master
+      + batch.getTrader().getPrettyPhoneNumberString();
     return sendMessage(batch, handlerSeller, msg);
   }
 
@@ -76,7 +72,7 @@ public class BatchSMSMessageService implements BatchMessageService {
   }
 
   public boolean sendMessage(Batch batch, HandlerSeller handlerSeller, String msg) {
-    return twilioMessageService.sendMessage(handlerSeller.get:String(), msg);
+    return twilioMessageService.sendMessage(handlerSeller.getPhoneNumberString(), msg);
   }
 
 }
