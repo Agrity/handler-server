@@ -44,6 +44,8 @@ import java.util.Date;
  *
  *    ALMOND_SIZE: ... ,
  *
+ *    GRADE: ... ,
+ *
  *    ALMOND_POUNDS: ... ,
  *
  *    ALMOND_PRICE_PER_POUND: ... ,
@@ -64,6 +66,7 @@ public class TraderBidJsonParser extends BidJsonParser {
   private List<HandlerSeller> handlerSellers;
   private AlmondVariety almondVariety;
   private String almondSize;
+  private String grade;
   private Integer almondPounds;
   private String pricePerPound;
   private TraderManagementTypeInfo managementType;
@@ -99,6 +102,12 @@ public class TraderBidJsonParser extends BidJsonParser {
 
     almondSize = parseAlmondSize(data);
     if (almondSize == null) {
+      // Parser set to invalid with proper error message.
+      return;
+    }
+
+    grade = parseGrade(data);
+    if (grade == null) {
       // Parser set to invalid with proper error message.
       return;
     }
@@ -146,6 +155,7 @@ public class TraderBidJsonParser extends BidJsonParser {
         getHandlerSellers(),
         getAlmondVariety(),
         getAlmondSize(),
+        getGrade(),
         getAlmondPounds(),
         getPricePerPound(),
         getComment(),
@@ -161,6 +171,7 @@ public class TraderBidJsonParser extends BidJsonParser {
     }
 
     traderBid.setAlmondVariety(getAlmondVariety());
+    traderBid.setGrade(getGrade());
     traderBid.setAlmondPounds(getAlmondPounds());
     traderBid.setPricePerPound(getPricePerPound());
     traderBid.setComment(getComment());
@@ -182,6 +193,11 @@ public class TraderBidJsonParser extends BidJsonParser {
   public String getAlmondSize() {
     ensureValid();
     return almondSize;
+  }
+
+  public String getGrade() {
+    ensureValid();
+    return grade;
   }
 
   public Integer getAlmondPounds() {
@@ -255,6 +271,16 @@ public class TraderBidJsonParser extends BidJsonParser {
     return processedHandlerSellers;
   }
 
+
+  protected String parseGrade(JsonNode data) {
+    // Check if grade is present.
+    if (!data.has(TraderBidJsonConstants.GRADE)) {
+      return "";
+    } 
+
+    return data.get(TraderBidJsonConstants.GRADE).asText();
+  }
+
   private TraderManagementTypeInfo parseManagementType(JsonNode data) {
     if (!data.has(BidJsonConstants.MANAGEMENT_TYPE)) {
       setInvalid(missingParameterError(BidJsonConstants.MANAGEMENT_TYPE));
@@ -302,6 +328,7 @@ public class TraderBidJsonParser extends BidJsonParser {
 
   private static class TraderBidJsonConstants {
     private static final String HANDLERSELLER_IDS = "handlerSeller_ids";
+    private static final String GRADE = "grade";
   }
 
 }
