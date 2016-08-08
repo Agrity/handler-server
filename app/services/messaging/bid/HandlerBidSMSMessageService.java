@@ -70,7 +70,7 @@ public class HandlerBidSMSMessageService implements HandlerBidMessageService {
                 + handlerBid.getPricePerPound() + "/lb\n" 
                 + handlerBid.getComment() + "\n"
                 + "-" + handlerBid.getHandler().getCompanyName() + " " 
-                + handlerBid.getHandler().getPhoneNumberString() + "\n\n"
+                + handlerBid.getHandler().getPrettyPhoneNumberString() + "\n\n"
                 + "Respond with the bid ID(" + id + ") "
                 + "followed by the amount of pounds you would like to accept (0 for rejection).\n"
                 + "Bid ID: " + id + "\n"

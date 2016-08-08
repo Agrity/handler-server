@@ -21,6 +21,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import models.PhoneNumber;
+import services.ModelService;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -142,6 +143,12 @@ public abstract class User extends BaseModel {
 
   public String getPhoneNumberString() {
     return getPhoneNumber().getPhoneNumber();
+  }
+
+  public String getPrettyPhoneNumberString() {
+    ModelService service = new ModelService();
+    String phoneNum = getPhoneNumber().getPhoneNumber();
+    return service.phoneNumberToPrettyString(phoneNum);
   }
 
   public String createToken() {

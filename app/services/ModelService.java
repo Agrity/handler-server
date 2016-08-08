@@ -14,4 +14,9 @@ public class ModelService {
 
     return builder.toString();
   }
+
+  public static String phoneNumberToPrettyString(String phoneNumber) {
+  	return "(" + phoneNumber.substring(3, 5) + ") "
+  	  + phoneNumber.substring(6, 8) + " " + phoneNumber.substring(9);
+  }
 }
