@@ -509,7 +509,7 @@ public class HandlerBid extends BaseBid implements PrettyString {
 
     String msg = "Sorry " + grower.getFullName() + ",\n"
       + "Your bid (ID " + getId() + ") from " + getHandler().getCompanyName() 
-      + " for " + getAlmondPounds() + "mt, " + getAlmondVariety() + ", " + getAlmondSize()
+      + " for " + getAlmondPounds() + "lbs, " + getAlmondVariety() + ", " + getAlmondSize()
       + ", " + getPricePerPound() + "/lb has been disapproved.";
 
     /* TODO: Send email on disapproval as well */  
