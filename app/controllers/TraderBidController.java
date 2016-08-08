@@ -78,6 +78,16 @@ public class TraderBidController extends Controller {
       return notFound(JsonMsgUtils.bidNotFoundMessage(bidId));
     }
 
+    int lbsRemaining = traderBid.getPoundsRemaining();
+    Long min =(long) (0.1 * lbsRemaining);
+
+    if(pounds < min) {
+      return badRequest(JsonMsgUtils.tooLittleAccepted(min, true));
+    }
+    if(lbsRemaining - pounds < min) {
+      return badRequest(JsonMsgUtils.tooLittleRemaining(lbsRemaining - min, true));
+    }
+
     BidResponseResult success = 
       traderBid.handlerSellerAcceptBid(handlerSellerId, pounds);
 
