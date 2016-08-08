@@ -19,6 +19,8 @@ import javax.persistence.FetchType;
 
 import play.data.validation.Constraints;
 
+import services.ModelService;
+
 //import play.Logger;
 
 @Entity
@@ -81,6 +83,12 @@ public abstract class BaseSeller extends BaseModel {
 
   public String getPhoneNumberString() {
     return getPhoneNumber().getPhoneNumber();
+  }
+
+  public String getPrettyPhoneNumberString() {
+    ModelService service = new ModelService();
+    String phoneNum = getPhoneNumber().getPhoneNumber();
+    return service.phoneNumberToPrettyString(phoneNum);
   }
 
   /* ======================================= Attribute Setters ======================================= */
