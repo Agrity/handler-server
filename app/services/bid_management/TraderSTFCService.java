@@ -39,7 +39,7 @@ public class TraderSTFCService implements TraderBidManagementService {
         .scheduleOnce(FiniteDuration.create(timeAllowed.toMinutes(), TimeUnit.MINUTES), new Runnable() {
           @Override
           public void run() {
-            if(poundsRemaining == traderBid.getAlmondPounds()) {
+            if (poundsRemaining == traderBid.getAlmondPounds()) {
               traderBid.closeBid(BidStatus.REJECTED);
             } else {
               traderBid.closeBid(BidStatus.PARTIAL);
@@ -50,7 +50,7 @@ public class TraderSTFCService implements TraderBidManagementService {
 
   private List<Long> getHandlerSellerIDList() {
     List<Long> handlerSellers = new ArrayList<>();
-    for(HandlerSeller hs : traderBid.getAllHandlerSellers()) {
+    for (HandlerSeller hs : traderBid.getAllHandlerSellers()) {
       handlerSellers.add(hs.getId());
     }
     return handlerSellers;
@@ -63,14 +63,13 @@ public class TraderSTFCService implements TraderBidManagementService {
 
   @Override
   public BidResponseResult accept(long pounds, long handlerSellerId) {
-    
     if (!checkPoundsRemaining(pounds)) {
-      return BidResponseResult.getInvalidResult("Only " + poundsRemaining + " pounds remain. Can not accept bid for " + pounds + " pounds.");
+      return BidResponseResult.getInvalidResult("Only " + poundsRemaining
+        + " pounds remain. Can not accept bid for " + pounds + " pounds.");
     }
 
     handlerSellerIdsRemaining.remove((Long) handlerSellerId);
 
-  
     if (handlerSellerIdsRemaining.isEmpty()) {
       if (poundsRemaining == traderBid.getAlmondPounds()) {
         traderBid.closeBid(BidStatus.REJECTED); 
@@ -106,9 +105,9 @@ public class TraderSTFCService implements TraderBidManagementService {
 
   @Override
   public BidResponseResult approve(long pounds, long handlerSellerId) {
-
     if (!checkPoundsRemaining(pounds)) {
-      return BidResponseResult.getInvalidResult("Only " + poundsRemaining + " pounds remain. Can not approve bid for " + pounds + " pounds.");
+      return BidResponseResult.getInvalidResult("Only " + poundsRemaining
+        + " pounds remain. Can not approve bid for " + pounds + " pounds.");
     }
 
     poundsRemaining -= pounds;
@@ -123,8 +122,6 @@ public class TraderSTFCService implements TraderBidManagementService {
 
   @Override
   public BidResponseResult disapprove(long handlerSellerId) {
-
-
     return BidResponseResult.getValidResult();
   }
 

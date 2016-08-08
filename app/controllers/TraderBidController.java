@@ -59,9 +59,11 @@ public class TraderBidController extends Controller {
     BidResponseResult success = 
       traderBid.handlerSellerAcceptBid(handlerSellerId, traderBid.getAlmondPounds());
 
-    if (success.isValid() && traderBid.getManagementService().equals("services.bid_management.TraderFCFSService")) {
+    if (success.isValid() && traderBid.getManagementService()
+        .equals("services.bid_management.TraderFCFSService")) {
       /* Send Receipt */
-      boolean sendSuccess = sendGridService.sendReceipt(traderBid, handlerSellerId, traderBid.getAlmondPounds());
+      boolean sendSuccess = 
+        sendGridService.sendReceipt(traderBid, handlerSellerId, traderBid.getAlmondPounds());
       if (!sendSuccess) Logger.error("Error sending bid receipts.");
     }
     
@@ -79,9 +81,11 @@ public class TraderBidController extends Controller {
     BidResponseResult success = 
       traderBid.handlerSellerAcceptBid(handlerSellerId, pounds);
 
-    if (success.isValid() && traderBid.getManagementService().equals("services.bid_management.TraderFCFSService")) {
+    if (success.isValid() && traderBid.getManagementService()
+        .equals("services.bid_management.TraderFCFSService")) {
       /* Send Receipt */
-      boolean sendSuccess = sendGridService.sendReceipt(traderBid, handlerSellerId, pounds);
+      boolean sendSuccess =
+        sendGridService.sendReceipt(traderBid, handlerSellerId, pounds);
       if (!sendSuccess) Logger.error("Error sending bid receipts.");
     }
     

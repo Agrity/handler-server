@@ -23,6 +23,7 @@ import services.HandlerBidService;
 import services.GrowerService;
 import services.messaging.bid.HandlerBidMessageService;
 import services.bid_management.HandlerFCFSService;
+import services.bid_management.HandlerSTFCService;
 import services.parsers.HandlerBidJsonParser;
 import services.parsers.HandlerBidJsonParser.HandlerManagementTypeInfo;
 
@@ -136,6 +137,8 @@ public class AdminHandlerBidController extends Controller {
       new WaterfallService(handlerBid, managementType.getDelay());
     } else if (classType == HandlerFCFSService.class) {
       new HandlerFCFSService(handlerBid, managementType.getDelay());
+    } else if (classType == HandlerSTFCService.class) {
+      new HandlerSTFCService(handlerBid, managementType.getDelay());
     } else {
       return internalServerError(JsonMsgUtils.caughtException(classType.getName() 
         + " management type not found\n"));

@@ -33,6 +33,10 @@ import play.Logger;
 import play.data.validation.Constraints;
 
 import services.bid_management.HandlerBidManagementService;
+import services.messaging.bid.HandlerBidSendGridMessageService;
+import services.messaging.bid.TwilioMessageService;
+import services.impl.EbeanGrowerService;
+import services.GrowerService;
 
 import services.DateService;
 
@@ -68,6 +72,12 @@ public class HandlerBid extends BaseBid implements PrettyString {
 
 
   public static Finder<Long, HandlerBid> find = new Finder<Long, HandlerBid>(HandlerBid.class);
+
+  private static final HandlerBidSendGridMessageService sendGridService = new HandlerBidSendGridMessageService();
+
+  private static final TwilioMessageService smsService = new TwilioMessageService();
+
+  private static final GrowerService growerService = new EbeanGrowerService();
 
 
   /* ===================================== Implementation ===================================== */
@@ -206,14 +216,25 @@ public class HandlerBid extends BaseBid implements PrettyString {
         return bidResponseResult;
       }
     }
-    else {
-      // TODO: Determine whether to log error.
-      // Logger.error("managementService returned null for HandlerBidID: " + getId());
+    
+  if (getPoundsRemaining() < pounds) {
+      return BidResponseResult.getInvalidResult("Cannot approve bid for :" 
+        + pounds + "lbs. Only " + getPoundsRemaining() + "lbs remaining.");
     }
 
     setPoundsRemaining(getPoundsRemaining() - (int)pounds);
     response.setResponseStatus(ResponseStatus.ACCEPTED);
+
+
+    if (getPoundsRemaining() == 0) {
+      setBidStatus(BidStatus.ACCEPTED);
+    } else {
+      setBidStatus(BidStatus.PARTIAL); 
+    }
+
+    sendApproved(growerId, pounds);
     save();
+
     return BidResponseResult.getValidResult();
   }
 
@@ -245,13 +266,11 @@ public class HandlerBid extends BaseBid implements PrettyString {
         return bidResponseResult;
       }
     }
-    else {
-      // TODO: Determine whether to log error.
-      // Logger.error("managementService returned null for HandlerBidID: " + getId());
-    }
 
     response.setResponseStatus(ResponseStatus.DISAPPROVED);
+    sendDisapproved(growerId);
     save();
+
     return BidResponseResult.getValidResult();
 }
 
@@ -375,6 +394,7 @@ public class HandlerBid extends BaseBid implements PrettyString {
       /* Pounds remaining not edited unless approved for STFC */
       fcfs = false;
     }
+
     save();
 
     return setGrowerResponseAccept(growerId, pounds, fcfs);
@@ -432,6 +452,7 @@ public class HandlerBid extends BaseBid implements PrettyString {
 
     }
 
+    /* Set pounds accepted in response even if STFC so we can get pounds on approval */
     response.setPoundsAccepted(poundsAccepted);
 
     if (fcfs) {
@@ -457,6 +478,31 @@ public class HandlerBid extends BaseBid implements PrettyString {
     response.save();
 
     return BidResponseResult.getValidResult();
+  }
+
+    private boolean sendApproved(long growerId, long pounds) {
+    Grower grower = growerService.getById(growerId);
+
+    String msg = "Congratulations " + grower.getFullName() + ",\n" 
+      + "Your bid (ID " + getId() + ") has been approved by " + getHandler().getCompanyName()
+      + ". Check your email for a receipt of this transaction.";
+
+
+
+    return sendGridService.sendReceipt(this, growerId, pounds)
+      && smsService.sendMessage(grower.getPhoneNumberString(), msg);
+  }
+
+  private boolean sendDisapproved(long growerId) {
+    Grower grower = growerService.getById(growerId);
+
+    String msg = "Sorry " + grower.getFullName() + ",\n"
+      + "Your bid (ID " + getId() + ") from " + getHandler().getCompanyName() 
+      + " for " + getAlmondPounds() + "mt, " + getAlmondVariety() + ", " + getAlmondSize()
+      + ", " + getPricePerPound() + "/lb has been disapproved.";
+
+    /* TODO: Send email on disapproval as well */  
+    return smsService.sendMessage(grower.getPhoneNumberString(), msg); 
   }
 
   @Override

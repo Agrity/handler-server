@@ -55,9 +55,11 @@ public class HandlerBidController extends Controller {
     BidResponseResult success =
       handlerBid.growerAcceptBid(growerId, handlerBid.getAlmondPounds());
 
-    if (success.isValid() && handlerBid.getManagementService().equals("services.bid_management.HandlerFCFSService")) {
+    if (success.isValid() && handlerBid.getManagementService()
+        .equals("services.bid_management.HandlerFCFSService")) {
       /* Send Receipt */
-      boolean sendSuccess = sendGridService.sendReceipt(handlerBid, growerId, handlerBid.getAlmondPounds());
+      boolean sendSuccess =
+        sendGridService.sendReceipt(handlerBid, growerId, handlerBid.getAlmondPounds());
       if (!sendSuccess) Logger.error("Error sending bid receipts.");
     }
     
@@ -75,9 +77,11 @@ public class HandlerBidController extends Controller {
     BidResponseResult success =
       handlerBid.growerAcceptBid(growerId, pounds);
 
-    if (success.isValid() && handlerBid.getManagementService().equals("services.bid_management.HandlerFCFSService")) {
+    if (success.isValid() && handlerBid.getManagementService()
+        .equals("services.bid_management.HandlerFCFSService")) {
       /* Send Receipt */
-      boolean sendSuccess = sendGridService.sendReceipt(handlerBid, growerId, pounds);
+      boolean sendSuccess =
+        sendGridService.sendReceipt(handlerBid, growerId, pounds);
       if (!sendSuccess) Logger.error("Error sending bid receipts.");
     }
     
@@ -107,12 +111,6 @@ public class HandlerBidController extends Controller {
     BidResponseResult success = 
       handlerBid.approve(growerId);
 
-    if (success.isValid()) {
-      /* Send Receipt */
-      boolean sendSuccess = 
-        sendGridService.sendReceipt(handlerBid, growerId, handlerBid.getBidResponse(growerId).getPoundsAccepted());
-      if (!sendSuccess) Logger.error("Error sending bid receipts.");
-    }
     
     return success.isValid() ? ok(JsonMsgUtils.successfullApprove())
         : internalServerError(JsonMsgUtils.bidNotApproved(success.getInvalidResponseMessage()));
