@@ -21,4 +21,6 @@ public interface GrowerService {
 
   public Grower growerLookupByPhoneNum(String phoneNum);
 
+  public Grower growerLookupByEmailAddress(String email);
+
 }
