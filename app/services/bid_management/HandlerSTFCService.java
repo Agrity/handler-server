@@ -15,6 +15,8 @@ import java.util.concurrent.TimeUnit;
 
 import services.impl.EbeanGrowerService;
 import services.GrowerService;
+import services.messaging.bid.HandlerBidSendGridMessageService;
+import services.messaging.bid.HandlerBidSMSMessageService;
 
 import play.libs.Akka;
 
@@ -27,6 +29,8 @@ public class HandlerSTFCService implements HandlerBidManagementService {
   private long poundsRemaining;
   private List<Long> growerIdsRemaining;
   GrowerService growerService = new EbeanGrowerService();
+  HandlerBidSendGridMessageService emailService = new HandlerBidSendGridMessageService();
+  HandlerBidSMSMessageService smsService = new HandlerBidSMSMessageService();
 
   public HandlerSTFCService(HandlerBid handlerBid, Duration timeAllowed) {
     this.handlerBid = handlerBid;
@@ -70,30 +74,12 @@ public class HandlerSTFCService implements HandlerBidManagementService {
 
     growerIdsRemaining.remove((Long) growerId);
 
-    if (growerIdsRemaining.isEmpty()) {
-      if (poundsRemaining == handlerBid.getAlmondPounds()) {
-        handlerBid.closeBid(BidStatus.REJECTED); 
-      } else {
-        handlerBid.closeBid(BidStatus.PARTIAL); 
-      }
-      cancellable.cancel();
-    }
-
     return BidResponseResult.getValidResult();
   }
 
   @Override
   public BidResponseResult reject(long growerId) {
     growerIdsRemaining.remove((Long) growerId);
-
-    if (growerIdsRemaining.isEmpty()) {
-      if (poundsRemaining == handlerBid.getAlmondPounds()) {
-        handlerBid.closeBid(BidStatus.REJECTED); 
-      } else {
-        handlerBid.closeBid(BidStatus.PARTIAL); 
-      }
-      cancellable.cancel();
-    }
 
     return BidResponseResult.getValidResult();
   }
@@ -113,8 +99,11 @@ public class HandlerSTFCService implements HandlerBidManagementService {
     poundsRemaining -= pounds;
 
     if (poundsRemaining == 0) {
-      handlerBid.closeBid(BidStatus.ACCEPTED); 
+      handlerBid.closeBid(BidStatus.ACCEPTED);
+      sendClosedToRemaining(); 
       cancellable.cancel();
+    } else {
+      sendUpdatedToRemaining();
     }
 
     return BidResponseResult.getValidResult();
@@ -130,5 +119,29 @@ public class HandlerSTFCService implements HandlerBidManagementService {
       return false;
     } 
     return true;
+  }
+
+  private void sendClosedToRemaining() {
+    for(Long growerId: growerIdsRemaining) {
+      Grower g = growerService.getById(growerId);
+      emailService.sendClosed(handlerBid, g);
+      smsService.sendClosed(handlerBid, g);  
+    }
+  }
+
+  private void sendUpdatedToRemaining() {
+    for(Long growerId: growerIdsRemaining) {
+      Grower g = growerService.getById(growerId);
+      emailService.sendUpdated(handlerBid, g, formatUpdateMessage());
+      smsService.sendUpdated(handlerBid, g, formatUpdateMessage());  
+    }
+  }
+
+  private String formatUpdateMessage(){
+    return "Your bid number " + Long.toString(handlerBid.getId()) + " has been updated. \n"
+        + "\tBid number " + Long.toString(handlerBid.getId()) + " now contains the following specs: \n"
+        + "\t\tAlmond type: " + handlerBid.getAlmondVariety() +"\n\t\tPrice per pound: " 
+        + handlerBid.getPricePerPound() + "\n\t\tPOUNDS REMAINING: " 
+        + Long.toString(poundsRemaining);
   }
 }
