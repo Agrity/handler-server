@@ -5,9 +5,6 @@
 <html>
   <head>
     <style> 
-     button {
-        background-color: #47d147;
-      }
       footer {
         margin: 30px;
       }
@@ -16,25 +13,22 @@
 
   <body>
     <p>
-      Hi @handlerSeller.getFullName(), <br><br>
-      We at @trader.getCompanyName() have new bids for you!
-      Click on the button below to check them out and accept them. Have
-      a nice day! <br>
+      Hi @handlerSeller.getFirstName(),
     </p>
-    <div id="bidsButton">
-
+    <p>
+      I've sent you new bids using Agrity. Please
       @if(batch.getId() == null) {
         <a href="@domain/traderBids/@batch.getTraderBids.get(0).getId()/displayBid/@handlerSeller.getId()">
       } else {
         <a href="@domain/traderBids/batch/@batch.getId()/display/@handlerSeller.getId()">
       } 
-        <button> Go To Bids</button>
+      click here
       </a>
-    </div>
+      to view your new bids. 
+    </p>
+    <p>
+      Thanks, <br>
+      @trader.getFullName() @trader.getCompanyName @trader.getPhoneNumberString() 
+    </p>
   <body>
-  <footer>
-    @trader.getFullName() <br>
-    @trader.getCompanyName<br>
-    @trader.getPhoneNumberString() <br><br>
-  </footer>
 </html>

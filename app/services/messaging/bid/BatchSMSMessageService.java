@@ -46,11 +46,12 @@ public class BatchSMSMessageService implements BatchMessageService {
         + bidId + "/displayBid/" + handlerSeller.getId();
     }
     String msg
-      = "Hi " + handlerSeller.getFullName() + ",\n"
-      + "You have received new bids from " + batch.getTrader().getCompanyName()
-      + "! Click on the link below to view and/or accept them.\n" 
+      = "Hi " + handlerSeller.getFirstName() + ",\n"
+      + "I've sent you new bids using Agrity."
+      + "Click on the link below to view your new bids.\n" 
       + route + "\n"
       + "- " + batch.getTrader().getFullName() + "\n"
+      + batch.getTrader().getCompanyName() + "\n"
       + batch.getTrader().getPhoneNumberString();
     return sendMessage(batch, handlerSeller, msg);
   }
