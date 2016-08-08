@@ -81,6 +81,18 @@ public class JsonMsgUtils {
     return errorToJson("Bid Could not be closed: " + invalidResponseMessage + " \n");
   }
 
+  public static ObjectNode tooLittleAccepted(Long lbs, boolean trader) {
+    String metric = "lbs";
+    if(trader) metric = "MT";
+    return errorToJson("You must accept at least " + lbs + metric + " for this bid.\n");
+  }
+
+  public static ObjectNode tooLittleRemaining(Long lbs, boolean trader) {
+    String metric = "lbs";
+    if(trader) metric = "MT";
+    return errorToJson("You must either fully accept or acccept at most " + lbs + metric + " for this bid.");
+  }
+
   public static ObjectNode cantAddSeller(Long id) {
     return errorToJson("Bid " + id + " is already closed, seller could not be added.");
   }

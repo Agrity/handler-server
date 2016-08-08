@@ -77,7 +77,6 @@ public class TraderFCFSService implements TraderBidManagementService {
   public BidResponseResult reject(long handlerSellerId) {
     handlerSellerIdsRemaining.remove((Long) handlerSellerId);
     if(handlerSellerIdsRemaining.isEmpty()) {
-      cancellable.cancel();
       if(poundsRemaining == traderBid.getAlmondPounds()) {
         traderBid.closeBid(BidStatus.REJECTED);
       } else {

@@ -71,6 +71,16 @@ public class HandlerBidController extends Controller {
       return notFound(JsonMsgUtils.bidNotFoundMessage(bidId));
     }
 
+    int lbsRemaining = handlerBid.getPoundsRemaining();
+    Long min = (long) (0.1 * lbsRemaining);
+
+    if(pounds < min) {
+      return badRequest(JsonMsgUtils.tooLittleAccepted(min, false));
+    }
+    if(lbsRemaining - pounds < min) {
+      return badRequest(JsonMsgUtils.tooLittleRemaining(lbsRemaining - min, false));
+    }
+
     BidResponseResult success =
       handlerBid.growerAcceptBid(growerId, pounds);
 
