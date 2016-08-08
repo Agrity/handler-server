@@ -63,14 +63,19 @@ public class HandlerBidSMSMessageService implements HandlerBidMessageService {
   private String createBodyText(Grower curGrower, HandlerBid handlerBid) {
     Long id = handlerBid.getId();
     String body = "Hi " + curGrower.getFullName() + ",\n"
-                + "You have received a new bid: \n"
+                + "We've sent you a new bid using Agrity. Here are the bid details: \n"
                 + handlerBid.getAlmondVariety() + "\n"
                 + handlerBid.getAlmondSize() + "\n"
                 + handlerBid.getAlmondPoundsString() + "lbs\n"
                 + handlerBid.getPricePerPound() + "/lb\n" 
                 + handlerBid.getComment() + "\n"
+<<<<<<< HEAD
                 + "-" + handlerBid.getHandler().getCompanyName() + " " 
                 + handlerBid.getHandler().getPrettyPhoneNumberString() + "\n\n"
+=======
+                + "\nThanks,\n-" + handlerBid.getHandler().getCompanyName() + " " 
+                + handlerBid.getHandler().getPhoneNumberString() + "\n\n"
+>>>>>>> master
                 + "Respond with the bid ID(" + id + ") "
                 + "followed by the amount of pounds you would like to accept (0 for rejection).\n"
                 + "Bid ID: " + id + "\n"
