@@ -28,6 +28,10 @@ public class JsonMsgUtils {
     return errorToJson("Grower with id '" + id + "' could not be found\n");
   }
 
+  public static ObjectNode growerEmailNotFoundMessage(String emailAddress) {
+    return errorToJson("Grower with email '" + emailAddress + "' could not be found\n");
+  }
+
   public static ObjectNode handlerSellerNotFoundMessage(Long id) {
     return errorToJson("Handler seller with id '" + id + "' could not be found\n");
   }

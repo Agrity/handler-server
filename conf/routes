@@ -214,6 +214,14 @@ GET     /trader/traderBids/:bidId                        controllers.TraderContr
 
 GET     /trader/traderBids/:bidId/close                  controllers.TraderController.closeBid(bidId: Long)
 
+# ========== Grower User ========== #
+
+GET     /grower/:id                                      controllers.GrowerController.getGrower(id: Long)
+
+GET     /grower/email/:emailAddress                            controllers.GrowerController.getGrowerByEmailAddress(emailAddress: String)
+
+GET     /grower/:id/handlerBids                          controllers.GrowerController.getAllBids(id: Long)
+
 
 # ========== **TEMP** Response to Bid ========== #
 
