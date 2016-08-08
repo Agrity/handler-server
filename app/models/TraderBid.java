@@ -488,7 +488,7 @@ public class TraderBid extends BaseBid implements PrettyString {
     String msg = "Sorry " + handlerSeller.getFullName() + ",\n"
       + "Your bid (ID " + getId() + ") from " + getTrader().getCompanyName() 
       + " for " + getAlmondPounds() + "mt, " + getAlmondVariety() + ", " + getAlmondSize()
-      + ", " + getPricePerPound() + "/lb has been disapproved.";
+      + ", " + getPricePerPound() + "/lb, " + getGrade() + " has been disapproved.";
 
     /* TODO: Send email on disapproval as well */  
     return smsService.sendMessage(handlerSeller.getPhoneNumberString(), msg);
