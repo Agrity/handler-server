@@ -89,13 +89,7 @@ public class HandlerFCFSService implements HandlerBidManagementService {
   @Override
   public BidResponseResult reject(long growerId) {
     growerIdsRemaining.remove((Long) growerId);
-    if(growerIdsRemaining.isEmpty()) {
-      if(poundsRemaining == handlerBid.getAlmondPounds()) {
-        handlerBid.closeBid(BidStatus.REJECTED);
-      } else {
-        handlerBid.closeBid(BidStatus.PARTIAL);
-      }
-    }
+
     return BidResponseResult.getValidResult();
   }
 

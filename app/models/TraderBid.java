@@ -196,7 +196,8 @@ public class TraderBid extends BaseBid implements PrettyString {
 
     if (getPoundsRemaining() == 0) {
       setBidStatus(BidStatus.ACCEPTED);
-    } else {
+    } else if (managementService == null) {
+      /* timer is up */
       setBidStatus(BidStatus.PARTIAL); 
     }
 
@@ -236,8 +237,16 @@ public class TraderBid extends BaseBid implements PrettyString {
     }
 
     response.setResponseStatus(ResponseStatus.DISAPPROVED);
-
     sendDisapproved(handlerSellerId);
+
+    if ((managementService == null) && (getPendingHandlerSellers().size() == 0)) {
+      /* timer is up and all growers have been approved/disapproved */
+      if (getPoundsRemaining() == getAlmondPounds()) {
+        setBidStatus(BidStatus.REJECTED);
+      } else if (getPoundsRemaining() > 0) {
+        setBidStatus(BidStatus.PARTIAL);
+      }
+    }
 
     save();
     return BidResponseResult.getValidResult();
