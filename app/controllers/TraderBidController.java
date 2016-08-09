@@ -90,7 +90,7 @@ public class TraderBidController extends Controller {
     if(pounds < min) {
       return badRequest(JsonMsgUtils.tooLittleAccepted(min, true));
     }
-    if(lbsRemaining - pounds < min) {
+    if(lbsRemaining - pounds < min && pounds != lbsRemaining) {
       return badRequest(JsonMsgUtils.tooLittleRemaining(lbsRemaining - min, true));
     }
 
