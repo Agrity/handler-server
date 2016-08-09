@@ -25,6 +25,8 @@ import java.time.LocalDateTime;
 
 import models.BaseBidResponse.ResponseStatus;
 import models.Almond.AlmondVariety;
+import models.BaseBid;
+import models.BaseBid.BidStatus;
 import models.Batch;
 import models.interfaces.PrettyString;
 import services.bid_management.TraderBidManagementService;
