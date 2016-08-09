@@ -17,6 +17,8 @@ import play.mvc.Security;
 import services.GrowerService;
 import services.HandlerBidService;
 
+import utils.ResponseHeaders;
+
 import utils.JsonMsgUtils;
 
 @Security.Authenticated(AdminSecured.class)
@@ -34,6 +36,8 @@ public class GrowerController extends Controller {
   }
 
   public Result getGrower(long id) {
+    ResponseHeaders.addResponseHeaders(response());
+
     Grower grower = growerService.getById(id);
 
     if (grower == null) {
@@ -48,6 +52,8 @@ public class GrowerController extends Controller {
   }
 
   public Result getGrowerByEmailAddress(String emailAddress) {
+    ResponseHeaders.addResponseHeaders(response());
+
     Grower grower = growerService.growerLookupByEmailAddress(emailAddress);
 
     if (grower == null) {
@@ -62,6 +68,8 @@ public class GrowerController extends Controller {
   }
 
   public Result getAllBids(long growerId) {
+    ResponseHeaders.addResponseHeaders(response());
+    
     List<HandlerBid> growerBids = handlerBidService.getByGrower(growerId);
 
     // growerBids will be null if Grower with growerId cannot be found.

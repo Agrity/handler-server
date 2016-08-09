@@ -22,7 +22,7 @@
         <td style="float:right;">
           <font color="gray">Almonds Sold:</font>
         </td>
-        <td style="padding-left:5%";>
+        <td style="padding-left:5%;white-space: nowrap;">
           <b>@pounds MT</b>
         </td>
       </tr>
@@ -30,7 +30,7 @@
         <td style="float:right;">
           <font color="gray">Price:</font>
         </td>
-        <td style="padding-left:5%";>
+        <td style="padding-left:5%;white-space: nowrap;">
           <b>@traderBid.getPricePerPound()/lb</b>
         </td>
       </tr>
@@ -38,7 +38,7 @@
         <td style="float:right;">
           <font color="gray">Type:</font>
         </td>
-        <td style="padding-left:5%;">
+        <td style="padding-left:5%;white-space: nowrap;">
           <b>@traderBid.getAlmondVariety()</b>
         </td>
       </tr>
@@ -46,8 +46,16 @@
         <td style="float:right;">
           <font color="gray">Size:</font>
         </td>
-        <td style="padding-left:5%;">
+        <td style="padding-left:5%;white-space: nowrap;">
           <b>@traderBid.getAlmondSize()</b>
+        </td>
+      </tr>
+      <tr>
+        <td style="float:right;">
+          <font color="gray">Grade:</font>
+        </td>
+        <td style="padding-left:5%;">
+          <b>@traderBid.getGrade()</b>
         </td>
       </tr>
     </table>

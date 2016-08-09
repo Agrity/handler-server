@@ -24,6 +24,8 @@ import java.util.Collections;
 import services.messaging.MessageServiceConstants;
 import services.messaging.bid.BatchSendGridMessageService;
 
+import utils.ResponseHeaders;
+
 import play.Logger;
 
 public class TraderBidController extends Controller {
@@ -51,6 +53,8 @@ public class TraderBidController extends Controller {
 
   /* Accept whole bid */
   public Result acceptBid(long bidId, long handlerSellerId) {
+    ResponseHeaders.addResponseHeaders(response());
+
     TraderBid traderBid = traderBidService.getById(bidId);
     if (traderBid == null) {
       return notFound(JsonMsgUtils.bidNotFoundMessage(bidId));
@@ -73,6 +77,8 @@ public class TraderBidController extends Controller {
 
   /* Partially accept bid */
   public Result acceptPartial(long bidId, long handlerSellerId, long pounds) {
+    ResponseHeaders.addResponseHeaders(response());
+
     TraderBid traderBid = traderBidService.getById(bidId);
     if (traderBid == null) {
       return notFound(JsonMsgUtils.bidNotFoundMessage(bidId));
@@ -104,6 +110,8 @@ public class TraderBidController extends Controller {
   }  
 
   public Result rejectBid(long bidId, long handlerSellerId) {
+    ResponseHeaders.addResponseHeaders(response());
+
     TraderBid traderBid = traderBidService.getById(bidId);
     if (traderBid == null) {
       return notFound(JsonMsgUtils.bidNotFoundMessage(bidId));
@@ -116,6 +124,8 @@ public class TraderBidController extends Controller {
   }
 
   public Result approveBid(long bidId, long handlerSellerId) {
+    ResponseHeaders.addResponseHeaders(response());
+
     TraderBid traderBid = traderBidService.getById(bidId);
 
     if (traderBid == null) {
@@ -131,6 +141,8 @@ public class TraderBidController extends Controller {
   }  
 
   public Result disapproveBid(long bidId, long handlerSellerId) {
+    ResponseHeaders.addResponseHeaders(response());
+
     TraderBid traderBid = traderBidService.getById(bidId);
 
     if (traderBid == null) {
@@ -144,6 +156,8 @@ public class TraderBidController extends Controller {
   }
 
   public Result displayBatchPage(long batchId, long handlerSellerId) {
+    ResponseHeaders.addResponseHeaders(response());
+
     Batch batch = batchService.getById(batchId);
     if (batch == null) {
       return notFound(JsonMsgUtils.batchNotFoundMessage(batchId));
@@ -156,6 +170,8 @@ public class TraderBidController extends Controller {
   }
 
   public Result displaySingleBidPage(long bidId, long handlerSellerId) {
+    ResponseHeaders.addResponseHeaders(response());
+
     TraderBid traderBid = traderBidService.getById(bidId);
     if(traderBid == null) {
       return notFound(JsonMsgUtils.bidNotFoundMessage(bidId));
@@ -171,6 +187,8 @@ public class TraderBidController extends Controller {
   }
 
   public Result displayMobilePage(long batchId, long handlerSellerId) {
+    ResponseHeaders.addResponseHeaders(response());
+    
     Batch batch = batchService.getById(batchId);
     if (batch == null) {
       return notFound(JsonMsgUtils.batchNotFoundMessage(batchId));

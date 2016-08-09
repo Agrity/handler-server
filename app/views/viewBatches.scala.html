@@ -234,7 +234,7 @@ button {
 
   <div class="batchHeader">
     <h1>BIDS FROM @trader.getCompanyName().toUpperCase()</h1><br>
-    <h3 class="phone-number">@trader.getPhoneNumberString()</h3>
+    <h3 class="phone-number">@trader.getPrettyPhoneNumberString()</h3>
     <h2>EXPIRES @expiration.getMonthValue()/@expiration.getDayOfMonth() AT
       @{var hour = expiration.getHour();
         var minute = expiration.getMinute().toString();
@@ -276,6 +276,8 @@ button {
             <td>@traderBid.getAlmondSize()</td>
             <td style="color: #419ed2;">&#9724;</td>
             <td>@traderBid.getPricePerPound()</td>
+            <td style="color: #419ed2;">&#9724;</td>
+            <td>@traderBid.getGrade()</td>
             <td style="color: #419ed2;">&#9724;</td>
             <td>@traderBid.getPoundsRemaining() OF @traderBid.getAlmondPounds() TONS</td>
             </tr>

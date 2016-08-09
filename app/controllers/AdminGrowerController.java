@@ -18,6 +18,8 @@ import services.GrowerService;
 import services.HandlerBidService;
 import services.parsers.GrowerJsonParser;
 
+import utils.ResponseHeaders;
+
 import utils.JsonMsgUtils;
 
 @Security.Authenticated(AdminSecured.class)
@@ -38,6 +40,8 @@ public class AdminGrowerController extends Controller {
   // returned.
   @BodyParser.Of(BodyParser.Json.class)
   public Result createGrower() {
+    ResponseHeaders.addResponseHeaders(response());
+
     JsonNode data = request().body().asJson();
 
     if (data == null) {
@@ -62,6 +66,8 @@ public class AdminGrowerController extends Controller {
   }
 
   public Result updateGrower(long growerId) {
+    ResponseHeaders.addResponseHeaders(response());
+
     JsonNode data = request().body().asJson();
 
     if (data == null) {
@@ -98,6 +104,8 @@ public class AdminGrowerController extends Controller {
   }
 
   public Result deleteGrower(long growerId) {
+    ResponseHeaders.addResponseHeaders(response());
+
     Grower grower = growerService.getById(growerId);
     
     if (grower == null) {
@@ -116,6 +124,8 @@ public class AdminGrowerController extends Controller {
   }
 
   public Result getAllGrowers() {
+    ResponseHeaders.addResponseHeaders(response());
+
     try {
       return created(jsonMapper.writeValueAsString(growerService.getAll()));
     } catch (JsonProcessingException e) {
@@ -124,6 +134,8 @@ public class AdminGrowerController extends Controller {
   }
 
   public Result getGrower(long id) {
+    ResponseHeaders.addResponseHeaders(response());
+    
     Grower grower = growerService.getById(id);
 
     if (grower == null) {
