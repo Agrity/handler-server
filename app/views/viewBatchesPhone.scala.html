@@ -3362,7 +3362,7 @@
 				<div class="inner">
 					<span class="icon major fa-leaf"></span>
 					<h1>Hi, you've received bids from <strong>@trader.getCompanyName().toUpperCase()</strong></h1>
-					<p>@trader.getPhoneNumberString()<br/></p>
+					<p>@trader.getPrettyPhoneNumberString()<br/></p>
 					<h2>EXPIRES @expiration.getMonthValue()/@expiration.getDayOfMonth() AT @{var hour = expiration.getHour();
 				        var minute = expiration.getMinute().toString();
 				        var ampm = "AM";
@@ -3408,6 +3408,7 @@
 							</header>
 							<p>@traderBid.getComment()</p>
 						</div>
+					@if(traderBid.bidCurrentlyOpen()) {
 						<div class="6u$ 12u$(medium) important(medium)">
 							<span class="image fit">
 								<input type="number" min="0" placeholder="# MT" 
@@ -3419,6 +3420,11 @@
 								<a href="@domain/traderBids/@traderBid.getId()/reject/@handlerSeller.getId()"></a>REJECT</button></span>
 
 						</div>
+					} else {
+						<span class="image fit">
+						 <h1 style="font-size: 225%; -ms-transform: rotate(-20deg); -webkit-transform: rotate(-20deg); transform: rotate(-20deg);"><strong style="color: red;"> CLOSED </strong></h1>
+						</span>
+					}
 					</div>
 				</div>
 			</section>
