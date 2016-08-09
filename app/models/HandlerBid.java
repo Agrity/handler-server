@@ -289,7 +289,7 @@ public class HandlerBid extends BaseBid implements PrettyString {
     List<Long> addedIds = new ArrayList<>();
     for(Grower grower : addedGrowers) {
       if(growers.contains(grower)) {
-        Logger.error("ERROR ERROR======");
+        Logger.error("HandlerBid already contains grower with Id " + grower.getId());
         return;
         //repeat, log error/return false?
       } 

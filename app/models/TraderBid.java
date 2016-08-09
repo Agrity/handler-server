@@ -267,7 +267,7 @@ public class TraderBid extends BaseBid implements PrettyString {
     List<Long> addedIds = new ArrayList<>();
     for(HandlerSeller handlerSeller : addedHandlerSellers) {
       if(handlerSellers.contains(handlerSeller)) {
-        Logger.error("ERROR ERROR======");
+        Logger.error("TraderBid already contains handlerSeller with Id " + handlerSeller.getId());
         return;
         //repeat, log error/return false?
       } 
