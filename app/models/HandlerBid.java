@@ -181,6 +181,7 @@ public class HandlerBid extends BaseBid implements PrettyString {
       save();
 
     } else {
+      save();
       // TODO: Determine whether to log error.
       Logger.error("management service does not exist for this bid");
       return;
