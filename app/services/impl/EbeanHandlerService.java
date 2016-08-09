@@ -14,6 +14,7 @@ import play.Logger;
 import services.HandlerService;
 
 import utils.SecurityUtility;
+import javax.persistence.NonUniqueResultException;
 
 public class EbeanHandlerService implements HandlerService {
 
@@ -65,18 +66,28 @@ public class EbeanHandlerService implements HandlerService {
 
   @Override
   public boolean checkCompanyNameAvailable(String companyName) {
-    return null == FINDER
+    try {
+      return null == FINDER
         .where()
-        .eq("company_name", companyName.toLowerCase())
+        .eq("company_name", companyName)
         .findUnique();
+    } catch (NonUniqueResultException nure) {
+      /* there are multiple company names in use */
+      return false;
+    }
   }
 
   @Override
   public boolean checkEmailAddressAvailable(String emailAddress) {
-    return null == FINDER
+    try {
+      return null == FINDER
         .where()
         .eq("emailAddress.emailAddress", emailAddress.toLowerCase())
         .findUnique();
+    } catch (NonUniqueResultException nure) {
+      /* there are multiple email addresses in use */
+      return false;
+    }
   }
 
   @Override

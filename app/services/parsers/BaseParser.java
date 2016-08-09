@@ -19,6 +19,8 @@ import services.PhoneMessageService;
 import services.HandlerSellerService;
 import services.impl.EbeanHandlerSellerService;
 
+import play.Logger;
+
 /**
  * Base class to parse json data. Intended to be extended for specific json data types.
  */
@@ -184,13 +186,12 @@ public abstract class BaseParser {
     
     String companyName = data.findValue(JsonConstants.COMPANY_NAME).asText();
 
-    // Check if company name is already in use.
-    // if (!handlerService.checkCompanyNameAvailable(companyName)
-    //   || !traderService.checkCompanyNameAvailable(companyName)
-    //   || !handlerSellerService.checkCompanyNameAvailable(companyName)) {
-    //   setInvalid("Company name [" + companyName + "] is already in use.\n");
-    //   return null;
-    // }
+    /* Check if company name is already in use (only for users). */
+    if (!handlerService.checkCompanyNameAvailable(companyName)
+        || !traderService.checkCompanyNameAvailable(companyName)) {
+      setInvalid("Company name [" + companyName + "] is already in use.\n");
+      return null;
+    }
 
 
     return companyName;
@@ -253,12 +254,14 @@ public abstract class BaseParser {
       = (data.findValue(JsonConstants.EMAIL_ADDRESS).asText()).toLowerCase();
 
 
-    // Check if email is already in use.
-    // if (!handlerService.checkEmailAddressAvailable(emailAddressString)
-    //     || !traderService.checkEmailAddressAvailable(emailAddressString)) {
-    //   setInvalid("Email address [" + emailAddressString + "] is already in use.\n");
-    //   return null;
-    // }
+    /* Check if email is already in use. */
+    if (uniqueUserEmail) {
+      if (!handlerService.checkEmailAddressAvailable(emailAddressString)
+          || !traderService.checkEmailAddressAvailable(emailAddressString)) {
+        setInvalid("Email address [" + emailAddressString + "] is already in use.\n");
+        return null;
+      }
+    }
 
     EmailAddress emailAddress = EmailService.stringToEmailAddress(emailAddressString);
 
