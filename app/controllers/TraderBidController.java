@@ -166,7 +166,7 @@ public class TraderBidController extends Controller {
     if (handlerSeller == null) {
       return notFound(JsonMsgUtils.handlerSellerNotFoundMessage(handlerSellerId));
     }
-    return ok(views.html.viewBatchesPhone.render(batch, handlerSeller, MessageServiceConstants.EmailFields.getDomain()));
+    return ok(views.html.viewBatches.render(batch, handlerSeller, MessageServiceConstants.EmailFields.getDomain()));
   }
 
   public Result displaySingleBidPage(long bidId, long handlerSellerId) {
