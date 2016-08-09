@@ -76,16 +76,6 @@ public class TraderSTFCService implements TraderBidManagementService {
   @Override
   public BidResponseResult reject(long handlerSellerId) {
     handlerSellerIdsRemaining.remove((Long) handlerSellerId);
-
-    if (handlerSellerIdsRemaining.isEmpty()) {
-      if (poundsRemaining == traderBid.getAlmondPounds()) {
-        traderBid.closeBid(BidStatus.REJECTED); 
-      } else {
-        traderBid.closeBid(BidStatus.PARTIAL); 
-      }
-      cancellable.cancel();
-    }
-
     return BidResponseResult.getValidResult();
   }
 

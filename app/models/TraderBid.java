@@ -146,13 +146,16 @@ public class TraderBid extends BaseBid implements PrettyString {
     TraderBidManagementService managementService
         = TraderBidManagementService.getBidManagementService(this);
 
+    if (getPoundsRemaining().equals(getAlmondPounds())) {
+      setBidStatus(BidStatus.REJECTED);
+    } else if (getPoundsRemaining().equals(0)){
+      setBidStatus(BidStatus.ACCEPTED);
+    } else {
+      setBidStatus(BidStatus.PARTIAL);
+    }
+
     if (managementService != null) {
       managementService.close();
-      if (getPoundsRemaining().equals(getAlmondPounds())) {
-        setBidStatus(BidStatus.REJECTED);
-      } else {
-        setBidStatus(BidStatus.PARTIAL);
-      }
 
       TraderBidManagementService.removeBidManagementService(this);
       save();

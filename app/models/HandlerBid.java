@@ -167,14 +167,16 @@ public class HandlerBid extends BaseBid implements PrettyString {
     HandlerBidManagementService managementService
         = HandlerBidManagementService.getBidManagementService(this);
 
+    if (getPoundsRemaining().equals(getAlmondPounds())) {
+      setBidStatus(BidStatus.REJECTED);
+    } else if (getPoundsRemaining().equals(0)){
+      setBidStatus(BidStatus.ACCEPTED);
+    } else {
+      setBidStatus(BidStatus.PARTIAL);
+    }
+
     if (managementService != null) {
       managementService.close();
-      if (getPoundsRemaining().equals(getAlmondPounds())) {
-        setBidStatus(BidStatus.REJECTED);
-      } else {
-        setBidStatus(BidStatus.PARTIAL);
-      }
-
       HandlerBidManagementService.removeBidManagementService(this);
       save();
 
