@@ -84,7 +84,7 @@ public class HandlerBid extends BaseBid implements PrettyString {
 
 
 
-  public HandlerBid(Handler handler, List<Grower> allGrowers, AlmondVariety almondVariety,
+  public HandlerBid(Handler handler, List<Grower> allGrowers, String almondVariety,
       String almondSize, Integer almondPounds, String pricePerPound, LocalDate startPaymentDate,
       LocalDate endPaymentDate, String comment, String managementService, LocalDateTime expirationTime) {
     super();
