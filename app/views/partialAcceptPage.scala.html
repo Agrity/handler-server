@@ -36,6 +36,7 @@ h1 {
 h1.bidClosed {
   color: red;
   font-size: 225%;
+  text-align:center;
 
   -ms-transform: rotate(-30deg); /* IE 9 */
   -webkit-transform: rotate(-30deg); /* Chrome, Safari, Opera */
@@ -185,10 +186,13 @@ button {
 
 .details {
   margin:auto;
+  table-layout:fixed;
+  width:100%;
 }
 
 .details td {
   text-align: center;
+  width:25%;
 }
 
 </style>
@@ -265,7 +269,7 @@ button {
 
       <div class="col-md-12 col-sm-12 col-xs-12 bid-box center" style="width:100%;">
 
-        <div class="bid-details col-md-10 col-sm-10 col-xs-10">
+        <div class="bid-details">
 
         <table class="details">
 
@@ -283,26 +287,25 @@ button {
         </div>
 
         @if(handlerBid.bidCurrentlyOpen()) {
-          <div class="col-md-10 col-sm-10 col-xs-10 movebutton">
+        <div>
+          <div class="movebutton">
             <pounds>Number of pounds to be accepted (@handlerBid.getPoundsRemaining()lbs remaining)</pounds>
             <input type="number" class="number" id="numpounds@handlerBid.getId()">
             <button class="partial" onclick="getpounds(@handlerBid.getPoundsRemaining(), @handlerBid.getId())">
               ACCEPT PARTIAL
             </button>
           </div>
-
+        </div>
         } else {
-          <div>
-            <h1 class="bidClosed"><strong> CLOSED </strong></h1>
-          </div>
+          <h1 class="bidClosed"><strong> CLOSED </strong></h1>
         }      
-
       </div>
     </div>
   </div>
+  </div>
   
 
-  <section>
+  </section>
 
 
 </body>
