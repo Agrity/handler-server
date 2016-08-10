@@ -3411,13 +3411,24 @@
 					@if(traderBid.bidCurrentlyOpen()) {
 						<div class="6u$ 12u$(medium) important(medium)">
 							<span class="image fit">
+								<div style="padding-bottom:10px;">
 								<input type="number" min="0" placeholder="# MT" 
-										class="number" id="numTons@traderBid.getId()" style="width:60px"> MT
-								<button onclick="getTons(@traderBid.getPoundsRemaining(), @traderBid.getId())" type="button" style="background-color:#449dd2;">ACCEPT PARTIAL</button></span>
-							<span class="image fit"><button type="button" style="background-color:#32b837; width:170px">
-								<a href="@domain/traderBids/@traderBid.getId()/accept/@handlerSeller.getId()"></a>ACCEPT FULL</button></span>
-							<span class="image fit"><button type="button" style="background-color:#ac1313; width:170px">
-								<a href="@domain/traderBids/@traderBid.getId()/reject/@handlerSeller.getId()"></a>REJECT</button></span>
+										class="number" id="numTons@traderBid.getId()" style="width:100px"> MT</div>
+								<button onclick="getTons(@traderBid.getPoundsRemaining(), @traderBid.getId())" 
+										type="button" style="background-color:#449dd2;">ACCEPT PARTIAL</button>
+							</span>
+							
+							<span class="image fit">
+								<a href="@domain/traderBids/@traderBid.getId()/accept/@handlerSeller.getId()">
+									<button type="button" style="background-color:#32b837; width:170px">ACCEPT FULL</button>
+								</a>
+							</span>
+							
+							<span class="image fit">
+								<a href="@domain/traderBids/@traderBid.getId()/reject/@handlerSeller.getId()">
+									<button type="button" style="background-color:#ac1313; width:170px">REJECT</button>
+								</a>
+							</span>
 
 						</div>
 					} else {
