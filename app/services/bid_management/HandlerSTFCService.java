@@ -37,6 +37,10 @@ public class HandlerSTFCService implements HandlerBidManagementService {
     this.poundsRemaining = handlerBid.getAlmondPounds();
 
     growerIdsRemaining = getGrowerIDList();
+
+    emailService.send(handlerBid);
+    smsService.send(handlerBid);
+    
     HandlerBidManagementService.bidToManageService.put(handlerBid, this);
 
     cancellable = Akka.system().scheduler()
