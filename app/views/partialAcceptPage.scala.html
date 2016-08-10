@@ -36,11 +36,12 @@ h1 {
 h1.bidClosed {
   color: red;
   font-size: 225%;
+  width:100%;
   text-align:center;
 
-  -ms-transform: rotate(-30deg); /* IE 9 */
-  -webkit-transform: rotate(-30deg); /* Chrome, Safari, Opera */
-  transform: rotate(-30deg);
+  -ms-transform: rotate(-20deg); /* IE 9 */
+  -webkit-transform: rotate(-20deg); /* Chrome, Safari, Opera */
+  transform: rotate(-20deg);
 }
 
 h2 {
@@ -65,7 +66,7 @@ h3 {
 
 .circle {
   height: 100px;
-  width: 100px;
+  width: auto;
   border-radius: 999px;
   background-color: #ffffff;
   font-size: 40px;
@@ -262,7 +263,9 @@ button {
 
   <div class="col-md-12">
     <div class="centercircle">
-      <div class="circle">@handlerBid.getId()</div>
+      <div class="circle">
+        <span style="padding:10px;">BID #@handlerBid.getId()</span>
+      </div>
     </div>
 
     <div class="col-md-12 col-sm-12 col-xs-12 spacetop">
