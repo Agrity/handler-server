@@ -66,7 +66,7 @@ public class HandlerBidJsonParser extends BidJsonParser {
 
   private Handler handler;
   private List<Grower> growers;
-  private AlmondVariety almondVariety;
+  private String almondVariety;
   private String almondSize;
   private Integer almondPounds;
   private String pricePerPound;
@@ -201,7 +201,7 @@ public class HandlerBidJsonParser extends BidJsonParser {
     return growers;
   }
 
-  public AlmondVariety getAlmondVariety() {
+  public String getAlmondVariety() {
     ensureValid();
     return almondVariety;
   }

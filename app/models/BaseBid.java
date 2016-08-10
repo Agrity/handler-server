@@ -35,7 +35,7 @@ public abstract class BaseBid extends BaseModel {
 
 
 	@Constraints.Required
-  private AlmondVariety almondVariety;
+  private String almondVariety;
 
   @Constraints.Required
   private Integer almondPounds;
@@ -62,7 +62,7 @@ public abstract class BaseBid extends BaseModel {
   /* ======================================= Attribute Accessors ======================================= */
 
 
-  public AlmondVariety getAlmondVariety() {
+  public String getAlmondVariety() {
     return almondVariety;
   }
 
@@ -115,7 +115,7 @@ public abstract class BaseBid extends BaseModel {
   /* ======================================= Attribute Setters ======================================= */
 
 
-  public void setAlmondVariety(AlmondVariety newVariety) {
+  public void setAlmondVariety(String newVariety) {
     almondVariety = newVariety;
   }
 

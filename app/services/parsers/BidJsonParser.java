@@ -24,7 +24,7 @@ public class BidJsonParser extends BaseParser {
     super();
   }
 
-  protected AlmondVariety parseAlmondVariety(JsonNode data) {
+  protected String parseAlmondVariety(JsonNode data) {
     // Check almound variety is preseent.
     Logger.info("parsing almond variety...\n\n");
     if (!data.has(BidJsonConstants.ALMOND_VARIETY)) {
@@ -32,8 +32,8 @@ public class BidJsonParser extends BaseParser {
       return null;
     } 
     
-    AlmondVariety almondVariety =
-        Almond.stringToAlmondVariety(data.get(BidJsonConstants.ALMOND_VARIETY).asText());
+    String almondVariety =
+        data.get(BidJsonConstants.ALMOND_VARIETY).asText();
 
     if (almondVariety == null) {
       setInvalid("Almond Variety Format Invalid: string of valid almond variety expected.\n");

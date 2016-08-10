@@ -64,7 +64,7 @@ public class TraderBidJsonParser extends BidJsonParser {
 
   private Trader trader;
   private List<HandlerSeller> handlerSellers;
-  private AlmondVariety almondVariety;
+  private String almondVariety;
   private String almondSize;
   private String grade;
   private Integer almondPounds;
@@ -185,7 +185,7 @@ public class TraderBidJsonParser extends BidJsonParser {
     return handlerSellers;
   }
 
-  public AlmondVariety getAlmondVariety() {
+  public String getAlmondVariety() {
     ensureValid();
     return almondVariety;
   }
