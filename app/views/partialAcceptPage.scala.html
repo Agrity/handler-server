@@ -1,95 +1,310 @@
 @(handlerBid: HandlerBid, grower: Grower, domain: String)
+@import models.Handler; var handler = handlerBid.getHandler()
+@import java.time.LocalDateTime; var expiration = handlerBid.getExpirationTime()
 
 <!DOCTYPE html>
-<html>
-  <style>
-    div.textBox{
-      padding:20px;
-      text-align:center;
-      font-size:20px;
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
+    media="screen">
+  <title>Agrity</title>
+</head>
+
+<style>
+
+body {
+  font-family: Gotham;
+  margin: 0 auto;
+  background-color: #e1e1e1;
+
+}
+
+.background {
+  width:80%;
+  height:100%;
+  margin: 0 auto;
+  background-color: #e1e1e1;
+}
+
+h1 {
+  font: 25px Gotham Book, sans-serif;
+  float: left;
+}
+
+h1.bidClosed {
+  color: red;
+  font-size: 225%;
+
+  -ms-transform: rotate(-30deg); /* IE 9 */
+  -webkit-transform: rotate(-30deg); /* Chrome, Safari, Opera */
+  transform: rotate(-30deg);
+}
+
+h2 {
+  font: 20px Gotham Medium, sans-serif;
+  color: #419ed2;
+  float: right; 
+}
+
+h3 {
+  float: left;
+  font: 15px Gotham Book, sans-serif;
+}
+
+.bid-box {
+  border-radius: 5px;
+  background-color: #ffffff;
+  width: 100%;
+  height: auto;
+  padding: 30px;
+  padding-top:60px;
+}
+
+.circle {
+  height: 100px;
+  width: 100px;
+  border-radius: 999px;
+  background-color: #ffffff;
+  font-size: 40px;
+  position:absolute;
+  border: 8px solid #e1e1e1;
+  z-index: 1;
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+  padding-top: 25px;
+  font: 40px Gotham Book, sans-serif;
+}
+
+table {
+  border-spacing: 30px;
+}
+
+td {
+  border-collapse: separate;
+  font: 18px Gotham Book, sans-serif;
+  border-spacing: 100px;
+  border-collapse: collapse;
+  padding-right: 40px;
+}
+
+tr {
+  justify-content: center;
+}
+
+pounds {
+  font: 20px Gotham Book, sans-serif;
+  padding-right: 10px;
+}
+
+.spaceleft {
+  padding-left: 200px;
+  padding-top: 20px;
+}
+
+button {
+    color: #ffffff;
+    background-color: #419ed2;
+    width: 130px;
+    height: 50px;
+    border-radius: 4px;
+    position: center;
+    border-color: #000000;
+    border-style: none;
+    border-width: 10px;
+    font: 10px Gotham Medium, sans-serif;
+    letter-spacing: 1px;
+
+    z-index:2 !important;
+}
+
+.handlerBidHeader{
+  padding-bottom: 40px;
+}
+
+.accept {
+  background-color: rgba(50,184,55,0.9);
+  z-index: 2 !important;
+}
+
+.reject {
+  background-color: rgba(184,79,55,0.9);
+}
+
+.comment {
+  padding-top:10px;
+  font: 17px Gotham Book, sans-serif;
+  border-spacing: 20px;
+  text-align: center;
+  line-height: 2;
+}
+
+.right-side {
+  float: middle;
+  margin: 0 auto;
+}
+
+.phone-number {
+  float: left;
+}
+
+.spacebottom {
+  padding-bottom: 20px;
+  padding-right: 20px;
+}
+
+.movebutton {
+  justify-content: center;
+  display:flex;
+  align-items: center;
+}
+
+.centercircle {
+  width:10%;
+  margin: 0 auto;
+  margin-bottom:3.5em;
+}
+
+.number {
+  margin: 10px;
+}
+
+.makespace {
+  padding-top: 70px;
+}
+
+.headline {
+  z-index: 1;
+}
+
+.spacetop {
+  margin-bottom: 50px;
+}
+
+.details {
+  margin:auto;
+}
+
+.details td {
+  text-align: center;
+}
+
+</style>
+<script>
+  function getpounds(poundsRemaining, bidId) {
+    var input = document.getElementById("numpounds"+bidId).value;
+    if(input > poundsRemaining) {
+      alert("Please enter a value less than " + poundsRemaining);
+      location.reload(true);
+      return;
+    } else if(input < 1){
+      alert("Please enter a value greater than 0");
+      location.reload(true);
+      return;
+    } else {
+      var redirect = "@domain/handlerBids/" + bidId + "/accept/@grower.getId()/" + input;
+      window.location.replace(redirect);
     }
-    button {
-      font-size: 16px; 
-      font-family: Helvetica, Arial, sans-serif; 
-      color: #ffffff; 
-      font-color: white;
-      text-decoration: none; 
-      text-decoration: none; 
-
-      -webkit-border-radius: 3px; 
-      -moz-border-radius: 3px; 
-      border-radius: 3px; 
-     
-      padding: 12px 18px; 
-      border: 1px solid #008000; 
-      background-color:#008000;
-      display: inline-block; 
-      column-gap: 40px;
-
-
-      width:400px;
+  }
+  function getExpirationTime(expTime) {
+    var hour = expTime.getHour();
+    var ampm = "AM";
+    if(hour > 12) {
+      hour -= 12;
+      ampm = "PM";
     }
-  </style>
+    var minute = expTime.getMinute().toString();
+    if(minute < 10) {
+      minute = "0" + minute;
+    }
+    return hour.toString() + ":" + minute + " " + ampm;
+  }
+</script>
 
-  <script>
-    function getPounds() {
-      var input = document.getElementById("numPounds").value;
-      if(input > @handlerBid.getAlmondPounds()) {
-        alert("Please enter a value less than @handlerBid.getAlmondPoundsString()");
-        return;
-      } else if(input < 1){
-        alert("Please enter a value greater than 0");
-        return;
-      } else {
-        var redirect = "@domain/handlerBids/@handlerBid.getId()/accept/@grower.getId()/" + input;
-        window.location.replace(redirect);
+
+<body>
+
+
+
+  <section class="background">
+
+  <div class="col-md-12 col-sm-12 col-xs-12 headline">
+
+  <div class="handlerBidHeader">
+    <h1>BID FROM @handler.getCompanyName().toUpperCase()</h1><br>
+    <h3 class="phone-number">@handler.getPrettyPhoneNumberString()</h3>
+    <h2>EXPIRES @expiration.getMonthValue()/@expiration.getDayOfMonth() AT
+      @{var hour = expiration.getHour();
+        var minute = expiration.getMinute().toString();
+        var ampm = "AM";
+        if(hour == 0){
+          hour = 12;
+        } else if(hour == 12) {
+          ampm = "PM";
+        } else if(hour > 12) {
+          hour = hour - 12;
+          ampm = "PM";
+        }
+        if(expiration.getMinute() < 10) {
+          minute = "0" + minute;
+        }
+        val str = hour.toString() + ":" + minute + " " + ampm; 
+        str;
       }
-    }
-  </script>
+    </h2>
+  </div>
 
-  <head>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.blue_grey-green.min.css" />
-  </head>
-  <body>
-    <table class="mdl-data-table mdl-shadow--2dp">
-      <thead>
-        <tr>
-          <th class="mdl-data-table__cell--non-numeric"><h1>Bid Details</h2></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="mdl-data-table__cell--non-numeric"><h2>Almond Variety</h2></td>
-          <td><h4>@handlerBid.getAlmondVariety()</h4></td>
-        </tr>
-        <tr>
-          <td class="mdl-data-table__cell--non-numeric"><h2>Almond Pounds</h2></td>
-          <td><h4>@handlerBid.getAlmondPoundsString() lbs</h4></td>
-        </tr>
-        <tr>
-          <td class="mdl-data-table__cell--non-numeric"><h2>Price Per Pound</h2></td>
-          <td><h4>@handlerBid.getPricePerPound()</h4></td>
-        </tr>
-        <tr>
-          <td class="mdl-data-table__cell--non-numeric"><h2>Comments</h2></td>
-        </tr>
-        <tr>
-          <td class="mdl-data-table__cell--non-numeric"><p>@handlerBid.getComment()</p></td>
-        </tr>
-      </tbody>
-    </table>
-
-    <br></br>
-    <br></br>
-    <br></br>
-    <div class="textBox">
-      Number of Pounds to be Accepted: 
-      <input id="numPounds" type="number" min="1" max="@handlerBid.getAlmondPounds()" style="width:100px;">
+  <div class="col-md-12">
+    <div class="centercircle">
+      <div class="circle">@handlerBid.getId()</div>
     </div>
-    <center style="padding-bottom:20px">
-      <button onclick="getPounds()">Accept
-      </button>
-    </center>
-  </body>
+
+    <div class="col-md-12 col-sm-12 col-xs-12 spacetop">
+
+      <div class="col-md-12 col-sm-12 col-xs-12 bid-box center" style="width:100%;">
+
+        <div class="bid-details col-md-10 col-sm-10 col-xs-10">
+
+        <table class="details">
+
+            <tr>
+            <td>@handlerBid.getPoundsRemaining()lbs REMAINING</td>
+            <td>@handlerBid.getAlmondVariety()</td>
+            <td>@handlerBid.getAlmondSize()</td>
+            <td>@handlerBid.getPricePerPound()</td>
+            </tr>
+
+
+        </table>
+
+        <p class="comment">@handlerBid.getComment()</p>
+        </div>
+
+        @if(handlerBid.bidCurrentlyOpen()) {
+          <div class="col-md-10 col-sm-10 col-xs-10 movebutton">
+            <pounds>Number of pounds to be accepted (@handlerBid.getPoundsRemaining()lbs remaining)</pounds>
+            <input type="number" class="number" id="numpounds@handlerBid.getId()">
+            <button class="partial" onclick="getpounds(@handlerBid.getPoundsRemaining(), @handlerBid.getId())">
+              ACCEPT PARTIAL
+            </button>
+          </div>
+
+        } else {
+          <div>
+            <h1 class="bidClosed"><strong> CLOSED </strong></h1>
+          </div>
+        }      
+
+      </div>
+    </div>
+  </div>
+  
+
+  <section>
+
+
+</body>
+
 </html>
