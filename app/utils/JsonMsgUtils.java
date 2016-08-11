@@ -15,6 +15,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class JsonMsgUtils {
 
   /* ==================== Json converters for Error Messages =======================*/
+
+  public static ObjectNode cannotAddHandlerSellerToClosedBid() {
+    return errorToJson("Cannot add handlers to closed bid.");
+  }
   
   public static ObjectNode handlerNotFoundMessage(Long id) {
     return errorToJson("Handler with id '" + id + "' could not be found\n");

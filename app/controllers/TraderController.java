@@ -385,6 +385,10 @@ public class TraderController extends Controller {
       return notFound(JsonMsgUtils.bidNotFoundMessage(bidId));
     }
 
+    if (!traderBid.bidCurrentlyOpen()) {
+      return badRequest(JsonMsgUtils.cannotAddHandlerSellerToClosedBid());
+    }
+
     JsonNode data = request().body().asJson();
 
     if (data == null) {
@@ -393,6 +397,8 @@ public class TraderController extends Controller {
 
     if(!data.isArray()) {
       //Log error, return badResult or something
+      Logger.error("Error Adding HandlerSellers to Bid (" + bidId + "). Data not Array");
+      return badRequest();
     }
 
     List<HandlerSeller> addedHandlerSellers = new ArrayList<>();
