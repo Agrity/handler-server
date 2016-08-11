@@ -168,7 +168,7 @@ public class TraderBid extends BaseBid implements PrettyString {
     }
   }
 
-  public BidResponseResult approve(long handlerSellerId) {
+  public BidResponseResult approve(long handlerSellerId, long pounds) {
 
     if (getManagementService().equals("services.bid_management.TraderFCFSService")) {
       return BidResponseResult.getInvalidResult("Cannot approve bid in FCFS service.");
@@ -185,8 +185,6 @@ public class TraderBid extends BaseBid implements PrettyString {
     if (response.getResponseStatus() != ResponseStatus.PENDING) {
       return BidResponseResult.getInvalidResult("Cannot approve bid because response status is not pending.");
     }
-
-    long pounds = response.getPoundsAccepted();
 
 
     TraderBidManagementService managementService
@@ -207,6 +205,7 @@ public class TraderBid extends BaseBid implements PrettyString {
 
     setPoundsRemaining(getPoundsRemaining() - (int)pounds);
     response.setResponseStatus(ResponseStatus.ACCEPTED);
+    response.setPoundsAccepted(pounds);
 
 
     if (getPoundsRemaining() == 0) {
@@ -445,12 +444,10 @@ public class TraderBid extends BaseBid implements PrettyString {
       return BidResponseResult.getInvalidResult("Cannot accept bid."); // TODO: What to tell grower when this inexplicable error happens.
 
     }
-    
-    /* Set pounds accepted in response even if STFC so we can get pounds on approval */
-    response.setPoundsAccepted(poundsAccepted);
 
     if (fcfs) {
       response.setResponseStatus(ResponseStatus.ACCEPTED);
+      response.setPoundsAccepted(poundsAccepted);
     } else {
       response.setResponseStatus(ResponseStatus.PENDING);
     }
