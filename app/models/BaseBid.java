@@ -99,6 +99,23 @@ public abstract class BaseBid extends BaseModel {
     return expirationTime.toString();
   }
 
+  public String getPrettyExpirationTime() {
+    String exp 
+      = expirationTime.getMonth() + "/" + expirationTime.getDayOfMonth()
+      + " ";
+    int hour = expirationTime.getHour();
+    String ampm = " AM";
+    if(hour == 0) {
+      hour = 12;
+    } else if (hour == 12) {
+      ampm = " PM";
+    } else if (hour > 12) {
+      hour -= 12;
+      ampm = " PM";
+    }
+    return exp + hour + ":" + expirationTime.getMinute() + ampm;
+  }
+
   public BidStatus getBidStatus() {
     return bidStatus;
   }

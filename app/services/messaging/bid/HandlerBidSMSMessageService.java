@@ -73,7 +73,7 @@ public class HandlerBidSMSMessageService implements HandlerBidMessageService {
                 + "- " + handlerBid.getHandler().getFullName() + "\n"
                 + handlerBid.getHandler().getCompanyName() + "\n"
                 + handlerBid.getHandler().getPrettyPhoneNumberString() + "\n\n"
-                + "This bid expires at " + handlerBid.getExpirationTime() + ". \n\n"
+                + "This bid expires at " + handlerBid.getPrettyExpirationTime() + ". \n\n"
                 + "Respond with the bid ID(" + id + ") "
                 + "followed by the amount of pounds you would like to accept (0 for rejection).\n"
                 + "Bid ID: " + id + "\n"

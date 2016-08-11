@@ -16,7 +16,7 @@
       Hi @handlerSeller.getFirstName(),
     </p>
     <p>
-      I've sent you new bids using Agrity. These bids expire at @batch.getTraderBids()[0].getExpirationTime(). Please
+      I've sent you new bids using Agrity. These bids expire at @batch.getTraderBids().get(0).getPrettyExpirationTime(). Please
       @if(batch.getId() == null) {
         <a href="@domain/traderBids/@batch.getTraderBids.get(0).getId()/displayBid/@handlerSeller.getId()">
       } else {
