@@ -116,6 +116,10 @@ public class BidJsonParser extends BaseParser {
     JsonNode typeMap = data.get(BidJsonConstants.MANAGEMENT_TYPE);
     if(typeMap.has(BidJsonConstants.DELAY_KEY)) {
       int delayInt = typeMap.get(BidJsonConstants.DELAY_KEY).asInt();
+      if (delayInt <= 0) {
+        setInvalid("Delay is an int less than 1.");
+        return null;
+      }
       return LocalDateTime.now(ZoneId.of("America/Los_Angeles")).plusHours(delayInt);
     }
     setInvalid(missingParameterError(BidJsonConstants.DELAY_KEY));
