@@ -98,7 +98,7 @@ GET     /admin/handlerBids/:bidId/close                    controllers.AdminHand
 
 GET     /admin/handlerBids/:bidId/requestcall/:growerId    controllers.AdminHandlerBidController.requestCall(bidId: Long, growerId: Long)
 
-GET     /admin/handlerBids/:bidId/approve/:growerId        controllers.AdminHandlerBidController.approveBid(bidId: Long, growerId: Long)
+GET     /admin/handlerBids/:bidId/approve/:growerId/:pounds        controllers.AdminHandlerBidController.approveBid(bidId: Long, growerId: Long, pounds: Long)
 
 GET     /admin/handlerBids/:bidId/disapprove/:growerId     controllers.AdminHandlerBidController.disapproveBid(bidId: Long, growerId: Long)
 
@@ -126,7 +126,7 @@ GET     /admin/traderBids/:bidId/close                    controllers.AdminTrade
 
 GET     /admin/traderBids/:bidId/requestcall/:handlerSellerId    controllers.AdminTraderBidController.requestCall(bidId: Long, handlerSellerId: Long)
 
-GET     /admin/traderBids/:bidId/approve/:handlerSellerId        controllers.AdminTraderBidController.approveBid(bidId: Long, handlerSellerId: Long)
+GET     /admin/traderBids/:bidId/approve/:handlerSellerId/:pounds        controllers.AdminTraderBidController.approveBid(bidId: Long, handlerSellerId: Long, pounds: Long)
 
 GET     /admin/traderBids/:bidId/disapprove/:handlerSellerId     controllers.AdminTraderBidController.disapproveBid(bidId: Long, handlerSellerId: Long)
 
@@ -242,7 +242,7 @@ GET     /handlerBids/:bidId/partial/:growerId              controllers.HandlerBi
 
 GET     /handlerBids/:bidId/accept/:growerId/:pounds       controllers.HandlerBidController.acceptPartial(bidId: Long, growerId: Long, pounds: Long)
 
-GET     /handlerBids/:bidId/approve/:growerId               controllers.HandlerBidController.approveBid(bidId: Long, growerId: Long)
+GET     /handlerBids/:bidId/approve/:growerId/:pounds               controllers.HandlerBidController.approveBid(bidId: Long, growerId: Long, pounds: Long)
 
 GET     /handlerBids/:bidId/disapprove/:growerId               controllers.HandlerBidController.disapproveBid(bidId: Long, growerId: Long)
 
@@ -258,7 +258,7 @@ GET     /traderBids/:bidId/displayBid/:handlerSellerId          controllers.Trad
 
 GET     /traderBids/:bidId/accept/:handlerSellerId/:pounds       controllers.TraderBidController.acceptPartial(bidId: Long, handlerSellerId: Long, pounds: Long)
 
-GET     /traderBids/:bidId/approve/:handlerSellerId               controllers.TraderBidController.approveBid(bidId: Long, handlerSellerId: Long)
+GET     /traderBids/:bidId/approve/:handlerSellerId/:pounds               controllers.TraderBidController.approveBid(bidId: Long, handlerSellerId: Long, pounds: Long)
 
 GET     /traderBids/:bidId/disapprove/:handlerSellerId               controllers.TraderBidController.disapproveBid(bidId: Long, handlerSellerId: Long)
 

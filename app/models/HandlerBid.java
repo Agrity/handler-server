@@ -188,7 +188,7 @@ public class HandlerBid extends BaseBid implements PrettyString {
     }  
   }
 
-  public BidResponseResult approve(long growerId) {
+  public BidResponseResult approve(long growerId, long pounds) {
 
     if (getManagementService().equals("services.bid_management.HandlerFCFSService")) {
       return BidResponseResult.getInvalidResult("Cannot approve bid in FCFS service.");
@@ -205,8 +205,6 @@ public class HandlerBid extends BaseBid implements PrettyString {
     if (response.getResponseStatus() != ResponseStatus.PENDING) {
       return BidResponseResult.getInvalidResult("Cannot approve bid because response status is not pending.");
     }
-
-    long pounds = response.getPoundsAccepted();
 
 
     HandlerBidManagementService managementService
@@ -227,6 +225,7 @@ public class HandlerBid extends BaseBid implements PrettyString {
 
     setPoundsRemaining(getPoundsRemaining() - (int)pounds);
     response.setResponseStatus(ResponseStatus.ACCEPTED);
+    response.setPoundsAccepted(pounds);
 
 
     if (getPoundsRemaining() == 0) {

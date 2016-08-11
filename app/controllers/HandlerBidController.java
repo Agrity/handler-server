@@ -119,7 +119,7 @@ public class HandlerBidController extends Controller {
         : internalServerError(JsonMsgUtils.bidNotRejected(success.getInvalidResponseMessage()));
   }
 
-  public Result approveBid(long bidId, long growerId) {
+  public Result approveBid(long bidId, long growerId, long pounds) {
     ResponseHeaders.addResponseHeaders(response());
 
     HandlerBid handlerBid = handlerBidService.getById(bidId);
@@ -129,7 +129,7 @@ public class HandlerBidController extends Controller {
     }
 
     BidResponseResult success = 
-      handlerBid.approve(growerId);
+      handlerBid.approve(growerId, pounds);
 
     
     return success.isValid() ? ok(JsonMsgUtils.successfullApprove())

@@ -92,7 +92,7 @@ public class AdminHandlerBidController extends Controller {
         : internalServerError(JsonMsgUtils.callNotRequested(success.getInvalidResponseMessage()));
   }
 
-  public Result approveBid(long bidId, long growerId) {
+  public Result approveBid(long bidId, long growerId, long pounds) {
     return ok("Not implemented.");
   }
 
