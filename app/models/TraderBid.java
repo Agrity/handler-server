@@ -445,9 +445,11 @@ public class TraderBid extends BaseBid implements PrettyString {
 
     }
 
+    /* Set pounds accepted in response even if STFC so we can get pounds on approval */
+    response.setPoundsAccepted(poundsAccepted);
+
     if (fcfs) {
       response.setResponseStatus(ResponseStatus.ACCEPTED);
-      response.setPoundsAccepted(poundsAccepted);
     } else {
       response.setResponseStatus(ResponseStatus.PENDING);
     }
