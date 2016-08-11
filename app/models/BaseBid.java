@@ -99,10 +99,10 @@ public abstract class BaseBid extends BaseModel {
     return expirationTime.toString();
   }
 
+  @JsonIgnore
   public String getPrettyExpirationTime() {
     String exp 
-      = expirationTime.getMonth() + "/" + expirationTime.getDayOfMonth()
-      + " ";
+      = expirationTime.getMonthValue() + "/" + expirationTime.getDayOfMonth() + " ";
     int hour = expirationTime.getHour();
     String ampm = " AM";
     if(hour == 0) {
