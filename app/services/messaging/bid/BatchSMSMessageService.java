@@ -48,6 +48,7 @@ public class BatchSMSMessageService implements BatchMessageService {
     String msg
       = "Hi " + handlerSeller.getFirstName() + ",\n"
       + "I've sent you new bids using Agrity. "
+      + "They expire at " + batch.getTraderBids().get(0).getPrettyExpirationTime() + ". "
       + "Click on the link below to view your new bids.\n" 
       + route + "\n"
       + "- " + batch.getTrader().getFullName() + "\n"
