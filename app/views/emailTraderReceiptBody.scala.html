@@ -7,58 +7,23 @@
   </head>
 
   <body>
-    <h1>Bid Transaction Confirmation</h1>
+    <h1>Transaction Receipt</h1>
     <p>
-      Congratulations, @trader.getFullName()!<br>
-      @handlerSeller.getFullName() has accepted your bid!
+      Congratulations, @trader.getFirstName()!<br>
+      You have successfully completed the following transaction using Agrity.
     </p>
 
     <hr>
 
     <h2>Details</h2>
 
-    <table>
-      <tr>
-        <td style="float:right;">
-          <font color="gray">Almonds Bought:</font>
-        </td>
-        <td style="padding-left:5%;white-space: nowrap;">
-          <b>@pounds MT</b>
-        </td>
-      </tr>
-      <tr>
-        <td style="float:right;">
-          <font color="gray">Price:</font>
-        </td>
-        <td style="padding-left:5%;white-space: nowrap;">
-          <b>@traderBid.getPricePerPound()/lb</b>
-        </td>
-      </tr>
-      <tr>
-        <td style="float:right;">
-          <font color="gray">Type:</font>
-        </td>
-        <td style="padding-left:5%;white-space: nowrap;">
-          <b>@traderBid.getAlmondVariety()</b>
-        </td>
-      </tr>
-      <tr>
-        <td style="float:right;">
-          <font color="gray">Size:</font>
-        </td>
-        <td style="padding-left:5%;white-space: nowrap;">
-          <b>@traderBid.getAlmondSize()</b>
-        </td>
-      </tr>
-      <tr>
-        <td style="float:right;">
-          <font color="gray">Grade:</font>
-        </td>
-        <td style="padding-left:5%;">
-          <b>@traderBid.getGrade()</b>
-        </td>
-      </tr>
-    </table>
+    <p>
+      @pounds MT
+      @traderBid.getAlmondVariety()
+      @traderBid.getGrade()
+      @traderBid.getAlmondSize()
+      @traderBid.getPricePerPound()/lb
+    </p>
       
     <p>
       Comment: @traderBid.getComment()<br><br>
@@ -66,7 +31,7 @@
 
     <hr>
 
-    <b>This will serve as an official record of the transaction.</b>
+    <b>This receipt serves as an official record of this completed transaction with @handlerSeller.getCompanyName()</b>
   </body>
   <footer>
   </footer>
