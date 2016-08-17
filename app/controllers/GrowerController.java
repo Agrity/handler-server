@@ -21,7 +21,6 @@ import utils.ResponseHeaders;
 
 import utils.JsonMsgUtils;
 
-@Security.Authenticated(AdminSecured.class)
 public class GrowerController extends Controller {
 
   private final GrowerService growerService;
